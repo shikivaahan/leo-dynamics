@@ -22,7 +22,7 @@ BodyVector Inertia::solve(BodyVector v) const {
     if (!result.as_eigen().allFinite()) throw std::invalid_argument("nonfinite inertia solution");
     return result;
 }
-Spacecraft::Spacecraft(double mass,Inertia tensor):mass_kg(mass),inertia(std::move(tensor)) {
+Spacecraft::Spacecraft(double mass,Inertia tensor):mass_kg_(mass),inertia_(std::move(tensor)) {
     if (!std::isfinite(mass)||mass<=0) throw std::invalid_argument("mass must be finite and positive");
 }
 }

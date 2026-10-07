@@ -56,6 +56,8 @@ Trajectory propagate(const Rhs& rhs,const State& initial,Epoch epoch,
             finite(trial); finite(trial_derivative); finite(error);
             const double e=detail::scaled_error(y,trial,error,o);
             if (!std::isfinite(e)) throw std::runtime_error("nonfinite scaled integration error");
+            // Nonzero q norm is a torque-free kinematic invariant. An invalid
+            // trial is a hard failure, even when its error would reject the step.
             Quaternion projected;
             try { projected=normalize_quaternion({trial[6],trial[7],trial[8],trial[9]}); }
             catch (const std::invalid_argument&) { throw std::runtime_error("invalid trial quaternion"); }

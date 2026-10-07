@@ -10,9 +10,14 @@ public:
     BodyVector multiply(BodyVector) const;
     BodyVector solve(BodyVector) const;
 };
-struct Spacecraft {
-    double mass_kg;
-    Inertia inertia;
+// Construction establishes mass/inertia invariants; access is read-only.
+class Spacecraft {
+public:
     Spacecraft(double mass_kg,Inertia inertia);
+    double mass_kg() const noexcept { return mass_kg_; }
+    const Inertia& inertia() const noexcept { return inertia_; }
+private:
+    double mass_kg_;
+    Inertia inertia_;
 };
 }

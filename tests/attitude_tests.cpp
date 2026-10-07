@@ -4,6 +4,12 @@
 #include <cmath>
 #include <limits>
 using namespace leo;
+namespace {
+template<class T> concept WritableMass = requires(T& craft) { craft.mass_kg() = -1.0; };
+template<class T> concept WritableInertia = requires(T& craft,const Inertia& inertia) { craft.inertia() = inertia; };
+static_assert(!WritableMass<Spacecraft>);
+static_assert(!WritableInertia<Spacecraft>);
+}
 TEST_CASE("Hamilton body-to-inertial rotation", "[attitude]") {
     const double h=std::sqrt(.5);
     for (double sign:{1.,-1.}) {
@@ -38,7 +44,8 @@ TEST_CASE("Full inertia and torque-free Euler equation", "[attitude]") {
                  +cross(omega,inertia.multiply(omega)))<=1e-15);
     const Inertia diagonal(Eigen::Vector3d(1,2,3).asDiagonal());
     REQUIRE(norm(torque_free_angular_acceleration(diagonal,{0,0,1}))==0);
-    for (double mass:{0.,-1.,std::numeric_limits<double>::infinity()})
+    for (double mass:{0.,-1.,std::numeric_limits<double>::infinity(),
+                     -std::numeric_limits<double>::infinity(),std::numeric_limits<double>::quiet_NaN()})
         REQUIRE_THROWS_AS(Spacecraft(mass,inertia),std::invalid_argument);
     for (int invalid=0;invalid<4;++invalid) {
         Eigen::Matrix3d bad=m;

@@ -42,5 +42,4 @@ TEST_CASE("Gravity and named dynamics validation", "[gravity]") {
     REQUIRE(d.q_dot.z==.01); REQUIRE(norm(d.omega_dot)==0);
     REQUIRE_THROWS_AS(rhs({NAN},s),std::invalid_argument);
     s.q={0,0,0,0}; REQUIRE_THROWS_AS(rhs({0},s),std::invalid_argument);
-    craft.mass_kg=-1; REQUIRE_THROWS_AS(EarthDynamics(EarthGravity(e,false),craft),std::invalid_argument);
 }

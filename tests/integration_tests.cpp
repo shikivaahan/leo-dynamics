@@ -225,6 +225,8 @@ TEST_CASE("A near-zero trial quaternion is a detected step failure", "[integrati
 }
 
 TEST_CASE("A near-zero quaternion also fails on a rejected trial", "[integration]") {
+    // The 1 s candidate drives q_w to zero while position decay forces E>1.
+    // The contract is hard failure, not adaptive recovery from undefined attitude.
     const auto rhs=[](ElapsedTime,const State& s) -> StateDerivative {
         return {s.r*(-10),{},{-1,0,0,0},{}};
     };
