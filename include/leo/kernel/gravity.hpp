@@ -10,5 +10,6 @@ class EarthGravity {
 public:
     EarthGravity(Earth,bool enable_j2);
     InertialVector operator()(InertialVector r) const;
+    const Earth& earth() const noexcept { return earth_; }
 };
 }
