@@ -1,0 +1,7 @@
+# Dependencies for the leo-dynamics headless plotting CLI.
+#
+#   python3 -m pip install -r plotting/requirements.txt
+#
+# NumPy is a direct dependency of CSV and heatmap processing.
+numpy>=1.21
+matplotlib>=3.5

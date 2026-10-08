@@ -1,6 +1,6 @@
-# LEO dynamics — Stage 2
+# LEO dynamics — Stage 3
 
-C++20, CPU-only, double-precision, lightweight Earth-centred 6-DoF rigid-spacecraft dynamics: point-mass/J2 gravity, panel radiation and aerodynamic forces, their torques, and gravity-gradient torque. This is a numerical LEO kernel, not a high-fidelity mission-analysis framework. No plotting, control systems, third-body gravity, flexible bodies, GPU support or optimisation subsystem.
+C++20, CPU-only, double-precision, lightweight Earth-centred 6-DoF rigid-spacecraft dynamics: point-mass/J2 gravity, panel radiation and aerodynamic forces, their torques, and gravity-gradient torque. A separate trajectory-analysis library exports CSV for optional headless Python/Matplotlib plotting. This is not a high-fidelity mission-analysis framework; no controls, third-body gravity, flexible bodies, GPU or optimisation subsystem.
 
 ## Build and run
 
@@ -16,20 +16,47 @@ ctest --test-dir build --output-on-failure
 
 The example propagates one day at 60 s output intervals (1441 samples). No arguments selects point-mass; only `--model point-mass|j2` is accepted. It prints model, sample count, final radius in metres and RAAN change in radians.
 
-`leo::kernel` links only Eigen. `leo::integration` adds Boost.Odeint. Integration defaults ON; tests and examples default OFF. The optional `leo::environment` component adds CSPICE Sun ephemerides; `leo::kernel` never links CSPICE. Environment acquisition and the solver wrapper are in `environment/source.hpp`, separate from individual force laws.
+`leo::kernel` links only Eigen. `leo::integration` adds Boost.Odeint. `leo::analysis` links only the kernel and consumes trajectories, spacecraft/model information and explicit environment snapshots; it adds orbital, attitude, per-orbit and work diagnostics plus CSV export. Integration/analysis default ON; tests/examples default OFF. The optional `leo::environment` component adds CSPICE Sun ephemerides; the kernel never links CSPICE or Python. Environment acquisition and the solver wrapper remain separate from individual force laws.
 
 Kernel-only build:
 ```sh
-cmake -S . -B build-kernel -DLEO_BUILD_INTEGRATION=OFF -DBUILD_TESTING=ON
+cmake -S . -B build-kernel -DLEO_BUILD_INTEGRATION=OFF -DLEO_BUILD_ANALYSIS=OFF -DBUILD_TESTING=ON
 cmake --build build-kernel --parallel
 ctest --test-dir build-kernel --output-on-failure
 ```
 
 Requesting examples with integration OFF is a configuration error. CI defines GCC/Clang Release and Clang Debug ASan/UBSan validation, full environmental propagation and kernel-only builds. Catch2 v3.7.1 and CSPICE N0067 are bootstrapped outside project configure in CI. Tests never fetch dependencies or kernels.
 
+## Analysis and plotting workflow
+
+```sh
+./build/analyze_orbit /tmp/leo-analysis
+python3 -m venv .venv
+.venv/bin/python -m pip install -r plotting/requirements.txt
+.venv/bin/python plotting/plot_analysis.py /tmp/leo-analysis --output /tmp/leo-analysis/plots --format both
+.venv/bin/python tests/plotting_smoke.py
+```
+
+The example propagates 751 samples across 2.5 nominal periods with J2, SRP,
+Sentman drag, albedo and environmental torques, using a deterministic constructed
+Sun. It analyzes every sample and exports nine CSV datasets. Python is optional
+and not required to configure/build/use C++ targets. `LEO_TEST_PLOTTING=ON`
+registers the Python smoke test only when explicitly requested.
+
+For real ephemerides, configure with `LEO_ENABLE_CSPICE=ON` and use
+`analyze_orbit OUTPUT_DIR --spice leap-seconds.tls planets.bsp epoch_et_seconds`.
+Kernels are caller-provided; no hidden downloads or fallback ephemerides.
+The plotting CLI also supports supplied-run comparisons, parameter heatmaps,
+sweep-manifest reduction and externally computed scalar series.
+
+See [Stage 3 contracts and feature inventory](docs/stage3.md) for APIs, full CSV
+schemas/units, sampled event/work interpolation, missing-diagnostic behavior,
+all plotting commands, Julia correctness corrections and deliberate omissions.
+
+
 ## Public contracts
 
-Headers live under `include/leo`; namespace `leo`.
+Headers live under `include/leo`; physics/integration/environment use namespace `leo`, postprocessing uses `leo::analysis`.
 
 - **State:** named `State {r,v,q,omega}`. Earth-relative position in metres and velocity in m/s use `InertialVector` (J2000); angular velocity in rad/s uses `BodyVector`. Minimal frame tags disallow implicit body/inertial mixing. Raw 13-scalar packing belongs only to the integration adapter.
 - **Attitude:** Hamilton quaternion `{w,x,y,z}`, active body → J2000; identity `{1,0,0,0}`. Body-frame angular velocity satisfies `q_dot = 0.5*q ⊗ (0,omega)`. Quaternion derivatives and intermediate solver states are not normalized. `validated_state` normalizes input; every accepted solver step projects q and refreshes its endpoint derivative if projection changes q. Quaternion sign is not canonicalized. Nonfinite quaternions and norm <=1e-12 are errors, never replaced by identity.
@@ -182,4 +209,4 @@ CSPICE tests create a deterministic local SPK to validate real kernel interpolat
 - Albedo force/torque now share one dimensionally valid law. Julia's torque used W/m² as pressure and incorrectly scaled solar irradiance with Earth-spacecraft distance, unlike its force.
 - Explicit TDB epoch plus elapsed seconds replaces ambiguous Unix-time handling, date-string truncation and hidden kernel downloads. Direct SPICE interpolation replaces Julia's optional daily position cache.
 
-Stage 2 covers the requested environmental model set with the stated approximations. Stage 3 (analysis/plotting) and Stage 4 (optimisation, benchmarks, packaging) remain out of scope. Finite-temperature Sentman, NRLMSISE, resolved Earth radiance and more accurate Earth orientation would require separately scoped fidelity work; none is claimed here.
+Stages 1–3 cover propagation, the requested environmental model set, reusable analysis, CSV export and headless plotting with the documented approximations. Stage 4 (optimisation, benchmarks and packaging) remains out of scope. Finite-temperature Sentman, NRLMSISE, resolved Earth radiance and more accurate Earth orientation require separately scoped fidelity work; none is claimed here.
