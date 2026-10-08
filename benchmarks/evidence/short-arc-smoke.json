@@ -1,0 +1,102 @@
+{
+  "runs": {
+    "direct": {
+      "benchmark_id": "BENCH-03",
+      "mode": "direct",
+      "interval_s": 900,
+      "duration_s": 60,
+      "wall_seconds": 0.000468423,
+      "preprocess_seconds": 0,
+      "rhs_count": 77,
+      "ephemeris_queries": 77,
+      "underlying_queries": 77,
+      "checksum": "7a4fc6e799294f09",
+      "correctness": true,
+      "reference": {
+        "final_position_m": [
+          6762503.148463777,
+          367807.7345992157,
+          275855.1863464373
+        ],
+        "final_velocity_m_s": [
+          -520.9044539004719,
+          6120.695912800912,
+          4590.491292878833
+        ],
+        "final_quaternion": [
+          0.8981281573800638,
+          0.4384315772199601,
+          0.022680674377484382,
+          0.025082903087406343
+        ],
+        "final_omega_rad_s": [
+          0.0021154432593721985,
+          0.0010360078900796474,
+          0.0004650350471982041
+        ],
+        "cumulative_srp_work_j": 6.94531112878054,
+        "trajectory_checksum": "7a4fc6e799294f09"
+      },
+      "postprocess_seconds": 7.6725e-05,
+      "sample_count": 3,
+      "kernel_load_seconds": 0.008403558,
+      "cache_memory_bytes": 0,
+      "cache_sample_count": 0,
+      "construction_queries": 0,
+      "postprocess_queries": 3
+    },
+    "cached": {
+      "benchmark_id": "BENCH-03",
+      "mode": "cached",
+      "interval_s": 900,
+      "duration_s": 60,
+      "wall_seconds": 6.9005e-05,
+      "preprocess_seconds": 0.000158059,
+      "rhs_count": 77,
+      "ephemeris_queries": 77,
+      "underlying_queries": 2,
+      "checksum": "7a4fc6e799294f09",
+      "correctness": true,
+      "reference": {
+        "final_position_m": [
+          6762503.148463777,
+          367807.7345992157,
+          275855.1863464373
+        ],
+        "final_velocity_m_s": [
+          -520.9044539004719,
+          6120.695912800912,
+          4590.491292878833
+        ],
+        "final_quaternion": [
+          0.8981281573800638,
+          0.4384315772199601,
+          0.022680674377484382,
+          0.025082903087406343
+        ],
+        "final_omega_rad_s": [
+          0.0021154432593721985,
+          0.0010360078900796474,
+          0.0004650350471982041
+        ],
+        "cumulative_srp_work_j": 6.945311128780539,
+        "trajectory_checksum": "7a4fc6e799294f09"
+      },
+      "postprocess_seconds": 8.8959e-05,
+      "sample_count": 3,
+      "kernel_load_seconds": 0.008486882,
+      "cache_memory_bytes": 168,
+      "cache_sample_count": 2,
+      "construction_queries": 2,
+      "postprocess_queries": 3
+    }
+  },
+  "differences": {
+    "position_m": 0.0,
+    "velocity_m_s": 0.0,
+    "quaternion_component_norm": 0.0,
+    "omega_rad_s": 0.0,
+    "work_j": 8.881784197001252e-16
+  },
+  "note": "Correctness smoke only. This does not replace the fixed six-hour acceptance workload or select a production interval."
+}

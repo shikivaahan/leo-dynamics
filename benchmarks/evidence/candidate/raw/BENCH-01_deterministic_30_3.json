@@ -1,0 +1,26 @@
+{
+  "benchmark_id": "BENCH-01",
+  "checksum": "3b2d62a6015939a0",
+  "correctness": true,
+  "duration_s": 21600,
+  "ephemeris_queries": 0,
+  "interval_s": 30,
+  "mode": "deterministic",
+  "preprocess_seconds": 0,
+  "reference": {
+    "first_acceleration_m_s2": [
+      -8.688428183776967,
+      0,
+      0
+    ],
+    "last_acceleration_m_s2": [
+      -4.2169676243588,
+      6.061463210175992,
+      4.559178364663785
+    ]
+  },
+  "rhs_count": 200000,
+  "rhs_nanoseconds_per_call": 171.64964,
+  "underlying_queries": 0,
+  "wall_seconds": 0.034329928
+}
