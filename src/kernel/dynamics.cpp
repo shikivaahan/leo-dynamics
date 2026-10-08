@@ -31,27 +31,40 @@ StateDerivative EarthDynamics::operator()(ElapsedTime t,const State& s) const {
     if (needs_environment()) throw std::invalid_argument("enabled environmental models need an explicit snapshot");
     return (*this)(t,s,EnvironmentSnapshot{});
 }
-StateDerivative EarthDynamics::operator()(ElapsedTime t,const State& s,const EnvironmentSnapshot& env) const {
+DynamicsContributions EarthDynamics::evaluate(ElapsedTime t,const State& s,const EnvironmentSnapshot& env) const {
     if (!std::isfinite(t.seconds)||!s.r.as_eigen().allFinite()||!s.v.as_eigen().allFinite()||!s.omega.as_eigen().allFinite())
         throw std::invalid_argument("nonfinite dynamics input");
     (void)normalize_quaternion(s.q); // Validate only; evolving q must remain raw.
-    Wrench total;
-    const auto add=[&](const Wrench& contribution,SurfaceContribution selection) {
-        if (selection.force) total.force_n=total.force_n+contribution.force_n;
-        if (selection.torque) total.torque_nm=total.torque_nm+contribution.torque_nm;
+    DynamicsContributions result;
+    const auto select=[](Wrench contribution,SurfaceContribution selection) {
+        if (!selection.force) contribution.force_n={};
+        if (!selection.torque) contribution.torque_nm={};
+        return contribution;
     };
-    if (models_.srp.enabled()) add(solar_radiation_pressure(spacecraft_,s,env),models_.srp);
-    if (models_.drag.enabled()) {
-        add(models_.drag_model==DragModel::flat_plate?flat_plate_drag(spacecraft_,s,env):
+    if (models_.srp.enabled()) result.srp=select(solar_radiation_pressure(spacecraft_,s,env),models_.srp);
+    if (models_.drag.enabled())
+        result.drag=select(models_.drag_model==DragModel::flat_plate?flat_plate_drag(spacecraft_,s,env):
             sentman_drag(spacecraft_,s,env),models_.drag);
-    }
     if (models_.albedo.enabled())
-        add(simplified_albedo(spacecraft_,s,env,gravity_.earth().equatorial_radius_m,models_.earth_albedo),models_.albedo);
+        result.albedo=select(simplified_albedo(spacecraft_,s,env,gravity_.earth().equatorial_radius_m,models_.earth_albedo),models_.albedo);
+    result.non_gravitational+=result.srp;
+    result.non_gravitational+=result.drag;
+    result.non_gravitational+=result.albedo;
     if (models_.gravity_gradient)
-        total.torque_nm=total.torque_nm+gravity_gradient_torque(gravity_.earth(),s,spacecraft_.inertia());
-    const InertialVector acceleration=gravity_(s.r)+total.force_n/spacecraft_.mass_kg();
-    if (!acceleration.as_eigen().allFinite()) throw std::invalid_argument("nonfinite total acceleration");
-    return {s.v,acceleration,quaternion_derivative(s.q,s.omega),
-            spacecraft_.inertia().solve(total.torque_nm-cross(s.omega,spacecraft_.inertia().multiply(s.omega)))};
+        result.gravity_gradient_nm=gravity_gradient_torque(gravity_.earth(),s,spacecraft_.inertia());
+    result.non_gravitational.torque_nm=result.non_gravitational.torque_nm+result.gravity_gradient_nm;
+    const auto gravity=gravity_.evaluate(s.r);
+    result.point_mass_m_s2=gravity.point_mass_m_s2;
+    result.j2_m_s2=gravity.j2_m_s2;
+    result.total_acceleration_m_s2=result.point_mass_m_s2+result.j2_m_s2+result.non_gravitational.force_n/spacecraft_.mass_kg();
+    if (!result.total_acceleration_m_s2.as_eigen().allFinite()) throw std::invalid_argument("nonfinite total acceleration");
+    result.total_angular_acceleration_rad_s2=spacecraft_.inertia().solve(
+        result.non_gravitational.torque_nm-cross(s.omega,spacecraft_.inertia().multiply(s.omega)));
+    return result;
 }
+StateDerivative EarthDynamics::operator()(ElapsedTime t,const State& s,const EnvironmentSnapshot& env) const {
+    const auto result=evaluate(t,s,env);
+    return {s.v,result.total_acceleration_m_s2,quaternion_derivative(s.q,s.omega),
+            result.total_angular_acceleration_rad_s2};
 }
+} // namespace leo

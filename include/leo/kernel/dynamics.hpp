@@ -17,6 +17,16 @@ struct EnvironmentalModels {
     bool gravity_gradient=false;
     double earth_albedo=0.3;
 };
+// Selected contributions, not hypothetical loads from disabled models.
+// Forces/accelerations are J2000; torques/angular acceleration are body frame.
+struct DynamicsContributions {
+    InertialVector point_mass_m_s2{},j2_m_s2{};
+    Wrench srp{},drag{},albedo{};
+    BodyVector gravity_gradient_nm{};
+    Wrench non_gravitational{};
+    InertialVector total_acceleration_m_s2{};
+    BodyVector total_angular_acceleration_rad_s2{};
+};
 BodyVector gravity_gradient_torque(const Earth&,const State&,const Inertia&);
 class EarthDynamics {
     EarthGravity gravity_;
@@ -33,5 +43,9 @@ public:
     StateDerivative operator()(ElapsedTime,const State&,const EnvironmentSnapshot&) const;
     // Reports model selection only; does not establish source compatibility.
     bool needs_environment() const noexcept;
+    DynamicsContributions evaluate(ElapsedTime,const State&,const EnvironmentSnapshot&) const;
+    const EarthGravity& gravity() const noexcept { return gravity_; }
+    const Spacecraft& spacecraft() const noexcept { return spacecraft_; }
+    const EnvironmentalModels& models() const noexcept { return models_; }
 };
 }

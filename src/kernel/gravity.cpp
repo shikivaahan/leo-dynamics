@@ -36,10 +36,12 @@ InertialVector j2_acceleration(const Earth& e,InertialVector r) {
     validate(e); return checked(additive(e,radius(r)));
 }
 EarthGravity::EarthGravity(Earth e,bool j2):earth_(e),enable_j2_(j2) { validate(e); }
-InertialVector EarthGravity::operator()(InertialVector position) const {
+GravityContributions EarthGravity::evaluate(InertialVector position) const {
     const auto r=radius(position);
-    auto result=central(earth_,r);
-    if (enable_j2_) result=result+additive(earth_,r);
-    return checked(result);
+    return {checked(central(earth_,r)),enable_j2_?checked(additive(earth_,r)):InertialVector{}};
 }
+InertialVector EarthGravity::operator()(InertialVector position) const {
+    const auto values=evaluate(position);
+    return checked(values.point_mass_m_s2+values.j2_m_s2);
 }
+} // namespace leo
