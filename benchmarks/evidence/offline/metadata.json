@@ -1,0 +1,54 @@
+{
+  "compiler": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "configure_command": [
+    "cmake",
+    "-S",
+    "/home/user/leo-dynamics/benchmarks/cases",
+    "-B",
+    "/tmp/leo-bench-offline",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DCMAKE_CXX_FLAGS=",
+    "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -DNDEBUG -Wall -Wextra -Wpedantic",
+    "-DCMAKE_CXX_COMPILER=/usr/bin/c++",
+    "-DLEO_SOURCE_DIR=/tmp/leo-opt001-final",
+    "-DLEO_ENABLE_CSPICE=OFF"
+  ],
+  "cpu": "AMD Ryzen 7 5800H with Radeon Graphics",
+  "dependencies": {
+    "Boost": {
+      "directory": "/tmp/leo-deps/usr/lib/x86_64-linux-gnu/cmake/Boost-1.83.0",
+      "version": null
+    },
+    "CMake": "cmake version 4.4.4",
+    "CSPICE": {
+      "library": "",
+      "library_sha256": null
+    },
+    "Eigen": {
+      "directory": "/tmp/leo-deps/usr/share/eigen3/cmake",
+      "version": "3.4.0"
+    }
+  },
+  "driver_binary_sha256": "af8324319728155c0adacb65b07e14fb909f40a3e8054934387c371eb18a8120",
+  "driver_source_sha256": "ae8ed595edad5d43cddc12d1a45e21e7c76ff3c40f9dea67db9f0d44d8caac67",
+  "duration_s": 21600,
+  "flags": "-O3 -DNDEBUG -Wall -Wextra -Wpedantic",
+  "intervals_s": [
+    60,
+    300,
+    900,
+    1800
+  ],
+  "kernels": {},
+  "os": "Linux-6.18.40.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "output_cadence_s": 30,
+  "repetitions": 7,
+  "revision": {
+    "git_commit": "a799fc6605b15b3c761a74ad446450d34ceee514",
+    "source_id": "a799fc6605b1+tree:5a48526d77e3fe71",
+    "source_path": "/tmp/leo-opt001-final",
+    "source_sha256": "5a48526d77e3fe71871ec5eb3c22b341aedf60f7d52e6117dbe11c91770e801e"
+  },
+  "timestamp": "2026-10-08T18:18:49.538205+00:00",
+  "warmup": 1
+}

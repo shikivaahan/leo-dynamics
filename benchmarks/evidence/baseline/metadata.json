@@ -1,0 +1,64 @@
+{
+  "compiler": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "configure_command": [
+    "cmake",
+    "-S",
+    "/home/user/leo-dynamics/benchmarks/cases",
+    "-B",
+    "/tmp/leo-bench-baseline",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DCMAKE_CXX_FLAGS=",
+    "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -DNDEBUG -Wall -Wextra -Wpedantic",
+    "-DCMAKE_CXX_COMPILER=/usr/bin/c++",
+    "-DLEO_SOURCE_DIR=/tmp/leo-stage3-baseline",
+    "-DLEO_ENABLE_CSPICE=ON",
+    "-DCSPICE_ROOT=/tmp/leo_cspice/cspice"
+  ],
+  "cpu": "AMD Ryzen 7 5800H with Radeon Graphics",
+  "dependencies": {
+    "Boost": {
+      "directory": "/tmp/leo-deps/usr/lib/x86_64-linux-gnu/cmake/Boost-1.83.0",
+      "version": null
+    },
+    "CMake": "cmake version 4.4.4",
+    "CSPICE": {
+      "library": "/tmp/leo_cspice/cspice/lib/cspice.a",
+      "library_sha256": "22ac28890f746526217cc8a7d242887c2e78c5a83380eb8db34465c2a1092e08"
+    },
+    "Eigen": {
+      "directory": "/tmp/leo-deps/usr/share/eigen3/cmake",
+      "version": "3.4.0"
+    }
+  },
+  "driver_binary_sha256": "9962f8d85c0f3a71141168f39c1b9fbe04d16d35ae26b2dd73c145cbf810d250",
+  "driver_source_sha256": "aae87cf60db1e55f109dc944e41904129d99a2ef5ceff20844dab6f647a12e9c",
+  "duration_s": 21600,
+  "flags": "-O3 -DNDEBUG -Wall -Wextra -Wpedantic",
+  "intervals_s": [
+    60,
+    300,
+    900,
+    1800
+  ],
+  "kernels": {
+    "lsk": {
+      "path": "/tmp/leo_cspice/kernels/naif0012.tls",
+      "sha256": "678e32bdb5a744117a467cd9601cd6b373f0e9bc9bbde1371d5eee39600a039b"
+    },
+    "spk": {
+      "path": "/tmp/leo_cspice/kernels/de432s.bsp",
+      "sha256": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b"
+    }
+  },
+  "os": "Linux-6.18.40.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "output_cadence_s": 30,
+  "repetitions": 7,
+  "revision": {
+    "git_commit": "48961a2137f87bb4a1daa80ae880ecc812dad5da",
+    "source_id": "48961a2137f8+tree:918ff99302843c82",
+    "source_path": "/tmp/leo-stage3-baseline",
+    "source_sha256": "918ff99302843c82b5139089b0f08e49c6bfdedef23d03d9261e2c8d96119999"
+  },
+  "timestamp": "2026-10-08T18:05:31.527267+00:00",
+  "warmup": 1
+}

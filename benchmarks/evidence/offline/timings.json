@@ -1,0 +1,175 @@
+{
+  "BENCH-01|deterministic|30": {
+    "baseline_speedup": 1.1146538460810604,
+    "checksum": "3b2d62a6015939a0",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.031633879,
+      "median": 0.030648418,
+      "min": 0.029907818
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "matches_baseline_reference": true,
+    "preprocess_seconds": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "reference": {
+      "first_acceleration_m_s2": [
+        -8.688428183776967,
+        0,
+        0
+      ],
+      "last_acceleration_m_s2": [
+        -4.2169676243588,
+        6.061463210175992,
+        4.559178364663785
+      ]
+    },
+    "rhs_count": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "underlying_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "wall_seconds": {
+      "max": 0.031633879,
+      "median": 0.030648418,
+      "min": 0.029907818
+    }
+  },
+  "BENCH-02|deterministic|30": {
+    "baseline_speedup": 1.0414938932028195,
+    "checksum": "a983dbcb65740f1a",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.002361679,
+      "median": 0.002016851,
+      "min": 0.001915125
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "matches_baseline_reference": true,
+    "preprocess_seconds": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "reference": {
+      "cumulative_srp_work_j": 0,
+      "final_omega_rad_s": [
+        0.002170026743505294,
+        -0.00023376322057261123,
+        0.0007775011471138999
+      ],
+      "final_position_m": [
+        5424186.627659021,
+        -3305438.858135616,
+        -2359878.4988936335
+      ],
+      "final_quaternion": [
+        0.05280901522825325,
+        0.776621202772538,
+        -0.0021527542871266664,
+        0.6277468287165917
+      ],
+      "final_velocity_m_s": [
+        4599.974767639982,
+        4863.013506871099,
+        3743.183184717491
+      ],
+      "trajectory_checksum": "a983dbcb65740f1a"
+    },
+    "rhs_count": {
+      "max": 10513,
+      "median": 10513,
+      "min": 10513
+    },
+    "underlying_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "wall_seconds": {
+      "max": 0.002361679,
+      "median": 0.002016851,
+      "min": 0.001915125
+    }
+  },
+  "BENCH-03|deterministic|30": {
+    "baseline_speedup": 0.9172627152686196,
+    "checksum": "9ad09eb68da01348",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.043674999,
+      "median": 0.038068484,
+      "min": 0.032312105
+    },
+    "ephemeris_queries": {
+      "max": 42764,
+      "median": 42764,
+      "min": 42764
+    },
+    "matches_baseline_reference": true,
+    "preprocess_seconds": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "reference": {
+      "cumulative_srp_work_j": 12.81936118815846,
+      "final_omega_rad_s": [
+        0.005790407185218005,
+        -0.0005001681376153336,
+        -0.0015662289769687897
+      ],
+      "final_position_m": [
+        5442651.471408673,
+        -3283134.925257786,
+        -2342720.623470282
+      ],
+      "final_quaternion": [
+        -0.6423867534448704,
+        -0.3223609260918266,
+        0.5403278902068726,
+        -0.4375710952432406
+      ],
+      "final_velocity_m_s": [
+        4570.073008747264,
+        4882.359891203515,
+        3757.0799092584452
+      ],
+      "trajectory_checksum": "9ad09eb68da01348"
+    },
+    "rhs_count": {
+      "max": 42764,
+      "median": 42764,
+      "min": 42764
+    },
+    "underlying_queries": {
+      "max": 42764,
+      "median": 42764,
+      "min": 42764
+    },
+    "wall_seconds": {
+      "max": 0.043674999,
+      "median": 0.038068484,
+      "min": 0.032312105
+    }
+  }
+}

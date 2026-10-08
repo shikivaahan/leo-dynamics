@@ -1,0 +1,45 @@
+{
+  "benchmark_id": "BENCH-03",
+  "cache_memory_bytes": 784,
+  "cache_sample_count": 13,
+  "checksum": "9cfa422a439ab15c",
+  "construction_queries": 13,
+  "correctness": true,
+  "duration_s": 21600,
+  "ephemeris_queries": 44262,
+  "interval_s": 1800,
+  "kernel_load_seconds": 0.00878084,
+  "mode": "cached",
+  "postprocess_queries": 721,
+  "postprocess_seconds": 0.000978603,
+  "preprocess_seconds": 0.000209719,
+  "reference": {
+    "cumulative_srp_work_j": -62.62841169543034,
+    "final_omega_rad_s": [
+      -0.0013029801784607163,
+      0.0009790433869358497,
+      -0.00033885985028077055
+    ],
+    "final_position_m": [
+      5442932.078308237,
+      -3282801.4473958914,
+      -2342463.9525029627
+    ],
+    "final_quaternion": [
+      -0.7895999020995592,
+      -0.4438155185134231,
+      -0.165512880917905,
+      -0.3900836658734681
+    ],
+    "final_velocity_m_s": [
+      4569.620853201489,
+      4882.656029949069,
+      3757.2906590981065
+    ],
+    "trajectory_checksum": "9cfa422a439ab15c"
+  },
+  "rhs_count": 44262,
+  "sample_count": 721,
+  "underlying_queries": 13,
+  "wall_seconds": 0.037500275
+}

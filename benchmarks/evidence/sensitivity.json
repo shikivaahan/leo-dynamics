@@ -1,0 +1,35 @@
+{
+  "measurement": {
+    "sun_x_perturbation_m": 3e-05,
+    "duration_s": 21600,
+    "final_position_difference_m": 0.1105231383191743,
+    "final_velocity_difference_m_s": 0.00012285552250042566,
+    "final_attitude_difference_rad": 0.013306499423528866,
+    "final_omega_difference_rad_s": 5.244465635558483e-05
+  },
+  "source": "#include \"bench_support.hpp\"\nusing namespace bench;\nstruct Perturbed:EphemerisProvider { const EphemerisProvider& source; explicit Perturbed(const EphemerisProvider& p):source(p){} EphemerisState geometric_state(int target,Epoch e)const override {auto s=source.geometric_state(target,e);s.position_m=s.position_m+InertialVector{3e-5,0,0};return s;} };\nint main(){SpiceEphemerisProvider direct({\"/tmp/leo_cspice/kernels/naif0012.tls\",\"/tmp/leo_cspice/kernels/de432s.bsp\"});Perturbed perturbed(direct);const auto rhs=dynamics(true);EarthEnvironment a(Earth{},Epoch{0},&direct,true),b(Earth{},Epoch{0},&perturbed,true);auto samples=times(21600);auto baseline=propagate(EnvironmentalDynamics(rhs,a),initial(),Epoch{0},samples,tolerances());auto candidate=propagate(EnvironmentalDynamics(rhs,b),initial(),Epoch{0},samples,tolerances());const auto& x=baseline.samples.back().state;const auto& y=candidate.samples.back().state;Json j;j.add(\"sun_x_perturbation_m\",3e-5);j.add(\"duration_s\",21600.);j.add(\"final_position_difference_m\",norm(x.r-y.r));j.add(\"final_velocity_difference_m_s\",norm(x.v-y.v));j.add(\"final_attitude_difference_rad\",angle(x.q,y.q));j.add(\"final_omega_difference_rad_s\",norm(x.omega-y.omega));std::cout<<j.str()<<'\\n';}\n",
+  "compile_command": [
+    "c++",
+    "-std=c++20",
+    "-O3",
+    "-DNDEBUG",
+    "-Iinclude",
+    "-Ibenchmarks/cases",
+    "-I/tmp/leo-deps/usr/include/eigen3",
+    "-I/tmp/leo-deps/usr/include",
+    "-x",
+    "c++",
+    "-",
+    "-x",
+    "none",
+    "/tmp/leo-bench-baseline/leo/libleo_environment.a",
+    "/tmp/leo-bench-baseline/leo/libleo_kernel.a",
+    "/tmp/leo-bench-baseline/leo/libleo_integration.a",
+    "/tmp/leo_cspice/cspice/lib/cspice.a",
+    "-pthread",
+    "-lm",
+    "-o",
+    "/tmp/leo-sensitivity-smoke"
+  ],
+  "interpretation": "This constant micrometre-scale Sun perturbation experiment directly demonstrates sensitivity of this fixed six-hour coupled workload; it does not prove a Lyapunov exponent or integrator defect."
+}

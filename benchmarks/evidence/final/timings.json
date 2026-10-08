@@ -1,0 +1,962 @@
+{
+  "ACCURACY|cached|1800": {
+    "checksum": "9cfa422a439ab15c",
+    "correctness": false,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.25027093899999997,
+      "median": 0.239306378,
+      "min": 0.234817676
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "preprocess_seconds": {
+      "max": 4.2029e-05,
+      "median": 2.5554e-05,
+      "min": 2.4677e-05
+    },
+    "reference": {
+      "cumulative_srp_work_j": -62.62841169543034,
+      "final_omega_rad_s": [
+        -0.0013029801784607163,
+        0.0009790433869358497,
+        -0.00033885985028077055
+      ],
+      "final_position_m": [
+        5442932.078308237,
+        -3282801.4473958914,
+        -2342463.9525029627
+      ],
+      "final_quaternion": [
+        -0.7895999020995592,
+        -0.4438155185134231,
+        -0.165512880917905,
+        -0.3900836658734681
+      ],
+      "final_velocity_m_s": [
+        4569.620853201489,
+        4882.656029949069,
+        3757.2906590981065
+      ],
+      "trajectory_checksum": "9cfa422a439ab15c"
+    },
+    "rhs_count": {
+      "max": 131783,
+      "median": 131783,
+      "min": 131783
+    },
+    "underlying_queries": {
+      "max": 13,
+      "median": 13,
+      "min": 13
+    },
+    "wall_seconds": {
+      "max": 0.250245365,
+      "median": 0.239280952,
+      "min": 0.234792999
+    }
+  },
+  "ACCURACY|cached|300": {
+    "checksum": "361f5661604b9688",
+    "correctness": false,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.390387146,
+      "median": 0.325418328,
+      "min": 0.31800983899999996
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "preprocess_seconds": {
+      "max": 0.000188367,
+      "median": 0.000144793,
+      "min": 0.000137788
+    },
+    "reference": {
+      "cumulative_srp_work_j": -67.1027830816068,
+      "final_omega_rad_s": [
+        0.001083491410687097,
+        0.0020987422703044787,
+        -0.000926459475121578
+      ],
+      "final_position_m": [
+        5442930.430729163,
+        -3282805.0041341865,
+        -2342466.792676904
+      ],
+      "final_quaternion": [
+        -0.5784317263131711,
+        -0.7379077974087495,
+        -0.1183992225718482,
+        -0.32694104149236874
+      ],
+      "final_velocity_m_s": [
+        4569.624297226777,
+        4882.653159503154,
+        3757.287881822431
+      ],
+      "trajectory_checksum": "361f5661604b9688"
+    },
+    "rhs_count": {
+      "max": 129919,
+      "median": 129919,
+      "min": 129919
+    },
+    "underlying_queries": {
+      "max": 73,
+      "median": 73,
+      "min": 73
+    },
+    "wall_seconds": {
+      "max": 0.390249358,
+      "median": 0.325274884,
+      "min": 0.317865046
+    }
+  },
+  "ACCURACY|cached|60": {
+    "checksum": "a71515f8bdc59e97",
+    "correctness": false,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.81813997,
+      "median": 0.771560139,
+      "min": 0.722055256
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "preprocess_seconds": {
+      "max": 0.000940122,
+      "median": 0.000787635,
+      "min": 0.000750738
+    },
+    "reference": {
+      "cumulative_srp_work_j": -66.21855117796233,
+      "final_omega_rad_s": [
+        -0.0002905143952012876,
+        0.0012361943405484457,
+        -0.0009216231486503303
+      ],
+      "final_position_m": [
+        5442932.025272001,
+        -3282802.4719853043,
+        -2342464.819794493
+      ],
+      "final_quaternion": [
+        -0.7274042950132366,
+        -0.5629475257071913,
+        -0.1772853723400349,
+        -0.3500613826898118
+      ],
+      "final_velocity_m_s": [
+        4569.623435981062,
+        4882.655738684444,
+        3757.2902161334046
+      ],
+      "trajectory_checksum": "a71515f8bdc59e97"
+    },
+    "rhs_count": {
+      "max": 130037,
+      "median": 130037,
+      "min": 130037
+    },
+    "underlying_queries": {
+      "max": 361,
+      "median": 361,
+      "min": 361
+    },
+    "wall_seconds": {
+      "max": 0.817352335,
+      "median": 0.770746537,
+      "min": 0.721301036
+    }
+  },
+  "ACCURACY|cached|900": {
+    "checksum": "13d1eb3331250f2f",
+    "correctness": false,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.30397386,
+      "median": 0.252490757,
+      "min": 0.242965287
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "preprocess_seconds": {
+      "max": 8.723e-05,
+      "median": 5.0304e-05,
+      "min": 4.8111e-05
+    },
+    "reference": {
+      "cumulative_srp_work_j": -60.85204403691512,
+      "final_omega_rad_s": [
+        -0.002002806946949741,
+        0.0008794318235346155,
+        -9.982017292783433e-05
+      ],
+      "final_position_m": [
+        5442932.172575979,
+        -3282800.8005207716,
+        -2342463.419631882
+      ],
+      "final_quaternion": [
+        -0.8233281228232484,
+        -0.35951782791348236,
+        -0.1619872201000454,
+        -0.4082130253984764
+      ],
+      "final_velocity_m_s": [
+        4569.61960188267,
+        4882.656457027043,
+        3757.2910356165744
+      ],
+      "trajectory_checksum": "13d1eb3331250f2f"
+    },
+    "rhs_count": {
+      "max": 129657,
+      "median": 129657,
+      "min": 129657
+    },
+    "underlying_queries": {
+      "max": 25,
+      "median": 25,
+      "min": 25
+    },
+    "wall_seconds": {
+      "max": 0.30388663,
+      "median": 0.252440593,
+      "min": 0.242917123
+    }
+  },
+  "BENCH-01|deterministic|30": {
+    "baseline_speedup": 1.0977215219646794,
+    "checksum": "3b2d62a6015939a0",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.033361161,
+      "median": 0.031121169,
+      "min": 0.03023001
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "matches_baseline_reference": true,
+    "preprocess_seconds": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "reference": {
+      "first_acceleration_m_s2": [
+        -8.688428183776967,
+        0,
+        0
+      ],
+      "last_acceleration_m_s2": [
+        -4.2169676243588,
+        6.061463210175992,
+        4.559178364663785
+      ]
+    },
+    "rhs_count": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "underlying_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "wall_seconds": {
+      "max": 0.033361161,
+      "median": 0.031121169,
+      "min": 0.03023001
+    }
+  },
+  "BENCH-02|deterministic|30": {
+    "baseline_speedup": 1.0413193805835745,
+    "checksum": "a983dbcb65740f1a",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.002102866,
+      "median": 0.002017189,
+      "min": 0.001916324
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "matches_baseline_reference": true,
+    "preprocess_seconds": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "reference": {
+      "cumulative_srp_work_j": 0,
+      "final_omega_rad_s": [
+        0.002170026743505294,
+        -0.00023376322057261123,
+        0.0007775011471138999
+      ],
+      "final_position_m": [
+        5424186.627659021,
+        -3305438.858135616,
+        -2359878.4988936335
+      ],
+      "final_quaternion": [
+        0.05280901522825325,
+        0.776621202772538,
+        -0.0021527542871266664,
+        0.6277468287165917
+      ],
+      "final_velocity_m_s": [
+        4599.974767639982,
+        4863.013506871099,
+        3743.183184717491
+      ],
+      "trajectory_checksum": "a983dbcb65740f1a"
+    },
+    "rhs_count": {
+      "max": 10513,
+      "median": 10513,
+      "min": 10513
+    },
+    "underlying_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "wall_seconds": {
+      "max": 0.002102866,
+      "median": 0.002017189,
+      "min": 0.001916324
+    }
+  },
+  "BENCH-03|cached|1800": {
+    "accuracy_accepted": false,
+    "checksum": "9cfa422a439ab15c",
+    "correctness": false,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.035085622,
+      "median": 0.033958721000000004,
+      "min": 0.032204103
+    },
+    "ephemeris_queries": {
+      "max": 44262,
+      "median": 44262,
+      "min": 44262
+    },
+    "finite_correctness": true,
+    "preprocess_seconds": {
+      "max": 0.000250492,
+      "median": 0.000178504,
+      "min": 0.000169533
+    },
+    "reference": {
+      "cumulative_srp_work_j": -62.62841169543034,
+      "final_omega_rad_s": [
+        -0.0013029801784607163,
+        0.0009790433869358497,
+        -0.00033885985028077055
+      ],
+      "final_position_m": [
+        5442932.078308237,
+        -3282801.4473958914,
+        -2342463.9525029627
+      ],
+      "final_quaternion": [
+        -0.7895999020995592,
+        -0.4438155185134231,
+        -0.165512880917905,
+        -0.3900836658734681
+      ],
+      "final_velocity_m_s": [
+        4569.620853201489,
+        4882.656029949069,
+        3757.2906590981065
+      ],
+      "trajectory_checksum": "9cfa422a439ab15c"
+    },
+    "rhs_count": {
+      "max": 44262,
+      "median": 44262,
+      "min": 44262
+    },
+    "underlying_queries": {
+      "max": 13,
+      "median": 13,
+      "min": 13
+    },
+    "wall_seconds": {
+      "max": 0.034916089,
+      "median": 0.033780217,
+      "min": 0.031989209
+    }
+  },
+  "BENCH-03|cached|300": {
+    "accuracy_accepted": false,
+    "checksum": "361f5661604b9688",
+    "correctness": false,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.03537976,
+      "median": 0.034424723,
+      "min": 0.033388759
+    },
+    "ephemeris_queries": {
+      "max": 43330,
+      "median": 43330,
+      "min": 43330
+    },
+    "finite_correctness": true,
+    "preprocess_seconds": {
+      "max": 0.000461124,
+      "median": 0.000314793,
+      "min": 0.000302389
+    },
+    "reference": {
+      "cumulative_srp_work_j": -67.1027830816068,
+      "final_omega_rad_s": [
+        0.001083491410687097,
+        0.0020987422703044787,
+        -0.000926459475121578
+      ],
+      "final_position_m": [
+        5442930.430729163,
+        -3282805.0041341865,
+        -2342466.792676904
+      ],
+      "final_quaternion": [
+        -0.5784317263131711,
+        -0.7379077974087495,
+        -0.1183992225718482,
+        -0.32694104149236874
+      ],
+      "final_velocity_m_s": [
+        4569.624297226777,
+        4882.653159503154,
+        3757.287881822431
+      ],
+      "trajectory_checksum": "361f5661604b9688"
+    },
+    "rhs_count": {
+      "max": 43330,
+      "median": 43330,
+      "min": 43330
+    },
+    "underlying_queries": {
+      "max": 73,
+      "median": 73,
+      "min": 73
+    },
+    "wall_seconds": {
+      "max": 0.035037732,
+      "median": 0.034103874,
+      "min": 0.032927635
+    }
+  },
+  "BENCH-03|cached|60": {
+    "accuracy_accepted": false,
+    "checksum": "a71515f8bdc59e97",
+    "correctness": false,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.034999396999999995,
+      "median": 0.033738024000000005,
+      "min": 0.033272977
+    },
+    "ephemeris_queries": {
+      "max": 43389,
+      "median": 43389,
+      "min": 43389
+    },
+    "finite_correctness": true,
+    "preprocess_seconds": {
+      "max": 0.00094807,
+      "median": 0.00090277,
+      "min": 0.000875424
+    },
+    "reference": {
+      "cumulative_srp_work_j": -66.21855117796233,
+      "final_omega_rad_s": [
+        -0.0002905143952012876,
+        0.0012361943405484457,
+        -0.0009216231486503303
+      ],
+      "final_position_m": [
+        5442932.025272001,
+        -3282802.4719853043,
+        -2342464.819794493
+      ],
+      "final_quaternion": [
+        -0.7274042950132366,
+        -0.5629475257071913,
+        -0.1772853723400349,
+        -0.3500613826898118
+      ],
+      "final_velocity_m_s": [
+        4569.623435981062,
+        4882.655738684444,
+        3757.2902161334046
+      ],
+      "trajectory_checksum": "a71515f8bdc59e97"
+    },
+    "rhs_count": {
+      "max": 43389,
+      "median": 43389,
+      "min": 43389
+    },
+    "underlying_queries": {
+      "max": 361,
+      "median": 361,
+      "min": 361
+    },
+    "wall_seconds": {
+      "max": 0.034096627,
+      "median": 0.032841303,
+      "min": 0.032378241
+    }
+  },
+  "BENCH-03|cached|900": {
+    "accuracy_accepted": false,
+    "checksum": "13d1eb3331250f2f",
+    "correctness": false,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.048908904999999996,
+      "median": 0.034617558,
+      "min": 0.033386355
+    },
+    "ephemeris_queries": {
+      "max": 43199,
+      "median": 43199,
+      "min": 43199
+    },
+    "finite_correctness": true,
+    "preprocess_seconds": {
+      "max": 0.000428831,
+      "median": 0.000209844,
+      "min": 0.000200744
+    },
+    "reference": {
+      "cumulative_srp_work_j": -60.85204403691512,
+      "final_omega_rad_s": [
+        -0.002002806946949741,
+        0.0008794318235346155,
+        -9.982017292783433e-05
+      ],
+      "final_position_m": [
+        5442932.172575979,
+        -3282800.8005207716,
+        -2342463.419631882
+      ],
+      "final_quaternion": [
+        -0.8233281228232484,
+        -0.35951782791348236,
+        -0.1619872201000454,
+        -0.4082130253984764
+      ],
+      "final_velocity_m_s": [
+        4569.61960188267,
+        4882.656457027043,
+        3757.2910356165744
+      ],
+      "trajectory_checksum": "13d1eb3331250f2f"
+    },
+    "rhs_count": {
+      "max": 43199,
+      "median": 43199,
+      "min": 43199
+    },
+    "underlying_queries": {
+      "max": 25,
+      "median": 25,
+      "min": 25
+    },
+    "wall_seconds": {
+      "max": 0.048480074,
+      "median": 0.034408513,
+      "min": 0.033178714
+    }
+  },
+  "BENCH-03|deterministic|30": {
+    "baseline_speedup": 1.0974561651465498,
+    "checksum": "9ad09eb68da01348",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.043557036,
+      "median": 0.031817946,
+      "min": 0.031326447
+    },
+    "ephemeris_queries": {
+      "max": 42764,
+      "median": 42764,
+      "min": 42764
+    },
+    "matches_baseline_reference": true,
+    "preprocess_seconds": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "reference": {
+      "cumulative_srp_work_j": 12.81936118815846,
+      "final_omega_rad_s": [
+        0.005790407185218005,
+        -0.0005001681376153336,
+        -0.0015662289769687897
+      ],
+      "final_position_m": [
+        5442651.471408673,
+        -3283134.925257786,
+        -2342720.623470282
+      ],
+      "final_quaternion": [
+        -0.6423867534448704,
+        -0.3223609260918266,
+        0.5403278902068726,
+        -0.4375710952432406
+      ],
+      "final_velocity_m_s": [
+        4570.073008747264,
+        4882.359891203515,
+        3757.0799092584452
+      ],
+      "trajectory_checksum": "9ad09eb68da01348"
+    },
+    "rhs_count": {
+      "max": 42764,
+      "median": 42764,
+      "min": 42764
+    },
+    "underlying_queries": {
+      "max": 42764,
+      "median": 42764,
+      "min": 42764
+    },
+    "wall_seconds": {
+      "max": 0.043557036,
+      "median": 0.031817946,
+      "min": 0.031326447
+    }
+  },
+  "BENCH-03|direct|30": {
+    "baseline_speedup": 0.9638012455325576,
+    "checksum": "115aba91a1c1e9a5",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.164729976,
+      "median": 0.13912603,
+      "min": 0.127934258
+    },
+    "ephemeris_queries": {
+      "max": 43259,
+      "median": 43259,
+      "min": 43259
+    },
+    "matches_baseline_reference": true,
+    "preprocess_seconds": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "reference": {
+      "cumulative_srp_work_j": -67.2672879971009,
+      "final_omega_rad_s": [
+        0.0010496951377835986,
+        0.00206158883155308,
+        -0.0009273721073393294
+      ],
+      "final_position_m": [
+        5442930.480225146,
+        -3282804.926697676,
+        -2342466.737592934
+      ],
+      "final_quaternion": [
+        -0.5822729265932693,
+        -0.733669940753343,
+        -0.11959252535522827,
+        -0.3292176861449795
+      ],
+      "final_velocity_m_s": [
+        4569.624232682139,
+        4882.6532425502755,
+        3757.2879415446228
+      ],
+      "trajectory_checksum": "115aba91a1c1e9a5"
+    },
+    "rhs_count": {
+      "max": 43259,
+      "median": 43259,
+      "min": 43259
+    },
+    "underlying_queries": {
+      "max": 43259,
+      "median": 43259,
+      "min": 43259
+    },
+    "wall_seconds": {
+      "max": 0.164729976,
+      "median": 0.13912603,
+      "min": 0.127934258
+    }
+  },
+  "QUERY|cached|1800": {
+    "checksum": "2f0282d37e918d75",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.003814896,
+      "median": 0.003635821,
+      "min": 0.003268934
+    },
+    "ephemeris_queries": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "preprocess_seconds": {
+      "max": 0.000247154,
+      "median": 0.000178631,
+      "min": 0.000173876
+    },
+    "reference": {
+      "first_position_m": [
+        26499033735.807716,
+        -132757417362.72394,
+        -57556718390.23011
+      ],
+      "last_position_m": [
+        27116873210.15414,
+        -132652124122.31299,
+        -57511072936.61616
+      ]
+    },
+    "rhs_count": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "underlying_queries": {
+      "max": 13,
+      "median": 13,
+      "min": 13
+    },
+    "wall_seconds": {
+      "max": 0.003639678,
+      "median": 0.003434452,
+      "min": 0.003090303
+    }
+  },
+  "QUERY|cached|300": {
+    "checksum": "3de523c1c5ac4158",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.0039333779999999995,
+      "median": 0.0035742020000000003,
+      "min": 0.003496886
+    },
+    "ephemeris_queries": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "preprocess_seconds": {
+      "max": 0.000382014,
+      "median": 0.000307053,
+      "min": 0.000299205
+    },
+    "reference": {
+      "first_position_m": [
+        26499033735.807716,
+        -132757417362.72394,
+        -57556718390.23011
+      ],
+      "last_position_m": [
+        27116873210.154137,
+        -132652124122.313,
+        -57511072936.61615
+      ]
+    },
+    "rhs_count": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "underlying_queries": {
+      "max": 73,
+      "median": 73,
+      "min": 73
+    },
+    "wall_seconds": {
+      "max": 0.003626163,
+      "median": 0.003219369,
+      "min": 0.003194659
+    }
+  },
+  "QUERY|cached|60": {
+    "checksum": "95848df44b45923",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.005288756,
+      "median": 0.004580849,
+      "min": 0.004172467
+    },
+    "ephemeris_queries": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "preprocess_seconds": {
+      "max": 0.00151071,
+      "median": 0.001012513,
+      "min": 0.000865258
+    },
+    "reference": {
+      "first_position_m": [
+        26499033735.807716,
+        -132757417362.72394,
+        -57556718390.23011
+      ],
+      "last_position_m": [
+        27116873210.15414,
+        -132652124122.313,
+        -57511072936.61616
+      ]
+    },
+    "rhs_count": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "underlying_queries": {
+      "max": 361,
+      "median": 361,
+      "min": 361
+    },
+    "wall_seconds": {
+      "max": 0.004031939,
+      "median": 0.003466864,
+      "min": 0.003159954
+    }
+  },
+  "QUERY|cached|900": {
+    "checksum": "4e9d8f0d1f32a1fe",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.003937414,
+      "median": 0.003468507,
+      "min": 0.003441498
+    },
+    "ephemeris_queries": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "preprocess_seconds": {
+      "max": 0.000359419,
+      "median": 0.00021224,
+      "min": 0.000206918
+    },
+    "reference": {
+      "first_position_m": [
+        26499033735.807716,
+        -132757417362.72394,
+        -57556718390.23011
+      ],
+      "last_position_m": [
+        27116873210.154137,
+        -132652124122.313,
+        -57511072936.61615
+      ]
+    },
+    "rhs_count": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "underlying_queries": {
+      "max": 25,
+      "median": 25,
+      "min": 25
+    },
+    "wall_seconds": {
+      "max": 0.003724148,
+      "median": 0.003261589,
+      "min": 0.003229258
+    }
+  },
+  "QUERY|direct|30": {
+    "baseline_speedup": 0.9781517222300352,
+    "checksum": "ba8888b15d792afb",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.542348122,
+      "median": 0.462455673,
+      "min": 0.416430262
+    },
+    "ephemeris_queries": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "matches_baseline_reference": true,
+    "preprocess_seconds": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "reference": {
+      "first_position_m": [
+        26499033735.807716,
+        -132757417362.72394,
+        -57556718390.23011
+      ],
+      "last_position_m": [
+        27116873210.15414,
+        -132652124122.313,
+        -57511072936.61616
+      ]
+    },
+    "rhs_count": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "underlying_queries": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "wall_seconds": {
+      "max": 0.542348122,
+      "median": 0.462455673,
+      "min": 0.416430262
+    }
+  }
+}

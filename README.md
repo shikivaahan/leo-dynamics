@@ -157,11 +157,46 @@ ctest --test-dir build-spice --output-on-failure
 
 `CSPICE_ROOT` contains `include/SpiceUsr.h` and `lib/` with `cspice.a`, `libcspice.a` or a shared CSPICE library; explicit `CSPICE_INCLUDE_DIR` and `CSPICE_LIBRARY` also work. The [NAIF N0067 Linux distribution](https://naif.jpl.nasa.gov/pub/naif/toolkit/C/PC_Linux_GCC_64bit/packages/) supplies a prebuilt library. Kernel files are supplied by the caller, never downloaded or loaded by a force model.
 
-`SpiceEphemerisProvider({kernel_paths...})` is noncopyable and loads exactly the listed files. It serves only NAIF Sun 10 relative to Earth 399, J2000, geometric `NONE`, with SI position and velocity. Nonfinite ET, unsupported targets, missing files, bad kernels and coverage gaps raise exceptions; there is no extrapolation/fallback or interpolation cache. `epoch_from_utc` is an optional explicit conversion requiring a loaded leap-seconds kernel; ET queries themselves need only appropriate SPK coverage.
+`SpiceEphemerisProvider({kernel_paths...})` is noncopyable and loads exactly the listed files. It serves only NAIF Sun 10 relative to Earth 399, J2000, geometric `NONE`, with SI position and velocity. Nonfinite ET, unsupported targets, missing files, bad kernels and coverage gaps raise exceptions; the direct provider never extrapolates, falls back or caches. `epoch_from_utc` is an optional explicit conversion requiring a loaded leap-seconds kernel; ET queries themselves need only appropriate SPK coverage.
 
 CSPICE is process-global. Provider calls are mutex-serialized and set SPICE's error action to RETURN; other code using SPICE must coordinate separately. Shared providers refcount loaded file paths and unload them when the last owner dies; no `kclear`. Do not independently load a listed file elsewhere and expect it to remain loaded after provider destruction. Provider sets are not isolated ephemeris contexts: overlapping coverage follows SPICE's process-global kernel precedence. Use one explicit kernel set for a propagation.
 
 The environmental example runs a six-face rigid box for 60 s with J2, SRP, Sentman drag, albedo and all environmental torques, printing Sun distance, illumination, density, angular acceleration and final state diagnostics.
+
+### Optional interpolated Sun provider (experimental)
+
+`leo/environment/interpolated.hpp` supplies a CSPICE-independent, header-only
+`InterpolatedEphemerisProvider(source, start_epoch, end_epoch, interval_seconds)`.
+It owns SI position/velocity samples, including both endpoints and a shortened
+last interval, and uses cubic Hermite interpolation with analytic derivative
+velocity. The source is needed only during construction. Queries allocate
+nothing and have no mutable cursor or global state; backward adaptive queries
+are supported. Unsupported targets/nonfinite epochs raise `invalid_argument`;
+out-of-coverage epochs raise `out_of_range`, never extrapolation. Invalid ranges,
+unrepresentable grids, source coverage failures and nonfinite samples are rejected.
+`sample_count()` and `memory_bytes()` expose preprocessing storage (object plus
+owned vector capacity, excluding allocator bookkeeping).
+
+```cpp
+#include "leo/environment/interpolated.hpp"
+// Explicitly opt in; the original direct provider remains unchanged.
+leo::InterpolatedEphemerisProvider cached(sun, epoch,
+    leo::Epoch{epoch.et_seconds + duration_s}, 300.0);
+leo::EarthEnvironment source(earth, epoch, &cached, true);
+```
+
+The interval above illustrates the API, **not a production recommendation**.
+Stage 4 evaluation rejected all tested 60/300/900/1800 s intervals for the fixed
+six-hour coupled-attitude workload: small ephemeris errors did not guarantee
+acceptable final trajectory, attitude or cumulative SRP work differences.
+No production interval is selected, no default changes, and no accepted
+performance improvement is claimed. Use direct SPICE unless the complete
+application workload passes its own fixed correctness criteria.
+Eclipse geometry still uses the current spacecraft state on every RHS call.
+
+See [benchmark methodology](benchmarks/README.md),
+[OPT-001 evidence and decision](benchmarks/OPTIMISATIONS.md) and
+[performance summary](benchmarks/PERFORMANCE_SUMMARY.md).
 
 
 ## Propagation and errors

@@ -1,0 +1,954 @@
+{
+  "ACCURACY|cached|1800": {
+    "checksum": "9cfa422a439ab15c",
+    "correctness": false,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.312485467,
+      "median": 0.263556958,
+      "min": 0.2333361
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "preprocess_seconds": {
+      "max": 6.9724e-05,
+      "median": 2.5609e-05,
+      "min": 2.5042e-05
+    },
+    "reference": {
+      "cumulative_srp_work_j": -62.62841169543034,
+      "final_omega_rad_s": [
+        -0.0013029801784607163,
+        0.0009790433869358497,
+        -0.00033885985028077055
+      ],
+      "final_position_m": [
+        5442932.078308237,
+        -3282801.4473958914,
+        -2342463.9525029627
+      ],
+      "final_quaternion": [
+        -0.7895999020995592,
+        -0.4438155185134231,
+        -0.165512880917905,
+        -0.3900836658734681
+      ],
+      "final_velocity_m_s": [
+        4569.620853201489,
+        4882.656029949069,
+        3757.2906590981065
+      ],
+      "trajectory_checksum": "9cfa422a439ab15c"
+    },
+    "rhs_count": {
+      "max": 131783,
+      "median": 131783,
+      "min": 131783
+    },
+    "underlying_queries": {
+      "max": 13,
+      "median": 13,
+      "min": 13
+    },
+    "wall_seconds": {
+      "max": 0.31246033,
+      "median": 0.263502886,
+      "min": 0.233311058
+    }
+  },
+  "ACCURACY|cached|300": {
+    "checksum": "361f5661604b9688",
+    "correctness": false,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.377193511,
+      "median": 0.324772748,
+      "min": 0.31282261100000003
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "preprocess_seconds": {
+      "max": 0.000152472,
+      "median": 0.000144801,
+      "min": 0.000140327
+    },
+    "reference": {
+      "cumulative_srp_work_j": -67.1027830816068,
+      "final_omega_rad_s": [
+        0.001083491410687097,
+        0.0020987422703044787,
+        -0.000926459475121578
+      ],
+      "final_position_m": [
+        5442930.430729163,
+        -3282805.0041341865,
+        -2342466.792676904
+      ],
+      "final_quaternion": [
+        -0.5784317263131711,
+        -0.7379077974087495,
+        -0.1183992225718482,
+        -0.32694104149236874
+      ],
+      "final_velocity_m_s": [
+        4569.624297226777,
+        4882.653159503154,
+        3757.287881822431
+      ],
+      "trajectory_checksum": "361f5661604b9688"
+    },
+    "rhs_count": {
+      "max": 129919,
+      "median": 129919,
+      "min": 129919
+    },
+    "underlying_queries": {
+      "max": 73,
+      "median": 73,
+      "min": 73
+    },
+    "wall_seconds": {
+      "max": 0.377052872,
+      "median": 0.324632421,
+      "min": 0.312678239
+    }
+  },
+  "ACCURACY|cached|60": {
+    "checksum": "a71515f8bdc59e97",
+    "correctness": false,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.82272282,
+      "median": 0.756812886,
+      "min": 0.729885644
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "preprocess_seconds": {
+      "max": 0.001141714,
+      "median": 0.000731629,
+      "min": 0.000693981
+    },
+    "reference": {
+      "cumulative_srp_work_j": -66.21855117796233,
+      "final_omega_rad_s": [
+        -0.0002905143952012876,
+        0.0012361943405484457,
+        -0.0009216231486503303
+      ],
+      "final_position_m": [
+        5442932.025272001,
+        -3282802.4719853043,
+        -2342464.819794493
+      ],
+      "final_quaternion": [
+        -0.7274042950132366,
+        -0.5629475257071913,
+        -0.1772853723400349,
+        -0.3500613826898118
+      ],
+      "final_velocity_m_s": [
+        4569.623435981062,
+        4882.655738684444,
+        3757.2902161334046
+      ],
+      "trajectory_checksum": "a71515f8bdc59e97"
+    },
+    "rhs_count": {
+      "max": 130037,
+      "median": 130037,
+      "min": 130037
+    },
+    "underlying_queries": {
+      "max": 361,
+      "median": 361,
+      "min": 361
+    },
+    "wall_seconds": {
+      "max": 0.822028839,
+      "median": 0.75608451,
+      "min": 0.72874393
+    }
+  },
+  "ACCURACY|cached|900": {
+    "checksum": "13d1eb3331250f2f",
+    "correctness": false,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.313023543,
+      "median": 0.258294843,
+      "min": 0.24595737499999998
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "preprocess_seconds": {
+      "max": 0.000112831,
+      "median": 8.7168e-05,
+      "min": 4.7892e-05
+    },
+    "reference": {
+      "cumulative_srp_work_j": -60.85204403691512,
+      "final_omega_rad_s": [
+        -0.002002806946949741,
+        0.0008794318235346155,
+        -9.982017292783433e-05
+      ],
+      "final_position_m": [
+        5442932.172575979,
+        -3282800.8005207716,
+        -2342463.419631882
+      ],
+      "final_quaternion": [
+        -0.8233281228232484,
+        -0.35951782791348236,
+        -0.1619872201000454,
+        -0.4082130253984764
+      ],
+      "final_velocity_m_s": [
+        4569.61960188267,
+        4882.656457027043,
+        3757.2910356165744
+      ],
+      "trajectory_checksum": "13d1eb3331250f2f"
+    },
+    "rhs_count": {
+      "max": 129657,
+      "median": 129657,
+      "min": 129657
+    },
+    "underlying_queries": {
+      "max": 25,
+      "median": 25,
+      "min": 25
+    },
+    "wall_seconds": {
+      "max": 0.312975651,
+      "median": 0.258182012,
+      "min": 0.245906254
+    }
+  },
+  "BENCH-01|deterministic|30": {
+    "baseline_speedup": 1.082250374191493,
+    "checksum": "3b2d62a6015939a0",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.034329928,
+      "median": 0.031566057,
+      "min": 0.029498831
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "matches_baseline_reference": true,
+    "preprocess_seconds": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "reference": {
+      "first_acceleration_m_s2": [
+        -8.688428183776967,
+        0,
+        0
+      ],
+      "last_acceleration_m_s2": [
+        -4.2169676243588,
+        6.061463210175992,
+        4.559178364663785
+      ]
+    },
+    "rhs_count": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "underlying_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "wall_seconds": {
+      "max": 0.034329928,
+      "median": 0.031566057,
+      "min": 0.029498831
+    }
+  },
+  "BENCH-02|deterministic|30": {
+    "baseline_speedup": 1.0524502030458125,
+    "checksum": "a983dbcb65740f1a",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.002445788,
+      "median": 0.001995855,
+      "min": 0.001909501
+    },
+    "ephemeris_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "matches_baseline_reference": true,
+    "preprocess_seconds": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "reference": {
+      "cumulative_srp_work_j": 0,
+      "final_omega_rad_s": [
+        0.002170026743505294,
+        -0.00023376322057261123,
+        0.0007775011471138999
+      ],
+      "final_position_m": [
+        5424186.627659021,
+        -3305438.858135616,
+        -2359878.4988936335
+      ],
+      "final_quaternion": [
+        0.05280901522825325,
+        0.776621202772538,
+        -0.0021527542871266664,
+        0.6277468287165917
+      ],
+      "final_velocity_m_s": [
+        4599.974767639982,
+        4863.013506871099,
+        3743.183184717491
+      ],
+      "trajectory_checksum": "a983dbcb65740f1a"
+    },
+    "rhs_count": {
+      "max": 10513,
+      "median": 10513,
+      "min": 10513
+    },
+    "underlying_queries": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "wall_seconds": {
+      "max": 0.002445788,
+      "median": 0.001995855,
+      "min": 0.001909501
+    }
+  },
+  "BENCH-03|cached|1800": {
+    "checksum": "9cfa422a439ab15c",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.059291747,
+      "median": 0.03592206,
+      "min": 0.033699995999999996
+    },
+    "ephemeris_queries": {
+      "max": 44262,
+      "median": 44262,
+      "min": 44262
+    },
+    "preprocess_seconds": {
+      "max": 0.000582672,
+      "median": 0.000196212,
+      "min": 0.000175002
+    },
+    "reference": {
+      "cumulative_srp_work_j": -62.62841169543034,
+      "final_omega_rad_s": [
+        -0.0013029801784607163,
+        0.0009790433869358497,
+        -0.00033885985028077055
+      ],
+      "final_position_m": [
+        5442932.078308237,
+        -3282801.4473958914,
+        -2342463.9525029627
+      ],
+      "final_quaternion": [
+        -0.7895999020995592,
+        -0.4438155185134231,
+        -0.165512880917905,
+        -0.3900836658734681
+      ],
+      "final_velocity_m_s": [
+        4569.620853201489,
+        4882.656029949069,
+        3757.2906590981065
+      ],
+      "trajectory_checksum": "9cfa422a439ab15c"
+    },
+    "rhs_count": {
+      "max": 44262,
+      "median": 44262,
+      "min": 44262
+    },
+    "underlying_queries": {
+      "max": 13,
+      "median": 13,
+      "min": 13
+    },
+    "wall_seconds": {
+      "max": 0.058992242,
+      "median": 0.035747058,
+      "min": 0.03351816
+    }
+  },
+  "BENCH-03|cached|300": {
+    "checksum": "361f5661604b9688",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.039206481999999994,
+      "median": 0.035164834000000006,
+      "min": 0.033833624
+    },
+    "ephemeris_queries": {
+      "max": 43330,
+      "median": 43330,
+      "min": 43330
+    },
+    "preprocess_seconds": {
+      "max": 0.000495089,
+      "median": 0.000330266,
+      "min": 0.000295003
+    },
+    "reference": {
+      "cumulative_srp_work_j": -67.1027830816068,
+      "final_omega_rad_s": [
+        0.001083491410687097,
+        0.0020987422703044787,
+        -0.000926459475121578
+      ],
+      "final_position_m": [
+        5442930.430729163,
+        -3282805.0041341865,
+        -2342466.792676904
+      ],
+      "final_quaternion": [
+        -0.5784317263131711,
+        -0.7379077974087495,
+        -0.1183992225718482,
+        -0.32694104149236874
+      ],
+      "final_velocity_m_s": [
+        4569.624297226777,
+        4882.653159503154,
+        3757.287881822431
+      ],
+      "trajectory_checksum": "361f5661604b9688"
+    },
+    "rhs_count": {
+      "max": 43330,
+      "median": 43330,
+      "min": 43330
+    },
+    "underlying_queries": {
+      "max": 73,
+      "median": 73,
+      "min": 73
+    },
+    "wall_seconds": {
+      "max": 0.038711393,
+      "median": 0.034868172,
+      "min": 0.033532374
+    }
+  },
+  "BENCH-03|cached|60": {
+    "checksum": "a71515f8bdc59e97",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.052532638,
+      "median": 0.035395217,
+      "min": 0.034068856
+    },
+    "ephemeris_queries": {
+      "max": 43389,
+      "median": 43389,
+      "min": 43389
+    },
+    "preprocess_seconds": {
+      "max": 0.00175696,
+      "median": 0.001180442,
+      "min": 0.000967128
+    },
+    "reference": {
+      "cumulative_srp_work_j": -66.21855117796233,
+      "final_omega_rad_s": [
+        -0.0002905143952012876,
+        0.0012361943405484457,
+        -0.0009216231486503303
+      ],
+      "final_position_m": [
+        5442932.025272001,
+        -3282802.4719853043,
+        -2342464.819794493
+      ],
+      "final_quaternion": [
+        -0.7274042950132366,
+        -0.5629475257071913,
+        -0.1772853723400349,
+        -0.3500613826898118
+      ],
+      "final_velocity_m_s": [
+        4569.623435981062,
+        4882.655738684444,
+        3757.2902161334046
+      ],
+      "trajectory_checksum": "a71515f8bdc59e97"
+    },
+    "rhs_count": {
+      "max": 43389,
+      "median": 43389,
+      "min": 43389
+    },
+    "underlying_queries": {
+      "max": 361,
+      "median": 361,
+      "min": 361
+    },
+    "wall_seconds": {
+      "max": 0.050775678,
+      "median": 0.034428089,
+      "min": 0.033036052
+    }
+  },
+  "BENCH-03|cached|900": {
+    "checksum": "13d1eb3331250f2f",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.038789222,
+      "median": 0.033463295000000004,
+      "min": 0.032594733
+    },
+    "ephemeris_queries": {
+      "max": 43199,
+      "median": 43199,
+      "min": 43199
+    },
+    "preprocess_seconds": {
+      "max": 0.000426744,
+      "median": 0.000237237,
+      "min": 0.000202714
+    },
+    "reference": {
+      "cumulative_srp_work_j": -60.85204403691512,
+      "final_omega_rad_s": [
+        -0.002002806946949741,
+        0.0008794318235346155,
+        -9.982017292783433e-05
+      ],
+      "final_position_m": [
+        5442932.172575979,
+        -3282800.8005207716,
+        -2342463.419631882
+      ],
+      "final_quaternion": [
+        -0.8233281228232484,
+        -0.35951782791348236,
+        -0.1619872201000454,
+        -0.4082130253984764
+      ],
+      "final_velocity_m_s": [
+        4569.61960188267,
+        4882.656457027043,
+        3757.2910356165744
+      ],
+      "trajectory_checksum": "13d1eb3331250f2f"
+    },
+    "rhs_count": {
+      "max": 43199,
+      "median": 43199,
+      "min": 43199
+    },
+    "underlying_queries": {
+      "max": 25,
+      "median": 25,
+      "min": 25
+    },
+    "wall_seconds": {
+      "max": 0.038581799,
+      "median": 0.033137312,
+      "min": 0.032357496
+    }
+  },
+  "BENCH-03|deterministic|30": {
+    "baseline_speedup": 1.063952991650912,
+    "checksum": "9ad09eb68da01348",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.034323949,
+      "median": 0.032819872,
+      "min": 0.031785759
+    },
+    "ephemeris_queries": {
+      "max": 42764,
+      "median": 42764,
+      "min": 42764
+    },
+    "matches_baseline_reference": true,
+    "preprocess_seconds": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "reference": {
+      "cumulative_srp_work_j": 12.81936118815846,
+      "final_omega_rad_s": [
+        0.005790407185218005,
+        -0.0005001681376153336,
+        -0.0015662289769687897
+      ],
+      "final_position_m": [
+        5442651.471408673,
+        -3283134.925257786,
+        -2342720.623470282
+      ],
+      "final_quaternion": [
+        -0.6423867534448704,
+        -0.3223609260918266,
+        0.5403278902068726,
+        -0.4375710952432406
+      ],
+      "final_velocity_m_s": [
+        4570.073008747264,
+        4882.359891203515,
+        3757.0799092584452
+      ],
+      "trajectory_checksum": "9ad09eb68da01348"
+    },
+    "rhs_count": {
+      "max": 42764,
+      "median": 42764,
+      "min": 42764
+    },
+    "underlying_queries": {
+      "max": 42764,
+      "median": 42764,
+      "min": 42764
+    },
+    "wall_seconds": {
+      "max": 0.034323949,
+      "median": 0.032819872,
+      "min": 0.031785759
+    }
+  },
+  "BENCH-03|direct|30": {
+    "baseline_speedup": 1.0659277958145117,
+    "checksum": "115aba91a1c1e9a5",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.142983798,
+      "median": 0.125796364,
+      "min": 0.12442269
+    },
+    "ephemeris_queries": {
+      "max": 43259,
+      "median": 43259,
+      "min": 43259
+    },
+    "matches_baseline_reference": true,
+    "preprocess_seconds": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "reference": {
+      "cumulative_srp_work_j": -67.2672879971009,
+      "final_omega_rad_s": [
+        0.0010496951377835986,
+        0.00206158883155308,
+        -0.0009273721073393294
+      ],
+      "final_position_m": [
+        5442930.480225146,
+        -3282804.926697676,
+        -2342466.737592934
+      ],
+      "final_quaternion": [
+        -0.5822729265932693,
+        -0.733669940753343,
+        -0.11959252535522827,
+        -0.3292176861449795
+      ],
+      "final_velocity_m_s": [
+        4569.624232682139,
+        4882.6532425502755,
+        3757.2879415446228
+      ],
+      "trajectory_checksum": "115aba91a1c1e9a5"
+    },
+    "rhs_count": {
+      "max": 43259,
+      "median": 43259,
+      "min": 43259
+    },
+    "underlying_queries": {
+      "max": 43259,
+      "median": 43259,
+      "min": 43259
+    },
+    "wall_seconds": {
+      "max": 0.142983798,
+      "median": 0.125796364,
+      "min": 0.12442269
+    }
+  },
+  "QUERY|cached|1800": {
+    "checksum": "2f0282d37e918d75",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.003648244,
+      "median": 0.003550939,
+      "min": 0.003390554
+    },
+    "ephemeris_queries": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "preprocess_seconds": {
+      "max": 0.000186255,
+      "median": 0.000183875,
+      "min": 0.000181836
+    },
+    "reference": {
+      "first_position_m": [
+        26499033735.807716,
+        -132757417362.72394,
+        -57556718390.23011
+      ],
+      "last_position_m": [
+        27116873210.15414,
+        -132652124122.31299,
+        -57511072936.61616
+      ]
+    },
+    "rhs_count": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "underlying_queries": {
+      "max": 13,
+      "median": 13,
+      "min": 13
+    },
+    "wall_seconds": {
+      "max": 0.003461989,
+      "median": 0.003366946,
+      "min": 0.003208546
+    }
+  },
+  "QUERY|cached|300": {
+    "checksum": "3de523c1c5ac4158",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.004740898,
+      "median": 0.0037676999999999997,
+      "min": 0.003404047
+    },
+    "ephemeris_queries": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "preprocess_seconds": {
+      "max": 0.000572088,
+      "median": 0.000331925,
+      "min": 0.000301912
+    },
+    "reference": {
+      "first_position_m": [
+        26499033735.807716,
+        -132757417362.72394,
+        -57556718390.23011
+      ],
+      "last_position_m": [
+        27116873210.154137,
+        -132652124122.313,
+        -57511072936.61615
+      ]
+    },
+    "rhs_count": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "underlying_queries": {
+      "max": 73,
+      "median": 73,
+      "min": 73
+    },
+    "wall_seconds": {
+      "max": 0.004289564,
+      "median": 0.003419306,
+      "min": 0.003098838
+    }
+  },
+  "QUERY|cached|60": {
+    "checksum": "95848df44b45923",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.004457533,
+      "median": 0.004249162,
+      "min": 0.004101464
+    },
+    "ephemeris_queries": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "preprocess_seconds": {
+      "max": 0.001214103,
+      "median": 0.000943679,
+      "min": 0.000905315
+    },
+    "reference": {
+      "first_position_m": [
+        26499033735.807716,
+        -132757417362.72394,
+        -57556718390.23011
+      ],
+      "last_position_m": [
+        27116873210.15414,
+        -132652124122.313,
+        -57511072936.61616
+      ]
+    },
+    "rhs_count": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "underlying_queries": {
+      "max": 361,
+      "median": 361,
+      "min": 361
+    },
+    "wall_seconds": {
+      "max": 0.003513854,
+      "median": 0.003314735,
+      "min": 0.003124118
+    }
+  },
+  "QUERY|cached|900": {
+    "checksum": "4e9d8f0d1f32a1fe",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.003728772,
+      "median": 0.0034705029999999998,
+      "min": 0.003393547
+    },
+    "ephemeris_queries": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "preprocess_seconds": {
+      "max": 0.000276878,
+      "median": 0.000213732,
+      "min": 0.000207155
+    },
+    "reference": {
+      "first_position_m": [
+        26499033735.807716,
+        -132757417362.72394,
+        -57556718390.23011
+      ],
+      "last_position_m": [
+        27116873210.154137,
+        -132652124122.313,
+        -57511072936.61615
+      ]
+    },
+    "rhs_count": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "underlying_queries": {
+      "max": 25,
+      "median": 25,
+      "min": 25
+    },
+    "wall_seconds": {
+      "max": 0.003509467,
+      "median": 0.003253156,
+      "min": 0.003175546
+    }
+  },
+  "QUERY|direct|30": {
+    "baseline_speedup": 1.033190316171072,
+    "checksum": "ba8888b15d792afb",
+    "correctness": true,
+    "deterministic": true,
+    "end_to_end_seconds": {
+      "max": 0.521953121,
+      "median": 0.437820415,
+      "min": 0.423695664
+    },
+    "ephemeris_queries": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "matches_baseline_reference": true,
+    "preprocess_seconds": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "reference": {
+      "first_position_m": [
+        26499033735.807716,
+        -132757417362.72394,
+        -57556718390.23011
+      ],
+      "last_position_m": [
+        27116873210.15414,
+        -132652124122.313,
+        -57511072936.61616
+      ]
+    },
+    "rhs_count": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "underlying_queries": {
+      "max": 200000,
+      "median": 200000,
+      "min": 200000
+    },
+    "wall_seconds": {
+      "max": 0.521953121,
+      "median": 0.437820415,
+      "min": 0.423695664
+    }
+  }
+}

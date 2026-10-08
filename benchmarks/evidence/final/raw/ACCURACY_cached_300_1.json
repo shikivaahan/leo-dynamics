@@ -1,0 +1,176 @@
+{
+  "accuracy": {
+    "deterministic": true,
+    "passed": false
+  },
+  "benchmark_id": "ACCURACY",
+  "cached_rhs_count": 43330,
+  "cached_wall_seconds": 0.032419741,
+  "checksum": "361f5661604b9688",
+  "correctness": false,
+  "direct_rhs_count": 43259,
+  "direct_wall_seconds": 0.128073387,
+  "duration_s": 21600,
+  "ephemeris_30d": {
+    "boundaries": true,
+    "build_seconds": 0.027118712,
+    "deterministic": true,
+    "memory_bytes": 483952,
+    "node_position_m": {
+      "count": 8641,
+      "max": 0,
+      "rms": 0
+    },
+    "node_velocity_m_s": {
+      "count": 8641,
+      "max": 0,
+      "rms": 0
+    },
+    "nodes": 8641,
+    "passed": true,
+    "position_m": {
+      "count": 25920,
+      "max": 5.709316080892854e-05,
+      "rms": 1.6292758944999815e-05
+    },
+    "underlying_queries": 8641,
+    "velocity_m_s": {
+      "count": 25920,
+      "max": 2.356099622904494e-07,
+      "rms": 6.988231486453366e-08
+    }
+  },
+  "ephemeris_6h": {
+    "boundaries": true,
+    "build_seconds": 0.000333587,
+    "deterministic": true,
+    "memory_bytes": 4144,
+    "node_position_m": {
+      "count": 73,
+      "max": 0,
+      "rms": 0
+    },
+    "node_velocity_m_s": {
+      "count": 73,
+      "max": 0,
+      "rms": 0
+    },
+    "nodes": 73,
+    "passed": true,
+    "position_m": {
+      "count": 216,
+      "max": 3.411968959808029e-05,
+      "rms": 1.4128596694105204e-05
+    },
+    "underlying_queries": 73,
+    "velocity_m_s": {
+      "count": 216,
+      "max": 1.5873354646795044e-07,
+      "rms": 6.59449152864972e-08
+    }
+  },
+  "ephemeris_queries": 0,
+  "final_attitude_rad": 0.012541365137594072,
+  "final_omega_rad_s": 5.0233444743383456e-05,
+  "final_position_m": 0.10714713803471898,
+  "final_velocity_m_s": 0.00012095277978108178,
+  "illumination": {
+    "count": 6724,
+    "max": 1.1998278814928653e-08,
+    "rms": 3.0188629390725126e-10
+  },
+  "interval_s": 300,
+  "mode": "cached",
+  "nonmultiple_boundary": {
+    "boundaries": true,
+    "build_seconds": 0.000195336,
+    "deterministic": true,
+    "memory_bytes": 4200,
+    "node_position_m": {
+      "count": 74,
+      "max": 0,
+      "rms": 0
+    },
+    "node_velocity_m_s": {
+      "count": 74,
+      "max": 0,
+      "rms": 0
+    },
+    "nodes": 74,
+    "passed": true,
+    "position_m": {
+      "count": 219,
+      "max": 3.411968959808029e-05,
+      "rms": 1.4078767835740683e-05
+    },
+    "underlying_queries": 74,
+    "velocity_m_s": {
+      "count": 219,
+      "max": 1.0758682789749238e-06,
+      "rms": 1.2458147765176144e-07
+    }
+  },
+  "penumbra_points": 2367,
+  "preprocess_seconds": 0.000140065,
+  "reference": {
+    "cumulative_srp_work_j": -67.1027830816068,
+    "final_omega_rad_s": [
+      0.001083491410687097,
+      0.0020987422703044787,
+      -0.000926459475121578
+    ],
+    "final_position_m": [
+      5442930.430729163,
+      -3282805.0041341865,
+      -2342466.792676904
+    ],
+    "final_quaternion": [
+      -0.5784317263131711,
+      -0.7379077974087495,
+      -0.1183992225718482,
+      -0.32694104149236874
+    ],
+    "final_velocity_m_s": [
+      4569.624297226777,
+      4882.653159503154,
+      3757.287881822431
+    ],
+    "trajectory_checksum": "361f5661604b9688"
+  },
+  "rhs_count": 129919,
+  "srp_force_n": {
+    "count": 6724,
+    "max": 1.8597577366703266e-13,
+    "rms": 4.677953015167418e-15
+  },
+  "srp_torque_nm": {
+    "count": 6724,
+    "max": 6.17172362390959e-15,
+    "rms": 1.5499329643491738e-16
+  },
+  "srp_work_cached_j": -67.1027830816068,
+  "srp_work_difference_j": 0.16450491549409207,
+  "srp_work_direct_j": -67.2672879971009,
+  "trajectory_attitude_rad": {
+    "count": 721,
+    "max": 0.02594114203407706,
+    "rms": 0.00450176362697826
+  },
+  "trajectory_omega_rad_s": {
+    "count": 721,
+    "max": 0.0001100988563249787,
+    "rms": 1.6440269045315393e-05
+  },
+  "trajectory_position_m": {
+    "count": 721,
+    "max": 0.10714713803471898,
+    "rms": 0.025633879002466307
+  },
+  "trajectory_velocity_m_s": {
+    "count": 721,
+    "max": 0.00012095277978108178,
+    "rms": 2.883279465734741e-05
+  },
+  "underlying_queries": 73,
+  "wall_seconds": 0.376454419
+}

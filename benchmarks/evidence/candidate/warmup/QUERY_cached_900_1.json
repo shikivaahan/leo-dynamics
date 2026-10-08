@@ -1,0 +1,30 @@
+{
+  "benchmark_id": "QUERY",
+  "cache_memory_bytes": 1456,
+  "cache_sample_count": 25,
+  "checksum": "4e9d8f0d1f32a1fe",
+  "construction_queries": 25,
+  "correctness": true,
+  "duration_s": 21600,
+  "ephemeris_queries": 200000,
+  "interval_s": 900,
+  "mode": "cached",
+  "nanoseconds_per_query": 15.766045,
+  "preprocess_seconds": 0.000210191,
+  "queries_per_second": 63427448.037856035,
+  "reference": {
+    "first_position_m": [
+      26499033735.807716,
+      -132757417362.72394,
+      -57556718390.23011
+    ],
+    "last_position_m": [
+      27116873210.154137,
+      -132652124122.313,
+      -57511072936.61615
+    ]
+  },
+  "rhs_count": 0,
+  "underlying_queries": 25,
+  "wall_seconds": 0.003153209
+}
