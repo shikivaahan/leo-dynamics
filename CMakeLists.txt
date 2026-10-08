@@ -70,7 +70,7 @@ if(BUILD_TESTING)
   find_package(Catch2 3 REQUIRED)
   add_executable(leo_kernel_tests
     tests/frames_tests.cpp tests/attitude_tests.cpp tests/gravity_tests.cpp tests/orbital_tests.cpp
-    tests/environment_tests.cpp tests/radiation_tests.cpp tests/aerodynamics_tests.cpp)
+    tests/environment_tests.cpp tests/interpolated_tests.cpp tests/radiation_tests.cpp tests/aerodynamics_tests.cpp)
   target_link_libraries(leo_kernel_tests PRIVATE leo::kernel Catch2::Catch2WithMain)
   include(Catch)
   catch_discover_tests(leo_kernel_tests)
