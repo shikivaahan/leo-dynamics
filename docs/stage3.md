@@ -123,6 +123,11 @@ silent zip/truncation. Sample tables share exact `time_s` values. Long-format
 surfaces contain one row per surface per sample. Header-only apsides/per-orbit/
 surfaces files are valid when there are no events/intervals/surfaces.
 
+Specific SRP work is J/kg: the C++ fields are `specific_work_j_kg` and both
+work CSV tables use `specific_srp_work_j_kg`. Numerical values are unchanged.
+Re-export older Stage 3 datasets to obtain the corrected headers; no legacy
+column alias is retained.
+
 | File | Columns / conventions |
 |---|---|
 | `metadata.csv` | `key,value`: schema_version, initial_epoch_et_seconds, epoch_scale=TDB_seconds_past_J2000, elapsed_time_unit=s, inertial_frame=J2000, quaternion_convention, orbital_elements=osculating_two_body_not_mean, earth_mu_m3_s2, earth_equatorial_radius_m, earth_j2, j2_enabled, surface_count, mass_kg, independent force/torque enable flags, gravity_gradient_enabled, drag_model |
@@ -131,8 +136,8 @@ surfaces files are valid when there are no events/intervals/surfaces.
 | `attitude.csv` | time_s,angular_speed_rad_s,rotational_energy_j,inertial_momentum_kg_m2_s,torque_x_nm,torque_y_nm,torque_z_nm,torque_magnitude_nm,relative_yaw_rad,relative_pitch_rad,relative_roll_rad,euler_singular |
 | `surfaces.csv` | time_s,surface_index,normal_x,normal_y,normal_z,sun_incidence_rad,projected_illuminated_area_m2,projected_aerodynamic_area_m2,orbit_normal_angle_rad |
 | `environment.csv` | time_s,illumination,density_kg_m3; x/y/z triples for point_mass and j2 (`_m_s2`), srp_force/drag_force/albedo_force/total_non_gravitational_force (`_n`), srp_torque/drag_torque/albedo_torque/gravity_gradient_torque/total_torque (`_nm`), total_acceleration (`_m_s2`), total_angular_acceleration (`_rad_s2`); drag_model. Example: srp_force_x_n. Triples appear in the order listed; drag_model last. |
-| `work.csv` | time_s,srp_power_w,cumulative_srp_work_j,specific_srp_work_j,orbital_energy_change_j,specific_energy_change_j_kg,energy_minus_srp_work_j; srp_force_r_n,srp_force_t_n,srp_force_n_n; srp_power_r_w,srp_power_t_w,srp_power_n_w; cumulative_work_r_j,cumulative_work_t_j,cumulative_work_n_j; sun_inbound_transverse_work_j,sun_outbound_transverse_work_j |
-| `per_orbit.csv` | orbit_index,start_time_s,end_time_s,complete,period_s,start_a_m,start_e,start_i_rad,start_raan_unwrapped_rad,end_raan_unwrapped_rad,delta_a_m,delta_e,delta_i_rad,delta_raan_rad,delta_arg_periapsis_rad,delta_true_anomaly_rad,srp_work_j,specific_srp_work_j,srp_work_r_j,srp_work_t_j,srp_work_n_j,orbital_energy_change_j,energy_minus_srp_work_j |
+| `work.csv` | time_s,srp_power_w,cumulative_srp_work_j,specific_srp_work_j_kg,orbital_energy_change_j,specific_energy_change_j_kg,energy_minus_srp_work_j; srp_force_r_n,srp_force_t_n,srp_force_n_n; srp_power_r_w,srp_power_t_w,srp_power_n_w; cumulative_work_r_j,cumulative_work_t_j,cumulative_work_n_j; sun_inbound_transverse_work_j,sun_outbound_transverse_work_j |
+| `per_orbit.csv` | orbit_index,start_time_s,end_time_s,complete,period_s,start_a_m,start_e,start_i_rad,start_raan_unwrapped_rad,end_raan_unwrapped_rad,delta_a_m,delta_e,delta_i_rad,delta_raan_rad,delta_arg_periapsis_rad,delta_true_anomaly_rad,srp_work_j,specific_srp_work_j_kg,srp_work_r_j,srp_work_t_j,srp_work_n_j,orbital_energy_change_j,energy_minus_srp_work_j |
 | `apsides.csv` | time_s,kind,radius_m,left_index,fraction; kind=0 periapsis,1 apoapsis; bracket indices zero-based |
 
 Disabled model contributions are exactly zero, never omitted columns. Drag
@@ -197,7 +202,7 @@ or required by CMake unless that optional test is requested.
 
 ## Plot inventory and supplied datasets
 
-The default command produces 26 PNG figures (52 files with `--format both`) for
+The default command produces 27 PNG figures (54 files with `--format both`) for
 a trajectory containing surfaces and orbit intervals. Names are stable stems:
 `orbit_3d`, `altitude_vs_time`, `orbital_elements`, `orbital_angles_unwrapped`,
 `apsides_evolution`, `per_orbit_elements`, `attitude_quaternion`,
@@ -205,13 +210,36 @@ a trajectory containing surfaces and orbit intervals. Names are stable stems:
 `surface_incidence`, `surface_projected_area`, `environment_force_contributions`,
 `environment_torque_contributions`, `gravity_acceleration`,
 `environment_total_acceleration`, `environment_drag`,
-`environment_illumination_density`, `srp_force`, `srp_power`, `srp_force_rtn`,
+`environment_illumination_density`, `srp_force`, `srp_acceleration`, `srp_power`, `srp_force_rtn`,
 `srp_cumulative_work`, `orbital_energy`, `orbital_energy_vs_srp_work`, `srp_transverse_work`,
 `srp_work_per_orbit`. With no surfaces/intervals only applicable figures are
 produced; explicitly selecting an unavailable figure errors. Use repeated
 `--only NAME` options to select figures. Gravity accelerations and environmental
 forces have separate plots/units; torque plots are body frame. No plotting path
 calls physical models or silently thins data.
+
+`srp_acceleration` plots `norm(SRP force)/mass_kg` in m/s², using the existing
+J2000 force columns and the spacecraft mass in `metadata.csv`. Missing,
+nonfinite or nonpositive mass is an actionable error, not an assumed default.
+Disabled SRP contributes zero acceleration; no SRP law is re-evaluated.
+
+For a selected orbit's inbound/outbound/net transverse work:
+
+```sh
+.venv/bin/python plotting/plot_analysis.py /tmp/leo-analysis \
+  --output /tmp/leo-analysis/orbit-1 --only srp_transverse_work --orbit 1 --format both
+```
+
+`--orbit INDEX` matches the zero-based `orbit_index` in `per_orbit.csv`, including
+flagged partial boundary intervals. Only the transverse-work plot is restricted;
+other requested plots retain the complete trajectory. Missing/negative/ambiguous
+indices error; there is no fallback to another orbit. The selected plot uses
+time relative to the exported interval start and resets each exported cumulative
+history to zero there. It includes all interior samples plus the two exact
+boundary times, linearly interpolating cumulative values between samples.
+This is display interpolation, not a new work integration or physics evaluation:
+fractional-boundary display totals may differ from the exact piecewise-linear
+power integral in `per_orbit.csv`. Partial intervals are identified in the title.
 
 `compare DIR1 DIR2 ... --output DIR --format both` overlays supplied runs for
 altitude, a, e, i, unwrapped RAAN/argp, SRP power/work and transverse work. This
@@ -257,23 +285,33 @@ energy or scalar experiment data. No thermal/optimisation model is ported.
 
 ## Julia reconnaissance and feature mapping
 
-This checkout has `src/Plotting.jl`, `Propagator.jl`, `SolarSailPropagator.jl`,
-`OrbitState.jl`, `examples/*.jl`, root `test.jl`, and `legacy/` analyses.
-`Analysis.jl`, `EnsembleIO.jl` and the advertised experiments directories are
-absent; the nested `Project-Svarog-Orbital/` directory is empty. Useful analysis
-is embedded in plotting functions/root scripts; export is in the propagator.
+The original Julia repository's `main` contains both
+[`src/Analysis.jl`](https://github.com/ImperialSpaceSociety/Project-Svarog-Orbital/blob/main/src/Analysis.jl)
+and [`src/EnsembleIO.jl`](https://github.com/ImperialSpaceSociety/Project-Svarog-Orbital/blob/main/src/EnsembleIO.jl).
+Their functionality was verified from upstream commit
+`58ab4d4964f9c20b7070efae48f8916e8a99784e`. The earlier inventory incorrectly
+generalized from the local `ian_gpu_acceleration_attempt` checkout, where those
+modules are absent. On `main`, plotting delegates reusable SRP work analysis to
+`Analysis`; `EnsembleIO` provides JLD2 naming/saving and ensemble memory planning.
 No Julia runtime is required for C++ or Python validation.
 
 | Julia functionality | C++ analysis / Python equivalent |
 |---|---|
+| `Analysis.find_periapsis_indices` | `detect_apsides` and `per_orbit`, including sampled radial-velocity interpolation and explicit circular segmentation rather than fixed anomaly-wrap/period thresholds |
+| `Analysis.srp_work_components_per_orbit` | `srp_work` RTN power/integrals and `work_per_orbit`; the `srp_work_per_orbit` plot displays radial, transverse and normal work without re-evaluating SRP |
+| `Analysis.srp_transverse_work_over_orbit` | `srp_work` exports inbound/outbound transverse cumulative histories; `--orbit INDEX` uses `per_orbit.csv` boundaries to display a selected interval relative to its start, without re-evaluating SRP |
+| `EnsembleIO.trajectory_filename`, `trajectory_output_file` | The mission-specific one-decimal RAAN/pitch JLD2 naming convention is replaced by caller-selected export directories and supplied sweep manifests |
+| `EnsembleIO.save_trajectory!` | `export_csv` records trajectory and diagnostics in transparent CSV, not JLD2 |
+| `EnsembleIO.estimate_output_steps`, `estimate_traj_storage_bytes`, `recommend_chunk_size` | Deliberately not ported: ensemble output-size/memory budgeting and chunk selection are outside Stage 3 |
+| Main `plot_srp_transverse_work_per_orbit`, `plot_srp_radial_work_per_orbit`, `plot_srp_normal_work_per_orbit` | RTN curves in `srp_work_per_orbit`; Julia's optional `Wmax` filtering is not copied, so no exported orbit rows are silently discarded |
 | `rv2coe` in `OrbitState.jl`; embedded elements in `plot_orbital_elements` | Stage 1 conversion reused by `orbital_history`; `orbital_elements` + unwrapped plots |
 | `plot_orbit_3d`, `plot_altitude` | `trajectory.csv`, `orbital_history`; `orbit_3d`, `altitude_vs_time` |
 | `_peri_plot`, `find_periapsis_indices`, inclination/RAAN at periapsis | `detect_apsides`, `per_orbit`; `apsides_evolution`, `per_orbit_elements` |
 | `plot_attitude` quaternion-relative yaw/pitch/roll and body rates | `attitude_history`; quaternion/rates/relative ZYX Euler plots |
 | `plot_sail_plane_angle` | Per-surface `orbit_normal_angle_rad`; `surface_incidence` |
 | `plot_force_contributions`, `plot_torque_contributions` | Shared `EarthDynamics::evaluate`, `environmental_history`; distinct force/gravity/torque plots |
-| `plot_srp_contribution` | Selected SRP force and acceleration; `srp_force` and RTN plot |
-| `plot_srp_transverse_work` (one-orbit inbound/outbound classification) | Full `srp_work` transverse histories/classification, exact `work_per_orbit`; transverse work plot. Per-orbit rows identify intervals for downstream selection rather than silently falling back to another orbit. |
+| `plot_srp_contribution` | Selected Stage 2 SRP force diagnostics; `srp_acceleration` displays force magnitude divided by metadata mass, and `srp_force`/RTN plots retain force units |
+| `plot_srp_transverse_work` (one-orbit inbound/outbound classification) | `srp_work`, exact `work_per_orbit`, and the `srp_transverse_work --orbit INDEX` display; no silent fallback to another orbit |
 | `plot_srp_net_work_per_orbit` | `work_per_orbit`; total and RTN per-orbit work plot |
 | Root `test.jl` max delta-a/time-to-maximum RAAN or LTAN/pitch maps | `reduce` supplied manifest, `heatmap` numeric summary |
 | `examples/on_off.jl`, `earth_orbit*.jl`, `visualisation.jl` | General `compare` supplied runs and deterministic/caller-SPICE example |
@@ -284,6 +322,15 @@ No Julia runtime is required for C++ or Python validation.
 | Legacy sensitivity/genetic optimisation plots | Already-computed numeric series supported; generation, sensitivities, fitness optimisation and mission controls are Stage 4/out of scope |
 
 ## Correctness issues in the Julia analysis
+
+The line references below describe the earlier `ian_gpu_acceleration_attempt`
+checkout, not the refactored `main`. On verified `main`,
+`Analysis.srp_transverse_work_over_orbit` correctly classifies Sun-outward
+velocity as outbound. It still pads the last interval and silently falls back
+to the first full orbit; `srp_work_components_per_orbit` uses mean sample spacing
+instead of each interval's actual duration. C++ work integration uses actual
+timestamps and the plotting layer does not re-evaluate SRP.
+
 
 - `Plotting.jl:277` pads the last `dt` and integrates through the final point,
   adding a non-existent interval. `:346` uses a fixed 100-second multiplier
@@ -316,9 +363,12 @@ invariance at Euler lock, zero/eclipsed SRP, irregular constant-force work,
 fractional-boundary cancellation, RTN power/work sums and energy-work balance.
 CSV tests check precision, values, ordering, complete row counts, deterministic
 bytes, missing surface diagnostics and malformed data/paths. Plot smoke fixtures
-exercise all 26 PNG/SVG outputs headlessly, circular/no-surface/single-sample
+exercise all 27 PNG/SVG outputs headlessly, circular/no-surface/single-sample
 exports, malformed/truncated tables, surface completeness, manifest reduction,
 first-maximum timestamps, LTAN, holes/duplicates/log-scale errors and comparisons.
+Focused cleanup regressions cover exported J/kg values, selected-orbit rebasing
+and fractional boundary interpolation, partial intervals, invalid orbit IDs,
+vector acceleration magnitude and positive finite metadata mass.
 
 CI retains GCC, Clang and ASan/UBSan, all previous tests, kernel-only builds and
 real CSPICE tests, adding Python fixtures and both end-to-end plotting paths.

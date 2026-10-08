@@ -37,7 +37,7 @@ struct WorkSample {
     double time_s;
     InertialVector srp_force_n,srp_acceleration_m_s2;
     RtnVector force_rtn_n,power_rtn_w,cumulative_work_rtn_j;
-    double power_w,cumulative_work_j,specific_work_j,orbital_energy_change_j,specific_energy_change_j_kg,energy_minus_srp_work_j;
+    double power_w,cumulative_work_j,specific_work_j_kg,orbital_energy_change_j,specific_energy_change_j_kg,energy_minus_srp_work_j;
     double sun_inbound_transverse_work_j,sun_outbound_transverse_work_j;
     double mass_kg; // Carries the force/work versus specific-work scale at fractional boundaries.
 };
@@ -46,7 +46,7 @@ struct OrbitWork {
     std::size_t index;
     double start_time_s,end_time_s;
     bool complete;
-    double work_j,specific_work_j;
+    double work_j,specific_work_j_kg;
     RtnVector work_rtn_j;
     double orbital_energy_change_j,energy_minus_srp_work_j;
 };

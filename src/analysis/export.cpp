@@ -111,15 +111,15 @@ void emit(std::size_t file,std::ostream* stream,const Trajectory& t,const Analys
             c.vector(d.total_angular_acceleration_rad_s2);c.value(static_cast<int>(a.models.drag_model));c.end();
         } break;
     case 6:
-        c.header("time_s,srp_power_w,cumulative_srp_work_j,specific_srp_work_j,orbital_energy_change_j,specific_energy_change_j_kg,energy_minus_srp_work_j,srp_force_r_n,srp_force_t_n,srp_force_n_n,srp_power_r_w,srp_power_t_w,srp_power_n_w,cumulative_work_r_j,cumulative_work_t_j,cumulative_work_n_j,sun_inbound_transverse_work_j,sun_outbound_transverse_work_j");
+        c.header("time_s,srp_power_w,cumulative_srp_work_j,specific_srp_work_j_kg,orbital_energy_change_j,specific_energy_change_j_kg,energy_minus_srp_work_j,srp_force_r_n,srp_force_t_n,srp_force_n_n,srp_power_r_w,srp_power_t_w,srp_power_n_w,cumulative_work_r_j,cumulative_work_t_j,cumulative_work_n_j,sun_inbound_transverse_work_j,sun_outbound_transverse_work_j");
         for(const auto& s:a.work) {
-            c.value(s.time_s);c.value(s.power_w);c.value(s.cumulative_work_j);c.value(s.specific_work_j);
+            c.value(s.time_s);c.value(s.power_w);c.value(s.cumulative_work_j);c.value(s.specific_work_j_kg);
             c.value(s.orbital_energy_change_j);c.value(s.specific_energy_change_j_kg);c.value(s.energy_minus_srp_work_j);
             c.vector(s.force_rtn_n);c.vector(s.power_rtn_w);c.vector(s.cumulative_work_rtn_j);
             c.value(s.sun_inbound_transverse_work_j);c.value(s.sun_outbound_transverse_work_j);c.end();
         } break;
     case 7:
-        c.header("orbit_index,start_time_s,end_time_s,complete,period_s,start_a_m,start_e,start_i_rad,start_raan_unwrapped_rad,end_raan_unwrapped_rad,delta_a_m,delta_e,delta_i_rad,delta_raan_rad,delta_arg_periapsis_rad,delta_true_anomaly_rad,srp_work_j,specific_srp_work_j,srp_work_r_j,srp_work_t_j,srp_work_n_j,orbital_energy_change_j,energy_minus_srp_work_j");
+        c.header("orbit_index,start_time_s,end_time_s,complete,period_s,start_a_m,start_e,start_i_rad,start_raan_unwrapped_rad,end_raan_unwrapped_rad,delta_a_m,delta_e,delta_i_rad,delta_raan_rad,delta_arg_periapsis_rad,delta_true_anomaly_rad,srp_work_j,specific_srp_work_j_kg,srp_work_r_j,srp_work_t_j,srp_work_n_j,orbital_energy_change_j,energy_minus_srp_work_j");
         for(std::size_t i=0;i<a.orbits.size();++i) {
             const auto& s=a.orbits[i];const auto& w=a.orbit_work[i];
             c.value(s.index);c.value(s.start_time_s);c.value(s.end_time_s);c.value(s.complete);c.value(s.period_s);
@@ -127,7 +127,7 @@ void emit(std::size_t file,std::ostream* stream,const Trajectory& t,const Analys
             c.value(s.raan_start_unwrapped_rad);c.value(s.raan_end_unwrapped_rad);
             c.value(s.delta_elements.a_m);c.value(s.delta_elements.e);c.value(s.delta_elements.i_rad);
             c.value(s.delta_elements.raan_rad);c.value(s.delta_elements.arg_periapsis_rad);c.value(s.delta_elements.true_anomaly_rad);
-            c.value(w.work_j);c.value(w.specific_work_j);c.vector(w.work_rtn_j);c.value(w.orbital_energy_change_j);c.value(w.energy_minus_srp_work_j);c.end();
+            c.value(w.work_j);c.value(w.specific_work_j_kg);c.vector(w.work_rtn_j);c.value(w.orbital_energy_change_j);c.value(w.energy_minus_srp_work_j);c.end();
         } break;
     case 8:
         c.header("time_s,kind,radius_m,left_index,fraction");

@@ -103,7 +103,7 @@ TEST_CASE("SRP work integrates constant force using actual irregular timestamps"
     for(const auto& row:work) {
         REQUIRE(row.power_w==Approx(30+3*row.time_s));
         REQUIRE(row.cumulative_work_j==Approx(30*row.time_s+1.5*row.time_s*row.time_s));
-        REQUIRE(row.specific_work_j==Approx(row.cumulative_work_j/2));
+        REQUIRE(row.specific_work_j_kg==Approx(row.cumulative_work_j/2));
         REQUIRE(row.srp_acceleration_m_s2.y()==Approx(1.5));
         REQUIRE(row.power_rtn_w.x()+row.power_rtn_w.y()+row.power_rtn_w.z()==Approx(row.power_w).epsilon(1e-14));
         REQUIRE(row.cumulative_work_rtn_j.x()+row.cumulative_work_rtn_j.y()+row.cumulative_work_rtn_j.z()==Approx(row.cumulative_work_j).margin(1e-12));
@@ -112,7 +112,7 @@ TEST_CASE("SRP work integrates constant force using actual irregular timestamps"
     const auto intervals=work_per_orbit(orbits,work);
     const auto analytic=[](double t){return 30*t+1.5*t*t;};
     REQUIRE(intervals[0].work_j==Approx(analytic(2)-analytic(.5)));
-    REQUIRE(intervals[1].specific_work_j==Approx((analytic(3.5)-analytic(2))/2));
+    REQUIRE(intervals[1].specific_work_j_kg==Approx((analytic(3.5)-analytic(2))/2));
     REQUIRE(intervals[0].work_j+intervals[1].work_j==Approx(analytic(3.5)-analytic(.5)));
     const auto zero=srp_work(trajectory,Earth{},2,force_data(trajectory,{}));
     for(const auto& row:zero) {REQUIRE(row.power_w==0);REQUIRE(row.cumulative_work_j==0);}
@@ -124,7 +124,7 @@ TEST_CASE("Fractional work remains correct when endpoint work cancels", "[analys
     REQUIRE(work.back().cumulative_work_j==0);
     const std::array<OrbitSummary,1> orbits{{{0,0,1,false,0,{},{},{},0,0}}};
     const auto result=work_per_orbit(orbits,work);
-    REQUIRE(result[0].work_j==Approx(3750));REQUIRE(result[0].specific_work_j==Approx(375));
+    REQUIRE(result[0].work_j==Approx(3750));REQUIRE(result[0].specific_work_j_kg==Approx(375));
 }
 TEST_CASE("Umbra gives zero solar power and RTN rejects degenerate orbits", "[analysis][work]") {
     Trajectory trajectory{{0},{{{0},orbit_state()},{{1},orbit_state()}}};

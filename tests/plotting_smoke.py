@@ -27,7 +27,7 @@ def fixture(directory, surfaces=2, power=.001):
     directory = Path(directory); directory.mkdir()
     write_table(directory / "metadata.csv", ["key", "value"],
                 [("schema_version", 1), ("earth_equatorial_radius_m", 6378136.3),
-                 ("initial_epoch_et_seconds", 0), ("surface_count", surfaces)])
+                 ("initial_epoch_et_seconds", 0), ("surface_count", surfaces), ("mass_kg", 10)])
     times = [i * 100. for i in range(101)]
     rows = {name: [] for name in plot.SCHEMAS}
     radius = 7e6; mu = 3.986004418e14; rate = math.sqrt(mu / radius**3)
@@ -59,7 +59,7 @@ def fixture(directory, surfaces=2, power=.001):
                            point_mass_x_m_s2=-mu/radius**2)
             elif name == "work":
                 row.update(srp_power_w=power, cumulative_srp_work_j=power*t,
-                           specific_srp_work_j=power*t/10, orbital_energy_change_j=power*t,
+                           specific_srp_work_j_kg=power*t/10, orbital_energy_change_j=power*t,
                            specific_energy_change_j_kg=power*t/10, srp_force_t_n=power/speed,
                            srp_power_t_w=power, cumulative_work_t_j=power*t,
                            sun_inbound_transverse_work_j=power*t/2,
@@ -75,7 +75,7 @@ def fixture(directory, surfaces=2, power=.001):
                    period_s=end-start if complete else 0,start_a_m=radius,start_e=0,start_i_rad=0,
                    start_raan_unwrapped_rad=-start*1e-7,end_raan_unwrapped_rad=-end*1e-7,
                    delta_raan_rad=-(end-start)*1e-7,srp_work_j=power*(end-start),
-                   specific_srp_work_j=power*(end-start)/10,srp_work_t_j=power*(end-start),
+                   specific_srp_work_j_kg=power*(end-start)/10,srp_work_t_j=power*(end-start),
                    orbital_energy_change_j=power*(end-start))
         rows["per_orbit"].append(list(row.values()))
     # Circular orbits have no geometric apsides: the header-only file is valid.
@@ -109,7 +109,7 @@ class PlotSmoke(unittest.TestCase):
         names = {"orbit_3d","altitude_vs_time","orbital_elements","orbital_angles_unwrapped",
                  "apsides_evolution","attitude_quaternion","attitude_angular_velocity",
                  "attitude_rotational_state","attitude_relative_euler","environment_illumination_density",
-                 "environment_drag","environment_total_acceleration","srp_force","srp_power",
+                 "environment_drag","environment_total_acceleration","srp_force","srp_acceleration","srp_power",
                  "srp_force_rtn","srp_cumulative_work","srp_transverse_work",
                  "environment_force_contributions","environment_torque_contributions","gravity_acceleration",
                  "orbital_energy_vs_srp_work","surface_incidence","surface_projected_area",
@@ -184,6 +184,70 @@ class PlotSmoke(unittest.TestCase):
         self.cli(*args,success=False)
         write_table(table,["x","y","value"],[[0,0,0]])
         self.cli(*args,"--log-scale",success=False)
+
+    def test_selected_orbit_rebases_and_interpolates_exported_histories(self):
+        data = {
+            "per_orbit": {"orbit_index": plot.np.array([2, 7, 9]),
+                          "start_time_s": plot.np.array([0., 3., 8.]),
+                          "end_time_s": plot.np.array([3., 8., 12.]),
+                          "complete": plot.np.array([0, 1, 0])},
+            "work": {"time_s": plot.np.array([0., 2., 5., 9., 12.]),
+                     "sun_inbound_transverse_work_j": plot.np.array([0., 2., 8., 8., 10.]),
+                     "sun_outbound_transverse_work_j": plot.np.array([0., -1., -1., 4., 4.]),
+                     "cumulative_work_t_j": plot.np.array([0., 1., 7., 12., 14.])}}
+        work, complete = plot.selected_orbit_transverse_work(data, 7)
+        self.assertTrue(complete)
+        plot.np.testing.assert_allclose(work["time_s"], [0., 2., 5.])
+        plot.np.testing.assert_allclose(work["sun_inbound_transverse_work_j"], [0., 4., 4.])
+        plot.np.testing.assert_allclose(work["sun_outbound_transverse_work_j"], [0., 0., 3.75])
+        plot.np.testing.assert_allclose(work["cumulative_work_t_j"], [0., 4., 7.75])
+        for index in (-1, 0, 8):
+            with self.assertRaises(plot.PlotError):
+                plot.selected_orbit_transverse_work(data, index)
+        data["per_orbit"]["end_time_s"][1] = 4.
+        data["per_orbit"]["complete"][1] = 0
+        work, complete = plot.selected_orbit_transverse_work(data, 7)
+        self.assertFalse(complete)
+        plot.np.testing.assert_allclose(work["time_s"], [0., 1.])
+        plot.np.testing.assert_allclose(work["cumulative_work_t_j"], [0., 2.])
+
+    def test_selected_orbit_cli_renders_partial_interval_without_fallback(self):
+        data = fixture(self.root/"run")
+        output = self.root/"selected"
+        self.cli(data, "--output", output, "--only", "srp_transverse_work", "--orbit", 1, "--format", "both")
+        self.assertEqual({path.name for path in output.iterdir()},
+                         {"srp_transverse_work.png", "srp_transverse_work.svg"})
+        result = self.cli(data, "--output", self.root/"bad", "--only", "srp_transverse_work", "--orbit", 99, success=False)
+        self.assertIn("per_orbit.csv", result.stderr)
+
+    def test_srp_acceleration_uses_vector_magnitude_and_metadata_mass(self):
+        data = plot.load_dataset(fixture(self.root/"run"))
+        for axis in "xyz":
+            data["environment"][f"srp_force_{axis}_n"][:] = 0
+        for axis, value in zip("xyz", (3., -4., 12.)):
+            data["environment"][f"srp_force_{axis}_n"][0] = value
+        magnitude = plot.srp_acceleration_magnitude(data)
+        self.assertAlmostEqual(magnitude[0], 1.3)
+        plot.np.testing.assert_array_equal(magnitude[1:], 0)
+        data["metadata"]["mass_kg"] = "26"
+        self.assertAlmostEqual(plot.srp_acceleration_magnitude(data)[0], .5)
+
+    def test_srp_acceleration_requires_positive_finite_metadata_mass(self):
+        directory = fixture(self.root/"run")
+        data = plot.load_dataset(directory)
+        for mass in ("0", "-1", "nan", "inf", "bad"):
+            data["metadata"]["mass_kg"] = mass
+            with self.assertRaises(plot.PlotError):
+                plot.srp_acceleration_magnitude(data)
+        del data["metadata"]["mass_kg"]
+        with self.assertRaises(plot.PlotError):
+            plot.srp_acceleration_magnitude(data)
+        write_table(directory/"metadata.csv", ["key", "value"],
+                    [("schema_version", 1), ("earth_equatorial_radius_m", 6378136.3),
+                     ("surface_count", 2), ("mass_kg", 0)])
+        result = self.cli(directory, "--output", self.root/"bad", "--only", "srp_acceleration", success=False)
+        self.assertIn("metadata.csv", result.stderr)
+        self.assertIn("mass_kg", result.stderr)
 
     def test_comparison_and_supplied_series_commands(self):
         one=fixture(self.root/"on"); two=fixture(self.root/"off",power=0)

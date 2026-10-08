@@ -2,7 +2,7 @@
 """Headless visualization of Stage 3 CSV diagnostics; no physics evaluation.
 
 Commands:
-  plot_analysis.py DATA_DIR --output DIR --format png|svg|both [--only NAME ...]
+  plot_analysis.py DATA_DIR --output DIR --format png|svg|both [--only NAME ...] [--orbit INDEX]
   plot_analysis.py compare DATA_DIR DATA_DIR ... --output DIR [--format ...]
   plot_analysis.py reduce MANIFEST.csv --output SUMMARY.csv [--sun-ra-deg DEGREES]
   plot_analysis.py heatmap TABLE.csv --x COL --y COL --value COL --output FILE
@@ -30,8 +30,8 @@ TRAJECTORY = "time_s,x_m,y_m,z_m,vx_m_s,vy_m_s,vz_m_s,qw,qx,qy,qz,omega_x_rad_s,
 ORBITAL = "time_s,radius_m,altitude_m,a_m,e,i_rad,raan_rad,arg_periapsis_rad,true_anomaly_rad,periapsis_radius_m,apoapsis_radius_m,periapsis_altitude_m,apoapsis_altitude_m,specific_energy_j_kg,h_x_m2_s,h_y_m2_s,h_z_m2_s,raan_unwrapped_rad,arg_periapsis_unwrapped_rad,true_anomaly_unwrapped_rad,specific_kinetic_energy_j_kg,specific_potential_energy_j_kg"
 ATTITUDE = "time_s,angular_speed_rad_s,rotational_energy_j,inertial_momentum_kg_m2_s,torque_x_nm,torque_y_nm,torque_z_nm,torque_magnitude_nm,relative_yaw_rad,relative_pitch_rad,relative_roll_rad,euler_singular"
 SURFACES = "time_s,surface_index,normal_x,normal_y,normal_z,sun_incidence_rad,projected_illuminated_area_m2,projected_aerodynamic_area_m2,orbit_normal_angle_rad"
-WORK = "time_s,srp_power_w,cumulative_srp_work_j,specific_srp_work_j,orbital_energy_change_j,specific_energy_change_j_kg,energy_minus_srp_work_j,srp_force_r_n,srp_force_t_n,srp_force_n_n,srp_power_r_w,srp_power_t_w,srp_power_n_w,cumulative_work_r_j,cumulative_work_t_j,cumulative_work_n_j,sun_inbound_transverse_work_j,sun_outbound_transverse_work_j"
-PER_ORBIT = "orbit_index,start_time_s,end_time_s,complete,period_s,start_a_m,start_e,start_i_rad,start_raan_unwrapped_rad,end_raan_unwrapped_rad,delta_a_m,delta_e,delta_i_rad,delta_raan_rad,delta_arg_periapsis_rad,delta_true_anomaly_rad,srp_work_j,specific_srp_work_j,srp_work_r_j,srp_work_t_j,srp_work_n_j,orbital_energy_change_j,energy_minus_srp_work_j"
+WORK = "time_s,srp_power_w,cumulative_srp_work_j,specific_srp_work_j_kg,orbital_energy_change_j,specific_energy_change_j_kg,energy_minus_srp_work_j,srp_force_r_n,srp_force_t_n,srp_force_n_n,srp_power_r_w,srp_power_t_w,srp_power_n_w,cumulative_work_r_j,cumulative_work_t_j,cumulative_work_n_j,sun_inbound_transverse_work_j,sun_outbound_transverse_work_j"
+PER_ORBIT = "orbit_index,start_time_s,end_time_s,complete,period_s,start_a_m,start_e,start_i_rad,start_raan_unwrapped_rad,end_raan_unwrapped_rad,delta_a_m,delta_e,delta_i_rad,delta_raan_rad,delta_arg_periapsis_rad,delta_true_anomaly_rad,srp_work_j,specific_srp_work_j_kg,srp_work_r_j,srp_work_t_j,srp_work_n_j,orbital_energy_change_j,energy_minus_srp_work_j"
 VECTOR_UNITS = {"point_mass": "m_s2", "j2": "m_s2", "srp_force": "n", "drag_force": "n", "albedo_force": "n",
                 "total_non_gravitational_force": "n", "srp_torque": "nm", "drag_torque": "nm", "albedo_torque": "nm",
                 "gravity_gradient_torque": "nm", "total_torque": "nm", "total_acceleration": "m_s2",
@@ -153,8 +153,39 @@ def vector(table, prefix):
     return np.column_stack([table[f"{prefix}_{axis}_{VECTOR_UNITS[prefix]}"] for axis in "xyz"])
 
 
-def figures(data):
+def srp_acceleration_magnitude(data):
+    """Convert exported J2000 SRP force magnitude to acceleration using metadata mass."""
+    try:
+        mass = float(data["metadata"]["mass_kg"])
+    except (KeyError, ValueError):
+        raise PlotError("metadata.csv: mass_kg must be a positive finite spacecraft mass") from None
+    if not math.isfinite(mass) or mass <= 0:
+        raise PlotError("metadata.csv: mass_kg must be a positive finite spacecraft mass")
+    return np.linalg.norm(vector(data["environment"], "srp_force"), axis=1) / mass
+
+
+def selected_orbit_transverse_work(data, orbit_index):
+    """Rebase exported cumulative histories; linearly interpolate boundary values."""
+    orbits, work = data["per_orbit"], data["work"]
+    matches = np.flatnonzero(orbits["orbit_index"] == orbit_index)
+    if orbit_index < 0 or len(matches) != 1:
+        raise PlotError(f"per_orbit.csv: orbit_index {orbit_index} must identify one exported interval")
+    index = matches[0]
+    start, end = orbits["start_time_s"][index], orbits["end_time_s"][index]
+    sampled = work["time_s"]
+    if not sampled[0] <= start < end <= sampled[-1]:
+        raise PlotError(f"per_orbit.csv: orbit_index {orbit_index} is outside the sampled work history")
+    times = np.concatenate(([start], sampled[(sampled > start) & (sampled < end)], [end]))
+    result = {"time_s": times - start}
+    for column in ("sun_inbound_transverse_work_j", "sun_outbound_transverse_work_j", "cumulative_work_t_j"):
+        values = np.interp(times, sampled, work[column])
+        result[column] = values - values[0]
+    return result, bool(orbits["complete"][index])
+
+
+def figures(data, orbit_index=None):
     o, a, w, env, p = (data[name] for name in ("orbital_elements", "attitude", "work", "environment", "per_orbit"))
+    transverse, complete = (w, None) if orbit_index is None else selected_orbit_transverse_work(data, orbit_index)
     specs = [
         ("altitude_vs_time", o, [("Altitude [km]", [field("altitude_m", "Altitude", .001)])]),
         ("orbital_elements", o, [(label, [field(col, label, scale)]) for col, label, scale in
@@ -172,11 +203,13 @@ def figures(data):
         ("environment_drag", env, [("Drag force [N]", [field(f"drag_force_{axis}_n", axis) for axis in "xyz"]), ("Model (0 none; 1 plate; 2 Sentman)", [field("drag_model")])]),
         ("environment_total_acceleration", env, [("J2000 acceleration [m/s²]", [field(f"total_acceleration_{axis}_m_s2", axis) for axis in "xyz"]), ("Body angular acceleration [rad/s²]", [field(f"total_angular_acceleration_{axis}_rad_s2", axis) for axis in "xyz"])]),
         ("srp_force", env, [("J2000 SRP force [N]", [field(f"srp_force_{axis}_n", axis) for axis in "xyz"])]),
+        ("srp_acceleration", {"time_s": env["time_s"], "magnitude_m_s2": srp_acceleration_magnitude(data)},
+         [("SRP acceleration magnitude [m/s²]", [field("magnitude_m_s2", "SRP")])]),
         ("srp_power", w, [("SRP power [W]", [field("srp_power_w", "Total")] + [field(f"srp_power_{axis}_w", axis.upper()) for axis in "rtn"])]),
         ("srp_force_rtn", w, [("RTN force [N]", [field(f"srp_force_{axis}_n", axis.upper()) for axis in ("r", "t", "n")]), ("RTN cumulative work [J]", [field(f"cumulative_work_{axis}_j", axis.upper()) for axis in "rtn"])]),
         ("srp_cumulative_work", w, [("SRP work [J]", [field("cumulative_srp_work_j", "SRP work")]), ("Two-body energy change [J]", [field("orbital_energy_change_j", "Energy change"), field("energy_minus_srp_work_j", "Residual (other physics + sampling)")])]),
         ("orbital_energy", o, [("Specific orbital energy [J/kg]", [field("specific_kinetic_energy_j_kg", "Kinetic"), field("specific_potential_energy_j_kg", "Point-mass potential"), field("specific_energy_j_kg", "Total (two body)")])]),
-        ("srp_transverse_work", w, [("Transverse work [J]", [field("sun_inbound_transverse_work_j", "Toward Sun"), field("sun_outbound_transverse_work_j", "Away from Sun"), field("cumulative_work_t_j", "Net transverse")])]),
+        ("srp_transverse_work", transverse, [("Transverse work [J]", [field("sun_inbound_transverse_work_j", "Toward Sun"), field("sun_outbound_transverse_work_j", "Away from Sun"), field("cumulative_work_t_j", "Net transverse")])]),
     ]
     fig = plt.figure(figsize=(9, 8)); ax = fig.add_subplot(111, projection="3d")
     trajectory = data["trajectory"]
@@ -195,6 +228,9 @@ def figures(data):
             events = data["apsides"]
             fig.axes[0].scatter(events["time_s"] / 3600, events["radius_m"] * .001, s=12, label="Sampled events")
             fig.axes[0].legend()
+        if name == "srp_transverse_work" and orbit_index is not None:
+            fig.suptitle(f"Transverse SRP work — orbit {orbit_index} ({'complete' if complete else 'partial interval'})")
+            fig.axes[-1].set_xlabel("Time since orbit start [h]")
         yield name, fig
     for name, prefixes, unit in [("environment_force_contributions", ("srp_force", "drag_force", "albedo_force", "total_non_gravitational_force"), "N"),
                                    ("environment_torque_contributions", ("srp_torque", "drag_torque", "albedo_torque", "gravity_gradient_torque", "total_torque"), "N m")]:
@@ -233,10 +269,10 @@ def formats(value):
     return ("png", "svg") if value == "both" else (value,)
 
 
-def plot_run(directory, output, fmt, only):
+def plot_run(directory, output, fmt, only, orbit_index=None):
     selected = set(only)
     found = set()
-    for name, fig in figures(load_dataset(directory)):
+    for name, fig in figures(load_dataset(directory), orbit_index):
         found.add(name)
         try:
             if not selected or name in selected:
@@ -369,6 +405,7 @@ def main(argv=None):
         parser.add_argument("--format", choices=("png", "svg", "both"), default="png")
     if command == "plots":
         parser.add_argument("--only", action="append", default=[])
+        parser.add_argument("--orbit", type=int, help="exported orbit_index for transverse SRP work; includes flagged partial intervals")
     elif command == "reduce":
         parser.add_argument("--sun-ra-deg", type=float)
         parser.add_argument("--baseline-a-m", type=float)
@@ -386,7 +423,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         if command == "plots":
-            plot_run(args.input, args.output, args.format, args.only)
+            plot_run(args.input, args.output, args.format, args.only, args.orbit)
         elif command == "compare":
             compare(args.input, args.output, args.format)
         elif command == "reduce":

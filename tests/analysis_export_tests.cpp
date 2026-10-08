@@ -1,6 +1,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
 #include "leo/analysis/export.hpp"
+#include "leo/kernel/radiation.hpp"
+#include <algorithm>
 #include <chrono>
 #include <fstream>
 #include <sstream>
@@ -75,4 +77,32 @@ TEST_CASE("CSV rejects malformed analyses before creating outputs and reports in
     SECTION("regular file directory") {std::ofstream(tmp.path/"file")<<"occupied";REQUIRE_THROWS_AS(export_csv(tmp.path/"file",t,a),std::runtime_error);}
     SECTION("directory in place of CSV") {std::filesystem::create_directory(tmp.path/"trajectory.csv");REQUIRE_THROWS_AS(export_csv(tmp.path,t,a),std::runtime_error);}
     SECTION("snapshot count mismatch") {const EarthDynamics dynamics(EarthGravity(Earth{},false),Spacecraft(10,Inertia(Eigen::Matrix3d::Identity())));REQUIRE_THROWS_AS(analyze(t,dynamics,{}),std::invalid_argument);}
+}
+TEST_CASE("CSV specific SRP work has explicit J per kg columns and mass scaling", "[analysis][export]") {
+    Temp tmp;const auto t=trajectory();
+    const Spacecraft craft(10,Inertia(Eigen::Matrix3d::Identity()),{Surface(2,{0,1,0},{})});
+    EnvironmentalModels models;models.srp={true,false};
+    const EarthDynamics dynamics(EarthGravity(Earth{},false),craft,models);
+    std::vector<EnvironmentSnapshot> snapshots;
+    for(const auto& sample:t.samples) {
+        EnvironmentSnapshot env;env.epoch={t.epoch.et_seconds+sample.t.seconds};
+        env.sun_position_m=sample.state.r+InertialVector{0,astronomical_unit_m,0};
+        snapshots.push_back(env);
+    }
+    const auto a=analyze(t,dynamics,snapshots);
+    export_csv(tmp.path,t,a);
+    const double expected=-2*solar_pressure_1au_n_m2*t.samples.back().state.v.y()*t.samples.back().t.seconds;
+    for(const auto name:{"work.csv","per_orbit.csv"}) {
+        std::istringstream rows(contents(tmp.path/name));std::string row;std::getline(rows,row);
+        const auto header=fields(row);
+        const auto specific=std::find(header.begin(),header.end(),"specific_srp_work_j_kg");
+        REQUIRE(specific!=header.end());
+        const auto total=std::find(header.begin(),header.end(),std::string(name)=="work.csv"?"cumulative_srp_work_j":"srp_work_j");
+        REQUIRE(total!=header.end());
+        std::vector<std::string> last;
+        while(std::getline(rows,row)) last=fields(row);
+        REQUIRE(last.size()==header.size());
+        REQUIRE(std::stod(last[static_cast<std::size_t>(total-header.begin())])==Catch::Approx(expected).epsilon(1e-14));
+        REQUIRE(std::stod(last[static_cast<std::size_t>(specific-header.begin())])==Catch::Approx(expected/10).epsilon(1e-14));
+    }
 }

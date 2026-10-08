@@ -26,7 +26,7 @@ BoundaryWork boundary(std::span<const WorkSample> samples,double time) {
         throw std::invalid_argument("orbit work interval outside sampled work history");
     const auto it=std::lower_bound(samples.begin(),samples.end(),time,[](const auto& s,double t){return s.time_s<t;});
     if(it==samples.begin()||it->time_s==time)
-        return {it->cumulative_work_j,it->specific_work_j,it->orbital_energy_change_j,it->cumulative_work_rtn_j};
+        return {it->cumulative_work_j,it->specific_work_j_kg,it->orbital_energy_change_j,it->cumulative_work_rtn_j};
     const auto& a=*(it-1);const auto& b=*it;
     const double dt=b.time_s-a.time_s,f=(time-a.time_s)/dt;
     const double work=a.cumulative_work_j+scalar_integral(a.power_w,b.power_w,dt,f);
@@ -146,7 +146,7 @@ std::vector<WorkSample> srp_work(const Trajectory& t,const Earth& earth,double m
                 assign(first,left);assign(scalar_integral(a.power_rtn_w.y(),powers.y(),dt,1)-first,right);
             } else assign(scalar_integral(a.power_rtn_w.y(),powers.y(),dt,1),left!=0?left:right);
         }
-        row.specific_work_j=row.cumulative_work_j/mass;
+        row.specific_work_j_kg=row.cumulative_work_j/mass;
         row.energy_minus_srp_work_j=row.orbital_energy_change_j-row.cumulative_work_j;
         finite(row.cumulative_work_j,"nonfinite cumulative SRP work");
         result.push_back(row);
