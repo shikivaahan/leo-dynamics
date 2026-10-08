@@ -4,8 +4,11 @@
 #include "leo/kernel/spacecraft.hpp"
 #include "leo/kernel/state.hpp"
 namespace leo {
-// Velocity of the craft relative to the co-rotating atmosphere, v - omega x r.
-// All inputs are inertial (J2000); the rotation vector is in rad/s about J2000 +Z by default.
+// COM velocity relative to the co-rotating atmosphere, v - omega_atmosphere x r.
+// All inputs are J2000; default atmospheric rotation is about J2000 +Z, in rad/s.
+// Both drag laws use this one COM flow for every surface, neglecting local body
+// rotation velocity omega_body x r_panel. Large/fast-spinning craft may violate
+// this approximation when panel rotational speed is appreciable relative to COM wind.
 InertialVector atmospheric_relative_velocity(InertialVector r,InertialVector v,
                                              InertialVector rotation={0,0,7.292115e-5});
 
@@ -31,9 +34,11 @@ public:
 // no SPICE or ephemeris access happens inside the force law.
 Wrench flat_plate_drag(const Spacecraft&,const State&,const EnvironmentSnapshot&);
 
-// Free-molecular (Sentman) limit for a flat plate, specular fraction 1-sigma and
-// diffuse fraction sigma with negligible re-emission thermal speed; the missing
-// thermodynamic parameters are deliberately not invented:
+// High-speed, cold-beam free-molecular approximation, NOT full finite-temperature Sentman.
+// Assumes collisionless flow, incident thermal velocity spread negligible relative
+// to bulk COM wind, and negligible re-emission speed. Specular fraction is 1-sigma,
+// diffuse fraction sigma. Omits Maxwellian incident velocity averaging, finite-temperature
+// re-emission recoil, and gas/surface-temperature, molecular-mass and speed-ratio dependence.
 //   Cn = (4 - 2 sigma) sin(alpha)^2            normal momentum-exchange coefficient
 //   Ct = 2 sigma sin(alpha) cos(alpha)          tangential momentum-exchange coefficient
 //   Cd = Cn sin(alpha) + Ct cos(alpha)          along the incoming flow
@@ -48,6 +53,7 @@ SentmanCoefficients sentman_coefficients(double grazing_angle_rad,double accommo
 
 // Per-surface Sentman wrench F = -0.5 rho |v_rel|^2 A (Cn n + Ct t_hat) with t_hat the
 // incoming-flow unit direction tangential to the plate. Front surfaces only (n.v_hat > 0).
+// Uses the COM-flow and cold-beam assumptions above; omega x r_panel is neglected.
 // No lift direction is reconstructed, so the force stays exact when the flow is axis aligned.
 Wrench sentman_drag(const Spacecraft&,const State&,const EnvironmentSnapshot&);
 

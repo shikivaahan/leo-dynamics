@@ -23,9 +23,15 @@ class EarthDynamics {
     Spacecraft spacecraft_;
     EnvironmentalModels models_;
 public:
+    // Validates drag selection and albedo bounds, not environment/source compatibility.
+    // SRP/albedo require solar data; either drag law requires density and rotation.
     EarthDynamics(EarthGravity,Spacecraft,EnvironmentalModels={});
+    // Throws std::invalid_argument if SRP, drag or albedo force/torque is enabled
+    // without using the explicit-snapshot overload below.
     StateDerivative operator()(ElapsedTime,const State&) const;
+    // Environment/geometry validity is checked during model evaluation, not construction.
     StateDerivative operator()(ElapsedTime,const State&,const EnvironmentSnapshot&) const;
+    // Reports model selection only; does not establish source compatibility.
     bool needs_environment() const noexcept;
 };
 }

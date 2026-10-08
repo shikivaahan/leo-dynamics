@@ -44,6 +44,17 @@ Headers live under `include/leo`; namespace `leo`.
 
 `EnvironmentalModels` contains `srp`, `drag` and `albedo` selections, each `{force,torque}`. All default disabled; forces and torques can be selected independently without reimplementing their physics. `drag_model` explicitly selects `DragModel::none`, `flat_plate` or `sentman`; enabled drag with `none` is rejected. `gravity_gradient` selects the independent inertia-based torque, and `earth_albedo` is a finite [0,1] radial-beam coefficient. Point-mass/J2 selection remains `EarthGravity(earth,enable_j2)`.
 
+Environment compatibility is **not fully validated at construction**. `EarthDynamics` checks drag selection and albedo bounds, but `EnvironmentalDynamics` does not check whether its source supplies the data needed by enabled forces **or torques**:
+
+| Enabled contribution | Required environment |
+|---|---|
+| Gravity / gravity-gradient only | No Sun provider or atmospheric density required |
+| SRP | Valid Sun position and direct illumination; with `EarthEnvironment`, supply a Sun provider covering `epoch + elapsed` and select the eclipse model |
+| Albedo | Valid Sun position; with `EarthEnvironment`, supply a covering Sun provider (direct-Sun illumination is not used by albedo) |
+| Either drag model | Select `flat_plate` or `sentman` and supply density/rotation; with `EarthEnvironment`, enable atmospheric acquisition for nonzero model density |
+
+An explicit/custom snapshot source can supply these fields without an ephemeris provider. With `EarthEnvironment`, a null provider leaves the Sun position at zero; atmospheric acquisition disabled leaves density at zero. Neither is automatically rejected as incompatible: drag is then muted, while SRP without a provider may fail during propagation **or use incorrect Sun geometry without an immediate error**. Albedo rejects the zero Sun position during evaluation. Runtime input/geometry failures raise `std::invalid_argument`, atmosphere-domain failures `std::out_of_range`, and CSPICE coverage failures `std::runtime_error`; propagation passes RHS exceptions through and returns no partial trajectory. Source acquisition is independent of model switches, so configured Sun/atmosphere acquisition can still fail when those contributions are disabled.
+
 ```cpp
 leo::Spacecraft craft(10, leo::Inertia(Eigen::Matrix3d::Identity()),
     {leo::Surface(2, {1,0,0}, {0,0.1,0},
@@ -75,14 +86,14 @@ The incident-momentum coefficient includes absorption **and diffuse reflection**
 
 ### Atmosphere and aerodynamics
 
-`atmospheric_relative_velocity(r,v,rotation)` is `v - rotation × r` for **both** drag laws. Default atmospheric co-rotation is 7.292115e-5 rad/s about fixed J2000 +Z, consistent with the Stage 1 fixed-axis approximation. Precession, nutation, winds and Earth-orientation data are not modelled.
+`atmospheric_relative_velocity(r,v,rotation)` is `v - rotation × r` at the spacecraft **centre of mass** for both drag laws; all panels use that same relative flow. Local surface velocity from body rotation, `omega × r_panel` (COM-relative panel offset), is not added. This approximation can matter for large or rapidly spinning spacecraft when panel rotational speed is appreciable relative to COM wind speed. Default atmospheric co-rotation is 7.292115e-5 rad/s about fixed J2000 +Z. Precession, nutation, winds and Earth-orientation data are not modelled.
 
 `ExponentialAtmosphere(scale=1)` uses the Julia altitude/density anchors from 0 to 35786 km with **continuous log-linear interpolation**. Each interval is an exponential with scale height derived from adjacent densities. This preserves endpoint density fixtures while eliminating the original stitched profile's upward jumps. The default density at 400 km is 2.62e-12 kg/m³. Scale must be finite and nonnegative (zero mutes density). Unsupported finite altitudes throw `std::out_of_range`, rather than silently returning vacuum; nonfinite inputs throw `std::invalid_argument`. This is **not NRLMSISE**: spherical density only, no latitude, local-time, solar activity or temperature dependence. The sparse low-altitude anchors and non-LEO extension are numerical reference data, not fidelity claims.
 
 `AerodynamicProperties(Cd=2.2,accommodation=0.9)` attaches nonnegative finite flat-plate Cd and accommodation in [0,1] to each surface.
 
 - `flat_plate_drag`: `F=-0.5 rho |v_rel|² Cd A max(0,n·vhat) vhat`; projected area and force opposing relative velocity. Normal faces incoming molecules when `n·vhat>0`.
-- `sentman_drag`: the **high-speed free-molecular Sentman limit**, not a full finite-temperature implementation. Specular fraction is `1-sigma`, diffuse fraction `sigma`; re-emission thermal speed is neglected. Julia provides no temperatures, gas molecular mass or speed ratio, so these are not invented. For grazing angle `alpha` (0 parallel, pi/2 face-on):
+- `sentman_drag`: a **high-speed, cold-beam free-molecular approximation**, **not the full finite-temperature Sentman model**. It assumes collisionless flow with negligible incident thermal velocity spread relative to bulk COM wind and negligible re-emission speed. Specular fraction is `1-sigma`, diffuse fraction `sigma`. It omits the incident Maxwellian velocity distribution, finite-temperature re-emission recoil, and gas/surface-temperature, molecular-mass and speed-ratio dependence; no such inputs are supplied. For grazing angle `alpha` (0 parallel, pi/2 face-on):
 
 ```text
 Cn = (4-2 sigma) sin(alpha)^2

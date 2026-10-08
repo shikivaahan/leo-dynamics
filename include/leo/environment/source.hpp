@@ -9,6 +9,13 @@
 namespace leo {
 // The provider is borrowed and must outlive the source. A null provider means no solar acquisition.
 // Epoch is explicit; elapsed solver seconds never masquerade as UTC or absolute ephemeris time.
+// Does not validate compatibility with enabled dynamics models. SRP/albedo need
+// a covering Sun provider here (or solar data from another snapshot source);
+// null leaves a zero Sun position, which may cause evaluation failure or incorrect
+// SRP geometry without an immediate error. Atmospheric acquisition must be enabled
+// for model density; disabled leaves zero density and hence zero drag.
+// Acquisition is independent of model switches. Geometry, atmosphere-domain and
+// provider/coverage errors occur during evaluation and propagate to the caller.
 class EarthEnvironment {
     Earth earth_;
     Epoch epoch_;
@@ -50,6 +57,8 @@ public:
 };
 // Acquisition is a wrapper, not a hidden dependency of EarthDynamics or its force laws.
 // A source is any callable (ElapsedTime,const State&) -> EnvironmentSnapshot.
+// Construction does not cross-check source data against enabled forces/torques.
+// Source/RHS exceptions propagate unchanged; no missing-data fallback is provided.
 template<class Source> class EnvironmentalDynamics {
     EarthDynamics dynamics_;
     Source source_;
