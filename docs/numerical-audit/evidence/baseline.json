@@ -1,0 +1,20 @@
+{
+  "preaudit_commit": "6a8f92a9721441623980bd47905cd22a3367f296",
+  "original_stage3_commit": "48961a2137f87bb4a1daa80ae880ecc812dad5da",
+  "opt001_first_candidate": "b9b2f1f99a6d6886dbcd654306788002c47dfb5b",
+  "opt001_final_candidate": "a799fc6605b15b3c761a74ad446450d34ceee514",
+  "preaudit_source_archive_sha256": "fb9111467ef94fd72c9fd9984855c00642588383dab65d8e513262c0ad3f3317",
+  "immutable_evidence_sha256": {
+    "benchmarks/results.csv": "4c4ef278a2e222c91c6eb2d1f6c2d72d4bb8548a5ab215c77b52c23892989c00",
+    "benchmarks/ACCURACY.md": "fd4a53c3b91c07def9a6e8c09555a620bf343062968ecd3b644060824452111f",
+    "benchmarks/OPTIMISATIONS.md": "45eb35d8f9aa7e80a9f62a604e8db85e4633a17bbeef28972b23453a89c3a47c",
+    "benchmarks/PERFORMANCE_SUMMARY.md": "95df0fc63db9386c641af8d46770db8d77a9ea0b43b320a02c2877419d0c881b",
+    "benchmarks/evidence/baseline/profile.json": "f36aec6d21161304b068ac6eed98e2063ddc7b95217f508512f452fcf4b21a02",
+    "benchmarks/evidence/sensitivity.json": "1419965bcb5be1e2e20ea17d8fb2b7deeff1b245f5a2c09ac8a388f1b8782df7"
+  },
+  "kernel_sha256": {
+    "de432s.bsp": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b",
+    "naif0012.tls": "678e32bdb5a744117a467cd9601cd6b373f0e9bc9bbde1371d5eee39600a039b"
+  },
+  "policy": "Historical benchmarks and accuracy limits remain untouched; all remediation evidence is new under docs/numerical-audit. Untracked outputs/ belongs to the user. No cache implementation or physical model changes are authorised except independently confirmed correctness defects."
+}

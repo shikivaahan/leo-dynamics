@@ -25,6 +25,15 @@ Geometry external_geometry(InertialVector r, InertialVector sun, double earth_ra
 double apparent_radius(double body_radius_m, double observer_distance_m) {
     return std::asin(std::min(1.0, body_radius_m/observer_distance_m));
 }
+// Circular-segment area divided by radius squared. The direct expression
+// theta - sin(theta)*cos(theta) cancels for the Earth's small segment angle.
+double segment_area(double theta) {
+    if (theta<0.1) {
+        const double z=theta*theta;
+        return theta*z*(2.0/3+z*(-2.0/15+z*(4.0/315+z*(-2.0/2835+z*(4.0/155925)))));
+    }
+    return theta-std::sin(theta)*std::cos(theta);
+}
 // Illuminated fraction of the uniform-brightness solar disk occluded by the Earth disk.
 // Both disks are reduced to the unit sphere and overlapped as circles of angular radii
 // alpha (Sun) and beta (Earth) separated by the observed centre separation `distance`,
@@ -37,12 +46,23 @@ double disk_overlap_illumination(double alpha, double beta, double distance) {
         const double smaller = std::min(alpha,beta);
         return std::clamp(1.0 - (smaller/alpha)*(smaller/alpha), 0.0, 1.0);
     }
-    const double solar_angle = std::clamp((distance*distance+alpha*alpha-beta*beta)/(2*distance*alpha), -1.0, 1.0);
-    const double earth_angle = std::clamp((distance*distance+beta*beta-alpha*alpha)/(2*distance*beta), -1.0, 1.0);
-    const double lens = std::sqrt(std::max(0.0,
-        (-distance+alpha+beta)*(distance+alpha-beta)*(distance-alpha+beta)*(distance+alpha+beta)));
-    const double overlap = alpha*alpha*std::acos(solar_angle) + beta*beta*std::acos(earth_angle) - 0.5*lens;
-    return std::clamp(1.0 - overlap/(kPi*alpha*alpha), 0.0, 1.0);
+    // Scale by the solar radius. Difference-before-division retains contact
+    // offsets; factoring Heron's product avoids the subtraction of squared
+    // Earth-sized terms in a small solar chord.
+    const double k=beta/alpha, d=distance/alpha;
+    const double delta=(distance-beta)/alpha, sum=(distance+beta)/alpha;
+    const double height=std::sqrt(std::max(0.0,(1-delta)*(1+delta)))*
+        std::sqrt((sum-1)/(2*d))*std::sqrt((sum+1)/(2*d));
+    const double solar_chord=(1+delta*sum)/(2*d);
+    const double earth_chord=d-solar_chord;
+    const double earth_segment=k*k*segment_area(std::atan2(height,earth_chord));
+    // Near internal contact, compute the small illuminated complement directly
+    // rather than subtracting nearly the full solar disk area from pi.
+    const double illumination=solar_chord<0 ?
+        (segment_area(std::atan2(height,-solar_chord))-earth_segment)/kPi :
+        1-(segment_area(std::atan2(height,solar_chord))+earth_segment)/kPi;
+    // Only roundoff may leave the mathematically bounded area fraction.
+    return std::clamp(illumination,0.0,1.0);
 }
 double axis_distance(InertialVector r, InertialVector sun_axis) {
     return norm(r - sun_axis*dot(r,sun_axis));

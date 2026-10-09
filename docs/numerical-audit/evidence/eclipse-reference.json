@@ -1,0 +1,240 @@
+{
+  "oracle": "80-digit independent Cartesian disk-intersection quadrature; exact binary64 Cartesian input values; not the production lens formula",
+  "mpmath_version": "1.4.1",
+  "fixtures": [
+    {
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        62268219084.47613,
+        136019557439.19482,
+        0
+      ],
+      "spacecraft_position_m": [
+        -7000000.0,
+        0,
+        0
+      ],
+      "separation_requested_rad": 1.14144166259215,
+      "reference": 1.7016745128472572e-15,
+      "preaudit": 2.1853435740237792e-05,
+      "preaudit_absolute_error": 2.1853435738536116e-05
+    },
+    {
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        62268219071.93999,
+        136019557444.93437,
+        0
+      ],
+      "spacecraft_position_m": [
+        -7000000.0,
+        0,
+        0
+      ],
+      "separation_requested_rad": 1.1414416626843142,
+      "reference": 1.7011150870232408e-12,
+      "preaudit": 0.0,
+      "preaudit_absolute_error": 1.7011150870232408e-12
+    },
+    {
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        62268217818.32536,
+        136019558018.88951,
+        0
+      ],
+      "spacecraft_position_m": [
+        -7000000.0,
+        0,
+        0
+      ],
+      "separation_requested_rad": 1.1414416719007434,
+      "reference": 1.7011102281850352e-09,
+      "preaudit": 5.5773208607057256e-08,
+      "preaudit_absolute_error": 5.407209837887222e-08
+    },
+    {
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        62266952804.51376,
+        136020137185.9149,
+        0
+      ],
+      "spacecraft_position_m": [
+        -7000000.0,
+        0,
+        0
+      ],
+      "separation_requested_rad": 1.1414509721156303,
+      "reference": 5.3777570480789964e-05,
+      "preaudit": 5.37652486982676e-05,
+      "preaudit_absolute_error": 1.2321782522366383e-08
+    },
+    {
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        62255556040.85596,
+        136025354376.42937,
+        0
+      ],
+      "spacecraft_position_m": [
+        -7000000.0,
+        0,
+        0
+      ],
+      "separation_requested_rad": 1.1415347578353325,
+      "reference": 0.0016959566549171598,
+      "preaudit": 0.0016959585468728777,
+      "preaudit_absolute_error": 1.8919557179600255e-09
+    },
+    {
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        62141564377.747086,
+        136077473755.79453,
+        0
+      ],
+      "spacecraft_position_m": [
+        -7000000.0,
+        0,
+        0
+      ],
+      "separation_requested_rad": 1.1423726150323545,
+      "reference": 0.052137327338716496,
+      "preaudit": 0.052137327524824806,
+      "preaudit_absolute_error": 1.861083093190885e-10
+    },
+    {
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        61634408024.26022,
+        136307959176.12656,
+        0
+      ],
+      "spacecraft_position_m": [
+        -7000000.0,
+        0,
+        0
+      ],
+      "separation_requested_rad": 1.1460964247968968,
+      "reference": 0.5004309286743197,
+      "preaudit": 0.5004309288998199,
+      "preaudit_absolute_error": 2.255001740891771e-10
+    },
+    {
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        61126396905.201584,
+        136536554449.00098,
+        0
+      ],
+      "spacecraft_position_m": [
+        -7000000.0,
+        0,
+        0
+      ],
+      "separation_requested_rad": 1.149820234561439,
+      "reference": 0.9480488350277784,
+      "preaudit": 0.9480488358165835,
+      "preaudit_absolute_error": 7.88805132323489e-10
+    },
+    {
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        61011977325.82038,
+        136587727574.93602,
+        0
+      ],
+      "spacecraft_position_m": [
+        -7000000.0,
+        0,
+        0
+      ],
+      "separation_requested_rad": 1.150658091758461,
+      "reference": 0.9983108351045432,
+      "preaudit": 0.9983108383116276,
+      "preaudit_absolute_error": 3.2070843758447154e-09
+    },
+    {
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        61000533010.59838,
+        136592839614.43465,
+        0
+      ],
+      "spacecraft_position_m": [
+        -7000000.0,
+        0,
+        0
+      ],
+      "separation_requested_rad": 1.1507418774781633,
+      "reference": 0.9999464401392764,
+      "preaudit": 0.9999464336819368,
+      "preaudit_absolute_error": 6.457339551957375e-09
+    },
+    {
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        60999262665.19958,
+        136593406991.69414,
+        0
+      ],
+      "spacecraft_position_m": [
+        -7000000.0,
+        0,
+        0
+      ],
+      "separation_requested_rad": 1.1507511776930501,
+      "reference": 0.9999999983057848,
+      "preaudit": 1.0,
+      "preaudit_absolute_error": 1.6942152125665189e-09
+    },
+    {
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        60999261406.29612,
+        136593407553.95401,
+        0
+      ],
+      "spacecraft_position_m": [
+        -7000000.0,
+        0,
+        0
+      ],
+      "separation_requested_rad": 1.1507511869094793,
+      "reference": 0.9999999999983058,
+      "preaudit": 0.9999986102005024,
+      "preaudit_absolute_error": 1.389797803397208e-06
+    },
+    {
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        60999261393.70708,
+        136593407559.57663,
+        0
+      ],
+      "spacecraft_position_m": [
+        -7000000.0,
+        0,
+        0
+      ],
+      "separation_requested_rad": 1.1507511870016436,
+      "reference": 0.9999999999999983,
+      "preaudit": 1.0,
+      "preaudit_absolute_error": 1.6653345369377348e-15
+    }
+  ]
+}

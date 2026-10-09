@@ -1,0 +1,22 @@
+Randomness seeded to: 3988338097
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+leo-radiation-regression-before is a Catch2 v3.7.1 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+Conical disk overlap agrees with independent Cartesian area quadrature at
+contacts
+-------------------------------------------------------------------------------
+tests/numerical_radiation_tests.cpp:6
+...............................................................................
+
+tests/numerical_radiation_tests.cpp:30: FAILED:
+  REQUIRE( std::abs(actual-f.illumination)<1e-12 )
+with expansion:
+  0.00002185343573854 < 0.000000000001
+
+===============================================================================
+test cases: 1 | 1 failed
+assertions: 1 | 1 failed
+
