@@ -32,3 +32,13 @@ TEST_CASE("Conical disk overlap agrees with independent Cartesian area quadratur
         previous=actual;
     }
 }
+
+TEST_CASE("Conical illumination retains small centre separations near the physical shadow apex", "[radiation][numerical]") {
+    // Nominal Earth/Sun radii; nearly equal apparent disks. A 1e-8 rad centre
+    // separation rounds the unit-vector dot product to one, but the uncovered
+    // area is not zero. Independent 80-digit Cartesian quadrature reference.
+    const InertialVector r{-1370244010.4444466,0,0};
+    const InertialVector sun{148227626689.55554,1495.978707,0};
+    const double actual=illumination_factor(EclipseModel::conical,r,sun,6378137.,696340000.);
+    REQUIRE(std::abs(actual-1.3676741029071159e-6)<1e-12);
+}

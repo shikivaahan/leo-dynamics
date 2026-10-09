@@ -114,10 +114,11 @@ double illumination_factor(EclipseModel model, InertialVector r, InertialVector 
         throw std::invalid_argument("eclipse observer must be outside the solar photosphere");
     const double solar_alpha = apparent_radius(sun_radius_m,sun_separation);
     const double earth_beta = apparent_radius(earth_radius_m,geometry.orbital_radius_m);
-    const double cosine = ((-r)/geometry.orbital_radius_m).as_eigen()
-        .dot((to_sun/sun_separation).as_eigen());
-    return disk_overlap_illumination(solar_alpha, earth_beta,
-                                     std::acos(std::clamp(cosine, -1.0, 1.0)));
+    const InertialVector earth_direction=(-r)/geometry.orbital_radius_m;
+    const InertialVector sun_direction=to_sun/sun_separation;
+    const double separation=std::atan2(norm(cross(earth_direction,sun_direction)),
+                                      dot(earth_direction,sun_direction));
+    return disk_overlap_illumination(solar_alpha,earth_beta,separation);
 }
 Wrench solar_radiation_pressure(const Spacecraft& craft, const State& state,
                                 const EnvironmentSnapshot& env) {

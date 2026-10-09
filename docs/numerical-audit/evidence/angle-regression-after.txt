@@ -1,0 +1,5 @@
+Filters: "Conical illumination retains small centre separations near the physical shadow apex"
+Randomness seeded to: 220425436
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+

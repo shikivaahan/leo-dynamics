@@ -1,0 +1,53 @@
+{
+  "oracle": "80-digit independent Cartesian quadrature; nominal Earth/Sun radii, spacecraft near umbra apex",
+  "fixtures": [
+    {
+      "observer_radius_m": 1370244010.4444466,
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        148227626689.5548,
+        14959.787069999973,
+        0
+      ],
+      "reference": 1.367674102832786e-05,
+      "preaudit": 1.3518517716359923e-05
+    },
+    {
+      "observer_radius_m": 1370244010.4444466,
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        148227626689.55554,
+        1495.978707,
+        0
+      ],
+      "reference": 1.3676741029071159e-06,
+      "preaudit": 4.440892098500626e-16
+    },
+    {
+      "observer_radius_m": 1370244010.4444466,
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        148227626689.55554,
+        149.59787070000002,
+        0
+      ],
+      "reference": 1.3676741038312327e-07,
+      "preaudit": 4.440892098500626e-16
+    },
+    {
+      "observer_radius_m": 1370244010.4444466,
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 696340000.0,
+      "sun_position_m": [
+        148227626689.55554,
+        14.95978707,
+        0
+      ],
+      "reference": 1.3676741126242944e-08,
+      "preaudit": 4.440892098500626e-16
+    }
+  ]
+}
