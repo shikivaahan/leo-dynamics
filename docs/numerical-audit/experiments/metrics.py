@@ -591,14 +591,14 @@ def _unwrapped(t, angles):
 
 
 def _interval_stats(values):
-    """max/rms/final/mean over a sampled series (uniform agnostic, plain samples)."""
+    """Absolute max/RMS errors with signed final/mean; plain common-time samples."""
     finite = _finite(values)
     if not finite:
         return {"final": None, "max": None, "rms": None, "mean": None,
                 "undefined_reason": "no_defined_samples"}
     n = len(finite)
     rms = math.sqrt(sum(v * v for v in finite) / n)
-    return {"final": values[-1], "max": max(finite), "rms": rms, "mean": sum(finite) / n,
+    return {"final": values[-1], "max": max(abs(v) for v in finite), "rms": rms, "mean": sum(finite) / n,
             "undefined_reason": None if values[-1] is not None else "undefined_final_sample"}
 
 
@@ -688,7 +688,6 @@ def summarize(result, horizon_s=None, spin_axis_body=None, series=False,
         "specific_energy_rate_w_kg": ((energy[-1] - energy[0]) / (t[-1] - t[0])) if (n > 1 and energy[-1] is not None and energy[0] is not None) else None,
         "total_orbital_energy_j": None if (mass is None or energy[-1] is None) else mass * energy[-1],
         "total_orbital_energy_change_j": None if (mass is None or energy[-1] is None or energy[0] is None) else mass * (energy[-1] - energy[0]),
-        "mean_specific_energy_change_j_kg": None if (mass is None) else _mean_energy_rate(t, energy),
         "inclination_rad": _stats(t, inclination),
         "inclination_change_rad": (inclination[-1] - inclination[0]) if (inclination[-1] is not None and inclination[0] is not None) else None,
         "raan_change_rad": (_unwrapped(t, raan)[-1] - _unwrapped(t, raan)[0]) if raan[0] is not None else None,
@@ -850,19 +849,6 @@ def summarize(result, horizon_s=None, spin_axis_body=None, series=False,
     return out
 
 
-def _mean_energy_rate(t, energy):
-    """Cadence-weighted mean of the specific-energy rate, and its mean value.
-
-    ``mean_specific_energy_change_j_kg`` reports the time average of the
-    numerical derivative of the point-mass specific energy. It is a diagnostic
-    rate, not a claim about long-term orbital decay.
-    """
-    if len(t) < 2 or energy[0] is None or energy[-1] is None:
-        return None
-    span = t[-1] - t[0]
-    if span <= 0.0:
-        return None
-    return (energy[-1] - energy[0]) / span
 
 
 def _non_gravitational_block(data, t, mass, substeps):
@@ -931,9 +917,6 @@ def _non_gravitational_block(data, t, mass, substeps):
         block["total_non_grav_work_cadence_difference_j"] = (block["total_non_grav_work_refined_j"]
                                                              - block["total_non_grav_work_j"])
         block["mean_non_grav_power_w"] = (block["total_non_grav_work_j"] / (t[-1] - t[0])) if len(t) > 1 and t[-1] > t[0] else None
-        energy_rate = block.get("mean_specific_energy_change_j_kg")
-        block["non_grav_work_to_energy_change_ratio"] = (
-            None if (energy_rate is None or energy_rate == 0.0) else block["mean_non_grav_power_w"] / energy_rate)
     else:
         block["total_non_grav_work_j"] = None
     for key in ("gravity_gradient_nm", "drag_torque_nm", "albedo_torque_nm", "srp_torque_nm"):

@@ -55,6 +55,13 @@ class MetricIdentities(unittest.TestCase):
         self.assertFalse(verdict["resolved"])
         self.assertFalse(m.classify_resolution(0, 0, consistency=0)["resolved"])
 
+    def test_maximum_scalar_error_includes_negative_excursions(self):
+        base=state_result(areas=(4,4,4))
+        changed=state_result(areas=(3,1,2))
+        comparison=m.compare_observables(base,changed)
+        self.assertEqual(comparison["final"]["projected_area_m2"],-2)
+        self.assertEqual(comparison["maximum"]["projected_area_m2"],3)
+
 
 if __name__ == "__main__":
     unittest.main()

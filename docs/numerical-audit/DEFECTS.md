@@ -21,6 +21,31 @@ canonical tensor must still be positive definite; near-singular/asymmetric data
 cannot be promised the same acceptance as an inconsistent old lower-triangle
 interpretation. The fix does not eliminate general ill-conditioning.
 
+### Sensitivity-tool defects (not production-kernel defects)
+
+`8b55f22` corrects four independently reproduced diagnostic identities:
+the relative SO(3) quaternion must select the shortest arc (160° versus −160°
+is 40°, not 320°); tiny vector angles use atan2 rather than acos; each
+trajectory's angular momentum uses its own inertia; illumination-weighted
+area uses the actual illumination integral. A response, not a derivative
+with different units, is compared to numerical uncertainty.
+
+The additional scalar-error regression has signed differences −1, −3, −2 m².
+The old reported maximum was −1 m²; the corrected maximum absolute error is
+3 m² while the terminal difference remains −2 m². All six independent
+identities pass in `tests/sensitivity_metrics_tests.py`; CTest registers them
+as `audit_metric_identities` when Python is available. The duplicate
+mislabelled specific-energy-rate field and an always-undefined,
+dimensionally inconsistent work/energy ratio were removed; the correctly
+named `specific_energy_rate_w_kg` remains.
+
+Unpublished sensitivity drafts also had a derivative/response unit mismatch,
+discarded scalar derivatives, unmatched CASE-C variant seed options and
+unsupported geometric torque estimates. They are superseded by the v1.1
+amendment and newly measured evidence. These errors do not demonstrate a
+defect in the propagated production equations or resolve NA-OPEN-001.
+
+
 ### Locations, reproductions and regressions
 
 **NUM-001/002/003:** `src/kernel/radiation.cpp`, internal
@@ -114,14 +139,20 @@ Lyapunov exponents or proof of chaos. No smoothing surrogate or new physics was
 used for the final assessment. [CONVERGENCE.md](CONVERGENCE.md) records why neither
 the default nor the refined six-hour reference is currently globally certified.
 
-**Outstanding blocker NA-OPEN-001:** establish an independently verified global
-error budget/reference for fully coupled and drag-driven six-hour attitude
-propagation. The implementation-level defects above are fixed, but refinement
-is nonmonotonic and still exceeds the original angular/work limits. It is not
-scientifically valid to label a nonconverged reference as truth, to relax the
-limits, or to attribute the entire residual to physical chaos. No further
-integrator defect has been independently demonstrated; remaining numerical
-conditioning/precision/discontinuity interactions require investigation.
+**NA-OPEN-001 remains open pending the versioned physical sensitivity study.**
+The historical six-hour data above is preserved. The new study separates
+same-grid physical responses from adaptive and cross-method numerical spread,
+using CASE-A/B and the unchanged CASE-C. Classification B/C/D may coexist;
+an implementation defect is not inferred from disagreement, nor excluded solely
+because a torque-free control converges.
+
+Draft amplification interpretations were withdrawn after independent checks
+found analysis-tool errors: SO(3) distances above pi, gradients compared with
+same-observable uncertainty despite incompatible units, and seeded runs that
+did not retain the matching parameter variant. These are new experimental-tool
+defects, not evidence of a defect in the physical kernel. Their regressions are
+in `tests/sensitivity_metrics_tests.py`; corrected measurements will replace
+only this task's unpublished draft outputs, not historical audit or OPT-001 data.
 
 ## Investigated hypotheses and model limitations
 
