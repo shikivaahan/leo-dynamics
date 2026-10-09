@@ -23,7 +23,12 @@ Geometry external_geometry(InertialVector r, InertialVector sun, double earth_ra
     return {sun/sun_distance, sun_distance, radius};
 }
 double apparent_radius(double body_radius_m, double observer_distance_m) {
-    return std::asin(std::min(1.0, body_radius_m/observer_distance_m));
+    const double ratio=body_radius_m/observer_distance_m;
+    // Preserve the altitude gap before division near the photosphere/limb;
+    // asin(R/r) loses that gap when its argument rounds towards one.
+    const double tangent=std::sqrt((observer_distance_m-body_radius_m)/observer_distance_m)*
+        std::sqrt(1+ratio);
+    return std::atan2(ratio,tangent);
 }
 // Circular-segment area divided by radius squared. The direct expression
 // theta - sin(theta)*cos(theta) cancels for the Earth's small segment angle.

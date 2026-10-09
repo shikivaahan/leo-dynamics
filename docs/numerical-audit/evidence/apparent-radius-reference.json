@@ -1,0 +1,16 @@
+{
+  "oracle": "80-digit independent Cartesian area quadrature; gap one Earth-radius binary64 ULP; low-severity boundary defect, not explanation of 400km workload",
+  "fixture": {
+    "observer_radius_m": 6378137.000000001,
+    "earth_radius_m": 6378137.0,
+    "sun_radius_m": 696340000.0,
+    "sun_position_m": [
+      292817404.93622166,
+      149597571504.35834,
+      0
+    ],
+    "reference": 0.23536539207144871,
+    "before": 0.23536512169507667,
+    "before_error": 2.7037637204130327e-07
+  }
+}

@@ -42,3 +42,12 @@ TEST_CASE("Conical illumination retains small centre separations near the physic
     const double actual=illumination_factor(EclipseModel::conical,r,sun,6378137.,696340000.);
     REQUIRE(std::abs(actual-1.3676741029071159e-6)<1e-12);
 }
+
+TEST_CASE("Apparent body radius preserves a representable altitude above the surface", "[radiation][numerical]") {
+    // One binary64 ULP above the nominal Earth radius. Independent Cartesian
+    // quadrature uses exact binary64 inputs and an 80-digit apparent radius.
+    const InertialVector r{-6378137.000000001,0,0};
+    const InertialVector sun{292817404.93622166,149597571504.35834,0};
+    const double actual=illumination_factor(EclipseModel::conical,r,sun,6378137.,696340000.);
+    REQUIRE(std::abs(actual-0.23536539207144871)<1e-12);
+}
