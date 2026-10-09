@@ -214,6 +214,32 @@ cross-method agreement is small relative to the predeclared conditional
 decision levels despite these floors. CASE-C's six-hour attitude differences
 are order-one and its small instantaneous sensitivities remain unresolved.
 
+### Measured physical source isolation
+
+`force-contributions-v11.json` compares each case with SRP force+torque removed,
+with SRP torque alone removed (the translational force stays on), and with
+gravity-gradient removed. Maximum common-time differences over the horizon,
+with the same resolution gate as every other claim:
+
+| Case / 6 h | Remove SRP (force+torque) | Remove SRP torque only | Remove GG |
+|---|---|---|---|
+| CASE-A position | 0.9419 m | 6e-6 m (unresolved) | 1.129e-3 m |
+| CASE-A orientation | 3.956e-3 rad | 3.956e-3 rad | 5.302e-3 rad |
+| CASE-B position | 364.3 m | 93.0 m | 532.8 m |
+| CASE-B orientation | 3.127 rad | 3.127 rad | 3.134 rad |
+| CASE-C position | 335 m (unresolved) | 378 m (unresolved) | 326 m (unresolved) |
+
+CASE-A behaves as its geometry predicts: its common CP offset is 1 mm, so SRP
+acts essentially through the centre of mass and its whole attitude effect is
+torque-mediated (identical 3.956e-3 rad whether or not the force stays) while
+its orbital effect is force-mediated (0.94 m versus an unresolved 6e-6 m).
+CASE-B's sail couples the other way: its 0.05 m common CP offset lets attitude
+torques feed back into the orbit, so removing SRP torque alone still moves the
+position by 93 m. Every CASE-C six-hour isolation is unresolved, consistent
+with its unresolved baseline rather than evidence that these sources are
+unimportant. These are finite model-isolation changes over six hours, not local
+derivatives and not uncertainty bounds.
+
 ### Demonstrated numerical configurations and cost
 
 The selected fine comparison includes DP5 rtol 1e-13 / absolute-scale 0.001 /

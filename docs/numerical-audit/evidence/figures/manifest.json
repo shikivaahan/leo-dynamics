@@ -1,5 +1,5 @@
 {
-  "source_sha256": "4eebd6f2ab494e7bf937585c544ca21d6799de293fbf4329e89bd67562d9988a",
+  "source_sha256": "fa8a4b5ac73220a6ec7167f354647e842ac15f435a25e38dede73b8ef81117b2",
   "horizon_s": 21600,
   "ranking_observable": "sma_final_m",
   "files": [

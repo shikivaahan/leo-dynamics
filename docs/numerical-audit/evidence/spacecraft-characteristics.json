@@ -3,7 +3,7 @@
   "generator": "docs/numerical-audit/spacecraft_characteristics.py",
   "content": "measured spacecraft characteristics of the version-1 sensitivity cases; every value is metadata, a measurement of the sampled load series, or a documented function of those. No generic spacecraft prior, typical dimension or typical coefficient is used anywhere.",
   "supersedes": "the unpublished analytic draft of this file, which used exaggerated dimension and torque scalings, vector-sum torque shares and invented CubeSat area-to-mass and ballistic-coefficient ranges",
-  "leo_dynamics_source_commit": "8b55f22e1e194ae901228aae89c8763ac1f4e4ab",
+  "leo_dynamics_source_commit": "33f30c314304440788b08e484a1bf3af4ee19d0b",
   "kernel_constants_used": {
     "mu_earth_m3_s2": 398600441800000.0,
     "earth_equatorial_radius_m": 6378136.0,
@@ -27,11 +27,11 @@
   "cases": {
     "CASE-A": {
       "input": {
-        "path": "/tmp/leo-study-v11-a/CASE-A/rkf78-half.json",
+        "path": "/tmp/leo-v12-runs-a/CASE-A/rkf78-half.json",
         "setting_name": "rkf78-half",
-        "sha256": "4314c1a3ea91d0878d725d2b81308b47be44f1719e02066a43925279871c82ab",
+        "sha256": "a64bd0b08a6d45b675d56add726f22023dde6e2f0ecd5704eeb6708cbf834079",
         "command": [
-          "/tmp/leo-audit-final/numerical_audit",
+          "/tmp/leo-audit-jsonfixed/numerical_audit",
           "--spk",
           "/tmp/leo_cspice/kernels/de432s.bsp",
           "--lsk",
@@ -673,11 +673,11 @@
     },
     "CASE-B": {
       "input": {
-        "path": "/tmp/leo-study-v11-b/CASE-B/rkf78-half.json",
+        "path": "/tmp/leo-v12-runs-b/CASE-B/rkf78-half.json",
         "setting_name": "rkf78-half",
-        "sha256": "f8c4c7cb254f50be7721c891ba40cf397cc68fe0fdb41b82ff8322232e1a8251",
+        "sha256": "66270869b9598fbb29738aac5e0b24cc5f24c5534ef0138df6b67798c93ed10d",
         "command": [
-          "/tmp/leo-audit-final/numerical_audit",
+          "/tmp/leo-audit-jsonfixed/numerical_audit",
           "--spk",
           "/tmp/leo_cspice/kernels/de432s.bsp",
           "--lsk",
@@ -1215,11 +1215,11 @@
     },
     "CASE-C": {
       "input": {
-        "path": "/tmp/leo-study-v11-c/CASE-C/rkf78-half.json",
+        "path": "/tmp/leo-v12-runs-c/CASE-C/rkf78-half.json",
         "setting_name": "rkf78-half",
-        "sha256": "a0f89ce172f8f470fad8064e118443075efd8b3ce9aa0c0de3831cbf1d4b630a",
+        "sha256": "2ab0172689c953fb11756cc31399494d24dba2bbcbcc029a61102136f4f4ac37",
         "command": [
-          "/tmp/leo-audit-final/numerical_audit",
+          "/tmp/leo-audit-jsonfixed/numerical_audit",
           "--spk",
           "/tmp/leo_cspice/kernels/de432s.bsp",
           "--lsk",

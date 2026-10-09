@@ -189,6 +189,29 @@ representation, projection and dynamical amplification into independent errors.
 No purely higher-precision physical force calculation or exact SPICE truth
 oracle was used.
 
+### Point-mass energy change is not a decay measurement
+
+`orbital-diagnostics-v11.json` compares the terminal point-mass specific-energy
+difference with the accumulated trapezoidal work of the modelled sources over
+the same six hours:
+
+| Case | Point-mass Δε [J/kg] | Non-gravitational specific work [J/kg] | Ratio | Dominant source |
+|---|---:|---:|---:|---|
+| CASE-A | −9166.1 | −0.2221 | 41271 | drag (−0.2134 J/kg) |
+| CASE-B | −13225.2 | −59.07 | 223.9 | SRP (−23.74) and drag (−40.08) J/kg |
+| CASE-C | −18305.1 | −8226.6 | 2.2 | drag (−8220.7 J/kg) |
+
+Point-mass energy is not conserved under J2; it oscillates by 3.8–7.0e4 J/kg
+within a single case's own run. For CASE-A the naive diagnostic exceeds the
+total modelled work by a factor of 4.1e4. Reporting that number as orbital
+decay would be wrong by four orders of magnitude. Only accumulated source work
+is attributable to the modelled forces, and even that requires the force model
+to be qualified. **A semi-major-axis or energy decay prediction is therefore not
+supported by this study for any case**, and the `energy_change_j_kg` sensitivity
+channel is retained solely as a J2-contaminated diagnostic. Computing decay in
+an osculating Kepler element set under J2 requires a J2-consistent element
+transformation, which this audit does not implement.
+
 ### Mission-observable horizons are not interchangeable
 
 The following are longest **tested nominal horizons** meeting the declared

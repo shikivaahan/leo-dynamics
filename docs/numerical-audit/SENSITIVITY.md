@@ -322,6 +322,13 @@ This is not a Sobol decomposition or a probability-based importance ranking.
 removal (force retained), and gravity-gradient removal in all cases. These
 finite model-isolation changes are not infinitesimal parameter derivatives.
 
+The `energy_change_j_kg` channel is a point-mass diagnostic only. Measured
+over six hours it exceeds the accumulated modelled non-gravitational work by
+a factor of 4.1e4 (CASE-A), 224 (CASE-B) and 2.2 (CASE-C), because point-mass
+energy is not conserved under J2. No sensitivity of that channel is an
+orbital-decay sensitivity; see ACCURACY_BUDGET.md and
+`evidence/orbital-diagnostics-v11.json`.
+
 ## CASE-C mechanism and unresolved six-hour state
 
 Matched continuations show six-hour RK4 0.5→0.25 s final SO(3) disagreement
