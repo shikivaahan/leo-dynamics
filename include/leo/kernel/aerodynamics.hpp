@@ -43,6 +43,12 @@ Wrench flat_plate_drag(const Spacecraft&,const State&,const EnvironmentSnapshot&
 //   Ct = 2 sigma sin(alpha) cos(alpha)          tangential momentum-exchange coefficient
 //   Cd = Cn sin(alpha) + Ct cos(alpha)          along the incoming flow
 //   Cl = Cn cos(alpha) - Ct sin(alpha)          perpendicular to it, in the flow/normal plane
+// Both reported coefficients are evaluated in the algebraically collapsed forms
+//   Cd = 4 (1 - sigma) sin(alpha)^3 + 2 sigma sin(alpha)
+//   Cl = 4 (1 - sigma) sin(alpha)^2 cos(alpha)
+// which are exact identities of the two lines above. Forming Cd and Cl directly
+// from Cn and Ct cancels two nearly equal terms, destroying relative accuracy in
+// Cl as sigma -> 1 and returning roundoff rather than zero at sigma = 1.
 // alpha is the grazing angle: 0 = flow parallel to the plate, pi/2 = face-on incidence.
 // sigma = 1 is fully diffuse with cold re-emission (Cd = 2 sin(alpha), Cl = 0),
 // sigma = 0 to a purely normal specular impulse (Cd = 4 sin(alpha)^3, Cl = 4 sin(alpha)^2 cos(alpha)).
@@ -54,6 +60,11 @@ SentmanCoefficients sentman_coefficients(double grazing_angle_rad,double accommo
 // Per-surface Sentman wrench F = -0.5 rho |v_rel|^2 A (Cn n + Ct t_hat) with t_hat the
 // incoming-flow unit direction tangential to the plate. Front surfaces only (n.v_hat > 0).
 // Uses the COM-flow and cold-beam assumptions above; omega x r_panel is neglected.
+// The exchange vector is built as 4 (1-sigma) sin(alpha)^2 n + 2 sigma sin(alpha) v_hat,
+// which is exactly Cn n + Ct t_hat after the t_hat reconstruction is carried out, so the
+// face-on limit stays finite and no division by cos(alpha) is needed. Its flow-parallel
+// component agrees algebraically with sentman_coefficients().drag; floating-point
+// evaluation of the equivalent expressions need not be bit-identical.
 // No lift direction is reconstructed, so the force stays exact when the flow is axis aligned.
 Wrench sentman_drag(const Spacecraft&,const State&,const EnvironmentSnapshot&);
 

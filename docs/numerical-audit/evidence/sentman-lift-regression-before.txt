@@ -1,0 +1,25 @@
+Filters: "Sentman small lift agrees with independent high-precision momentum flux"
+Randomness seeded to: 2012535395
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+leo-audit-lift-before is a Catch2 v3.7.1 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+Sentman small lift agrees with independent high-precision momentum flux
+-------------------------------------------------------------------------------
+tests/numerical_environment_tests.cpp:30
+...............................................................................
+
+tests/numerical_environment_tests.cpp:50: FAILED:
+  REQUIRE( std::abs(sentman_coefficients(f.angle,f.sigma).lift-f.lift)/f.lift<1e-14 )
+with expansion:
+  0.00000000000976487 < 0.00000000000001
+with messages:
+  f.angle := 0.26179938779914941
+  f.sigma := 0.99999899999999997
+
+===============================================================================
+test cases: 1 | 1 failed
+assertions: 1 | 1 failed
+

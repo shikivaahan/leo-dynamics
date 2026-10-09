@@ -103,7 +103,9 @@ SentmanCoefficients sentman_coefficients(double grazing_angle_rad,double accommo
     const double s=std::sin(grazing_angle_rad),c=std::cos(grazing_angle_rad);
     const double normal=(4-2*accommodation)*s*s;
     const double tangential=2*accommodation*s*c;
-    return {normal*s+tangential*c,normal*c-tangential*s};
+    // Factor the small lift directly; subtracting two O(1) momentum terms
+    // loses relative accuracy near full accommodation. The drag sum is stable.
+    return {normal*s+tangential*c,4*(1-accommodation)*s*s*c};
 }
 Wrench sentman_drag(const Spacecraft& craft,const State& state,const EnvironmentSnapshot& env) {
     const Flow flow=incoming_flow(state,env);
@@ -118,7 +120,7 @@ Wrench sentman_drag(const Spacecraft& craft,const State& state,const Environment
         // Cn n + Ct t_hat with t_hat = (v_hat - sin(alpha) n)/cos(alpha) reduces exactly to
         // 4(1 - sigma) sin^2(alpha) n + 2 sigma sin(alpha) v_hat, so no lift axis or division
         // by cos(alpha) is needed and the face-on limit stays finite. The flow-parallel
-        // component of this expression reproduces sentman_coefficients().drag exactly.
+        // component has the same analytic value as sentman_coefficients().drag.
         const BodyVector exchange=normal*(4*(1-sigma)*sine_alpha*sine_alpha)+
                                    flow.direction_body*(2*sigma*sine_alpha);
         const BodyVector force=exchange*(-flow.dynamic_pressure_pa*surface.area_m2());

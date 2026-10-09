@@ -1,0 +1,125 @@
+{
+  "oracle": "60-digit incoming/outgoing molecular momentum vectors; binary64 angles and accommodation converted exactly",
+  "fixtures": [
+    {
+      "angle_rad": 0.2617993877991494,
+      "accommodation": 0.999999,
+      "drag": 0.5176376419173053,
+      "lift": 2.588190451099632e-07,
+      "before_lift": 2.5881904511249054e-07,
+      "after_lift": 2.588190451099632e-07,
+      "before_relative_error": 9.764870878401711e-12,
+      "after_relative_error": 0.0
+    },
+    {
+      "angle_rad": 0.2617993877991494,
+      "accommodation": 0.999999999,
+      "drag": 0.5176380897567537,
+      "lift": 2.588190377826182e-10,
+      "before_lift": 2.5881902177005145e-10,
+      "after_lift": 2.5881903778261825e-10,
+      "before_relative_error": 6.186780880217257e-08,
+      "after_relative_error": 1.9974878481692672e-16
+    },
+    {
+      "angle_rad": 0.2617993877991494,
+      "accommodation": 0.999999999999,
+      "drag": 0.5176380902045932,
+      "lift": 2.5881331958004286e-13,
+      "before_lift": 2.588207426157396e-13,
+      "after_lift": 2.5881331958004286e-13,
+      "before_relative_error": 2.8681042029844966e-05,
+      "after_relative_error": 0.0
+    },
+    {
+      "angle_rad": 0.2617993877991494,
+      "accommodation": 0.999999999999999,
+      "drag": 0.517638090205041,
+      "lift": 2.586121767758838e-16,
+      "before_lift": 2.220446049250313e-16,
+      "after_lift": 2.5861217677588385e-16,
+      "before_relative_error": 0.14139926552082796,
+      "after_relative_error": 1.9064766087576947e-16
+    },
+    {
+      "angle_rad": 0.7853981633974483,
+      "accommodation": 0.999999,
+      "drag": 1.414213562373095,
+      "lift": 1.4142135624137616e-06,
+      "before_lift": 1.4142135624783947e-06,
+      "after_lift": 1.4142135624137614e-06,
+      "before_relative_error": 4.570247557813073e-11,
+      "after_relative_error": 1.4973568521868001e-16
+    },
+    {
+      "angle_rad": 0.7853981633974483,
+      "accommodation": 0.999999999,
+      "drag": 1.414213562373095,
+      "lift": 1.4142135223764039e-09,
+      "before_lift": 1.414213524064678e-09,
+      "after_lift": 1.4142135223764039e-09,
+      "before_relative_error": 1.1937901568199759e-09,
+      "after_relative_error": 0.0
+    },
+    {
+      "angle_rad": 0.7853981633974483,
+      "accommodation": 0.999999999999,
+      "drag": 1.414213562373095,
+      "lift": 1.414182277536476e-12,
+      "before_lift": 1.4142020887675244e-12,
+      "after_lift": 1.414182277536476e-12,
+      "before_relative_error": 1.4008965720339973e-05,
+      "after_relative_error": 0.0
+    },
+    {
+      "angle_rad": 0.7853981633974483,
+      "accommodation": 0.999999999999999,
+      "drag": 1.414213562373095,
+      "lift": 1.4130832128153975e-15,
+      "before_lift": 1.2212453270876722e-15,
+      "after_lift": 1.4130832128153973e-15,
+      "before_relative_error": 0.13575837854977524,
+      "after_relative_error": 1.3956377410522444e-16
+    },
+    {
+      "angle_rad": 1.3089969389957472,
+      "accommodation": 0.999999,
+      "drag": 1.9318533256107442,
+      "lift": 9.659258263168441e-07,
+      "before_lift": 9.659258263794435e-07,
+      "after_lift": 9.659258263168441e-07,
+      "before_relative_error": 6.480760011440539e-11,
+      "after_relative_error": 0.0
+    },
+    {
+      "angle_rad": 1.3089969389957472,
+      "accommodation": 0.999999999,
+      "drag": 1.9318516542511692,
+      "lift": 9.659257989708201e-10,
+      "before_lift": 9.659258393135417e-10,
+      "after_lift": 9.659257989708203e-10,
+      "before_relative_error": 4.176585988455059e-08,
+      "after_relative_error": 2.1409010232317446e-16
+    },
+    {
+      "angle_rad": 1.3089969389957472,
+      "accommodation": 0.999999999999,
+      "drag": 1.9318516525798095,
+      "lift": 9.659044583482808e-13,
+      "before_lift": 9.658940314238862e-13,
+      "after_lift": 9.65904458348281e-13,
+      "before_relative_error": 1.0794985264370147e-05,
+      "after_relative_error": 2.0907698477954588e-16
+    },
+    {
+      "angle_rad": 1.3089969389957472,
+      "accommodation": 0.999999999999999,
+      "drag": 1.9318516525781382,
+      "lift": 9.651537831835825e-16,
+      "before_lift": 9.43689570931383e-16,
+      "after_lift": 9.651537831835825e-16,
+      "before_relative_error": 0.02223916294603254,
+      "after_relative_error": 0.0
+    }
+  ]
+}
