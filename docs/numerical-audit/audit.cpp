@@ -576,11 +576,11 @@ int main(int argc,char** argv) {
             }
             ts<<']';j.raw("steps",ts.str());
             j.raw("steps_fields",R"(["time_s","step_s","scaled_error","accepted","illumination",)"
-                               R"(["proposed_step_s","altitude_m","density_kg_m3",)"
-                               R"(["solar_incidence_mask","wind_incidence_mask",)"
-                               R"(["clipped_to_output","clipped_to_max_step",)"
-                               R"(["solar_projected_area_m2","wind_projected_area_m2",)"
-                               R"(["solar_silhouette_m2","wind_silhouette_m2"]])");
+                               R"("proposed_step_s","altitude_m","density_kg_m3",)"
+                               R"("solar_incidence_mask","wind_incidence_mask",)"
+                               R"("clipped_to_output","clipped_to_max_step",)"
+                               R"("solar_projected_area_m2","wind_projected_area_m2",)"
+                               R"("solar_silhouette_m2","wind_silhouette_m2"])");
             j.raw("trace_events",trace_events.json("accepted_trace_steps",static_cast<long long>(rejected),
                 static_cast<long long>(clipped_to_output),static_cast<long long>(clipped_to_max_step)).str());
         } else {
