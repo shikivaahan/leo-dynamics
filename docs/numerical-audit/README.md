@@ -226,6 +226,9 @@ Canonical measurements and figures are under `evidence/`. Large raw trajectories
 and uncompressed intermediate reports are kept in temporary scientific work
 directories, not duplicated in committed evidence. Gzip requires only the Python
 standard library. Every claim is tied to measured binary/configuration digests.
+`publish_v11_evidence.sh` re-runs only the report/figure/derivation stages from
+an existing corrected-binary raw directory (`RAW_DIR`), for example after a
+diagnostic change; `run_experiments.sh` is the full from-scratch reproduction.
 
 ### Interpretation and verification
 

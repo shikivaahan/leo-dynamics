@@ -214,6 +214,31 @@ cross-method agreement is small relative to the predeclared conditional
 decision levels despite these floors. CASE-C's six-hour attitude differences
 are order-one and its small instantaneous sensitivities remain unresolved.
 
+### Where adaptive rejections actually occur
+
+`precision-events-v11.json` counts only attempts with `accepted=false` and
+compares them with full attempt denominators inside and outside declared event
+windows. The trace checksum matches the production Dopri run at every horizon,
+so these are production decisions, and locally recomputed counters match the
+harness's own diagnostics. Six-hour production defaults:
+
+| Case | Rejected / total attempts | Rejection rate | Enrichment at face-incidence changes | Enrichment at eclipse boundaries |
+|---|---:|---:|---:|---:|
+| CASE-A | 119 / 8727 | 1.36 % | 0.45 | 3.21 |
+| CASE-B | 127 / 1751 | 7.25 % | 0.00 | 5.62 |
+| CASE-C | 1169 / 6400 | 18.27 % | 7.53 | 2.93 |
+
+CASE-C's production controller rejects nearly one attempt in five, concentrated
+at attitude-dependent surface-incidence transitions, exactly where the drag
+force law is nonsmooth. That is the implemented controller responding to a real
+force-law discontinuity — an `O(n·u)` panel law with no smoothing — not evidence
+of a solver bug. It also explains why CASE-C consumes many more RHS calls than
+its trajectory accuracy warrants and why its cross-configuration spread is
+large: many configurations are integrating slightly different force histories
+through those transitions. Nothing here certifies a particular CASE-C reference.
+Bin windows that cover the whole attempt set, or events with no denominators,
+are labelled undefined rather than reported as zero enrichment.
+
 ### Measured physical source isolation
 
 `force-contributions-v11.json` compares each case with SRP force+torque removed,

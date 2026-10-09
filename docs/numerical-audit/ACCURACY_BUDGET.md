@@ -189,6 +189,23 @@ representation, projection and dynamical amplification into independent errors.
 No purely higher-precision physical force calculation or exact SPICE truth
 oracle was used.
 
+### Ephemeris sensitivity is unresolved, not small
+
+`precision-events-v11.json` perturbs the direct Sun X coordinate by signed
+representable sizes and measures what actually reached the force model from the
+reported load series. The Sun X component's ULP is 3.8147e-6 m, so a requested
+1e-6 m offset applies exactly zero and is permanently unresolved; 1 ULP, 1e5
+ULPs, 1 m, 100 m and 1000 m all realise exactly as requested with sign preserved.
+
+At six hours the largest response/envelope ratio over every observable, sign and
+size is 1.34 (inclination, CASE-A); the greatest ratio anywhere in the study is
+1.34 against a required 10. **Zero of 154 entries per case per horizon resolve.**
+Every reported Sun-offset difference is a measured run-to-run difference, not an
+ephemeris sensitivity. This is the direct answer to the original suspicion that a
+30 µm Sun perturbation drove the six-hour anomaly: it is not separable from
+numerical uncertainty at any tested size in any case, while the initial-condition
+and parameter sensitivities of the same cases are clearly resolvable.
+
 ### Point-mass energy change is not a decay measurement
 
 `orbital-diagnostics-v11.json` compares the terminal point-mass specific-energy
