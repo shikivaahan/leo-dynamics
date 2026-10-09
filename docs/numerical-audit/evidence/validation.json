@@ -1,0 +1,29 @@
+{
+  "gcc": {
+    "compiler": "GCC13.3.0",
+    "build": "Release",
+    "passed": 114,
+    "failed": 0,
+    "log": "gcc-tests.log",
+    "real_spice": true,
+    "plotting": true
+  },
+  "clang": {
+    "compiler": "Clang18.1.3",
+    "build": "Release",
+    "passed": 114,
+    "failed": 0,
+    "log": "clang-tests.log",
+    "real_spice": true,
+    "plotting": true
+  },
+  "sanitizer": {
+    "compiler": "Clang18.1.3",
+    "build": "Debug ASan/UBSan",
+    "passed": 114,
+    "failed": 0,
+    "log": "sanitizer-tests.log",
+    "real_spice": true,
+    "plotting": true
+  }
+}

@@ -198,6 +198,18 @@ See [benchmark methodology](benchmarks/README.md),
 [OPT-001 evidence and decision](benchmarks/OPTIMISATIONS.md) and
 [performance summary](benchmarks/PERFORMANCE_SUMMARY.md).
 
+## Numerical correctness audit
+
+The numerical audit fixes independently reproduced eclipse cancellation,
+small-angle/apparent-radius conditioning, near-full-accommodation Sentman lift
+and inconsistent accepted inertia operators. It does **not** establish a
+converged six-hour fully coupled reference: independently refined solutions
+still disagree, and the original cache intervals remain rejected.
+Default tolerances, physical approximations and the cache implementation are
+unchanged. See [audit scope and reproduction](docs/numerical-audit/README.md),
+[defect ledger](docs/numerical-audit/DEFECTS.md) and
+[convergence assessment](docs/numerical-audit/CONVERGENCE.md).
+
 
 ## Propagation and errors
 

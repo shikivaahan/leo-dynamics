@@ -1,0 +1,19 @@
+{
+  "before": {
+    "sun_x_perturbation_m": 3e-05,
+    "duration_s": 21600,
+    "final_position_difference_m": 0.1105231383191743,
+    "final_velocity_difference_m_s": 0.00012285552250042566,
+    "final_attitude_difference_rad": 0.013306499423528866,
+    "final_omega_difference_rad_s": 5.244465635558483e-05
+  },
+  "after": {
+    "sun_x_perturbation_m": 3e-05,
+    "duration_s": 21600,
+    "final_position_difference_m": 0.1712903823482256,
+    "final_velocity_difference_m_s": 0.0001871208475860125,
+    "final_attitude_difference_rad": 0.02295762801684611,
+    "final_omega_difference_rad_s": 8.678375640505252e-05
+  },
+  "isolation": "Only radiation.cpp replaced; preserved original integrator, attitude, gravity, atmosphere, spacecraft, SPICE and benchmark inputs"
+}

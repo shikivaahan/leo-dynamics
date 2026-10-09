@@ -1,0 +1,756 @@
+{
+  "source_commit": "84de8919a86cb42845f649fac7d25789031cf2f6",
+  "cache_implementation": "unchanged",
+  "acceptance_criteria": "unchanged benchmarks/ACCURACY.md",
+  "intervals": {
+    "60": {
+      "benchmark_id": "ACCURACY",
+      "mode": "cached",
+      "interval_s": 60,
+      "duration_s": 21600,
+      "wall_seconds": 1.119571553,
+      "preprocess_seconds": 0.002030898,
+      "rhs_count": 130582,
+      "ephemeris_queries": 0,
+      "underlying_queries": 361,
+      "checksum": "4441a9c417cfcf34",
+      "correctness": false,
+      "accuracy": {
+        "passed": false,
+        "deterministic": true
+      },
+      "ephemeris_6h": {
+        "position_m": {
+          "max": 3.2368779656366614e-05,
+          "rms": 1.397131969406767e-05,
+          "count": 1080
+        },
+        "velocity_m_s": {
+          "max": 9.647828760193212e-07,
+          "rms": 3.090643756785732e-07,
+          "count": 1080
+        },
+        "node_position_m": {
+          "max": 0,
+          "rms": 0,
+          "count": 361
+        },
+        "node_velocity_m_s": {
+          "max": 0,
+          "rms": 0,
+          "count": 361
+        },
+        "build_seconds": 0.001725188,
+        "nodes": 361,
+        "memory_bytes": 20272,
+        "underlying_queries": 361,
+        "boundaries": true,
+        "deterministic": true,
+        "passed": true
+      },
+      "ephemeris_30d": {
+        "position_m": {
+          "max": 5.501634636633285e-05,
+          "rms": 1.6300148518062547e-05,
+          "count": 129600
+        },
+        "velocity_m_s": {
+          "max": 1.2616666426429669e-06,
+          "rms": 3.5159598044150086e-07,
+          "count": 129600
+        },
+        "node_position_m": {
+          "max": 0,
+          "rms": 0,
+          "count": 43201
+        },
+        "node_velocity_m_s": {
+          "max": 0,
+          "rms": 0,
+          "count": 43201
+        },
+        "build_seconds": 0.178299052,
+        "nodes": 43201,
+        "memory_bytes": 2419312,
+        "underlying_queries": 43201,
+        "boundaries": true,
+        "deterministic": true,
+        "passed": true
+      },
+      "nonmultiple_boundary": {
+        "position_m": {
+          "max": 3.2368779656366614e-05,
+          "rms": 1.3961582767306336e-05,
+          "count": 1083
+        },
+        "velocity_m_s": {
+          "max": 1.0758682789749238e-06,
+          "rms": 3.1229369856695676e-07,
+          "count": 1083
+        },
+        "node_position_m": {
+          "max": 0,
+          "rms": 0,
+          "count": 362
+        },
+        "node_velocity_m_s": {
+          "max": 0,
+          "rms": 0,
+          "count": 362
+        },
+        "build_seconds": 0.000956777,
+        "nodes": 362,
+        "memory_bytes": 20328,
+        "underlying_queries": 362,
+        "boundaries": true,
+        "deterministic": true,
+        "passed": true
+      },
+      "srp_force_n": {
+        "max": 4.72219776066228e-19,
+        "rms": 6.678721900598343e-20,
+        "count": 6724
+      },
+      "srp_torque_nm": {
+        "max": 1.5601605605617318e-20,
+        "rms": 2.2184313737843616e-21,
+        "count": 6724
+      },
+      "illumination": {
+        "max": 2.9976021664879227e-14,
+        "rms": 4.306191720383874e-15,
+        "count": 6724
+      },
+      "trajectory_position_m": {
+        "max": 2.8484398485328226,
+        "rms": 0.552451029099299,
+        "count": 721
+      },
+      "trajectory_velocity_m_s": {
+        "max": 0.0031214716051798006,
+        "rms": 0.0006540113487238996,
+        "count": 721
+      },
+      "trajectory_attitude_rad": {
+        "max": 0.5776794580454899,
+        "rms": 0.10093982153722972,
+        "count": 721
+      },
+      "trajectory_omega_rad_s": {
+        "max": 0.002207042004095685,
+        "rms": 0.0003356236996781645,
+        "count": 721
+      },
+      "final_position_m": 2.8484398485328226,
+      "final_velocity_m_s": 0.002957718605139733,
+      "final_attitude_rad": 0.3783938314849034,
+      "final_omega_rad_s": 0.001271895991111375,
+      "srp_work_direct_j": -67.49594434798624,
+      "srp_work_cached_j": -67.05821093484572,
+      "srp_work_difference_j": 0.4377334131405206,
+      "penumbra_points": 2367,
+      "direct_rhs_count": 43416,
+      "cached_rhs_count": 43583,
+      "direct_wall_seconds": 0.216701721,
+      "cached_wall_seconds": 0.050147067,
+      "reference": {
+        "final_position_m": [
+          5442931.861770569,
+          -3282802.815499066,
+          -2342465.110193987
+        ],
+        "final_velocity_m_s": [
+          4569.623774325131,
+          4882.655557620063,
+          3757.289977325089
+        ],
+        "final_quaternion": [
+          -0.7079305551740493,
+          -0.590237343301767,
+          -0.16927498877784877,
+          -0.3489988335185284
+        ],
+        "final_omega_rad_s": [
+          -8.46144512011732e-05,
+          0.0013438532839446789,
+          -0.0009950809142329061
+        ],
+        "cumulative_srp_work_j": -67.05821093484572,
+        "trajectory_checksum": "4441a9c417cfcf34"
+      }
+    },
+    "300": {
+      "benchmark_id": "ACCURACY",
+      "mode": "cached",
+      "interval_s": 300,
+      "duration_s": 21600,
+      "wall_seconds": 0.445932122,
+      "preprocess_seconds": 0.000188117,
+      "rhs_count": 130410,
+      "ephemeris_queries": 0,
+      "underlying_queries": 73,
+      "checksum": "a67824c2cacc6435",
+      "correctness": false,
+      "accuracy": {
+        "passed": false,
+        "deterministic": true
+      },
+      "ephemeris_6h": {
+        "position_m": {
+          "max": 3.411968959808029e-05,
+          "rms": 1.4128596694105204e-05,
+          "count": 216
+        },
+        "velocity_m_s": {
+          "max": 1.5873354646795044e-07,
+          "rms": 6.59449152864972e-08,
+          "count": 216
+        },
+        "node_position_m": {
+          "max": 0,
+          "rms": 0,
+          "count": 73
+        },
+        "node_velocity_m_s": {
+          "max": 0,
+          "rms": 0,
+          "count": 73
+        },
+        "build_seconds": 0.000488257,
+        "nodes": 73,
+        "memory_bytes": 4144,
+        "underlying_queries": 73,
+        "boundaries": true,
+        "deterministic": true,
+        "passed": true
+      },
+      "ephemeris_30d": {
+        "position_m": {
+          "max": 5.709316080892854e-05,
+          "rms": 1.6292758944999815e-05,
+          "count": 25920
+        },
+        "velocity_m_s": {
+          "max": 2.356099622904494e-07,
+          "rms": 6.988231486453366e-08,
+          "count": 25920
+        },
+        "node_position_m": {
+          "max": 0,
+          "rms": 0,
+          "count": 8641
+        },
+        "node_velocity_m_s": {
+          "max": 0,
+          "rms": 0,
+          "count": 8641
+        },
+        "build_seconds": 0.037104184,
+        "nodes": 8641,
+        "memory_bytes": 483952,
+        "underlying_queries": 8641,
+        "boundaries": true,
+        "deterministic": true,
+        "passed": true
+      },
+      "nonmultiple_boundary": {
+        "position_m": {
+          "max": 3.411968959808029e-05,
+          "rms": 1.4078767835740683e-05,
+          "count": 219
+        },
+        "velocity_m_s": {
+          "max": 1.0758682789749238e-06,
+          "rms": 1.2458147765176144e-07,
+          "count": 219
+        },
+        "node_position_m": {
+          "max": 0,
+          "rms": 0,
+          "count": 74
+        },
+        "node_velocity_m_s": {
+          "max": 0,
+          "rms": 0,
+          "count": 74
+        },
+        "build_seconds": 0.000201196,
+        "nodes": 74,
+        "memory_bytes": 4200,
+        "underlying_queries": 74,
+        "boundaries": true,
+        "deterministic": true,
+        "passed": true
+      },
+      "srp_force_n": {
+        "max": 4.72219776066228e-19,
+        "rms": 6.680192652946713e-20,
+        "count": 6724
+      },
+      "srp_torque_nm": {
+        "max": 1.5601605605617318e-20,
+        "rms": 2.2218026232125474e-21,
+        "count": 6724
+      },
+      "illumination": {
+        "max": 2.9976021664879227e-14,
+        "rms": 4.306191720383874e-15,
+        "count": 6724
+      },
+      "trajectory_position_m": {
+        "max": 0.6095636592893217,
+        "rms": 0.14834993797649423,
+        "count": 721
+      },
+      "trajectory_velocity_m_s": {
+        "max": 0.0007008248689482907,
+        "rms": 0.0001669559053752086,
+        "count": 721
+      },
+      "trajectory_attitude_rad": {
+        "max": 0.1498581171899453,
+        "rms": 0.025982921360427548,
+        "count": 721
+      },
+      "trajectory_omega_rad_s": {
+        "max": 0.0006387421829537793,
+        "rms": 9.535994077931375e-05,
+        "count": 721
+      },
+      "final_position_m": 0.6095636592893217,
+      "final_velocity_m_s": 0.0007008248689482907,
+      "final_attitude_rad": 0.06985518962769087,
+      "final_omega_rad_s": 0.00028334467963561584,
+      "srp_work_direct_j": -67.49594434798624,
+      "srp_work_cached_j": -66.484035048396,
+      "srp_work_difference_j": 1.0119092995902434,
+      "penumbra_points": 2367,
+      "direct_rhs_count": 43416,
+      "cached_rhs_count": 43497,
+      "direct_wall_seconds": 0.185254265,
+      "cached_wall_seconds": 0.039327039,
+      "reference": {
+        "final_position_m": [
+          5442930.271805733,
+          -3282805.2576069687,
+          -2342466.9712279965
+        ],
+        "final_velocity_m_s": [
+          4569.624548179901,
+          4882.652893393584,
+          3757.287695404217
+        ],
+        "final_quaternion": [
+          -0.5672272795347744,
+          -0.7506888050505895,
+          -0.11444591340921152,
+          -0.3187815305616499
+        ],
+        "final_omega_rad_s": [
+          0.0011778029827410148,
+          0.002227657634641159,
+          -0.0009196803603019416
+        ],
+        "cumulative_srp_work_j": -66.484035048396,
+        "trajectory_checksum": "a67824c2cacc6435"
+      }
+    },
+    "900": {
+      "benchmark_id": "ACCURACY",
+      "mode": "cached",
+      "interval_s": 900,
+      "duration_s": 21600,
+      "wall_seconds": 0.341605693,
+      "preprocess_seconds": 6.6726e-05,
+      "rhs_count": 131004,
+      "ephemeris_queries": 0,
+      "underlying_queries": 25,
+      "checksum": "703cee08a9dfbbbf",
+      "correctness": false,
+      "accuracy": {
+        "passed": false,
+        "deterministic": true
+      },
+      "ephemeris_6h": {
+        "position_m": {
+          "max": 3.145679951185349e-05,
+          "rms": 1.4287443195498297e-05,
+          "count": 72
+        },
+        "velocity_m_s": {
+          "max": 4.044364190547176e-08,
+          "rms": 1.943150965644066e-08,
+          "count": 72
+        },
+        "node_position_m": {
+          "max": 0,
+          "rms": 0,
+          "count": 25
+        },
+        "node_velocity_m_s": {
+          "max": 0,
+          "rms": 0,
+          "count": 25
+        },
+        "build_seconds": 0.000408024,
+        "nodes": 25,
+        "memory_bytes": 1456,
+        "underlying_queries": 25,
+        "boundaries": true,
+        "deterministic": true,
+        "passed": true
+      },
+      "ephemeris_30d": {
+        "position_m": {
+          "max": 4.640779518354964e-05,
+          "rms": 1.62801079339684e-05,
+          "count": 8640
+        },
+        "velocity_m_s": {
+          "max": 7.653055307094963e-08,
+          "rms": 2.3391012866816558e-08,
+          "count": 8640
+        },
+        "node_position_m": {
+          "max": 0,
+          "rms": 0,
+          "count": 2881
+        },
+        "node_velocity_m_s": {
+          "max": 0,
+          "rms": 0,
+          "count": 2881
+        },
+        "build_seconds": 0.008112531,
+        "nodes": 2881,
+        "memory_bytes": 161392,
+        "underlying_queries": 2881,
+        "boundaries": true,
+        "deterministic": true,
+        "passed": true
+      },
+      "nonmultiple_boundary": {
+        "position_m": {
+          "max": 3.145679951185349e-05,
+          "rms": 1.4136700551032813e-05,
+          "count": 75
+        },
+        "velocity_m_s": {
+          "max": 1.0758682789749238e-06,
+          "rms": 1.820937194041349e-07,
+          "count": 75
+        },
+        "node_position_m": {
+          "max": 0,
+          "rms": 0,
+          "count": 26
+        },
+        "node_velocity_m_s": {
+          "max": 0,
+          "rms": 0,
+          "count": 26
+        },
+        "build_seconds": 9.2076e-05,
+        "nodes": 26,
+        "memory_bytes": 1512,
+        "underlying_queries": 26,
+        "boundaries": true,
+        "deterministic": true,
+        "passed": true
+      },
+      "srp_force_n": {
+        "max": 4.72219776066228e-19,
+        "rms": 6.680915188171864e-20,
+        "count": 6724
+      },
+      "srp_torque_nm": {
+        "max": 1.5601605605617318e-20,
+        "rms": 2.222888654931061e-21,
+        "count": 6724
+      },
+      "illumination": {
+        "max": 2.9976021664879227e-14,
+        "rms": 4.3061930107741574e-15,
+        "count": 6724
+      },
+      "trajectory_position_m": {
+        "max": 5.189613359411011,
+        "rms": 1.0602089936126518,
+        "count": 721
+      },
+      "trajectory_velocity_m_s": {
+        "max": 0.005937218465095567,
+        "rms": 0.0013093336592717413,
+        "count": 721
+      },
+      "trajectory_attitude_rad": {
+        "max": 1.158773599586267,
+        "rms": 0.20346318306882477,
+        "count": 721
+      },
+      "trajectory_omega_rad_s": {
+        "max": 0.00402658375425936,
+        "rms": 0.0006398695455911792,
+        "count": 721
+      },
+      "final_position_m": 5.189613359411011,
+      "final_velocity_m_s": 0.005937218465095567,
+      "final_attitude_rad": 0.8486251266349073,
+      "final_omega_rad_s": 0.0031217805399014393,
+      "srp_work_direct_j": -67.49594434798624,
+      "srp_work_cached_j": -61.26543042552746,
+      "srp_work_difference_j": 6.230513922458776,
+      "penumbra_points": 2367,
+      "direct_rhs_count": 43416,
+      "cached_rhs_count": 43794,
+      "direct_wall_seconds": 0.18755681,
+      "cached_wall_seconds": 0.03882984,
+      "reference": {
+        "final_position_m": [
+          5442932.142855231,
+          -3282800.970294666,
+          -2342463.557722703
+        ],
+        "final_velocity_m_s": [
+          4569.61990715863,
+          4882.656331330994,
+          3757.2909347176364
+        ],
+        "final_quaternion": [
+          -0.8151501398708086,
+          -0.3822210852178299,
+          -0.16250198055665285,
+          -0.40377022896527537
+        ],
+        "final_omega_rad_s": [
+          -0.001816976024636748,
+          0.0009019371244807075,
+          -0.00015358755105382278
+        ],
+        "cumulative_srp_work_j": -61.26543042552746,
+        "trajectory_checksum": "703cee08a9dfbbbf"
+      }
+    },
+    "1800": {
+      "benchmark_id": "ACCURACY",
+      "mode": "cached",
+      "interval_s": 1800,
+      "duration_s": 21600,
+      "wall_seconds": 0.384861551,
+      "preprocess_seconds": 3.5521e-05,
+      "rhs_count": 131612,
+      "ephemeris_queries": 0,
+      "underlying_queries": 13,
+      "checksum": "de00addcd5d7615a",
+      "correctness": false,
+      "accuracy": {
+        "passed": false,
+        "deterministic": true
+      },
+      "ephemeris_6h": {
+        "position_m": {
+          "max": 3.2368779656366614e-05,
+          "rms": 1.5676915494204145e-05,
+          "count": 36
+        },
+        "velocity_m_s": {
+          "max": 3.539747571101532e-08,
+          "rms": 1.821411828855634e-08,
+          "count": 36
+        },
+        "node_position_m": {
+          "max": 0,
+          "rms": 0,
+          "count": 13
+        },
+        "node_velocity_m_s": {
+          "max": 0,
+          "rms": 0,
+          "count": 13
+        },
+        "build_seconds": 0.000651603,
+        "nodes": 13,
+        "memory_bytes": 784,
+        "underlying_queries": 13,
+        "boundaries": true,
+        "deterministic": true,
+        "passed": true
+      },
+      "ephemeris_30d": {
+        "position_m": {
+          "max": 4.640779518354964e-05,
+          "rms": 1.7905313481585646e-05,
+          "count": 4320
+        },
+        "velocity_m_s": {
+          "max": 4.017669667826788e-08,
+          "rms": 1.7943347762973618e-08,
+          "count": 4320
+        },
+        "node_position_m": {
+          "max": 0,
+          "rms": 0,
+          "count": 1441
+        },
+        "node_velocity_m_s": {
+          "max": 0,
+          "rms": 0,
+          "count": 1441
+        },
+        "build_seconds": 0.005175745,
+        "nodes": 1441,
+        "memory_bytes": 80752,
+        "underlying_queries": 1441,
+        "boundaries": true,
+        "deterministic": true,
+        "passed": true
+      },
+      "nonmultiple_boundary": {
+        "position_m": {
+          "max": 3.2368779656366614e-05,
+          "rms": 1.530761731230096e-05,
+          "count": 39
+        },
+        "velocity_m_s": {
+          "max": 1.0758682789749238e-06,
+          "rms": 2.51743475937231e-07,
+          "count": 39
+        },
+        "node_position_m": {
+          "max": 0,
+          "rms": 0,
+          "count": 14
+        },
+        "node_velocity_m_s": {
+          "max": 0,
+          "rms": 0,
+          "count": 14
+        },
+        "build_seconds": 3.9266e-05,
+        "nodes": 14,
+        "memory_bytes": 840,
+        "underlying_queries": 14,
+        "boundaries": true,
+        "deterministic": true,
+        "passed": true
+      },
+      "srp_force_n": {
+        "max": 4.72219776066228e-19,
+        "rms": 6.681058972143501e-20,
+        "count": 6724
+      },
+      "srp_torque_nm": {
+        "max": 1.5601605605617318e-20,
+        "rms": 2.2238318846147136e-21,
+        "count": 6724
+      },
+      "illumination": {
+        "max": 2.9976021664879227e-14,
+        "rms": 4.306191933231783e-15,
+        "count": 6724
+      },
+      "trajectory_position_m": {
+        "max": 4.575988590785963,
+        "rms": 0.9343154436586956,
+        "count": 721
+      },
+      "trajectory_velocity_m_s": {
+        "max": 0.004978118552408419,
+        "rms": 0.001137684460585724,
+        "count": 721
+      },
+      "trajectory_attitude_rad": {
+        "max": 1.018312674578514,
+        "rms": 0.17816675045459793,
+        "count": 721
+      },
+      "trajectory_omega_rad_s": {
+        "max": 0.0036153894193112234,
+        "rms": 0.000566677514014487,
+        "count": 721
+      },
+      "final_position_m": 4.575988590785963,
+      "final_velocity_m_s": 0.004978118552408419,
+      "final_attitude_rad": 0.7122509093595845,
+      "final_omega_rad_s": 0.0025804718920556706,
+      "srp_work_direct_j": -67.49594434798624,
+      "srp_work_cached_j": -62.6505832850413,
+      "srp_work_difference_j": 4.845361062944939,
+      "penumbra_points": 2367,
+      "direct_rhs_count": 43416,
+      "cached_rhs_count": 44098,
+      "direct_wall_seconds": 0.212094954,
+      "cached_wall_seconds": 0.053181412,
+      "reference": {
+        "final_position_m": [
+          5442932.078873403,
+          -3282801.4525627545,
+          -2342463.9569943785
+        ],
+        "final_velocity_m_s": [
+          4569.620866121423,
+          4882.656027645872,
+          3757.2906562839194
+        ],
+        "final_quaternion": [
+          -0.7891865200177944,
+          -0.4447223445881736,
+          -0.16557394280804832,
+          -0.38986143988499083
+        ],
+        "final_omega_rad_s": [
+          -0.0012954506006571727,
+          0.0009801942871158797,
+          -0.00034192135486974976
+        ],
+        "cumulative_srp_work_j": -62.6505832850413,
+        "trajectory_checksum": "de00addcd5d7615a"
+      }
+    }
+  },
+  "direct_benchmark": {
+    "benchmark_id": "BENCH-03",
+    "mode": "direct",
+    "interval_s": 300,
+    "duration_s": 21600,
+    "wall_seconds": 0.230803931,
+    "preprocess_seconds": 0,
+    "rhs_count": 43416,
+    "ephemeris_queries": 43416,
+    "underlying_queries": 43416,
+    "checksum": "ee2e0277a0bf64a2",
+    "correctness": true,
+    "reference": {
+      "final_position_m": [
+        5442930.551606059,
+        -3282804.8156778733,
+        -2342466.6582131293
+      ],
+      "final_velocity_m_s": [
+        4569.624150323492,
+        4882.653363473231,
+        3757.28802990519
+      ],
+      "final_quaternion": [
+        -0.5881671131696861,
+        -0.7272417742138356,
+        -0.12133608893293296,
+        -0.33234981923631235
+      ],
+      "final_omega_rad_s": [
+        0.000997042680528906,
+        0.0020096225639757415,
+        -0.0009280844415678071
+      ],
+      "cumulative_srp_work_j": -67.49594434798624,
+      "trajectory_checksum": "ee2e0277a0bf64a2"
+    },
+    "postprocess_seconds": 0.005810252,
+    "sample_count": 721,
+    "kernel_load_seconds": 0.019212584,
+    "cache_memory_bytes": 0,
+    "cache_sample_count": 0,
+    "construction_queries": 0,
+    "postprocess_queries": 721
+  }
+}

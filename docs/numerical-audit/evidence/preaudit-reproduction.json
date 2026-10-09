@@ -1,0 +1,188 @@
+{
+  "direct_30um": {
+    "sun_x_perturbation_m": 3e-05,
+    "duration_s": 21600,
+    "final_position_difference_m": 0.1105231383191743,
+    "final_velocity_difference_m_s": 0.00012285552250042566,
+    "final_attitude_difference_rad": 0.013306499423528866,
+    "final_omega_difference_rad_s": 5.244465635558483e-05
+  },
+  "cache_300s": {
+    "benchmark_id": "ACCURACY",
+    "mode": "cached",
+    "interval_s": 300,
+    "duration_s": 21600,
+    "wall_seconds": 0.36114649,
+    "preprocess_seconds": 0.000303434,
+    "rhs_count": 129919,
+    "ephemeris_queries": 0,
+    "underlying_queries": 73,
+    "checksum": "361f5661604b9688",
+    "correctness": false,
+    "accuracy": {
+      "passed": false,
+      "deterministic": true
+    },
+    "ephemeris_6h": {
+      "position_m": {
+        "max": 3.411968959808029e-05,
+        "rms": 1.4128596694105204e-05,
+        "count": 216
+      },
+      "velocity_m_s": {
+        "max": 1.5873354646795044e-07,
+        "rms": 6.59449152864972e-08,
+        "count": 216
+      },
+      "node_position_m": {
+        "max": 0,
+        "rms": 0,
+        "count": 73
+      },
+      "node_velocity_m_s": {
+        "max": 0,
+        "rms": 0,
+        "count": 73
+      },
+      "build_seconds": 0.000376006,
+      "nodes": 73,
+      "memory_bytes": 4144,
+      "underlying_queries": 73,
+      "boundaries": true,
+      "deterministic": true,
+      "passed": true
+    },
+    "ephemeris_30d": {
+      "position_m": {
+        "max": 5.709316080892854e-05,
+        "rms": 1.6292758944999815e-05,
+        "count": 25920
+      },
+      "velocity_m_s": {
+        "max": 2.356099622904494e-07,
+        "rms": 6.988231486453366e-08,
+        "count": 25920
+      },
+      "node_position_m": {
+        "max": 0,
+        "rms": 0,
+        "count": 8641
+      },
+      "node_velocity_m_s": {
+        "max": 0,
+        "rms": 0,
+        "count": 8641
+      },
+      "build_seconds": 0.019252251,
+      "nodes": 8641,
+      "memory_bytes": 483952,
+      "underlying_queries": 8641,
+      "boundaries": true,
+      "deterministic": true,
+      "passed": true
+    },
+    "nonmultiple_boundary": {
+      "position_m": {
+        "max": 3.411968959808029e-05,
+        "rms": 1.4078767835740683e-05,
+        "count": 219
+      },
+      "velocity_m_s": {
+        "max": 1.0758682789749238e-06,
+        "rms": 1.2458147765176144e-07,
+        "count": 219
+      },
+      "node_position_m": {
+        "max": 0,
+        "rms": 0,
+        "count": 74
+      },
+      "node_velocity_m_s": {
+        "max": 0,
+        "rms": 0,
+        "count": 74
+      },
+      "build_seconds": 0.000278528,
+      "nodes": 74,
+      "memory_bytes": 4200,
+      "underlying_queries": 74,
+      "boundaries": true,
+      "deterministic": true,
+      "passed": true
+    },
+    "srp_force_n": {
+      "max": 1.8597577366703266e-13,
+      "rms": 4.677953015167418e-15,
+      "count": 6724
+    },
+    "srp_torque_nm": {
+      "max": 6.17172362390959e-15,
+      "rms": 1.5499329643491738e-16,
+      "count": 6724
+    },
+    "illumination": {
+      "max": 1.1998278814928653e-08,
+      "rms": 3.0188629390725126e-10,
+      "count": 6724
+    },
+    "trajectory_position_m": {
+      "max": 0.10714713803471898,
+      "rms": 0.025633879002466307,
+      "count": 721
+    },
+    "trajectory_velocity_m_s": {
+      "max": 0.00012095277978108178,
+      "rms": 2.883279465734741e-05,
+      "count": 721
+    },
+    "trajectory_attitude_rad": {
+      "max": 0.02594114203407706,
+      "rms": 0.00450176362697826,
+      "count": 721
+    },
+    "trajectory_omega_rad_s": {
+      "max": 0.0001100988563249787,
+      "rms": 1.6440269045315393e-05,
+      "count": 721
+    },
+    "final_position_m": 0.10714713803471898,
+    "final_velocity_m_s": 0.00012095277978108178,
+    "final_attitude_rad": 0.012541365137594072,
+    "final_omega_rad_s": 5.0233444743383456e-05,
+    "srp_work_direct_j": -67.2672879971009,
+    "srp_work_cached_j": -67.1027830816068,
+    "srp_work_difference_j": 0.16450491549409207,
+    "penumbra_points": 2367,
+    "direct_rhs_count": 43259,
+    "cached_rhs_count": 43330,
+    "direct_wall_seconds": 0.16265012,
+    "cached_wall_seconds": 0.030916779,
+    "reference": {
+      "final_position_m": [
+        5442930.430729163,
+        -3282805.0041341865,
+        -2342466.792676904
+      ],
+      "final_velocity_m_s": [
+        4569.624297226777,
+        4882.653159503154,
+        3757.287881822431
+      ],
+      "final_quaternion": [
+        -0.5784317263131711,
+        -0.7379077974087495,
+        -0.1183992225718482,
+        -0.32694104149236874
+      ],
+      "final_omega_rad_s": [
+        0.001083491410687097,
+        0.0020987422703044787,
+        -0.000926459475121578
+      ],
+      "cumulative_srp_work_j": -67.1027830816068,
+      "trajectory_checksum": "361f5661604b9688"
+    }
+  },
+  "source_commit": "6a8f92a9721441623980bd47905cd22a3367f296",
+  "direct_original_source_reference": "benchmarks/evidence/sensitivity.json"
+}

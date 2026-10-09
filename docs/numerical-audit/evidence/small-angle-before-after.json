@@ -1,0 +1,95 @@
+{
+  "oracle": "80-digit Cartesian intersection quadrature; observer outside Earth; nearly equal apparent radii",
+  "fixtures": [
+    {
+      "observer_radius_m": 1400000000.0,
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 681539795.8806328,
+      "sun_position_m": [
+        148197870692.5201,
+        1495978.706975067,
+        0
+      ],
+      "reference": 0.001397374216435209,
+      "preaudit": 0.0013973742742448003,
+      "remediated": 0.0013973742164353764,
+      "preaudit_error": 5.7809591315349795e-11,
+      "remediated_error": 1.6740081543176188e-16
+    },
+    {
+      "observer_radius_m": 1400000000.0,
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 681539795.8806328,
+      "sun_position_m": [
+        148197870699.99927,
+        14959.787069999973,
+        0
+      ],
+      "reference": 1.3973744969148422e-05,
+      "preaudit": 1.3812085681852437e-05,
+      "remediated": 1.3973744969142388e-05,
+      "preaudit_error": 1.6165928729598453e-07,
+      "remediated_error": 6.034262716239636e-18
+    },
+    {
+      "observer_radius_m": 1400000000.0,
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 681539795.8806328,
+      "sun_position_m": [
+        148197870700.0,
+        1495.978707,
+        0
+      ],
+      "reference": 1.3973744968666074e-06,
+      "preaudit": 4.440892098500626e-16,
+      "remediated": 1.3973744972251012e-06,
+      "preaudit_error": 1.3973744964225182e-06,
+      "remediated_error": 3.58493777672937e-16
+    },
+    {
+      "observer_radius_m": 1400000000.0,
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 681539795.8806328,
+      "sun_position_m": [
+        148197870700.0,
+        149.59787070000002,
+        0
+      ],
+      "reference": 1.3973744965477613e-07,
+      "preaudit": 4.440892098500626e-16,
+      "remediated": 1.3973744972251012e-07,
+      "preaudit_error": 1.3973744921068692e-07,
+      "remediated_error": 6.773399547881499e-17
+    },
+    {
+      "observer_radius_m": 1400000000.0,
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 681539795.8806328,
+      "sun_position_m": [
+        148197870700.0,
+        14.95978707,
+        0
+      ],
+      "reference": 1.397374492911021e-08,
+      "preaudit": 4.440892098500626e-16,
+      "remediated": 1.3973745272011229e-08,
+      "preaudit_error": 1.3973744485021e-08,
+      "remediated_error": 3.429010194621735e-16
+    },
+    {
+      "observer_radius_m": 1400000000.0,
+      "earth_radius_m": 6378137.0,
+      "sun_radius_m": 681539795.8806328,
+      "sun_position_m": [
+        148197870700.0,
+        1.495978707,
+        0
+      ],
+      "reference": 1.3973744564990392e-09,
+      "preaudit": 4.440892098500626e-16,
+      "remediated": 1.3973745494055834e-09,
+      "preaudit_error": 1.3973740124098294e-09,
+      "remediated_error": 9.290654412179192e-17
+    }
+  ]
+}

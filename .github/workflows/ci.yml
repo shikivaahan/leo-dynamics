@@ -1,4 +1,4 @@
-name: Stages 1–4 analytical plotting and cache validation
+name: Analytical numerical-audit plotting and cache validation
 on: [push, pull_request]
 jobs:
   validate:
@@ -58,6 +58,9 @@ jobs:
           cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" -DBUILD_TESTING=ON -DLEO_BUILD_EXAMPLES=ON -DLEO_TEST_PLOTTING=ON -DLEO_ENABLE_CSPICE=ON -DCSPICE_ROOT="$RUNNER_TEMP/cspice" -DCMAKE_PREFIX_PATH="$RUNNER_TEMP/catch-install" -DCMAKE_CXX_FLAGS="${{ matrix.cxx_flags }}" -DCMAKE_EXE_LINKER_FLAGS="${{ matrix.linker_flags }}"
           cmake --build build --parallel
           LEO_SPICE_TEST_SPK="$RUNNER_TEMP/spice-kernels/de432s.bsp" LEO_SPICE_TEST_LSK="$RUNNER_TEMP/spice-kernels/naif0012.tls" ctest --test-dir build --output-on-failure
+          # Fast independent numerical regressions are also part of the full
+          # matrix above; keep a focused command discoverable in CI output.
+          ctest --test-dir build --output-on-failure -R "Conical disk overlap|small centre separations|Apparent body radius|Sentman small lift|self-adjoint inertia|Rejected large adaptive|Projected adaptive"
           ./build/propagate_leo --model point-mass
           ./build/propagate_leo --model j2
           ./build/propagate_environment "$RUNNER_TEMP/spice-kernels/naif0012.tls" "$RUNNER_TEMP/spice-kernels/de432s.bsp" 0

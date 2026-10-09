@@ -1,0 +1,42 @@
+{
+  "historical_files_unchanged": true,
+  "cache_implementation_sha256": "34e16a398beaa502b7debc50c76d9326925e33db21487d0e5585eac89a97a4de",
+  "cache_matches_preserved_original": true,
+  "thresholds_unchanged": true,
+  "validation": {
+    "gcc": {
+      "compiler": "GCC13.3.0",
+      "build": "Release",
+      "passed": 114,
+      "failed": 0,
+      "log": "gcc-tests.log",
+      "real_spice": true,
+      "plotting": true
+    },
+    "clang": {
+      "compiler": "Clang18.1.3",
+      "build": "Release",
+      "passed": 114,
+      "failed": 0,
+      "log": "clang-tests.log",
+      "real_spice": true,
+      "plotting": true
+    },
+    "sanitizer": {
+      "compiler": "Clang18.1.3",
+      "build": "Debug ASan/UBSan",
+      "passed": 114,
+      "failed": 0,
+      "log": "sanitizer-tests.log",
+      "real_spice": true,
+      "plotting": true
+    }
+  },
+  "fix_commits": {
+    "NUM-001": "c196bdd0ecc75f847b0de6b186579ecc10d9f03d",
+    "NUM-002": "d22507fe6623279592f3ccfc7709356e66a86ea6",
+    "NUM-003": "aea356e27154f43b6c72bc4201ffc8a815d711de",
+    "NUM-004": "bf11b1bb14f66d36b4131900f1ae5adf46725247",
+    "NUM-005": "84de8919a86cb42845f649fac7d25789031cf2f6"
+  }
+}
