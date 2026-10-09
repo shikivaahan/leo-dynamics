@@ -4,6 +4,9 @@
 #include <span>
 #include <vector>
 namespace leo {
+// Symmetric positive-definite body inertia. Inputs may differ from perfect
+// symmetry by at most 1e-12 relative; such inputs are symmetrised on
+// construction so multiply() and solve() always act on the same operator.
 class Inertia {
     Eigen::Matrix3d matrix_;
     Eigen::LLT<Eigen::Matrix3d> factor_;

@@ -1,0 +1,22 @@
+Filters: "Accepted roundoff asymmetry has one self-adjoint inertia operator"
+Randomness seeded to: 1590035312
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+leo-audit-inertia-before is a Catch2 v3.7.1 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+Accepted roundoff asymmetry has one self-adjoint inertia operator
+-------------------------------------------------------------------------------
+tests/numerical_dynamics_tests.cpp:23
+...............................................................................
+
+tests/numerical_dynamics_tests.cpp:27: FAILED:
+  REQUIRE( norm(inertia.multiply(inertia.solve(omega))-omega)/norm(omega)<1e-15 )
+with expansion:
+  0.00000000000063753 < 0.000000000000001
+
+===============================================================================
+test cases: 1 | 1 failed
+assertions: 1 | 1 failed
+

@@ -1,12 +1,19 @@
 #include "leo/kernel/spacecraft.hpp"
 #include <cmath>
+#include <numeric>
 #include <stdexcept>
 #include <utility>
 namespace leo {
 Inertia::Inertia(const Eigen::Matrix3d& m):matrix_(m) {
     if (!m.allFinite() || (m-m.transpose()).cwiseAbs().maxCoeff()>1e-12*m.cwiseAbs().maxCoeff())
         throw std::invalid_argument("inertia must be finite and symmetric");
-    factor_.compute(m);
+    // Canonicalise accepted roundoff asymmetry before factorisation so both
+    // operations use the same self-adjoint tensor. Preserve diagonal entries;
+    // midpoint avoids overflow and preserves equal subnormal entries.
+    for (int i=0;i<3;++i)
+        for (int j=i+1;j<3;++j)
+            matrix_(i,j)=matrix_(j,i)=std::midpoint(m(i,j),m(j,i));
+    factor_.compute(matrix_);
     if (factor_.info()!=Eigen::Success || !(factor_.matrixL().toDenseMatrix().diagonal().array()>0).all())
         throw std::invalid_argument("inertia must be positive definite");
 }

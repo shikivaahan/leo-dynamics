@@ -1,0 +1,7 @@
+{
+  "independent_identity": "A single SPD inertia operator must satisfy I(I^-1 v)=v and I omega_dot + omega cross I omega =0. Conditioning amplifies accepted asymmetry; default benchmark diagonal inertia unaffected.",
+  "source": "#include \"leo/kernel/dynamics.hpp\"\n#include <iostream>\n#include <iomanip>\nint main(){for(bool conditioned:{false,true}){Eigen::Matrix3d m;if(!conditioned)m<<10,.25,.05,.25+9.9e-12,8,.1,.05,.1,6;else m<<50000000.5,49999999.5,0,49999999.5+4.9e-5,50000000.5,0,0,0,1e8;leo::Inertia I(m);leo::BodyVector w{.01,.02,.03};auto a=leo::torque_free_angular_acceleration(I,w);std::cout<<std::setprecision(17)<<conditioned<<' '<<leo::norm(I.multiply(I.solve(w))-w)/leo::norm(w)<<' '<<leo::norm(I.multiply(a)+leo::cross(w,I.multiply(w)))<<'\\n';}}\n",
+  "before_stdout": "0 6.3752985794710313e-13 1.747083381584182e-15\n1 6.5475458317834558e-06 7.3523551691323519e-09\n",
+  "after_stdout": "0 9.2724870112839827e-17 3.1141336506778048e-19\n1 1.8719765693886339e-09 1.8189894035458565e-12\n",
+  "canonicalisation": "std::midpoint of off-diagonal pairs; unchanged diagonals; canonical SPD required"
+}
