@@ -153,3 +153,100 @@ Original OPT-001 data/rejection and thresholds remain immutable.
 No caching readiness until NA-OPEN-001 has a satisfactory independently converged
 six-hour reference/global error budget. Fixing the documented local defects and
 passing analytical regressions are necessary, not sufficient, for that decision.
+
+## Physical sensitivity benchmark (v1.1)
+
+The physical study extends this audit; it is not a separate simulator or caching
+benchmark. Production defaults, force laws and historical OPT-001 evidence remain
+unchanged.
+
+| Case | Interpretation |
+|---|---|
+| CASE-A | Analytically valid 10 kg, 0.1×0.2×0.3 m 6U-class reference with nonzero spin, unequal inertia, 1 mm common pressure-centre offset and all environmental forces/torques. Six-hour numerical agreement supports the conditional coarse orbit/orientation budgets. |
+| CASE-B | Provisional project-informed 9 m² sail with 10 kg crossbrace inertia, zero initial spin and exploratory optical mapping. The source Julia example disables torques; this explicitly documented free coupled extension enables them. It is not a verified flight specification. |
+| CASE-C | Unchanged original 400 km stress factory: six 2 m² faces, 10 kg, inertia (2,3,4), 0.1 m common CP offset and low spin. Six-hour instantaneous state remains unresolved. |
+
+Read [EXPERIMENT_DESIGN.md](EXPERIMENT_DESIGN.md), including provenance and
+predeclarations, [SENSITIVITY.md](SENSITIVITY.md) for measured qualified responses,
+and [ACCURACY_BUDGET.md](ACCURACY_BUDGET.md) for conditional application decisions.
+The correction amendment is
+[ANALYSIS_AMENDMENT-v1.1.md](experiments/ANALYSIS_AMENDMENT-v1.1.md).
+
+### Reproduction
+
+Preinstalled CMake, Eigen, Boost, CSPICE and Python are required. Matplotlib is
+needed only for the six figures. No runner downloads dependencies or kernels.
+
+```sh
+# Uses a fresh directory; builds the existing standalone audit and runs every stage.
+sh docs/numerical-audit/run_experiments.sh /tmp/leo-new-physical-study
+
+# Optional environment overrides:
+# LEO_AUDIT_BUILD, CSPICE_ROOT, LEO_DEPS_PREFIX, LEO_SPICE_KERNELS, LEO_BUILD_JOBS.
+
+# A small actual changed-path run (not the six-hour scientific evidence):
+python3 docs/numerical-audit/experiment.py \
+  --binary /tmp/leo-audit-current/numerical_audit \
+  --spk /tmp/leo_cspice/kernels/de432s.bsp --lsk /tmp/leo_cspice/kernels/naif0012.tls \
+  --cases docs/numerical-audit/experiments/CASE-A-v1.cfg \
+  --horizons 60 --sensitivity-horizons 60 \
+  --output /tmp/new-signed-smoke.json --workdir /tmp/new-signed-runs
+
+# Re-render the six committed scientific figures from compact qualified evidence.
+python3 docs/numerical-audit/experiments/plot_sensitivity.py \
+  docs/numerical-audit/evidence/sensitivity-results.json.gz \
+  --output /tmp/new-physical-figures --horizon 21600 --observable sma_final_m
+
+# Standalone gated screening: one common observable, not mixed-unit gradients.
+python3 docs/numerical-audit/screen.py \
+  --results docs/numerical-audit/evidence/sensitivity-results.json.gz \
+  --binary /tmp/leo-audit-current/numerical_audit \
+  --spk /tmp/leo_cspice/kernels/de432s.bsp --lsk /tmp/leo_cspice/kernels/naif0012.tls \
+  --case docs/numerical-audit/experiments/CASE-C-v1.cfg \
+  --horizon 3600 --output /tmp/new-case-c-screen.json
+```
+
+`run_experiments.sh` invokes these reusable scientific stages:
+
+| Driver | Evidence / purpose |
+|---|---|
+| `experiment.py` | Independent tolerance/step/method sweeps; three signed sizes for four initial-condition and ten material/geometry/scale parameters; seven convergence horizons. |
+| `qualify_cadence.py` | Actual 15 s cadence in both perturbed trajectories, on the same RK4 0.25 s evaluation schedule; excludes sampled responses hidden by their own quadrature error. |
+| `summarise.py` | Compact `sensitivity-results.json.gz`, physical-unit derivatives, qualified elasticities and generated sensitivity tables. |
+| `precision_probe.py` | Actual 53/64-bit mantissas, mixed-state versus double-force limitations, signed requested/applied Sun offsets, numerical resolution and true rejected-step event localisation. |
+| `case_c_probe.py` | Matched CP, density, area, spin, inertia magnitude/ratio and torque-isolation continuations; no certified chaos claim. |
+| `contribution_probe.py` | SRP force/torque, SRP torque-only and GG source isolation in all cases. |
+| `cadence_probe.py` | Independent 30/15/7.5/3.75 s sampled quadrature, with bitwise-identical common-time RK4 states. |
+| `spacecraft_characteristics.py` | Actual force/torque/area/mass/ballistic/timescale measurements, geometry consistency and explicit unresolved CASE-C diagnostic caveats. |
+| `orbital_diagnostics.py` | RTN terminal/maximum/RMS position and velocity differences, orbital energy/element/plane diagnostics and physical derivative projections. |
+| `screen.py` | Seed 20261009, 12 controlled stratified samples over three locally resolved parameters for one common observable. No variance decomposition or mission uncertainty prior. |
+| `experiments/plot_sensitivity.py` | Six real Matplotlib figures, with actual physical axes, numerical envelopes and unresolved channels identified. |
+
+Canonical measurements and figures are under `evidence/`. Large raw trajectories
+and uncompressed intermediate reports are kept in temporary scientific work
+directories, not duplicated in committed evidence. Gzip requires only the Python
+standard library. Every claim is tied to measured binary/configuration digests.
+
+### Interpretation and verification
+
+The response gate is 10× same-unit uncertainty plus ≤20% method and neighboring
+size derivative disagreement. Numerical envelopes include perturbed trajectories
+and sampled scalar cadence exposure. State-gradient consistency checks directions
+as well as norms. Zero spin/near-zero scalar baselines are not assigned fabricated
+normalised sensitivities. Rankings use one observable and stated exploratory
+spans; ranks whose numerical envelopes overlap are not distinguished.
+
+`mixed_rk4` uses long-double state buffers but double forces, times and CSPICE
+outputs. It is **not** an independent high-precision oracle. Shared force-model
+agreement does not calibrate atmosphere/material/model-form uncertainty.
+The original six-hour CASE-C instantaneous reference is still unsuitable for
+fine caching validation; NA-OPEN-001 remains open as documented in DEFECTS.md.
+
+115 CTest entries pass after the audit correction, including the two optional
+real-kernel cases supplied with DE432s and the leapseconds kernel, the six
+independent metric identities, and the standalone strict-JSON trace check.
+All case, method, perturbation, torque switch, cadence, reporting and figure
+paths were exercised against the actual corrected audit executable. This
+proves the measured paths, not every possible orbit, spacecraft or precision
+regime.
+

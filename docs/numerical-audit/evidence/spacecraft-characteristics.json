@@ -1,0 +1,1922 @@
+{
+  "schema": "leo-dynamics/spacecraft-characteristics/2",
+  "generator": "docs/numerical-audit/spacecraft_characteristics.py",
+  "content": "measured spacecraft characteristics of the version-1 sensitivity cases; every value is metadata, a measurement of the sampled load series, or a documented function of those. No generic spacecraft prior, typical dimension or typical coefficient is used anywhere.",
+  "supersedes": "the unpublished analytic draft of this file, which used exaggerated dimension and torque scalings, vector-sum torque shares and invented CubeSat area-to-mass and ballistic-coefficient ranges",
+  "leo_dynamics_source_commit": "8b55f22e1e194ae901228aae89c8763ac1f4e4ab",
+  "kernel_constants_used": {
+    "mu_earth_m3_s2": 398600441800000.0,
+    "earth_equatorial_radius_m": 6378136.0,
+    "astronomical_unit_m": 149597870700.0,
+    "solar_pressure_1au_n_m2": 4.53980733564685e-06,
+    "ballistic_reference_cd": 2.2,
+    "source": "include/leo/kernel/radiation.hpp, include/leo/environment"
+  },
+  "definitions": {
+    "one_sided_projected_area_m2": "A(u) = sum_i A_i * max(0, n_i . u) over the panel records, with u the unit vector pointing from the body towards the source/flow. This is the area the drag and radiation laws of the audited kernel actually use (they loop over panels with n.u > 0), so all force areas here are one-sided.",
+    "projected_area_bounds": "Exact min/max of A(u) over the unit sphere, by enumeration of the cell interiors (u = +-w_S/|w_S| for every incidence subset S, w_S = sum_{i in S} A_i n_i), the cell-edge stationary points (orthogonal projection of w_S onto each panel normal and onto every pair plane), one interior point of each such plane and the cell vertices (+-unit(n_i x n_j)). f is piecewise linear in u, so these critical points contain its extrema; a deterministic direction grid is evaluated as an independent cross-check of every reported bound.",
+    "silhouette_columns": "The harness logs projected_area_{wind,sun}_silhouette_m2 = sum_i A_i |n_i . u|. For a closed six-panel body and for a paired two-panel membrane this equals exactly twice the one-sided projected area, i.e. it counts both sides of the same body. It is a geometric diagnostic only and is never used as a force area here.",
+    "ballistic_coefficient_reference_kg_m2": "m / (2.2 * A_wind) with the declared reference coefficient 2.2 of the classical definition; a convention, not a measured coefficient of the case.",
+    "ballistic_coefficient_effective_kg_m2": "m / (mean_t Cd_eff * mean_t A_wind), and the peak variant m / (max_t Cd_eff * max_t A_wind). The coefficient is the one measured on the case's own samples; the product of the two separate time averages is used, not a sample-wise product.",
+    "effective_drag_coefficient": "Cd_eff = -(F_drag . unit(relative_wind)) / (q * A_wind) with q the logged dynamic pressure 0.5 rho |v_rel|^2 and A_wind the logged one-sided wind-facing area. A two-sided or double-counted area would push this above the admissible bracket [2 sigma, 2 sigma + 4 (1 - sigma)] of the Sentman law F = -q A [4 (1 - sigma) sin^2(a) n + 2 sigma sin(a) v_hat].",
+    "effective_srp_coefficient": "Cr_eff = -(F_srp . unit(to_sun)) / (P_sun * illumination * A_sun) with P_sun = (1361/299792458) * (AU/d)^2 Pa and d the spacecraft-to-Sun distance. The admissible bracket of the kernel's panel law is [1 - s, 1 + s + 2 d_opt/3].",
+    "torque_share": "share_i = mean_t(|tau_i|) / sum_j mean_t(|tau_j|), i.e. a share of time-averaged torque magnitudes. It is NOT a share of the vector sum of the torques: the sources act at different instants and in different directions, so a vector-sum share would be smaller than 1 and is not reported.",
+    "angular_acceleration_consistency": "alpha_body recomputed as I^-1 (tau_total - omega x (I omega)) from the logged total torque, body rate and principal moments, compared with the logged angular acceleration channel.",
+    "characteristic_times": "Spin-rate and momentum-change times use the initial body rate and the largest sampled magnitude of the corresponding quantity; the orientation-change time is a constant-acceleration scaling sqrt(2 theta I_min / tau_max) with theta = 1 rad, valid as a kinematic scaling for zero-spin cases. No libration, resonance or period model is claimed."
+  },
+  "cases": {
+    "CASE-A": {
+      "input": {
+        "path": "/tmp/leo-study-v11-a/CASE-A/rkf78-half.json",
+        "setting_name": "rkf78-half",
+        "sha256": "4314c1a3ea91d0878d725d2b81308b47be44f1719e02066a43925279871c82ab",
+        "command": [
+          "/tmp/leo-audit-final/numerical_audit",
+          "--spk",
+          "/tmp/leo_cspice/kernels/de432s.bsp",
+          "--lsk",
+          "/tmp/leo_cspice/kernels/naif0012.tls",
+          "--scenario",
+          "full",
+          "--case-file",
+          "/home/user/leo-dynamics/docs/numerical-audit/experiments/CASE-A-v1.cfg",
+          "--duration",
+          "21600",
+          "--atol-scale",
+          "0.0001",
+          "--max-step",
+          "0.5",
+          "--method",
+          "rkf78",
+          "--rtol",
+          "1e-14"
+        ],
+        "scenario": "full",
+        "method": "rkf78",
+        "duration_s": 21600,
+        "output_cadence_s": 30,
+        "rtol": 1e-14,
+        "atol_scale": 0.0001,
+        "max_step_s": 0.5,
+        "state_precision": "double",
+        "double_mantissa_bits": 53,
+        "rhs_calls": 561600,
+        "rejected_steps": 0,
+        "samples": 721
+      },
+      "configuration": {
+        "case_id": "CASE-A",
+        "version": 1,
+        "configuration_source": "/home/user/leo-dynamics/docs/numerical-audit/experiments/CASE-A-v1.cfg",
+        "legacy_benchmark_factory": false,
+        "density_scale_case": 1,
+        "density_scale_applied": 1,
+        "earth_albedo": 0.3,
+        "j2_enabled": true,
+        "models": {
+          "srp_force": true,
+          "srp_torque": true,
+          "drag_force": true,
+          "drag_torque": true,
+          "albedo_force": true,
+          "albedo_torque": true,
+          "gravity_gradient": true,
+          "drag_model": "sentman",
+          "needs_environment": true,
+          "eclipse_model": "conical",
+          "atmosphere_acquisition": true
+        },
+        "declared_assumptions": [
+          {
+            "assumption": "optical specular 0.3 / diffuse 0.2, drag coefficient 2.2, Sentman accommodation 0.9",
+            "status": "explicit exploratory assumption of this study",
+            "source": "docs/numerical-audit/experiments/CASE-A-v1.cfg header"
+          },
+          {
+            "assumption": "bus 0.1 x 0.2 x 0.3 m, six axis-aligned faces, centre of pressure at each geometric face centre plus (0, 0.001, 0) m",
+            "status": "analytic construction of the case",
+            "source": "docs/numerical-audit/experiments/CASE-A-v1.cfg"
+          },
+          {
+            "assumption": "principal moments = uniform-bus tensor minus m*d^2 on Ix and Iz with d = 1e-3 m (centre-of-mass offset along body y)",
+            "status": "analytic construction; every moment stays strictly positive and below the uniform-bus value",
+            "source": "docs/numerical-audit/experiments/provenance.json"
+          }
+        ]
+      },
+      "initial_conditions": {
+        "orbit_radius_m": 7170958.863,
+        "orbit_altitude_above_equator_m": 792822.8629999999,
+        "orbit_speed_m_s": 7459.286894464131,
+        "point_mass_sma_m": 7178136.999999999,
+        "point_mass_eccentricity": 0.0010000000000000009,
+        "point_mass_inclination_deg": 51.60000000000001,
+        "body_rate_rad_s": [
+          0.02,
+          0.0,
+          0.0
+        ],
+        "body_rate_norm_rad_s": 0.02,
+        "note": "these are the t = 0 source values; they are exact for the versioned configuration and carry no integration-setting dependence"
+      },
+      "mass_and_inertia": {
+        "mass_kg": 10.0,
+        "principal_moments_kg_m2": [
+          0.10832333333333334,
+          0.08333333333333333,
+          0.041656666666666675
+        ],
+        "harness_asymmetry_ratio": 2.6003840921821233,
+        "measured_asymmetry_ratio_max_over_min": 2.6003840921821233,
+        "triangle_inequalities_satisfied": true,
+        "all_moments_positive": true,
+        "uniform_cuboid_moments_kg_m2": [
+          0.10833333333333334,
+          0.08333333333333333,
+          0.04166666666666668
+        ],
+        "measured_over_uniform_cuboid": [
+          0.9999076923076924,
+          1.0,
+          0.99976
+        ],
+        "uniform_cuboid_max_relative_deviation": 0.00024000000000001798,
+        "uniform_cuboid_note": "the recorded moments reproduce the uniform-bus tensor of the inferred cuboid to 2.40e-04 in relative terms; the residual deficit is the centre-of-mass offset declared in the case configuration, not an independently measured mass distribution"
+      },
+      "statistics_scope": {
+        "authoritative_at_t0": "the configuration block, the panel records, the principal moments, the declared optical/aerodynamic coefficients, the initial body rate and the initial orbital elements are exact consequences of the versioned source and hold independently of any integration setting",
+        "long_horizon_statistics": "every mean, RMS, maximum and share below is a statistic of the single integration recorded in input.path, not a converged physical prediction; the convergence status of a case's final state is assessed in docs/numerical-audit/CONVERGENCE.md and not here"
+      },
+      "surfaces": {
+        "panel_records": 6,
+        "sum_of_panel_record_areas_m2": 0.21999999999999997,
+        "panels": [
+          {
+            "area_m2": 0.06,
+            "normal_body": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "cp_body": [
+              0.05,
+              0.001,
+              0.0
+            ],
+            "specular": 0.3,
+            "diffuse": 0.2,
+            "cd": 2.2,
+            "accommodation": 0.9
+          },
+          {
+            "area_m2": 0.06,
+            "normal_body": [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            "cp_body": [
+              -0.05,
+              0.001,
+              0.0
+            ],
+            "specular": 0.3,
+            "diffuse": 0.2,
+            "cd": 2.2,
+            "accommodation": 0.9
+          },
+          {
+            "area_m2": 0.03,
+            "normal_body": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "cp_body": [
+              0.0,
+              0.101,
+              0.0
+            ],
+            "specular": 0.3,
+            "diffuse": 0.2,
+            "cd": 2.2,
+            "accommodation": 0.9
+          },
+          {
+            "area_m2": 0.03,
+            "normal_body": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "cp_body": [
+              0.0,
+              -0.099,
+              0.0
+            ],
+            "specular": 0.3,
+            "diffuse": 0.2,
+            "cd": 2.2,
+            "accommodation": 0.9
+          },
+          {
+            "area_m2": 0.02,
+            "normal_body": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "cp_body": [
+              0.0,
+              0.001,
+              0.15
+            ],
+            "specular": 0.3,
+            "diffuse": 0.2,
+            "cd": 2.2,
+            "accommodation": 0.9
+          },
+          {
+            "area_m2": 0.02,
+            "normal_body": [
+              0.0,
+              0.0,
+              -1.0
+            ],
+            "cp_body": [
+              0.0,
+              0.001,
+              -0.15
+            ],
+            "specular": 0.3,
+            "diffuse": 0.2,
+            "cd": 2.2,
+            "accommodation": 0.9
+          }
+        ],
+        "closure_residual_area_vector_m2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "closure_residual_norm_m2": 0.0,
+        "presents_area_in_every_direction": true,
+        "physical_area_m2": 0.22,
+        "panel_set_interpretation": "every direction meets at least one panel, so the record sum is the physical surface area of a closed shell",
+        "one_sided_projected_area_bounds_m2": {
+          "min_m2": 0.02,
+          "max_m2": 0.07,
+          "direction_of_max_body": [
+            0.8571428571428572,
+            0.4285714285714286,
+            0.28571428571428575
+          ],
+          "direction_of_min_body": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "method": "exact_piecewise_linear_enumeration",
+          "direction_grid_cross_check": {
+            "points": 4096,
+            "grid_max_m2": 0.06999686616880554,
+            "grid_min_m2": 0.02130712598389068,
+            "grid_inside_bounds": true
+          }
+        },
+        "centres_of_pressure": {
+          "mean_cp_body_m": [
+            0.0,
+            0.0010000000000000002,
+            0.0
+          ],
+          "common_offset_norm_m": 0.0010000000000000002,
+          "max_cp_offset_norm_m": 0.15000333329629711,
+          "residual_lever_max_m": 0.15,
+          "residual_normal_lever_max_by_axis_m": {
+            "x": 0.05,
+            "y": 0.1,
+            "z": 0.15
+          },
+          "per_surface_cp_body_m": [
+            [
+              0.05,
+              0.001,
+              0.0
+            ],
+            [
+              -0.05,
+              0.001,
+              0.0
+            ],
+            [
+              0.0,
+              0.101,
+              0.0
+            ],
+            [
+              0.0,
+              -0.099,
+              0.0
+            ],
+            [
+              0.0,
+              0.001,
+              0.15
+            ],
+            [
+              0.0,
+              0.001,
+              -0.15
+            ]
+          ],
+          "per_surface_cp_offset_norm_m": [
+            0.05000999900019995,
+            0.05000999900019995,
+            0.101,
+            0.099,
+            0.15000333329629711,
+            0.15000333329629711
+          ],
+          "per_surface_normal_lever_m": [
+            0.05,
+            0.05,
+            0.101,
+            0.099,
+            0.15,
+            0.15
+          ],
+          "interpretation": "the mean centre of pressure is a common offset of every panel; the residual lever of each panel is measured from that common point, so the two do not combine into a single lever arm acting on a common centre of pressure"
+        },
+        "cuboid_inference": {
+          "applies": true,
+          "method": "edges from axis-aligned face areas: Lx = sqrt(Ay Az / Ax) and cyclic permutations",
+          "face_area_m2": {
+            "x": 0.06,
+            "y": 0.03,
+            "z": 0.02
+          },
+          "edges_m": {
+            "x": 0.1,
+            "y": 0.2,
+            "z": 0.3
+          },
+          "surface_area_sum_m2": 0.22,
+          "area_implied_half_edges_m": {
+            "x": 0.05,
+            "y": 0.1,
+            "z": 0.15
+          },
+          "cp_residual_lever_half_edges_m": {
+            "x": 0.05,
+            "y": 0.1,
+            "z": 0.15
+          },
+          "cp_plane_over_area_implied_edge_ratio": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "cp_plane_note": "the comparison uses the residual lever measured from the common centre-of-pressure offset, so a common offset is not mistaken for a geometric edge"
+        },
+        "idealised_lumping_check": {
+          "applies": false,
+          "reason": "panel set is not an antiparallel pair"
+        }
+      },
+      "orbit": {
+        "initial_radius_m": 7170958.863,
+        "initial_altitude_above_equator_m": 792822.8629999999,
+        "initial_speed_m_s": 7459.286894464131,
+        "point_mass_elements_at_t0": {
+          "sma_m": 7178136.999999999,
+          "eccentricity": 0.0010000000000000009,
+          "inclination_rad": 0.9005898940290742,
+          "inclination_deg": 51.60000000000001,
+          "specific_energy_j_kg": -27764895.111363858,
+          "angular_momentum_kg_m2_s": 53490239467.51731,
+          "note": "point-mass diagnostic of the initial state; with J2 enabled these elements are not conserved along the propagation"
+        },
+        "initial_altitude_stats_m": {
+          "min": 792252.8944391394,
+          "max": 796275.1344383527,
+          "final": 795702.312725706,
+          "mean_time_weighted": 793659.6102186413,
+          "rms_time_weighted": 793660.8823175019
+        },
+        "radius_stats_m": {
+          "min": 7170389.194439139,
+          "max": 7174411.4344383525,
+          "final": 7173838.612725706,
+          "mean_time_weighted": 7171795.910218643,
+          "rms_time_weighted": 7171796.050994301
+        },
+        "speed_stats_m_s": {
+          "min": 7453.349802693251,
+          "max": 7459.287100821069,
+          "final": 7455.065539570009,
+          "mean_time_weighted": 7455.53152654085,
+          "rms_time_weighted": 7455.5317582165435
+        },
+        "relative_wind_speed_stats_m_s": {
+          "min": 7128.441595625187,
+          "max": 7146.239671310247,
+          "final": 7139.393761346368,
+          "mean_time_weighted": 7136.552524468848,
+          "rms_time_weighted": 7136.554836594303
+        }
+      },
+      "environment": {
+        "density_stats_kg_m3": {
+          "min": 7.256315814551741e-15,
+          "max": 7.602264326443501e-15,
+          "final": 7.304605168272034e-15,
+          "mean_time_weighted": 7.48044640364414e-15,
+          "rms_time_weighted": 7.481446891471708e-15
+        },
+        "dynamic_pressure_stats_pa": {
+          "min": 1.8509201378925394e-07,
+          "max": 1.9344081181481604e-07,
+          "final": 1.8616130785575606e-07,
+          "mean_time_weighted": 1.9048969177232766e-07,
+          "rms_time_weighted": 1.905140224489851e-07
+        },
+        "solar_illumination_fraction_full_sun": 0.6305555555555555,
+        "solar_illumination_fraction_umbra": 0.3638888888888889,
+        "solar_illumination_fraction_penumbra": 0.005555555555555556,
+        "solar_illumination_mean_time_weighted": 0.6331695597040811
+      },
+      "areas_and_area_to_mass": {
+        "wind_facing_one_sided_area_stats_m2": {
+          "min": 0.020813325960535305,
+          "max": 0.039427425932594906,
+          "final": 0.03162095024498931,
+          "mean_time_weighted": 0.03397593375978394,
+          "rms_time_weighted": 0.03426586688029689
+        },
+        "sun_facing_one_sided_area_stats_m2": {
+          "min": 0.04568887501649312,
+          "max": 0.059901490576050126,
+          "final": 0.0577242619557867,
+          "mean_time_weighted": 0.0560859489596674,
+          "rms_time_weighted": 0.05621737281086352
+        },
+        "area_to_mass_at_mean_wind_facing_m2_per_kg": 0.003397593375978394,
+        "area_to_mass_at_projected_area_upper_bound_m2_per_kg": 0.007000000000000001,
+        "area_to_mass_at_projected_area_lower_bound_m2_per_kg": 0.002,
+        "area_to_mass_total_panel_record_area_m2_per_kg": 0.022,
+        "silhouette_diagnostic": {
+          "wind_silhouette_mean_m2": 0.06795186751956787,
+          "sun_silhouette_mean_m2": 0.11217189791933478,
+          "wind_silhouette_over_one_sided_mean_ratio": 2.0,
+          "sun_silhouette_over_one_sided_mean_ratio": 1.9999999999999998,
+          "note": "The harness logs projected_area_{wind,sun}_silhouette_m2 = sum_i A_i |n_i . u|. For a closed six-panel body and for a paired two-panel membrane this equals exactly twice the one-sided projected area, i.e. it counts both sides of the same body. It is a geometric diagnostic only and is never used as a force area here."
+        }
+      },
+      "forces": {
+        "drag_force_norm_n": {
+          "min": 8.69997924353299e-09,
+          "max": 1.5371678063394593e-08,
+          "final": 1.1916118305987673e-08,
+          "mean_time_weighted": 1.3263790072156784e-08,
+          "rms_time_weighted": 1.3361117668179952e-08
+        },
+        "srp_force_norm_n": {
+          "min": 0.0,
+          "max": 2.851248880453876e-07,
+          "final": 2.6023726184959043e-07,
+          "mean_time_weighted": 1.6728219879910312e-07,
+          "rms_time_weighted": 2.1055202924876473e-07
+        },
+        "albedo_force_norm_n": {
+          "min": 0.0,
+          "max": 4.4076872479008405e-08,
+          "final": 1.068968623267523e-08,
+          "mean_time_weighted": 1.0288712511190011e-08,
+          "rms_time_weighted": 1.7630841335758245e-08
+        },
+        "non_gravitational_force_norm_n": {
+          "min": 8.972279524892e-09,
+          "max": 2.968611020443515e-07,
+          "final": 2.6670349610098756e-07,
+          "mean_time_weighted": 1.6560229483056608e-07,
+          "rms_time_weighted": 2.0288706290881735e-07
+        },
+        "accelerations_m_s2": {
+          "drag": {
+            "min": 8.699979243532991e-10,
+            "max": 1.5371678063394592e-09,
+            "final": 1.1916118305987672e-09,
+            "mean_time_weighted": 1.3263790072156783e-09,
+            "rms_time_weighted": 1.3361117668179953e-09
+          },
+          "srp": {
+            "min": 0.0,
+            "max": 2.8512488804538764e-08,
+            "final": 2.6023726184959045e-08,
+            "mean_time_weighted": 1.6728219879910296e-08,
+            "rms_time_weighted": 2.105520292487649e-08
+          },
+          "albedo": {
+            "min": 0.0,
+            "max": 4.407687247900841e-09,
+            "final": 1.068968623267523e-09,
+            "mean_time_weighted": 1.028871251119001e-09,
+            "rms_time_weighted": 1.7630841335758245e-09
+          },
+          "non_gravitational": {
+            "min": 8.972279524891999e-10,
+            "max": 2.9686110204435148e-08,
+            "final": 2.6670349610098756e-08,
+            "mean_time_weighted": 1.6560229483056598e-08,
+            "rms_time_weighted": 2.0288706290881738e-08
+          }
+        },
+        "non_gravitational_force_reconstruction_residual_n": {
+          "max": 5.293955920339377e-23,
+          "note": "max over samples and axes of |F_non_grav - (F_srp + F_drag + F_albedo)|"
+        },
+        "effective_drag_coefficient": {
+          "measured": {
+            "min": 1.977732694336281,
+            "max": 2.1945779413676823,
+            "final": 2.0239740231224874,
+            "mean_time_weighted": 2.0530054333540497,
+            "rms_time_weighted": 2.053835513270526
+          },
+          "samples_used": 721,
+          "admissible_bracket": {
+            "min": 1.8,
+            "max": 2.2,
+            "definition": "Cd_eff = -(F_drag . unit(relative_wind)) / (q * A_wind) with q the logged dynamic pressure 0.5 rho |v_rel|^2 and A_wind the logged one-sided wind-facing area. A two-sided or double-counted area would push this above the admissible bracket [2 sigma, 2 sigma + 4 (1 - sigma)] of the Sentman law F = -q A [4 (1 - sigma) sin^2(a) n + 2 sigma sin(a) v_hat]."
+          },
+          "measured_within_bracket": true
+        },
+        "effective_srp_coefficient": {
+          "measured": {
+            "min": 0.9546338238549749,
+            "max": 1.0851514689940558,
+            "final": 0.9556520696635855,
+            "mean_time_weighted": 1.003351329618276,
+            "rms_time_weighted": 1.004020852860355
+          },
+          "samples_used": 457,
+          "selection": "samples with solar illumination factor >= 0.5 and nonzero sun-facing projected area",
+          "normal_incidence_value": [
+            [
+              0.3,
+              0.2,
+              1.4333333333333333
+            ]
+          ],
+          "admissible_bracket": {
+            "min": 0.7,
+            "max": 1.4333333333333333,
+            "definition": "Cr_eff = -(F_srp . unit(to_sun)) / (P_sun * illumination * A_sun) with P_sun = (1361/299792458) * (AU/d)^2 Pa and d the spacecraft-to-Sun distance. The admissible bracket of the kernel's panel law is [1 - s, 1 + s + 2 d_opt/3]."
+          },
+          "measured_within_bracket": true
+        },
+        "albedo_effective_pressure": {
+          "value": null,
+          "undefined_reason": "the harness logs the solar and wind incidence areas but not the anti-solar incidence area of the simplified albedo law, so no effective albedo pressure coefficient can be measured from these records"
+        },
+        "ballistic_coefficient_reference_kg_m2": {
+          "reference_cd": 2.2,
+          "at_mean_wind_facing_area": 133.78453636011125,
+          "at_max_wind_facing_area": 115.28661681402814,
+          "at_projected_area_upper_bound": 64.93506493506493,
+          "definition": "m / (2.2 * A_wind); 2.2 is a declared reference constant of the classical definition, not a measured property of the case"
+        },
+        "ballistic_coefficient_effective_kg_m2": {
+          "at_mean_wind_facing_area": 143.3634686058266,
+          "at_max_wind_facing_area": 115.57145098833762,
+          "definition": "m / (mean_t Cd_eff * mean_t A_wind), and the peak variant m / (max_t Cd_eff * max_t A_wind). The coefficient is the one measured on the case's own samples; the product of the two separate time averages is used, not a sample-wise product."
+        }
+      },
+      "torques_and_attitude": {
+        "source_norm_stats_nm": {
+          "drag": {
+            "min": 9.720035474461701e-14,
+            "max": 1.2011319516964592e-11,
+            "final": 1.1242261933464078e-11,
+            "mean_time_weighted": 7.967219138294394e-12,
+            "rms_time_weighted": 8.719996113972104e-12
+          },
+          "srp": {
+            "min": 0.0,
+            "max": 2.3938296672990735e-10,
+            "final": 2.2725675983293293e-10,
+            "mean_time_weighted": 1.2604331077510196e-10,
+            "rms_time_weighted": 1.6081450259286714e-10
+          },
+          "albedo": {
+            "min": 0.0,
+            "max": 3.1850361211725214e-11,
+            "final": 2.669013535910103e-12,
+            "mean_time_weighted": 5.7171016379208565e-12,
+            "rms_time_weighted": 1.0850112241375293e-11
+          },
+          "gravity_gradient": {
+            "min": 1.8947196980736027e-10,
+            "max": 6.758796236810193e-08,
+            "final": 4.4080254501758426e-08,
+            "mean_time_weighted": 4.3023940266323506e-08,
+            "rms_time_weighted": 4.776627432140622e-08
+          }
+        },
+        "total_norm_stats_nm": {
+          "min": 1.986902243573424e-10,
+          "max": 6.768364107738279e-08,
+          "final": 4.3892364914228717e-08,
+          "mean_time_weighted": 4.301777478813951e-08,
+          "rms_time_weighted": 4.776703598370966e-08
+        },
+        "relative_shares_of_mean_norms": {
+          "drag": 0.000184581605927115,
+          "srp": 0.0029201251171082185,
+          "albedo": 0.00013245171034694065,
+          "gravity_gradient": 0.9967628415666178
+        },
+        "share_definition": "share_i = mean_t(|tau_i|) / sum_j mean_t(|tau_j|), i.e. a share of time-averaged torque magnitudes. It is NOT a share of the vector sum of the torques: the sources act at different instants and in different directions, so a vector-sum share would be smaller than 1 and is not reported.",
+        "angular_acceleration_norm_stats_rad_s2": {
+          "min": 2.4465028637453556e-09,
+          "max": 6.24855462490456e-07,
+          "final": 4.054158840867085e-07,
+          "mean_time_weighted": 3.972875390757197e-07,
+          "rms_time_weighted": 4.410322544263968e-07
+        },
+        "angular_acceleration_recomputation_residual_rad_s2": {
+          "max": 2.117582368135751e-22,
+          "definition": "alpha_body recomputed as I^-1 (tau_total - omega x (I omega)) from the logged total torque, body rate and principal moments, compared with the logged angular acceleration channel."
+        },
+        "initial_body_rate_rad_s": [
+          0.02,
+          0.0,
+          0.0
+        ],
+        "initial_body_rate_norm_rad_s": 0.02,
+        "initial_angular_momentum_norm_kg_m2_s": 0.002166466666666667,
+        "characteristic_times": {
+          "spin_period_s": 314.1592653589793,
+          "spin_rate_change_time_s": 32007.402032282756,
+          "momentum_change_time_s": 32008.71927368303,
+          "orientation_change_1rad_time_s": 1109.4695786665134,
+          "orientation_change_1rad_definition": "sqrt(2 * 1 rad * I_min / max_t |tau_total|): constant-acceleration kinematic scaling from the largest sampled torque. Not a libration or resonance period.",
+          "per_source_momentum_change_time_s": {
+            "drag": 180368748.29670334,
+            "srp": 9050212.286453374,
+            "albedo": 68020160.03099883,
+            "gravity_gradient": 32054.031380137134
+          }
+        }
+      }
+    },
+    "CASE-B": {
+      "input": {
+        "path": "/tmp/leo-study-v11-b/CASE-B/rkf78-half.json",
+        "setting_name": "rkf78-half",
+        "sha256": "f8c4c7cb254f50be7721c891ba40cf397cc68fe0fdb41b82ff8322232e1a8251",
+        "command": [
+          "/tmp/leo-audit-final/numerical_audit",
+          "--spk",
+          "/tmp/leo_cspice/kernels/de432s.bsp",
+          "--lsk",
+          "/tmp/leo_cspice/kernels/naif0012.tls",
+          "--scenario",
+          "full",
+          "--case-file",
+          "/home/user/leo-dynamics/docs/numerical-audit/experiments/CASE-B-v1.cfg",
+          "--duration",
+          "21600",
+          "--atol-scale",
+          "0.0001",
+          "--max-step",
+          "0.5",
+          "--method",
+          "rkf78",
+          "--rtol",
+          "1e-14"
+        ],
+        "scenario": "full",
+        "method": "rkf78",
+        "duration_s": 21600,
+        "output_cadence_s": 30,
+        "rtol": 1e-14,
+        "atol_scale": 0.0001,
+        "max_step_s": 0.5,
+        "state_precision": "double",
+        "double_mantissa_bits": 53,
+        "rhs_calls": 561600,
+        "rejected_steps": 0,
+        "samples": 721
+      },
+      "configuration": {
+        "case_id": "CASE-B",
+        "version": 1,
+        "configuration_source": "/home/user/leo-dynamics/docs/numerical-audit/experiments/CASE-B-v1.cfg",
+        "legacy_benchmark_factory": false,
+        "density_scale_case": 1,
+        "density_scale_applied": 1,
+        "earth_albedo": 0.3,
+        "j2_enabled": true,
+        "models": {
+          "srp_force": true,
+          "srp_torque": true,
+          "drag_force": true,
+          "drag_torque": true,
+          "albedo_force": true,
+          "albedo_torque": true,
+          "gravity_gradient": true,
+          "drag_model": "sentman",
+          "needs_environment": true,
+          "eclipse_model": "conical",
+          "atmosphere_acquisition": true
+        },
+        "declared_assumptions": [
+          {
+            "assumption": "9 m^2 two-sided membrane represented by one +z and one -z panel sharing the centre point {0, 0, 0.05} m",
+            "status": "idealisation; both panel records describe the same membrane, so the physical membrane area is 9 m^2 and not 18 m^2",
+            "source": "docs/numerical-audit/experiments/CASE-B-v1.cfg"
+          },
+          {
+            "assumption": "specular 0.6 / diffuse 0.15 reproduces the example's scalar Cr = 1.7 at normal incidence",
+            "status": "non-unique provisional mapping, not measured sail optics",
+            "source": "docs/numerical-audit/experiments/CASE-B-v1.cfg header"
+          },
+          {
+            "assumption": "principal moments 3.75/3.75/7.5 kg m^2",
+            "status": "the source example's own idealised cross-brace/sail mass lumping (m L^2/24, m L^2/24, m L^2/12 with m = 10 kg, L = 3 m); no flight mass budget exists",
+            "source": "/home/user/Project-Svarog-Orbital/examples/earth_orbit_acc.jl lines 68-71 via docs/numerical-audit/experiments/provenance.json"
+          },
+          {
+            "assumption": "all torques enabled (SRP, gravity-gradient, drag, albedo)",
+            "status": "declared departure: the source example sets MODEL_TORQUES=false, so conclusions about the example's own behaviour do not transfer",
+            "source": "docs/numerical-audit/experiments/provenance.json"
+          }
+        ]
+      },
+      "initial_conditions": {
+        "orbit_radius_m": 7170958.863,
+        "orbit_altitude_above_equator_m": 792822.8629999999,
+        "orbit_speed_m_s": 7459.286894464131,
+        "point_mass_sma_m": 7178136.999999997,
+        "point_mass_eccentricity": 0.000999999999999702,
+        "point_mass_inclination_deg": 97.97,
+        "body_rate_rad_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "body_rate_norm_rad_s": 0.0,
+        "note": "these are the t = 0 source values; they are exact for the versioned configuration and carry no integration-setting dependence"
+      },
+      "mass_and_inertia": {
+        "mass_kg": 10.0,
+        "principal_moments_kg_m2": [
+          3.75,
+          3.75,
+          7.5
+        ],
+        "harness_asymmetry_ratio": 0.5,
+        "measured_asymmetry_ratio_max_over_min": 2.0,
+        "triangle_inequalities_satisfied": true,
+        "all_moments_positive": true
+      },
+      "statistics_scope": {
+        "authoritative_at_t0": "the configuration block, the panel records, the principal moments, the declared optical/aerodynamic coefficients, the initial body rate and the initial orbital elements are exact consequences of the versioned source and hold independently of any integration setting",
+        "long_horizon_statistics": "every mean, RMS, maximum and share below is a statistic of the single integration recorded in input.path, not a converged physical prediction; the convergence status of a case's final state is assessed in docs/numerical-audit/CONVERGENCE.md and not here"
+      },
+      "surfaces": {
+        "panel_records": 2,
+        "sum_of_panel_record_areas_m2": 18,
+        "panels": [
+          {
+            "area_m2": 9.0,
+            "normal_body": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "cp_body": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "specular": 0.6,
+            "diffuse": 0.15,
+            "cd": 2.2,
+            "accommodation": 0.9
+          },
+          {
+            "area_m2": 9.0,
+            "normal_body": [
+              0.0,
+              0.0,
+              -1.0
+            ],
+            "cp_body": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "specular": 0.6,
+            "diffuse": 0.15,
+            "cd": 2.2,
+            "accommodation": 0.9
+          }
+        ],
+        "closure_residual_area_vector_m2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "closure_residual_norm_m2": 0.0,
+        "presents_area_in_every_direction": false,
+        "physical_area_m2": 9.0,
+        "panel_set_interpretation": "some direction meets no panel at all, so the records are an open/two-sided representation of one physical surface and its record sum is twice that surface; every area-to-mass and ballistic-coefficient number here uses the one-sided projected area, never the record sum",
+        "one_sided_projected_area_bounds_m2": {
+          "min_m2": 0.0,
+          "max_m2": 9.0,
+          "direction_of_max_body": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "direction_of_min_body": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "method": "exact_piecewise_linear_enumeration",
+          "direction_grid_cross_check": {
+            "points": 4096,
+            "grid_max_m2": 8.997802734375,
+            "grid_min_m2": 0.002197265625,
+            "grid_inside_bounds": true
+          }
+        },
+        "centres_of_pressure": {
+          "mean_cp_body_m": [
+            0.0,
+            0.0,
+            0.05
+          ],
+          "common_offset_norm_m": 0.05,
+          "max_cp_offset_norm_m": 0.05,
+          "residual_lever_max_m": 0.0,
+          "residual_normal_lever_max_by_axis_m": {
+            "z": 0.0
+          },
+          "per_surface_cp_body_m": [
+            [
+              0.0,
+              0.0,
+              0.05
+            ],
+            [
+              0.0,
+              0.0,
+              0.05
+            ]
+          ],
+          "per_surface_cp_offset_norm_m": [
+            0.05,
+            0.05
+          ],
+          "per_surface_normal_lever_m": [
+            0.05,
+            0.05
+          ],
+          "interpretation": "the mean centre of pressure is a common offset of every panel; the residual lever of each panel is measured from that common point, so the two do not combine into a single lever arm acting on a common centre of pressure"
+        },
+        "cuboid_inference": {
+          "applies": false,
+          "reason": "2 axis-aligned panel record(s); a closed six-panel cuboid is not determined by the recorded areas"
+        },
+        "idealised_lumping_check": {
+          "applies": true,
+          "source_length_from_single_panel_area_m": 3.0,
+          "thin_moment_m_L2_over_24_kg_m2": 3.75,
+          "thick_moment_m_L2_over_12_kg_m2": 7.5,
+          "measured_thin_kg_m2": 3.75,
+          "measured_thick_kg_m2": 7.5,
+          "thin_relative_residual": 0.0,
+          "thick_relative_residual": 0.0,
+          "note": "the two panel records are the two sides of one membrane, so the physical membrane area is one panel area, not their sum"
+        }
+      },
+      "orbit": {
+        "initial_radius_m": 7170958.863,
+        "initial_altitude_above_equator_m": 792822.8629999999,
+        "initial_speed_m_s": 7459.286894464131,
+        "point_mass_elements_at_t0": {
+          "sma_m": 7178136.999999997,
+          "eccentricity": 0.000999999999999702,
+          "inclination_rad": 1.7098990681788446,
+          "inclination_deg": 97.97,
+          "specific_energy_j_kg": -27764895.111363865,
+          "angular_momentum_kg_m2_s": 53490239467.51731,
+          "note": "point-mass diagnostic of the initial state; with J2 enabled these elements are not conserved along the propagation"
+        },
+        "initial_altitude_stats_m": {
+          "min": 792442.6632170826,
+          "max": 800797.2512574606,
+          "final": 799833.7365580117,
+          "mean_time_weighted": 795393.5117147914,
+          "rms_time_weighted": 795399.4658713745
+        },
+        "radius_stats_m": {
+          "min": 7170578.963217082,
+          "max": 7178933.551257461,
+          "final": 7177970.036558011,
+          "mean_time_weighted": 7173529.81171479,
+          "rms_time_weighted": 7173530.471907912
+        },
+        "speed_stats_m_s": {
+          "min": 7448.196212225556,
+          "max": 7459.312293386305,
+          "final": 7450.2297415630765,
+          "mean_time_weighted": 7451.994409255198,
+          "rms_time_weighted": 7451.9952994685655
+        },
+        "relative_wind_speed_stats_m_s": {
+          "min": 7521.312806321761,
+          "max": 7549.597872461414,
+          "final": 7537.318212845054,
+          "mean_time_weighted": 7533.632834920894,
+          "rms_time_weighted": 7533.638119521609
+        }
+      },
+      "environment": {
+        "density_stats_kg_m3": {
+          "min": 6.894931540843979e-15,
+          "max": 7.585577823491415e-15,
+          "final": 6.963392891505515e-15,
+          "mean_time_weighted": 7.336231447822282e-15,
+          "rms_time_weighted": 7.340736621023686e-15
+        },
+        "dynamic_pressure_stats_pa": {
+          "min": 1.9606784815119714e-07,
+          "max": 2.154980532147338e-07,
+          "final": 1.977992341900678e-07,
+          "mean_time_weighted": 2.0818568741347893e-07,
+          "rms_time_weighted": 2.0831359554978297e-07
+        },
+        "solar_illumination_fraction_full_sun": 0.6201388888888889,
+        "solar_illumination_fraction_umbra": 0.3770833333333333,
+        "solar_illumination_fraction_penumbra": 0.002777777777777778,
+        "solar_illumination_mean_time_weighted": 0.6221630628428683
+      },
+      "areas_and_area_to_mass": {
+        "wind_facing_one_sided_area_stats_m2": {
+          "min": 0.05697588720404578,
+          "max": 8.998916465266579,
+          "final": 3.368175467188731,
+          "mean_time_weighted": 5.876006320218331,
+          "rms_time_weighted": 6.246176368848861
+        },
+        "sun_facing_one_sided_area_stats_m2": {
+          "min": 0.0024039468031225586,
+          "max": 8.987364800667372,
+          "final": 2.2805832313231567,
+          "mean_time_weighted": 4.6861632503264365,
+          "rms_time_weighted": 5.4974400580535585
+        },
+        "area_to_mass_at_mean_wind_facing_m2_per_kg": 0.5876006320218331,
+        "area_to_mass_at_projected_area_upper_bound_m2_per_kg": 0.9,
+        "area_to_mass_at_projected_area_lower_bound_m2_per_kg": 0.0,
+        "area_to_mass_total_panel_record_area_m2_per_kg": 1.8,
+        "silhouette_diagnostic": {
+          "wind_silhouette_mean_m2": 11.752012640436662,
+          "sun_silhouette_mean_m2": 9.372326500652873,
+          "wind_silhouette_over_one_sided_mean_ratio": 2.0,
+          "sun_silhouette_over_one_sided_mean_ratio": 2.0,
+          "note": "The harness logs projected_area_{wind,sun}_silhouette_m2 = sum_i A_i |n_i . u|. For a closed six-panel body and for a paired two-panel membrane this equals exactly twice the one-sided projected area, i.e. it counts both sides of the same body. It is a geometric diagnostic only and is never used as a force area here."
+        }
+      },
+      "forces": {
+        "drag_force_norm_n": {
+          "min": 2.0831564194961465e-08,
+          "max": 4.262986101548068e-06,
+          "final": 1.239977940626848e-06,
+          "mean_time_weighted": 2.5016885907888393e-06,
+          "rms_time_weighted": 2.7029593071241578e-06
+        },
+        "srp_force_norm_n": {
+          "min": 0.0,
+          "max": 7.164865260638888e-05,
+          "final": 0.0,
+          "mean_time_weighted": 1.9297244267197633e-05,
+          "rms_time_weighted": 3.191420237420303e-05
+        },
+        "albedo_force_norm_n": {
+          "min": 0.0,
+          "max": 1.13449540698187e-05,
+          "final": 0.0,
+          "mean_time_weighted": 2.0814239224776125e-06,
+          "rms_time_weighted": 3.7279371755933857e-06
+        },
+        "non_gravitational_force_norm_n": {
+          "min": 2.0831564194961465e-08,
+          "max": 7.430104039018796e-05,
+          "final": 1.239977940626848e-06,
+          "mean_time_weighted": 1.9219244033624532e-05,
+          "rms_time_weighted": 3.033463793015668e-05
+        },
+        "accelerations_m_s2": {
+          "drag": {
+            "min": 2.0831564194961463e-09,
+            "max": 4.262986101548069e-07,
+            "final": 1.239977940626848e-07,
+            "mean_time_weighted": 2.5016885907888366e-07,
+            "rms_time_weighted": 2.7029593071241594e-07
+          },
+          "srp": {
+            "min": 0.0,
+            "max": 7.1648652606388886e-06,
+            "final": 0.0,
+            "mean_time_weighted": 1.9297244267197635e-06,
+            "rms_time_weighted": 3.191420237420305e-06
+          },
+          "albedo": {
+            "min": 0.0,
+            "max": 1.1344954069818702e-06,
+            "final": 0.0,
+            "mean_time_weighted": 2.0814239224776135e-07,
+            "rms_time_weighted": 3.7279371755933866e-07
+          },
+          "non_gravitational": {
+            "min": 2.0831564194961463e-09,
+            "max": 7.430104039018796e-06,
+            "final": 1.239977940626848e-07,
+            "mean_time_weighted": 1.9219244033624563e-06,
+            "rms_time_weighted": 3.0334637930156694e-06
+          }
+        },
+        "non_gravitational_force_reconstruction_residual_n": {
+          "max": 1.3552527156068805e-20,
+          "note": "max over samples and axes of |F_non_grav - (F_srp + F_drag + F_albedo)|"
+        },
+        "effective_drag_coefficient": {
+          "measured": {
+            "min": 1.8000160308727045,
+            "max": 2.199903691599239,
+            "final": 1.8560227455692444,
+            "mean_time_weighted": 1.9926652801519324,
+            "rms_time_weighted": 1.9960718530805053
+          },
+          "samples_used": 721,
+          "admissible_bracket": {
+            "min": 1.8,
+            "max": 2.2,
+            "definition": "Cd_eff = -(F_drag . unit(relative_wind)) / (q * A_wind) with q the logged dynamic pressure 0.5 rho |v_rel|^2 and A_wind the logged one-sided wind-facing area. A two-sided or double-counted area would push this above the admissible bracket [2 sigma, 2 sigma + 4 (1 - sigma)] of the Sentman law F = -q A [4 (1 - sigma) sin^2(a) n + 2 sigma sin(a) v_hat]."
+          },
+          "measured_within_bracket": true
+        },
+        "effective_srp_coefficient": {
+          "measured": {
+            "min": 0.4000267961342603,
+            "max": 1.6964925875670438,
+            "final": 0.6507228554726385,
+            "mean_time_weighted": 0.975160907068917,
+            "rms_time_weighted": 1.087063435028659
+          },
+          "samples_used": 449,
+          "selection": "samples with solar illumination factor >= 0.5 and nonzero sun-facing projected area",
+          "normal_incidence_value": [
+            [
+              0.6,
+              0.15,
+              1.7000000000000002
+            ]
+          ],
+          "admissible_bracket": {
+            "min": 0.4,
+            "max": 1.7000000000000002,
+            "definition": "Cr_eff = -(F_srp . unit(to_sun)) / (P_sun * illumination * A_sun) with P_sun = (1361/299792458) * (AU/d)^2 Pa and d the spacecraft-to-Sun distance. The admissible bracket of the kernel's panel law is [1 - s, 1 + s + 2 d_opt/3]."
+          },
+          "measured_within_bracket": true
+        },
+        "albedo_effective_pressure": {
+          "value": null,
+          "undefined_reason": "the harness logs the solar and wind incidence areas but not the anti-solar incidence area of the simplified albedo law, so no effective albedo pressure coefficient can be measured from these records"
+        },
+        "ballistic_coefficient_reference_kg_m2": {
+          "reference_cd": 2.2,
+          "at_mean_wind_facing_area": 0.7735618884231651,
+          "at_max_wind_facing_area": 0.505111316790059,
+          "at_projected_area_upper_bound": 0.5050505050505051,
+          "definition": "m / (2.2 * A_wind); 2.2 is a declared reference constant of the classical definition, not a measured property of the case"
+        },
+        "ballistic_coefficient_effective_kg_m2": {
+          "at_mean_wind_facing_area": 0.854050186693274,
+          "at_max_wind_facing_area": 0.5051334297867834,
+          "definition": "m / (mean_t Cd_eff * mean_t A_wind), and the peak variant m / (max_t Cd_eff * max_t A_wind). The coefficient is the one measured on the case's own samples; the product of the two separate time averages is used, not a sample-wise product."
+        }
+      },
+      "torques_and_attitude": {
+        "source_norm_stats_nm": {
+          "drag": {
+            "min": 1.0415470310970745e-09,
+            "max": 8.720377987596133e-08,
+            "final": 5.560280367907174e-08,
+            "mean_time_weighted": 6.569097044806786e-08,
+            "rms_time_weighted": 6.869596715231415e-08
+          },
+          "srp": {
+            "min": 0.0,
+            "max": 4.225954256507666e-07,
+            "final": 0.0,
+            "mean_time_weighted": 1.5072329008459708e-07,
+            "rms_time_weighted": 2.1673960486203868e-07
+          },
+          "albedo": {
+            "min": 0.0,
+            "max": 9.840769126331374e-08,
+            "final": 0.0,
+            "mean_time_weighted": 2.348811624689782e-08,
+            "rms_time_weighted": 3.976437680331029e-08
+          },
+          "gravity_gradient": {
+            "min": 4.318999955926526e-08,
+            "max": 6.0810270582664516e-06,
+            "final": 5.902740051776519e-06,
+            "mean_time_weighted": 4.729960662736737e-06,
+            "rms_time_weighted": 4.9916949561535975e-06
+          }
+        },
+        "total_norm_stats_nm": {
+          "min": 9.17874233219148e-08,
+          "max": 6.397752372761643e-06,
+          "final": 5.885142429305012e-06,
+          "mean_time_weighted": 4.756067675782808e-06,
+          "rms_time_weighted": 5.020980887819003e-06
+        },
+        "relative_shares_of_mean_norms": {
+          "drag": 0.013217863334612405,
+          "srp": 0.030327453470280437,
+          "albedo": 0.004726109363606093,
+          "gravity_gradient": 0.9517285738315011
+        },
+        "share_definition": "share_i = mean_t(|tau_i|) / sum_j mean_t(|tau_j|), i.e. a share of time-averaged torque magnitudes. It is NOT a share of the vector sum of the torques: the sources act at different instants and in different directions, so a vector-sum share would be smaller than 1 and is not reported.",
+        "angular_acceleration_norm_stats_rad_s2": {
+          "min": 2.4476646219177277e-08,
+          "max": 1.7060672994031046e-06,
+          "final": 1.5693713144813363e-06,
+          "mean_time_weighted": 1.268284713542081e-06,
+          "rms_time_weighted": 1.3389282367517345e-06
+        },
+        "angular_acceleration_recomputation_residual_rad_s2": {
+          "max": 2.994713704459715e-22,
+          "definition": "alpha_body recomputed as I^-1 (tau_total - omega x (I omega)) from the logged total torque, body rate and principal moments, compared with the logged angular acceleration channel."
+        },
+        "initial_body_rate_rad_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_body_rate_norm_rad_s": 0.0,
+        "initial_angular_momentum_norm_kg_m2_s": 0.0,
+        "characteristic_times": {
+          "spin_period_s": {
+            "value": null,
+            "undefined_reason": "initial body rate is zero, so no spin period exists"
+          },
+          "spin_rate_change_time_s": {
+            "value": null,
+            "undefined_reason": "initial body rate is zero, so a spin-rate change time is not defined; use the orientation-change scaling"
+          },
+          "momentum_change_time_s": {
+            "value": null,
+            "undefined_reason": "initial angular momentum is zero (zero spin), so a momentum-change time is not defined; use the orientation-change scaling"
+          },
+          "orientation_change_1rad_time_s": 1082.7218929271708,
+          "orientation_change_1rad_definition": "sqrt(2 * 1 rad * I_min / max_t |tau_total|): constant-acceleration kinematic scaling from the largest sampled torque. Not a libration or resonance period.",
+          "per_source_momentum_change_time_s": {
+            "drag": {
+              "value": null,
+              "undefined_reason": "zero initial angular momentum"
+            },
+            "srp": {
+              "value": null,
+              "undefined_reason": "zero initial angular momentum"
+            },
+            "albedo": {
+              "value": null,
+              "undefined_reason": "zero initial angular momentum"
+            },
+            "gravity_gradient": {
+              "value": null,
+              "undefined_reason": "zero initial angular momentum"
+            }
+          }
+        }
+      }
+    },
+    "CASE-C": {
+      "input": {
+        "path": "/tmp/leo-study-v11-c/CASE-C/rkf78-half.json",
+        "setting_name": "rkf78-half",
+        "sha256": "a0f89ce172f8f470fad8064e118443075efd8b3ce9aa0c0de3831cbf1d4b630a",
+        "command": [
+          "/tmp/leo-audit-final/numerical_audit",
+          "--spk",
+          "/tmp/leo_cspice/kernels/de432s.bsp",
+          "--lsk",
+          "/tmp/leo_cspice/kernels/naif0012.tls",
+          "--scenario",
+          "full",
+          "--case-file",
+          "/home/user/leo-dynamics/docs/numerical-audit/experiments/CASE-C-v1.cfg",
+          "--duration",
+          "21600",
+          "--atol-scale",
+          "0.0001",
+          "--max-step",
+          "0.5",
+          "--method",
+          "rkf78",
+          "--rtol",
+          "1e-14"
+        ],
+        "scenario": "full",
+        "method": "rkf78",
+        "duration_s": 21600,
+        "output_cadence_s": 30,
+        "rtol": 1e-14,
+        "atol_scale": 0.0001,
+        "max_step_s": 0.5,
+        "state_precision": "double",
+        "double_mantissa_bits": 53,
+        "rhs_calls": 562536,
+        "rejected_steps": 20,
+        "samples": 721
+      },
+      "configuration": {
+        "case_id": "CASE-C",
+        "version": 1,
+        "configuration_source": "/home/user/leo-dynamics/docs/numerical-audit/experiments/CASE-C-v1.cfg",
+        "legacy_benchmark_factory": true,
+        "density_scale_case": 1,
+        "density_scale_applied": 1,
+        "earth_albedo": 0.3,
+        "j2_enabled": true,
+        "models": {
+          "srp_force": true,
+          "srp_torque": true,
+          "drag_force": true,
+          "drag_torque": true,
+          "albedo_force": true,
+          "albedo_torque": true,
+          "gravity_gradient": true,
+          "drag_model": "sentman",
+          "needs_environment": true,
+          "eclipse_model": "conical",
+          "atmosphere_acquisition": true
+        },
+        "declared_assumptions": [
+          {
+            "assumption": "six 2 m^2 panels with centre of pressure 0.5*n + (0, 0.1, 0) m, mass 10 kg, principal moments (2, 3, 4) kg m^2",
+            "status": "unmodified historical benchmark factory; preserved unchanged",
+            "source": "benchmarks/cases/bench_support.hpp lines 104-109"
+          },
+          {
+            "assumption": "initial state: r = (R_equatorial + 400 km, 0, 0), |v| = sqrt(mu/r) in direction (0, 0.8, 0.6), q = (cos45, sin45, 0, 0), omega = (0.002, 0.001, 0.0005) rad/s",
+            "status": "unmodified historical benchmark initial state",
+            "source": "benchmarks/cases/bench_support.hpp lines 111-116"
+          }
+        ]
+      },
+      "initial_conditions": {
+        "orbit_radius_m": 6778136.3,
+        "orbit_altitude_above_equator_m": 400000.2999999998,
+        "orbit_speed_m_s": 7668.558571385414,
+        "point_mass_sma_m": 6778136.300000001,
+        "point_mass_eccentricity": 0.0,
+        "point_mass_inclination_deg": 36.86989764584401,
+        "body_rate_rad_s": [
+          0.002,
+          0.001,
+          0.0005
+        ],
+        "body_rate_norm_rad_s": 0.0022912878474779202,
+        "note": "these are the t = 0 source values; they are exact for the versioned configuration and carry no integration-setting dependence"
+      },
+      "mass_and_inertia": {
+        "mass_kg": 10.0,
+        "principal_moments_kg_m2": [
+          2.0,
+          3.0,
+          4.0
+        ],
+        "harness_asymmetry_ratio": 0.5,
+        "measured_asymmetry_ratio_max_over_min": 2.0,
+        "triangle_inequalities_satisfied": true,
+        "all_moments_positive": true,
+        "uniform_cuboid_moments_kg_m2": [
+          3.333333333333334,
+          3.333333333333334,
+          3.333333333333334
+        ],
+        "measured_over_uniform_cuboid": [
+          0.5999999999999999,
+          0.8999999999999998,
+          1.1999999999999997
+        ],
+        "uniform_cuboid_max_relative_deviation": 0.40000000000000013,
+        "uniform_cuboid_note": "the recorded moments are not the uniform-bus tensor of the inferred cuboid (ratios [0.6, 0.9, 1.2]); they are declared case inputs and no mass distribution in the source records explains the difference"
+      },
+      "statistics_scope": {
+        "authoritative_at_t0": "the configuration block, the panel records, the principal moments, the declared optical/aerodynamic coefficients, the initial body rate and the initial orbital elements are exact consequences of the versioned source and hold independently of any integration setting",
+        "long_horizon_statistics": "every mean, RMS, maximum and share below is a statistic of the single integration recorded in input.path, not a converged physical prediction; the convergence status of a case's final state is assessed in docs/numerical-audit/CONVERGENCE.md and not here"
+      },
+      "surfaces": {
+        "panel_records": 6,
+        "sum_of_panel_record_areas_m2": 12,
+        "panels": [
+          {
+            "area_m2": 2.0,
+            "normal_body": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "cp_body": [
+              0.5,
+              0.1,
+              0.0
+            ],
+            "specular": 0.3,
+            "diffuse": 0.2,
+            "cd": 2.2,
+            "accommodation": 0.9
+          },
+          {
+            "area_m2": 2.0,
+            "normal_body": [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            "cp_body": [
+              -0.5,
+              0.1,
+              0.0
+            ],
+            "specular": 0.3,
+            "diffuse": 0.2,
+            "cd": 2.2,
+            "accommodation": 0.9
+          },
+          {
+            "area_m2": 2.0,
+            "normal_body": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "cp_body": [
+              0.0,
+              0.6,
+              0.0
+            ],
+            "specular": 0.3,
+            "diffuse": 0.2,
+            "cd": 2.2,
+            "accommodation": 0.9
+          },
+          {
+            "area_m2": 2.0,
+            "normal_body": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "cp_body": [
+              0.0,
+              -0.4,
+              0.0
+            ],
+            "specular": 0.3,
+            "diffuse": 0.2,
+            "cd": 2.2,
+            "accommodation": 0.9
+          },
+          {
+            "area_m2": 2.0,
+            "normal_body": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "cp_body": [
+              0.0,
+              0.1,
+              0.5
+            ],
+            "specular": 0.3,
+            "diffuse": 0.2,
+            "cd": 2.2,
+            "accommodation": 0.9
+          },
+          {
+            "area_m2": 2.0,
+            "normal_body": [
+              0.0,
+              0.0,
+              -1.0
+            ],
+            "cp_body": [
+              0.0,
+              0.1,
+              -0.5
+            ],
+            "specular": 0.3,
+            "diffuse": 0.2,
+            "cd": 2.2,
+            "accommodation": 0.9
+          }
+        ],
+        "closure_residual_area_vector_m2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "closure_residual_norm_m2": 0.0,
+        "presents_area_in_every_direction": true,
+        "physical_area_m2": 12.0,
+        "panel_set_interpretation": "every direction meets at least one panel, so the record sum is the physical surface area of a closed shell",
+        "one_sided_projected_area_bounds_m2": {
+          "min_m2": 2.0,
+          "max_m2": 3.4641016151377553,
+          "direction_of_max_body": [
+            0.5773502691896258,
+            0.5773502691896258,
+            0.5773502691896258
+          ],
+          "direction_of_min_body": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "method": "exact_piecewise_linear_enumeration",
+          "direction_grid_cross_check": {
+            "points": 4096,
+            "grid_max_m2": 3.4639029768968257,
+            "grid_min_m2": 2.0321252855365493,
+            "grid_inside_bounds": true
+          }
+        },
+        "centres_of_pressure": {
+          "mean_cp_body_m": [
+            0.0,
+            0.09999999999999999,
+            0.0
+          ],
+          "common_offset_norm_m": 0.09999999999999999,
+          "max_cp_offset_norm_m": 0.6,
+          "residual_lever_max_m": 0.5,
+          "residual_normal_lever_max_by_axis_m": {
+            "x": 0.5,
+            "y": 0.5,
+            "z": 0.5
+          },
+          "per_surface_cp_body_m": [
+            [
+              0.5,
+              0.1,
+              0.0
+            ],
+            [
+              -0.5,
+              0.1,
+              0.0
+            ],
+            [
+              0.0,
+              0.6,
+              0.0
+            ],
+            [
+              0.0,
+              -0.4,
+              0.0
+            ],
+            [
+              0.0,
+              0.1,
+              0.5
+            ],
+            [
+              0.0,
+              0.1,
+              -0.5
+            ]
+          ],
+          "per_surface_cp_offset_norm_m": [
+            0.5099019513592785,
+            0.5099019513592785,
+            0.6,
+            0.4,
+            0.5099019513592785,
+            0.5099019513592785
+          ],
+          "per_surface_normal_lever_m": [
+            0.5,
+            0.5,
+            0.6,
+            0.4,
+            0.5,
+            0.5
+          ],
+          "interpretation": "the mean centre of pressure is a common offset of every panel; the residual lever of each panel is measured from that common point, so the two do not combine into a single lever arm acting on a common centre of pressure"
+        },
+        "cuboid_inference": {
+          "applies": true,
+          "method": "edges from axis-aligned face areas: Lx = sqrt(Ay Az / Ax) and cyclic permutations",
+          "face_area_m2": {
+            "x": 2.0,
+            "y": 2.0,
+            "z": 2.0
+          },
+          "edges_m": {
+            "x": 1.4142135623730951,
+            "y": 1.4142135623730951,
+            "z": 1.4142135623730951
+          },
+          "surface_area_sum_m2": 12.0,
+          "area_implied_half_edges_m": {
+            "x": 0.7071067811865476,
+            "y": 0.7071067811865476,
+            "z": 0.7071067811865476
+          },
+          "cp_residual_lever_half_edges_m": {
+            "x": 0.5,
+            "y": 0.5,
+            "z": 0.5
+          },
+          "cp_plane_over_area_implied_edge_ratio": {
+            "x": 0.7071067811865475,
+            "y": 0.7071067811865475,
+            "z": 0.7071067811865475
+          },
+          "cp_plane_note": "the comparison uses the residual lever measured from the common centre-of-pressure offset, so a common offset is not mistaken for a geometric edge"
+        },
+        "idealised_lumping_check": {
+          "applies": false,
+          "reason": "panel set is not an antiparallel pair"
+        }
+      },
+      "orbit": {
+        "initial_radius_m": 6778136.3,
+        "initial_altitude_above_equator_m": 400000.2999999998,
+        "initial_speed_m_s": 7668.558571385414,
+        "point_mass_elements_at_t0": {
+          "sma_m": 6778136.300000001,
+          "eccentricity": 0.0,
+          "inclination_rad": 0.6435011087932843,
+          "inclination_deg": 36.86989764584401,
+          "specific_energy_j_kg": -29403395.28138435,
+          "angular_momentum_kg_m2_s": 51978535221.38361,
+          "note": "point-mass diagnostic of the initial state; with J2 enabled these elements are not conserved along the propagation"
+        },
+        "initial_altitude_stats_m": {
+          "min": 383628.96465896163,
+          "max": 400000.0,
+          "final": 396036.2529149717,
+          "mean_time_weighted": 390887.2660736665,
+          "rms_time_weighted": 390921.78061315004
+        },
+        "radius_stats_m": {
+          "min": 6761765.264658962,
+          "max": 6778136.3,
+          "final": 6774172.5529149715,
+          "mean_time_weighted": 6769023.566073669,
+          "rms_time_weighted": 6769025.559254439
+        },
+        "speed_stats_m_s": {
+          "min": 7668.558571385414,
+          "max": 7686.163787318991,
+          "final": 7670.658332730486,
+          "mean_time_weighted": 7676.337581458943,
+          "rms_time_weighted": 7676.33988516281
+        },
+        "relative_wind_speed_stats_m_s": {
+          "min": 7276.948132736964,
+          "max": 7297.697611154652,
+          "final": 7279.4323920772995,
+          "mean_time_weighted": 7284.301645569963,
+          "rms_time_weighted": 7284.304973924315
+        }
+      },
+      "environment": {
+        "density_stats_kg_m3": {
+          "min": 2.62e-12,
+          "max": 3.556012680907939e-12,
+          "final": 2.8211186522301743e-12,
+          "mean_time_weighted": 3.120102947673321e-12,
+          "rms_time_weighted": 3.1343648658402603e-12
+        },
+        "dynamic_pressure_stats_pa": {
+          "min": 6.94123904474432e-05,
+          "max": 9.468912346792214e-05,
+          "final": 7.474573045754149e-05,
+          "mean_time_weighted": 8.279125451026008e-05,
+          "rms_time_weighted": 8.318318874909566e-05
+        },
+        "solar_illumination_fraction_full_sun": 0.6,
+        "solar_illumination_fraction_umbra": 0.3972222222222222,
+        "solar_illumination_fraction_penumbra": 0.002777777777777778,
+        "solar_illumination_mean_time_weighted": 0.601404724530367
+      },
+      "areas_and_area_to_mass": {
+        "wind_facing_one_sided_area_stats_m2": {
+          "min": 2.0307729608356637,
+          "max": 3.459644397290919,
+          "final": 2.9494682735408393,
+          "mean_time_weighted": 2.9928599590984204,
+          "rms_time_weighted": 3.0091348250629997
+        },
+        "sun_facing_one_sided_area_stats_m2": {
+          "min": 2.0369524873811975,
+          "max": 3.4629175168350907,
+          "final": 3.281186156627811,
+          "mean_time_weighted": 2.9960719101126787,
+          "rms_time_weighted": 3.0103047270358316
+        },
+        "area_to_mass_at_mean_wind_facing_m2_per_kg": 0.29928599590984206,
+        "area_to_mass_at_projected_area_upper_bound_m2_per_kg": 0.3464101615137755,
+        "area_to_mass_at_projected_area_lower_bound_m2_per_kg": 0.2,
+        "area_to_mass_total_panel_record_area_m2_per_kg": 1.2,
+        "silhouette_diagnostic": {
+          "wind_silhouette_mean_m2": 5.985719918196843,
+          "sun_silhouette_mean_m2": 5.992143820225357,
+          "wind_silhouette_over_one_sided_mean_ratio": 2.0000000000000004,
+          "sun_silhouette_over_one_sided_mean_ratio": 2.0,
+          "note": "The harness logs projected_area_{wind,sun}_silhouette_m2 = sum_i A_i |n_i . u|. For a closed six-panel body and for a paired two-panel membrane this equals exactly twice the one-sided projected area, i.e. it counts both sides of the same body. It is a geometric diagnostic only and is never used as a force area here."
+        }
+      },
+      "forces": {
+        "drag_force_norm_n": {
+          "min": 0.00032861679777692183,
+          "max": 0.0006267390076485077,
+          "final": 0.00043903375230527474,
+          "mean_time_weighted": 0.0004960865850915832,
+          "rms_time_weighted": 0.0005001121810324725
+        },
+        "srp_force_norm_n": {
+          "min": 0.0,
+          "max": 1.589029361193087e-05,
+          "final": 1.5798399757178782e-05,
+          "mean_time_weighted": 9.259497300689097e-06,
+          "rms_time_weighted": 1.194041816229554e-05
+        },
+        "albedo_force_norm_n": {
+          "min": 0.0,
+          "max": 4.1192846458558546e-06,
+          "final": 2.7363253844673383e-06,
+          "mean_time_weighted": 1.2520610388723929e-06,
+          "rms_time_weighted": 1.99359971102673e-06
+        },
+        "non_gravitational_force_norm_n": {
+          "min": 0.000313674948702114,
+          "max": 0.0006378915086045232,
+          "final": 0.00042976139704154864,
+          "mean_time_weighted": 0.0004964776221604067,
+          "rms_time_weighted": 0.0005012833221755459
+        },
+        "accelerations_m_s2": {
+          "drag": {
+            "min": 3.286167977769218e-05,
+            "max": 6.267390076485076e-05,
+            "final": 4.390337523052747e-05,
+            "mean_time_weighted": 4.960865850915829e-05,
+            "rms_time_weighted": 5.001121810324727e-05
+          },
+          "srp": {
+            "min": 0.0,
+            "max": 1.5890293611930871e-06,
+            "final": 1.5798399757178782e-06,
+            "mean_time_weighted": 9.259497300689096e-07,
+            "rms_time_weighted": 1.1940418162295535e-06
+          },
+          "albedo": {
+            "min": 0.0,
+            "max": 4.119284645855854e-07,
+            "final": 2.736325384467338e-07,
+            "mean_time_weighted": 1.2520610388723913e-07,
+            "rms_time_weighted": 1.9935997110267297e-07
+          },
+          "non_gravitational": {
+            "min": 3.13674948702114e-05,
+            "max": 6.378915086045233e-05,
+            "final": 4.2976139704154864e-05,
+            "mean_time_weighted": 4.964776221604073e-05,
+            "rms_time_weighted": 5.0128332217554585e-05
+          }
+        },
+        "non_gravitational_force_reconstruction_residual_n": {
+          "max": 1.0206747014414319e-19,
+          "note": "max over samples and axes of |F_non_grav - (F_srp + F_drag + F_albedo)|"
+        },
+        "effective_drag_coefficient": {
+          "measured": {
+            "min": 1.9340217885719426,
+            "max": 2.1938363129903906,
+            "final": 1.9913863349813685,
+            "mean_time_weighted": 2.006858867558424,
+            "rms_time_weighted": 2.0076183109776573
+          },
+          "samples_used": 721,
+          "admissible_bracket": {
+            "min": 1.8,
+            "max": 2.2,
+            "definition": "Cd_eff = -(F_drag . unit(relative_wind)) / (q * A_wind) with q the logged dynamic pressure 0.5 rho |v_rel|^2 and A_wind the logged one-sided wind-facing area. A two-sided or double-counted area would push this above the admissible bracket [2 sigma, 2 sigma + 4 (1 - sigma)] of the Sentman law F = -q A [4 (1 - sigma) sin^2(a) n + 2 sigma sin(a) v_hat]."
+          },
+          "measured_within_bracket": true
+        },
+        "effective_srp_coefficient": {
+          "measured": {
+            "min": 0.9772795791156761,
+            "max": 1.4198715023346486,
+            "final": 1.023712330641562,
+            "mean_time_weighted": 1.099487453259157,
+            "rms_time_weighted": 1.1022604629689183
+          },
+          "samples_used": 434,
+          "selection": "samples with solar illumination factor >= 0.5 and nonzero sun-facing projected area",
+          "normal_incidence_value": [
+            [
+              0.3,
+              0.2,
+              1.4333333333333333
+            ]
+          ],
+          "admissible_bracket": {
+            "min": 0.7,
+            "max": 1.4333333333333333,
+            "definition": "Cr_eff = -(F_srp . unit(to_sun)) / (P_sun * illumination * A_sun) with P_sun = (1361/299792458) * (AU/d)^2 Pa and d the spacecraft-to-Sun distance. The admissible bracket of the kernel's panel law is [1 - s, 1 + s + 2 d_opt/3]."
+          },
+          "measured_within_bracket": true
+        },
+        "albedo_effective_pressure": {
+          "value": null,
+          "undefined_reason": "the harness logs the solar and wind incidence areas but not the anti-solar incidence area of the simplified albedo law, so no effective albedo pressure coefficient can be measured from these records"
+        },
+        "ballistic_coefficient_reference_kg_m2": {
+          "reference_cd": 2.2,
+          "at_mean_wind_facing_area": 1.5187661994127628,
+          "at_max_wind_facing_area": 1.3138502179628264,
+          "at_projected_area_upper_bound": 1.3121597027036946,
+          "definition": "m / (2.2 * A_wind); 2.2 is a declared reference constant of the classical definition, not a measured property of the case"
+        },
+        "ballistic_coefficient_effective_kg_m2": {
+          "at_mean_wind_facing_area": 1.664933041740568,
+          "at_max_wind_facing_area": 1.3175415423670576,
+          "definition": "m / (mean_t Cd_eff * mean_t A_wind), and the peak variant m / (max_t Cd_eff * max_t A_wind). The coefficient is the one measured on the case's own samples; the product of the two separate time averages is used, not a sample-wise product."
+        }
+      },
+      "torques_and_attitude": {
+        "source_norm_stats_nm": {
+          "drag": {
+            "min": 1.3488862176320412e-06,
+            "max": 5.743088824690757e-05,
+            "final": 4.3825086155620955e-05,
+            "mean_time_weighted": 4.0945010151537903e-05,
+            "rms_time_weighted": 4.257151386857404e-05
+          },
+          "srp": {
+            "min": 0.0,
+            "max": 1.5373879409268679e-06,
+            "final": 9.106940248241436e-07,
+            "mean_time_weighted": 7.43440451049808e-07,
+            "rms_time_weighted": 9.943809788075445e-07
+          },
+          "albedo": {
+            "min": 0.0,
+            "max": 3.9687271547908425e-07,
+            "final": 2.3221065650483092e-08,
+            "mean_time_weighted": 1.0015905312422864e-07,
+            "rms_time_weighted": 1.7011728397424783e-07
+          },
+          "gravity_gradient": {
+            "min": 0.0,
+            "max": 3.846820322321169e-06,
+            "final": 4.898962909218054e-07,
+            "mean_time_weighted": 2.128971175557409e-06,
+            "rms_time_weighted": 2.298429385436688e-06
+          }
+        },
+        "total_norm_stats_nm": {
+          "min": 2.361392839729394e-06,
+          "max": 5.968432248776925e-05,
+          "final": 4.255876465432197e-05,
+          "mean_time_weighted": 4.1328643997694705e-05,
+          "rms_time_weighted": 4.3018715691043146e-05
+        },
+        "relative_shares_of_mean_norms": {
+          "drag": 0.932314790034724,
+          "srp": 0.016928082944871085,
+          "albedo": 0.0022806140781988457,
+          "gravity_gradient": 0.04847651294220605
+        },
+        "share_definition": "share_i = mean_t(|tau_i|) / sum_j mean_t(|tau_j|), i.e. a share of time-averaged torque magnitudes. It is NOT a share of the vector sum of the torques: the sources act at different instants and in different directions, so a vector-sum share would be smaller than 1 and is not reported.",
+        "angular_acceleration_norm_stats_rad_s2": {
+          "min": 1.2330671935314505e-06,
+          "max": 3.671344396451688e-05,
+          "final": 1.7899677513202248e-05,
+          "mean_time_weighted": 1.9028472463978064e-05,
+          "rms_time_weighted": 2.0007625900261287e-05
+        },
+        "angular_acceleration_recomputation_residual_rad_s2": {
+          "max": 6.984812619815426e-21,
+          "definition": "alpha_body recomputed as I^-1 (tau_total - omega x (I omega)) from the logged total torque, body rate and principal moments, compared with the logged angular acceleration channel."
+        },
+        "initial_body_rate_rad_s": [
+          0.002,
+          0.001,
+          0.0005
+        ],
+        "initial_body_rate_norm_rad_s": 0.0022912878474779202,
+        "initial_angular_momentum_norm_kg_m2_s": 0.005385164807134504,
+        "characteristic_times": {
+          "spin_period_s": 2742.20688338903,
+          "spin_rate_change_time_s": 62.410049291273886,
+          "momentum_change_time_s": 90.22745978624543,
+          "orientation_change_1rad_time_s": 258.880811632405,
+          "orientation_change_1rad_definition": "sqrt(2 * 1 rad * I_min / max_t |tau_total|): constant-acceleration kinematic scaling from the largest sampled torque. Not a libration or resonance period.",
+          "per_source_momentum_change_time_s": {
+            "drag": 93.76774365708116,
+            "srp": 3502.801514032866,
+            "albedo": 13568.997305934248,
+            "gravity_gradient": 1399.900269811692
+          }
+        }
+      }
+    }
+  },
+  "cross_case": {
+    "measured_rows": {
+      "CASE-A": {
+        "area_to_mass_at_mean_wind_facing_m2_per_kg": 0.003397593375978394,
+        "projected_area_bounds_m2": [
+          0.02,
+          0.07
+        ],
+        "ballistic_coefficient_reference_kg_m2": 133.78453636011125,
+        "ballistic_coefficient_effective_kg_m2": 143.3634686058266,
+        "dynamic_pressure_mean_pa": 1.9048969177232766e-07,
+        "dominant_torque_source": "gravity_gradient",
+        "max_angular_acceleration_rad_s2": 6.24855462490456e-07
+      },
+      "CASE-B": {
+        "area_to_mass_at_mean_wind_facing_m2_per_kg": 0.5876006320218331,
+        "projected_area_bounds_m2": [
+          0.0,
+          9.0
+        ],
+        "ballistic_coefficient_reference_kg_m2": 0.7735618884231651,
+        "ballistic_coefficient_effective_kg_m2": 0.854050186693274,
+        "dynamic_pressure_mean_pa": 2.0818568741347893e-07,
+        "dominant_torque_source": "gravity_gradient",
+        "max_angular_acceleration_rad_s2": 1.7060672994031046e-06
+      },
+      "CASE-C": {
+        "area_to_mass_at_mean_wind_facing_m2_per_kg": 0.29928599590984206,
+        "projected_area_bounds_m2": [
+          2.0,
+          3.4641016151377553
+        ],
+        "ballistic_coefficient_reference_kg_m2": 1.5187661994127628,
+        "ballistic_coefficient_effective_kg_m2": 1.664933041740568,
+        "dynamic_pressure_mean_pa": 8.279125451026008e-05,
+        "dominant_torque_source": "drag",
+        "max_angular_acceleration_rad_s2": 3.671344396451688e-05
+      }
+    },
+    "note": "rows are comparable because they are measured with the same definitions on each case's own nominal propagation; they are not comparisons against any external or generic spacecraft class",
+    "ratios": {
+      "CASE-A_over_CASE-B": {
+        "area_to_mass_at_mean_wind_facing_m2_per_kg": 0.005782147245634943,
+        "ballistic_coefficient_reference_kg_m2": 172.9461318638884,
+        "ballistic_coefficient_effective_kg_m2": 167.86304931435436,
+        "dynamic_pressure_mean_pa": 0.9149989806647699,
+        "max_angular_acceleration_rad_s2": 0.3662548732450776
+      },
+      "CASE-A_over_CASE-C": {
+        "area_to_mass_at_mean_wind_facing_m2_per_kg": 0.011352329953326305,
+        "ballistic_coefficient_reference_kg_m2": 88.08764404411923,
+        "ballistic_coefficient_effective_kg_m2": 86.10764818262624,
+        "dynamic_pressure_mean_pa": 0.0023008431615047075,
+        "max_angular_acceleration_rad_s2": 0.017019799697744822
+      },
+      "CASE-B_over_CASE-C": {
+        "area_to_mass_at_mean_wind_facing_m2_per_kg": 1.9633415530703413,
+        "ballistic_coefficient_reference_kg_m2": 0.5093357283841753,
+        "ballistic_coefficient_effective_kg_m2": 0.5129636839932168,
+        "dynamic_pressure_mean_pa": 0.002514585491486653,
+        "max_angular_acceleration_rad_s2": 0.04646982454307471
+      }
+    }
+  }
+}

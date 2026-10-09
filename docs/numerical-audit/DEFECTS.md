@@ -45,6 +45,18 @@ unsupported geometric torque estimates. They are superseded by the v1.1
 amendment and newly measured evidence. These errors do not demonstrate a
 defect in the propagated production equations or resolve NA-OPEN-001.
 
+**AUDIT-JSON-001 — confirmed trace-consumer defect.** The new diagnostic
+`steps_fields` fragments repeated array openers and emitted unbalanced JSON.
+`tests/audit_trace_tests.py` reproduced a strict `json.loads` failure at
+column 9589 in a 90 s principal-axis run using an isolated valid metakernel.
+The emitter now produces one flat 16-column field array. The permanent
+standalone CTest also checks actual accept/reject accounting and an independent
+exact principal-axis spin identity. No force/integration equation changes.
+The tolerant parser workaround is removed from the final precision driver.
+Earlier precision measurements record the malformed metadata recovery explicitly;
+only field-name metadata was recovered, not state/event values. A strict post-fix
+trace smoke establishes the consumer contract independently.
+
 
 ### Locations, reproductions and regressions
 
@@ -139,20 +151,38 @@ Lyapunov exponents or proof of chaos. No smoothing surrogate or new physics was
 used for the final assessment. [CONVERGENCE.md](CONVERGENCE.md) records why neither
 the default nor the refined six-hour reference is currently globally certified.
 
-**NA-OPEN-001 remains open pending the versioned physical sensitivity study.**
-The historical six-hour data above is preserved. The new study separates
-same-grid physical responses from adaptive and cross-method numerical spread,
-using CASE-A/B and the unchanged CASE-C. Classification B/C/D may coexist;
-an implementation defect is not inferred from disagreement, nor excluded solely
-because a torque-free control converges.
+**NA-OPEN-001 remains open for the original six-hour instantaneous state.**
+The corrected v1.1 physical study supports the following classification:
 
-Draft amplification interpretations were withdrawn after independent checks
-found analysis-tool errors: SO(3) distances above pi, gradients compared with
-same-observable uncertainty despite incompatible units, and seeded runs that
-did not retain the matching parameter variant. These are new experimental-tool
-defects, not evidence of a defect in the physical kernel. Their regressions are
-in `tests/sensitivity_metrics_tests.py`; corrected measurements will replace
-only this task's unpublished draft outputs, not historical audit or OPT-001 data.
+| Class | Finding |
+|---|---|
+| A — implementation defect | No additional production-kernel defect independently demonstrated. This does not exclude an undiscovered defect; diagnostic-tool defects are recorded separately above. |
+| B — inadequate numerical configuration | Default CASE-C settings are not a qualified six-hour reference. Independent DP5/RKF78/RK4 refinement still does not establish an adequate six-hour instantaneous-state configuration; no successful replacement is claimed. |
+| C — conditioned physical dynamics | Resolved one-hour responses and matched torque/CP/inertia continuations demonstrate strong physical torque/geometry sensitivity in the implemented equations. Six-hour seed gains remain grid-dependent, not certified physical growth coefficients. |
+| D — numerically unresolved | Six-hour selected-fine position/SMA envelopes are 19.0/6.66 m; the formal orientation margin is 3.97 rad and the rate margin 0.0129 rad/s. Small six-hour instantaneous sensitivities are unresolved. |
+
+For example, CASE-C ±1% density produces a one-hour maximum orientation response
+0.1143 rad against a 4.29e-6 rad empirical numerical envelope, with method and
+neighboring-size derivative checks. The unchanged six-hour baseline instead
+has RK4 0.5→0.25 s final SO(3) disagreement 1.4903 rad. The matched values
+are 0.000290 rad with drag torque alone removed, 5.90e-11 rad with common
+CP offset zero, 2.6054 rad with that offset doubled, and 0.279/2.321 rad
+with Izz factors 0.9/1.1. These isolate involvement of drag, geometry and
+inertia ratios without proving a particular unresolved trajectory physical.
+Removing only radiation torques still gives 1.988 rad; no single-source
+implementation defect follows from these switches.
+
+Conditional orbit integration accuracy is supported through three tested hours
+and coarse instantaneous orientation through one hour for CASE-C. Some
+large finite-span six-hour SMA responses are resolved even though attitude
+and small sensitivities are not. None certifies historical centimetre /
+microradian criteria, long-term decay or chaos.
+
+Evidence: `sensitivity-results.json.gz`, `case-c-continuation-v11.json`,
+`force-contributions-v11.json`, `cadence-refinement-v11.json` and the
+fixed-seed screening files under `evidence/`. Seeded continuations retain
+every option of their matching unperturbed variant. The obsolete draft
+unit/rotation/pairing/geometry claims were replaced, not used as evidence.
 
 ## Investigated hypotheses and model limitations
 

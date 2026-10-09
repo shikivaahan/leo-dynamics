@@ -1,0 +1,112 @@
+{
+  "schema": "leo-dynamics/sensitivity-provenance/1",
+  "generated": "Predeclared before new numerical sweeps, version 1",
+  "configs": [
+    {
+      "file": "CASE-A-v1.cfg",
+      "id": "CASE-A",
+      "version": 1,
+      "class": "analytical_exploratory_controlled_case",
+      "derivation": "Analytic. Compact 6U-class 10 kg bus 0.1 x 0.2 x 0.3 m with six real faces, a -1 mm centre-of-mass offset along body y (physically produced by a positive linear mass-density gradient along y) and an in-plane 45 deg attitude with body-x spin. Optical coefficients 0.3/0.2, Cd 2.2 and Sentman accommodation 0.9 are explicit exploratory assumptions of this study, not mission data.",
+      "sources": [],
+      "inertia_derivation": "Ix = m(b^2+c^2)/12 - m*d^2, Iy = m(a^2+c^2)/12, Iz = m(a^2+b^2)/12 - m*d^2, m=10, a=0.1, b=0.2, c=0.3, d=1e-3 m (parallel-axis shift from the offset centre of mass).",
+      "checks": {
+        "triangle_inequality_Ix_plus_Iz_minus_Iy": 0.06664666666666667,
+        "normal_incidence_effective_Cr_1_plus_s_plus_2d_over_3": 1.4333333333333333,
+        "total_surface_area_m2": 0.22,
+        "max_projected_area_m2": 0.07
+      }
+    },
+    {
+      "file": "CASE-B-v1.cfg",
+      "id": "CASE-B",
+      "version": 1,
+      "class": "project_prototype",
+      "sources": [
+        {
+          "path": "/home/user/Project-Svarog-Orbital/examples/earth_orbit_acc.jl",
+          "sha256": "aeac193d53353dee83810d7c0e7a19db2fa130120a4a77b5ed36f3009bfb1147",
+          "repository_head": "a8751b44256d9b7b725ee21d4ae7affd473213b2",
+          "line_ranges": {
+            "19-21": "RATE=0, PITCH=49.7 deg, MODEL_TORQUES=false",
+            "50-56": "a=6378.137+800 km, e=0.001, i=97.97 deg, RAAN=285.5 deg, argp=0, nu=0",
+            "59-60": "fixed_in_plane_attitude(angle_deg=PITCH); omega=[0,0,0]",
+            "67-73": "m=10 kg, L=3 m, Ixx=Iyy=(1/24)mL^2, Izz=(1/12)mL^2",
+            "77-80": "area=L^2=9 m^2, mass=10 kg, Cr=1.7, lever=[0,0,0.05] m, Cd=2.2",
+            "82-90": "SRP/drag/albedo forces; torque block disabled in that example"
+          }
+        }
+      ],
+      "deviations_from_source": [
+        "Torques are enabled here although MODEL_TORQUES=false in the cited example; enabling all torques is a declared requirement of this study.",
+        "The scalar Cr=1.7 is split into specular 0.6 / diffuse 0.15. This mapping is NOT unique: any pair with 1 + s + 2d/3 = 1.7 reproduces the same normal-incidence force. It is provisional and treated as an exploratory parameter, not a measured sail property.",
+        "The 9 m^2 sail is represented as one flat two-sided membrane (a +z and a -z panel sharing centre point {0,0,0.05} m), which is a geometric idealisation of a distributed membrane with a non-zero centre-of-pressure offset.",
+        "Inertia is the source's own idealised cross-brace/sail lumping, not a flight mass budget."
+      ],
+      "inconsistencies_in_the_source_family": [
+        {
+          "file": "earth_orbit.jl",
+          "sha256": "504e65be6790f7781d071d274bbead89c7e907bfb801cca069f764d4243cc4",
+          "note": "area = pi*(10.37/2)^2 ~ 84.4 m^2, lever {0.01,0.02,0.05}, SunFeatherLaw control law"
+        },
+        {
+          "file": "earth_ensemble_gpu.jl",
+          "sha256": "fb9d970da20ad848338091703421bc23f0de416b5c7828532df7dd14b7113618",
+          "note": "L=2 m but area = 6.0^2 = 36 m^2, lever {0,0,0}, Cd=2.0, spin about body z"
+        },
+        {
+          "file": "on_off.jl",
+          "sha256": "b5a8a0b1bc223c9b9ea8df9f6be7a9265990bf102f3c3cf8c999c13ce7576b8d",
+          "note": "L=10 m but area = pi*(25/2)^2 ~ 490.9 m^2, Cr=2.0, lever {0,0,0}"
+        },
+        {
+          "file": "sun_orbit.jl",
+          "sha256": "b75be716b4f141c3ae29cfe7591ec2af02c8039bc7c7eaccb43cb9f9c7317123",
+          "note": "area = pi*(210.37/2)^2 ~ 3.48e4 m^2, Cr=1.6, lever {0,0,2.0} m"
+        }
+      ],
+      "conclusion": "Sail area, arm length, reflectivity and lever arm are mutually inconsistent across the example set and the area does not track L^2 outside the cited file. No frozen mission specification is derived from this family. No externally citable Svarog mission requirement document was found; NASA ACSS3 and ESA sail-loading figures are context only, not the provenance of this case.",
+      "checks": {
+        "areal_density_kg_m2": 1.1111111111111112,
+        "Ixx_source_formula_value": 3.75,
+        "Izz_source_formula_value": 7.5,
+        "two_rod_cross_brace_Izz_if_each_rod_carries_half_the_mass": 7.5,
+        "triangle_inequality_Ix_plus_Iz_minus_Iy": 7.5,
+        "gravity_gradient_torque_scale_3mu_over_r3_dI_Nm": 1.2124255209166728e-05,
+        "normal_incidence_effective_Cr_1_plus_s_plus_2d_over_3": 1.7000000000000002,
+        "max_projected_area_m2": 9.0
+      }
+    },
+    {
+      "file": "CASE-C-v1.cfg",
+      "id": "CASE-C",
+      "version": 1,
+      "class": "historical_benchmark",
+      "legacy": 1,
+      "sources": [
+        {
+          "path": "benchmarks/cases/bench_support.hpp",
+          "sha256": "eb849efc5d5b979f6ccc9cbd2eb46f40b7c202833aba74fd1bf50a025ede16ab",
+          "line_ranges": {
+            "102-110": "dynamics(true): 6 x 2 m^2 plates, normal +-axis, cp 0.5n + (0,0.1,0), optical (0.3,0.2), mass 10 kg, inertia diag(2,3,4), SRP+drag+albedo torques, Sentman, GG",
+            "111-116": "initial(): r = Re+400 km, v = sqrt(mu/r)*(0.8,0.6,0), q = (cos22.5deg, sin22.5deg, 0,0), omega = (0.002,0.001,0.0005)",
+            "117-122": "tolerances(): rtol 1e-10, atols 1e-3/1e-6/1e-12/1e-12, initial/max step 1/15 s"
+          }
+        }
+      ],
+      "note": "Physical parameters are read from the unchanged factory; they are deliberately not duplicated in the config. Original benchmark evidence and OPT-001 thresholds remain immutable."
+    }
+  ],
+  "leo_dynamics_source_commit": "0c6a9c365a5d09c2049ea5591e76bf7d99b0761e",
+  "ephemeris": {
+    "mode": "direct SPICE",
+    "spk": "/tmp/leo_cspice/kernels/de432s.bsp",
+    "lsk": "/tmp/leo_cspice/kernels/naif0012.tls",
+    "observer": 399,
+    "target_sun": 10,
+    "frame": "J2000",
+    "radii": "GEOMETRIC NONE",
+    "units": "SI",
+    "epoch_et_s": 0.0
+  }
+}

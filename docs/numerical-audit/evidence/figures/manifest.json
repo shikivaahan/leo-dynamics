@@ -1,0 +1,13 @@
+{
+  "source_sha256": "4eebd6f2ab494e7bf937585c544ca21d6799de293fbf4329e89bd67562d9988a",
+  "horizon_s": 21600,
+  "ranking_observable": "sma_final_m",
+  "files": [
+    "timestep_vs_error.png",
+    "convergence_vs_horizon.png",
+    "attitude_sensitivity_vs_time.png",
+    "perturbation_vs_response.png",
+    "parameter_ranking.png",
+    "uncertainty_vs_response.png"
+  ]
+}

@@ -168,3 +168,75 @@ not an optimisation or replacement of earlier OPT-001 rejection records.
 six-hour reference/error budget—before revisiting approximate ephemerides.
 Passing114 regression tests proves the exercised analytical/boundary behaviours,
 not every possible numerical regime or global solution accuracy.
+
+## Extension: versioned scenario convergence study
+
+The original workload is retained above as the historical record. The version 1
+sensitivity study adds three physically documented cases (see
+[EXPERIMENT_DESIGN.md](EXPERIMENT_DESIGN.md) and
+`experiments/provenance.json`): CASE-A (analytically specified compact 6U-class
+free flyer), CASE-B (project-inspired deployed sail, provisional values) and
+CASE-C (this unchanged stress workload). Per case and horizon the study measures
+a fine numerical envelope over tight Dopri, independently refined RKF78, fixed
+RK4, output-cadence refinement and a mixed-arithmetic state channel, then reports
+which physical sensitivities are resolved against it. Measured envelopes,
+verdicts and reliable horizons are generated from
+`evidence/sensitivity-results.json.gz` into [SENSITIVITY.md](SENSITIVITY.md) and
+[evidence/figures/](evidence/figures/) by `summarise.py` and
+`experiments/plot_sensitivity.py`. Historical sections retain their original data.
+
+### Refinement regimes, not a finest-step oracle
+
+The new study independently varies rtol, absolute scales and maximum step.
+Observed RK4 orders below are `log2(difference(1,0.5)/difference(0.5,0.25))`
+using maximum common-time differences. They are descriptive pairwise orders;
+neither a shared force implementation nor a saturated SO(3) difference is an
+independent accuracy reference.
+
+| Case / horizon | Position observed order | SO(3) observed order |
+|---|---:|---:|
+| CASE-A / 60 s | 1.43 | 4.20 |
+| CASE-A / 1 h | −0.16 | 7.12 |
+| CASE-A / 6 h | −2.64 | 6.47 |
+| CASE-B / 60 s | −0.40 | 0.82 |
+| CASE-B / 1 h | −0.54 | 2.78 |
+| CASE-B / 6 h | 0.94 | 2.78 |
+| CASE-C / 60 s | 0.99 | 3.01 |
+| CASE-C / 1 h | 4.80 | 2.71 |
+| CASE-C / 6 h | 1.61 | 0.78 |
+
+There is no demonstrated global fourth-order regime for every observable.
+Nanometre/micrometre position spreads often stop improving under halving;
+mixed long-double state arithmetic with double forces measures arithmetic
+exposure but cannot certify a pure roundoff floor. Incidence/eclipse events
+also invalidate a universal smooth-RHS order expectation. CASE-A/B
+cross-method agreement is small relative to the predeclared conditional
+decision levels despite these floors. CASE-C's six-hour attitude differences
+are order-one and its small instantaneous sensitivities remain unresolved.
+
+### Demonstrated numerical configurations and cost
+
+The selected fine comparison includes DP5 rtol 1e-13 / absolute-scale 0.001 /
+maximum step 0.5 s; RKF78 rtol 1e-14 / absolute-scale 0.0001 / caps 1 and 0.5 s;
+RK4 0.5 and 0.25 s; mixed-state RK4 0.25 s; and actual 15 s output cadence.
+These are audit configurations, **not changed production defaults**.
+
+| Case, 6 h | Default DP5 RHS calls | Tight DP5 RHS calls | RKF78 0.5 s RHS calls | RK4 0.25 s RHS calls |
+|---|---:|---:|---:|---:|
+| CASE-A | 60887 | 298266 | 561600 | 345600 |
+| CASE-B | 12080 | 294428 | 561600 | 345600 |
+| CASE-C | 43416 | 309696 | 562536 | 345600 |
+
+RHS counts state the scientific cost of independent refinement, not a
+performance optimisation or a speedup claim. Tightening the original
+six-hour CASE-C settings does not establish an accurate instantaneous
+reference. The conditional 0.1 m orbit allowance is supported through the
+tested three-hour CASE-C horizon; 0.01° orientation through one hour.
+CASE-A/B support both at six hours. Application requirements remain provisional.
+
+Actual cadence refinement isolates a second limitation: identical RK4
+quarter-second schedules give bitwise identical common-time states at
+30/15/7.5/3.75 s output intervals, while work and averages change.
+`cadence-refinement-v11.json` and independent cadence qualification of both
+signed perturbations prevent that sampling error being called physics.
+
