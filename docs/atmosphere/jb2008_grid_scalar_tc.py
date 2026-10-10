@@ -1,21 +1,13 @@
 #!/usr/bin/env python3
 """Scalar exospheric-temperature offset experiment for the official grid.
 
-Section 7.3 of docs/atmosphere/JB2008.md records that the grid residual "has
-deliberately not been quantified".  This script quantifies it, by asking whether
-one scalar temperature offset reproduces the entire residual.
+This diagnostic asks how much of the sampled residual a uniform thermal-input
+perturbation can mimic. Altitude-dominant residual structure motivates the
+experiment but does not establish a cause or exclude coordinate errors.
 
-The question is deliberately framed as a scalar because the residual's own
-structure says it should be one: at fixed altitude the relative density error is
-nearly constant across all 703 latitude/longitude points of that altitude plane,
-with a standard deviation only a few percent of its mean.  A geometry, latitude
-or longitude error would not behave that way; an error in the exospheric
-temperature, which the model applies uniformly, would.
-
-The fit searches a constant offset added to DSTDTC, which enters TEMP(1) as
-TEMP(1) = TSUBL + DSTDTC.  If a sub-K offset removes most of the residual, then
-the residual is one scalar of lost input precision, and it is the fixture's
-printed resolution that is lost -- not model accuracy.
+The fit adds a constant offset to DSTDTC and re-evaluates the unmodified model.
+The coarse search is a scale diagnostic, not recovered storm data or proof of
+an original solar-index rounding error. No fitted offset enters production.
 
 Usage:
     jb2008_grid_scalar_tc.py --kernel PATH --astro PATH --validation-dir DIR
@@ -86,6 +78,8 @@ def main():
         ),
         "print_floor_relative_half_ulp": 0.5 / 10000.0,
         "stride": args.stride,
+        "search_half_range_k": args.search,
+        "search_step_k": args.step,
         "epochs": [],
     }
     for name in sorted(f for f in os.listdir(args.validation_dir) if f.endswith(".DAT")):
@@ -126,12 +120,11 @@ def main():
         "offset_mean_k": sum(shifts) / len(shifts),
         "all_epochs_below_1k": all(abs(s) < 1.0 for s in shifts),
         "interpretation": (
-            "A sub-K offset, consistent across all eight epochs and independent "
-            "of the printed DSTDTC, removes the great majority of the residual "
-            "and leaves it near the D15.5 print floor. The official grid residual "
-            "is therefore one lost scalar of exospheric temperature, which is "
-            "consistent with the eight solar indices being published as whole "
-            "numbers (F8.0) although the driver read them as F6.1."
+            "The per-epoch thermal offsets mimic most of the sampled density "
+            "residual but leave disagreement above publication precision. "
+            "This is a hypothetical input-sensitivity result, not recovered "
+            "source data, a complete rounding explanation, or proof that a "
+            "better fit is impossible; the search has finite resolution."
         ),
     }
     print(json.dumps(report, indent=2))
