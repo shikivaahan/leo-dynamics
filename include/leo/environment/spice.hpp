@@ -7,6 +7,11 @@
 namespace leo {
 inline constexpr int sun_naif_id=10;
 inline constexpr int earth_naif_id=399;
+struct UtcCalendar {
+    int year,month,day,day_of_year;
+    long long days_since_1970;
+    double seconds_of_day,day_length_seconds,mjd;
+};
 // Real Sun ephemeris computed by CSPICE from kernels the caller lists explicitly.
 // CSPICE is linked only by the optional leo::environment component, never by
 // leo::kernel, and the force models never load kernels themselves.
@@ -43,6 +48,13 @@ public:
     // Optional convenience for callers holding UTC strings: needs a leapseconds
     // kernel (LSK) among kernel_files, otherwise std::runtime_error.
     static Epoch epoch_from_utc(std::string_view utc);
+    // UTC quasi-MJD stretches leap-second days to their actual 86401 seconds.
+    // seconds_of_day retains 86400 during a positive leap second.
+    static UtcCalendar utc_calendar(Epoch);
+    // Explicit frame, no Earth-rotation fallback. Matrix acts on SI J2000 positions.
+    static Eigen::Matrix3d earth_fixed_rotation(Epoch,const std::string& frame);
+    // Version of the actually linked toolkit, for reproducibility manifests.
+    static std::string toolkit_version();
 private:
     std::vector<std::string> kernel_files_;
 };

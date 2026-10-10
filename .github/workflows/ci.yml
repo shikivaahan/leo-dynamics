@@ -68,6 +68,14 @@ jobs:
           python3 plotting/plot_analysis.py "$RUNNER_TEMP/analysis-deterministic" --output "$RUNNER_TEMP/analysis-deterministic/plots" --format both
           ./build/analyze_orbit "$RUNNER_TEMP/analysis-spice" --spice "$RUNNER_TEMP/spice-kernels/naif0012.tls" "$RUNNER_TEMP/spice-kernels/de432s.bsp" 0
           python3 plotting/plot_analysis.py "$RUNNER_TEMP/analysis-spice" --output "$RUNNER_TEMP/analysis-spice/plots"
+      - name: Validate optional direct NRLMSISE reference
+        run: |
+          python3 docs/atmosphere/acquire.py --destination "$RUNNER_TEMP/atmosphere-reference" --groups nrlmsise00 --acknowledge-external-terms
+          cmake -S . -B build-atmosphere-reference -G Ninja -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" -DBUILD_TESTING=ON -DLEO_ENABLE_CSPICE=ON -DLEO_ENABLE_NRLMSISE00=ON -DLEO_ENABLE_JB2008=OFF -DLEO_NRLMSISE00_ROOT="$RUNNER_TEMP/atmosphere-reference" -DLEO_NRLMSISE00_REFERENCE_DOCUMENTATION="$RUNNER_TEMP/atmosphere-reference/NRLMSISE-DOCUMENTATION" -DCSPICE_ROOT="$RUNNER_TEMP/cspice" -DCMAKE_PREFIX_PATH="$RUNNER_TEMP/catch-install" -DCMAKE_C_FLAGS="${{ matrix.cxx_flags }}" -DCMAKE_CXX_FLAGS="${{ matrix.cxx_flags }}" -DCMAKE_EXE_LINKER_FLAGS="${{ matrix.linker_flags }}"
+          cmake --build build-atmosphere-reference --parallel
+          LEO_SPICE_TEST_SPK="$RUNNER_TEMP/spice-kernels/de432s.bsp" LEO_SPICE_TEST_LSK="$RUNNER_TEMP/spice-kernels/naif0012.tls" ctest --test-dir build-atmosphere-reference --output-on-failure
+          # JB2008 uses externally acquired assets with unclear redistribution
+          # terms; official fixture validation is optional local evidence.
       - name: Exercise optional cache against direct SPICE on a short arc
         if: matrix.name == 'GCC Release'
         run: |
