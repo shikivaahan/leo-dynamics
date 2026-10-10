@@ -197,14 +197,15 @@ reported load series. The Sun X component's ULP is 3.8147e-6 m, so a requested
 1e-6 m offset applies exactly zero and is permanently unresolved; 1 ULP, 1e5
 ULPs, 1 m, 100 m and 1000 m all realise exactly as requested with sign preserved.
 
-At six hours the largest response/envelope ratio over every observable, sign and
-size is 1.34 (inclination, CASE-A); the greatest ratio anywhere in the study is
-1.34 against a required 10. **Zero of 154 entries per case per horizon resolve.**
-Every reported Sun-offset difference is a measured run-to-run difference, not an
-ephemeris sensitivity. This is the direct answer to the original suspicion that a
-30 µm Sun perturbation drove the six-hour anomaly: it is not separable from
-numerical uncertainty at any tested size in any case, while the initial-condition
-and parameter sensitivities of the same cases are clearly resolvable.
+Across the tested one- and six-hour horizons, the largest response/envelope
+ratio is 2.149 (CASE-B, pointing-axis angle, −1000 m), not the previously
+reported 1.34. **Zero of 154 entries per case per horizon passes the complete
+10:1/method/size resolution gate.** This establishes unresolved sensitivity,
+not a small physical response, an ephemeris error bound, or an exclusion of
+Sun perturbations as a contributor. The original approximately 30 µm request
+is not itself a member of this size ladder; its earlier matched-grid results
+remain separate evidence. Quantitative ephemeris amplification is not identified
+by the present data.
 
 ### Point-mass energy change is not a decay measurement
 
@@ -221,13 +222,39 @@ the same six hours:
 Point-mass energy is not conserved under J2; it oscillates by 3.8–7.0e4 J/kg
 within a single case's own run. For CASE-A the naive diagnostic exceeds the
 total modelled work by a factor of 4.1e4. Reporting that number as orbital
-decay would be wrong by four orders of magnitude. Only accumulated source work
-is attributable to the modelled forces, and even that requires the force model
-to be qualified. **A semi-major-axis or energy decay prediction is therefore not
-supported by this study for any case**, and the `energy_change_j_kg` sensitivity
-channel is retained solely as a J2-contaminated diagnostic. Computing decay in
-an osculating Kepler element set under J2 requires a J2-consistent element
-transformation, which this audit does not implement.
+decay would mistake reversible exchange with the omitted J2 potential for
+non-gravitational work. This does **not** invalidate osculating elements
+themselves, nor imply an element transformation is required to measure energy.
+The time-independent potential already implemented by the kernel gives
+
+$$E/m = \tfrac12 v^2-\mu/r+
+ \frac{\mu J_2 R^2}{2r^3}\left(3(z/r)^2-1\right),\qquad
+ \Delta(E/m)=\int\mathbf F_{\rm non\mathchar`-grav}\cdot\mathbf v/m\,dt.$$
+
+`energy-balance-v12.json` measures this translational balance using identical
+RK4 0.25 s RHS schedules and actual output cadences. Six-hour results at 3.75 s:
+
+| Case | Matched energy change (J/kg) | Sampled source work (J/kg) | Signed closure residual (J/kg) |
+|---|---:|---:|---:|
+| CASE-A | −0.221210361 | −0.221215978 | +5.62e-6 |
+| CASE-B | −59.472054457 | −59.467421511 | −0.004633 |
+| CASE-C | −8226.132293481 | −8226.125542242 | −0.006751 |
+
+Cadence leaves endpoint energies and common-time states bitwise identical.
+CASE-B's 7.5→3.75 s terminal residual is nonmonotonic, so its final residual
+alone is not a quadrature convergence certificate. Gravity-only controls at
+1/0.5/0.25 s record the remaining integration/arithmetic exposure separately.
+Small closure residuals certify neither atmosphere/material truth nor a
+particular CASE-C trajectory: any inaccurate path may still satisfy its own
+modelled work balance. The calculation needs no new physics or orbital-element
+transformation. Separating secular decay from periodic osculation needs a
+specified averaging/decision procedure; no long-term mission prediction follows.
+
+At six hours the selected-fine cross-method spread of matched energy changes
+is 3.31e-6 / 1.84e-5 / 14.51 J/kg for A/B/C. Gravity-only RK4 0.25 s controls
+have maximum energy drifts 2.09e-6 / 5.18e-7 / 6.12e-7 J/kg respectively.
+Thus CASE-C's small single-grid work residual does not resolve its much larger
+cross-method energy uncertainty. All are empirical exposures, not bounds.
 
 ### Mission-observable horizons are not interchangeable
 

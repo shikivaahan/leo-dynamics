@@ -57,6 +57,18 @@ Earlier precision measurements record the malformed metadata recovery explicitly
 only field-name metadata was recovered, not state/event values. A strict post-fix
 trace smoke establishes the consumer contract independently.
 
+**Interpretation errata, v1.2.** Point-mass energy omits the J2 potential;
+computing the matching translational energy/work balance does not require a
+mean-element transformation. The earlier blanket prohibition on energy/element
+predictions is replaced by observable-specific numerical qualification.
+The largest tested ephemeris response/envelope ratio is 2.149 (CASE-B), not
+1.34; an unresolved response does not exclude a physical contribution.
+The one-sided panel force values are continuous at grazing; rejection enrichment
+does not prove either a force discontinuity or the cause of the six-hour anomaly.
+Three additional identities test J2 potential limits, representable tiny energy
+changes and specific work scaling; the metric CTest now exercises nine identities.
+Production kernels, integration defaults and historical evidence are unchanged.
+
 
 ### Locations, reproductions and regressions
 

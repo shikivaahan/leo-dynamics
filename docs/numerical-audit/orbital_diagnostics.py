@@ -6,35 +6,24 @@ import json
 from pathlib import Path
 from experiment import HORIZONS, prefix, save
 from metrics import summarize, compare_observables, rtn_basis, rtn_components
+from energy import account as matched_energy_account
 
 LABELS=("default","dopri-tight","rkf78-2","rkf78-1","rk4-1","rk4-half","rk4-quarter","mixed-quarter")
 
 
-def energy_account(summary, span_s, mass_kg):
-    """Separate the J2-contaminated point-mass change from physical source work.
-
-    Point-mass specific energy is not conserved under J2 and oscillates over a
-    single revolution by orders of magnitude more than the non-gravitational
-    work, so its terminal difference is a frame/orbit-phase diagnostic and NOT a
-    decay measurement. The accumulated trapezoidal force work is the physically
-    attributable quantity.
-    """
+def energy_account(raw, summary):
+    """Point-mass diagnostics alongside the force-matched translational balance."""
+    mass_kg=raw["physical"]["mass_kg"]
     non_grav=summary["non_gravitational"]
-    specific={}
-    for key in ("srp","drag","albedo"):
-        work=non_grav.get(f"{key}_work_j")
-        specific[key+"_specific_work_j_kg"]=work/mass_kg if work is not None else None
-    total=non_grav.get("total_non_grav_work_j")
-    physical=None if total is None else total/mass_kg
-    point_mass=summary["orbital"]["specific_energy_change_j_kg"]
-    return dict(point_mass_terminal_change_j_kg=point_mass,
+    specific={key+"_specific_work_j_kg":non_grav[key+"_work_j"]/mass_kg
+              for key in ("srp","drag","albedo")}
+    matched=matched_energy_account(raw)
+    return dict(point_mass_terminal_change_j_kg=summary["orbital"]["specific_energy_change_j_kg"],
                 point_mass_range_j_kg=summary["orbital"]["specific_energy_j_kg"]["max"]-summary["orbital"]["specific_energy_j_kg"]["min"],
-                accumulated_specific_non_grav_work_j_kg=physical,
-                accumulated_specific_non_grav_work_rate_w_kg=None if physical is None else physical/span_s,
-                point_mass_minus_non_grav_work_j_kg=None if (point_mass is None or physical is None) else point_mass-physical,
-                point_mass_to_non_grav_work_ratio=None if not physical else abs(point_mass/physical),
-                interpretation=("the point-mass difference is dominated by J2 short-period osculation and is not a decay "
-                                "measurement; only accumulated source work is attributable to the modelled forces"),
+                accumulated_specific_non_grav_work_j_kg=matched["non_grav_specific_work_j_kg"],
+                accumulated_specific_non_grav_work_rate_w_kg=matched["mean_non_grav_specific_power_w_kg"],
+                matched_gravity=matched,
+                interpretation="Kepler energy omits the J2 potential. Matched K+U can be compared with source work without transforming orbital elements. Residual includes integration, output quadrature and arithmetic exposure, not a certified physical error.",
                 **specific)
 
 
@@ -53,8 +42,14 @@ def main():
         for horizon in HORIZONS:
             base=prefix(nominal,horizon);summary=summarize(base)
             errors={label:compare_observables(base,prefix(raw,horizon))["orbital_rtn"] for label,raw in runs.items()}
+            energy_methods={label:matched_energy_account(prefix(raw,horizon)) for label,raw in runs.items()}
+            energy_methods["rkf78-half"]=matched_energy_account(base)
+            selected=[energy_methods[label]["matched_energy_change_j_kg"]
+                      for label in ("dopri-tight","rkf78-1","rkf78-half","rk4-half","rk4-quarter","mixed-quarter")]
             rows.append(dict(horizon_s=horizon,orbital=summary["orbital"],
-                             energy_account=energy_account(summary,horizon,base["physical"]["mass_kg"]),
+                             energy_account=energy_account(base,summary),
+                             matched_energy_by_method=energy_methods,
+                             matched_energy_fine_spread_j_kg=max(selected)-min(selected),
                              rtn_errors=errors))
         gradients=[]
         for row in evidence["cases"][name]["sensitivity"]:

@@ -47,7 +47,7 @@ python3 "$repo/docs/numerical-audit/contribution_probe.py" --binary "$audit" \
   --output "$out/force-contributions-v11.json"
 python3 "$repo/docs/numerical-audit/cadence_probe.py" --binary "$audit" \
   --spk "$kernels/de432s.bsp" --lsk "$kernels/naif0012.tls" --cases "$@" \
-  --output "$out/cadence-refinement-v11.json"
+  --output "$out/energy-balance-v12.json"
 python3 "$repo/docs/numerical-audit/spacecraft_characteristics.py" \
   --inputs "$out/runs/CASE-A/rkf78-half.json" "$out/runs/CASE-B/rkf78-half.json" "$out/runs/CASE-C/rkf78-half.json" \
   --output "$out/spacecraft-characteristics.json"

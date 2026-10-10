@@ -325,9 +325,11 @@ finite model-isolation changes are not infinitesimal parameter derivatives.
 The `energy_change_j_kg` channel is a point-mass diagnostic only. Measured
 over six hours it exceeds the accumulated modelled non-gravitational work by
 a factor of 4.1e4 (CASE-A), 224 (CASE-B) and 2.2 (CASE-C), because point-mass
-energy is not conserved under J2. No sensitivity of that channel is an
-orbital-decay sensitivity; see ACCURACY_BUDGET.md and
-`evidence/orbital-diagnostics-v11.json`.
+energy omits the J2 potential. These changes are valid osculating diagnostics,
+not direct measures of dissipative decay. The matched K+U/work balance in
+`evidence/energy-balance-v12.json` needs no element transformation.
+Its closure is a per-trajectory identity, not proof of an accurate global
+trajectory or long-term mission prediction; see ACCURACY_BUDGET.md.
 
 ## CASE-C mechanism and unresolved six-hour state
 

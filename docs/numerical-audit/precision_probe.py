@@ -195,7 +195,7 @@ def arithmetic_facts(results):
             "double-precision CSPICE for every ephemeris and environment value. "
             "Only state accumulation is widened. This is not an independent "
             "high-precision oracle, not a higher-precision force model, and not "
-            "evidence about CSPICE accuracy. It bounds state round-off alone."),
+            "evidence about CSPICE accuracy. It measures same-grid arithmetic exposure, not a state-roundoff bound."),
         "force_ephemeris_precision_observed": sorted(
             {f["force_ephemeris_precision"] for f in facts.values()}),
     }

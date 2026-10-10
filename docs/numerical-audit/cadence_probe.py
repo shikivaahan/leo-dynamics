@@ -9,6 +9,7 @@ import hashlib
 import math
 from pathlib import Path
 from experiment import HORIZONS, run, prefix, save
+from energy import account as matched_energy_account
 
 CADENCES=(30,15,7.5,3.75)
 
@@ -27,6 +28,7 @@ def measurements(raw):
         result[source+"_work_j"]=integrate(t,power)
         result[source+"_absolute_work_scale_j"]=integrate(t,[abs(v) for v in power])
         result[source+"_impulse_n_s"]=math.hypot(*impulse)
+    result.update({key:val for key,val in matched_energy_account(raw).items() if key!="j2_enabled"})
     return result
 
 
@@ -37,6 +39,7 @@ def main():
     a=p.parse_args()
     if a.output.exists():p.error("fresh output required")
     report=dict(protocol=__doc__,binary_sha256=hashlib.sha256(a.binary.read_bytes()).hexdigest(),cases={})
+    report["energy_convention"]="K+Ucentral+UJ2 for fixed J2000 Z; compare delta specific energy with integral Fnon-grav dot v / mass. Translational balance only."
     for case in a.cases:
         name=next(line.split()[1] for line in case.read_text().splitlines() if line.startswith("id "))
         runs={cadence:run(a,case,max(HORIZONS),dict(method="rk4",max_step=.25,cadence=cadence)) for cadence in CADENCES}
@@ -49,7 +52,11 @@ def main():
             values={str(c):measurements(prefix(raw,horizon)) for c,raw in runs.items()}
             errors={key:[abs(values[str(a)][key]-values[str(b)][key]) for a,b in zip(CADENCES,CADENCES[1:])] for key in values["30"]}
             rows.append(dict(horizon_s=horizon,observables=values,successive_cadence_differences=errors))
-        report["cases"][name]=dict(common_states_bitwise_equal=equality,rhs_calls={str(c):raw["rhs_calls"] for c,raw in runs.items()},rows=rows)
+        controls={step:run(a,case,max(HORIZONS),dict(method="rk4",max_step=step),("--scenario","j2"))
+                  for step in (1,.5,.25)}
+        report["cases"][name]=dict(common_states_bitwise_equal=equality,rhs_calls={str(c):raw["rhs_calls"] for c,raw in runs.items()},rows=rows,
+            gravity_only_controls=[dict(horizon_s=h,by_step={str(step):matched_energy_account(prefix(raw,h)) for step,raw in controls.items()})
+                                   for h in HORIZONS])
         save(a.output,report);print(name,"identical RK4 states",equality,"final integral differences",rows[-1]["successive_cadence_differences"],flush=True)
 
 

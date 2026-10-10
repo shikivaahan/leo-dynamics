@@ -216,7 +216,7 @@ python3 docs/numerical-audit/screen.py \
 | `precision_probe.py` | Actual 53/64-bit mantissas, mixed-state versus double-force limitations, signed requested/applied Sun offsets, numerical resolution and true rejected-step event localisation. |
 | `case_c_probe.py` | Matched CP, density, area, spin, inertia magnitude/ratio and torque-isolation continuations; no certified chaos claim. |
 | `contribution_probe.py` | SRP force/torque, SRP torque-only and GG source isolation in all cases. |
-| `cadence_probe.py` | Independent 30/15/7.5/3.75 s sampled quadrature, with bitwise-identical common-time RK4 states. |
+| `cadence_probe.py` | Actual 30/15/7.5/3.75 s quadrature with identical RK4 states, force-matched J2 energy/work closure and gravity-only step controls; writes `energy-balance-v12.json`. |
 | `spacecraft_characteristics.py` | Actual force/torque/area/mass/ballistic/timescale measurements, geometry consistency and explicit unresolved CASE-C diagnostic caveats. |
 | `orbital_diagnostics.py` | RTN terminal/maximum/RMS position and velocity differences, orbital energy/element/plane diagnostics and physical derivative projections. |
 | `screen.py` | Seed 20261009, 12 controlled stratified samples over three locally resolved parameters for one common observable. No variance decomposition or mission uncertainty prior. |
@@ -253,3 +253,18 @@ paths were exercised against the actual corrected audit executable. This
 proves the measured paths, not every possible orbit, spacecraft or precision
 regime.
 
+
+### Matched-energy continuation
+
+The orbital accounting now uses the same central+J2 potential as the implemented
+fixed-axis force law. `energy-balance-v12.json` measures source-work closure and
+separates cadence error from endpoint energy change with identical RHS grids.
+No mean-element transformation, production physics change or new ephemeris
+approximation is required. Small closure residuals remain per-trajectory
+consistency checks, not proof of a globally accurate CASE-C orbit.
+
+The earlier interpretation that Sun-offset sensitivities were excluded is
+withdrawn: none meets the full resolution gate, and the measured maximum
+response/envelope ratio is 2.149 (CASE-B), not 1.34. Likewise, incidence-event
+enrichment demonstrates correlation; grazing panel forces are continuous with
+possible derivative kinks, not discontinuous values or a proven divergence cause.

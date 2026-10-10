@@ -10,6 +10,10 @@ spec = importlib.util.spec_from_file_location("sensitivity_metrics", MODULE)
 m = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
 
+energy_spec=importlib.util.spec_from_file_location("audit_energy",MODULE.with_name("energy.py"))
+energy=importlib.util.module_from_spec(energy_spec)
+energy_spec.loader.exec_module(energy)
+
 
 def state_result(inertia=(2, 3, 4), mass=10, times=(0, 5, 10), areas=(2, 4, 4), illumination=(1, 0, 0)):
     samples, loads = [], []
@@ -61,6 +65,32 @@ class MetricIdentities(unittest.TestCase):
         comparison=m.compare_observables(base,changed)
         self.assertEqual(comparison["final"]["projected_area_m2"],-2)
         self.assertEqual(comparison["maximum"]["projected_area_m2"],3)
+
+    def test_j2_potential_matches_equatorial_and_polar_limits(self):
+        radius=7e6
+        correction=energy.MU*energy.J2*energy.EARTH_RADIUS**2/radius**3
+        equator=energy.potential_components((radius,0,0),True)
+        pole=energy.potential_components((0,0,radius),True)
+        self.assertAlmostEqual(equator[1],-correction/2,delta=1e-10)
+        self.assertAlmostEqual(pole[1],correction,delta=1e-10)
+        self.assertEqual(energy.potential_components((0,0,radius),False)[1],0)
+
+    def test_energy_difference_resolves_small_representable_velocity_change(self):
+        initial=state_result()["samples"][0]
+        changed=list(initial);changed[4]+=1e-6
+        # Initial radial velocity is zero, so a 1 µm/s radial change adds
+        # exactly 0.5e-12 J/kg, lost when two large absolute energies subtract.
+        self.assertAlmostEqual(energy.specific_energy_change(initial,changed,True),5e-13,delta=1e-27)
+
+    def test_power_balance_uses_inertial_velocity_and_specific_mass(self):
+        raw=state_result(mass=2,times=(0,5,10))
+        raw["physical"]["j2_enabled"]=False
+        for row,speed in zip(raw["samples"],(2,5,8)):
+            row[4:7]=[speed,0,0];row[15:18]=[2,0,0]
+        result=energy.account(raw)
+        # Constant 2 N force and linearly changing velocity: 100 J / 2 kg.
+        self.assertAlmostEqual(result["non_grav_specific_work_j_kg"],50,delta=1e-13)
+        self.assertAlmostEqual(result["mean_non_grav_specific_power_w_kg"],5,delta=1e-14)
 
 
 if __name__ == "__main__":

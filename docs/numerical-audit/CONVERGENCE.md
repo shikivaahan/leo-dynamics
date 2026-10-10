@@ -228,16 +228,15 @@ harness's own diagnostics. Six-hour production defaults:
 | CASE-B | 127 / 1751 | 7.25 % | 0.00 | 5.62 |
 | CASE-C | 1169 / 6400 | 18.27 % | 7.53 | 2.93 |
 
-CASE-C's production controller rejects nearly one attempt in five, concentrated
-at attitude-dependent surface-incidence transitions, exactly where the drag
-force law is nonsmooth. That is the implemented controller responding to a real
-force-law discontinuity — an `O(n·u)` panel law with no smoothing — not evidence
-of a solver bug. It also explains why CASE-C consumes many more RHS calls than
-its trajectory accuracy warrants and why its cross-configuration spread is
-large: many configurations are integrating slightly different force histories
-through those transitions. Nothing here certifies a particular CASE-C reference.
-Bin windows that cover the whole attempt set, or events with no denominators,
-are labelled undefined rather than reported as zero enrichment.
+CASE-C's rejection rate is elevated near sampled incidence-mask changes.
+The one-sided Sentman and optical panel forces tend to zero at grazing
+incidence; they are continuous there, although derivatives may have kinks.
+Event-window enrichment is correlation, not an attribution of the six-hour
+divergence to those kinks, a discontinuous force, or a particular solver defect.
+Adaptive schedules and conditioning remain possible contributors; these bins
+alone distinguish neither. A zero enrichment with populated denominators
+means no rejection inside that window; missing denominators remain undefined.
+No bin establishes an independently converged CASE-C reference.
 
 ### Measured physical source isolation
 
@@ -252,18 +251,17 @@ with the same resolution gate as every other claim:
 | CASE-A orientation | 3.956e-3 rad | 3.956e-3 rad | 5.302e-3 rad |
 | CASE-B position | 364.3 m | 93.0 m | 532.8 m |
 | CASE-B orientation | 3.127 rad | 3.127 rad | 3.134 rad |
-| CASE-C position | 335 m (unresolved) | 378 m (unresolved) | 326 m (unresolved) |
+| CASE-C position | 335 m | 378 m | 326 m |
 
-CASE-A behaves as its geometry predicts: its common CP offset is 1 mm, so SRP
-acts essentially through the centre of mass and its whole attitude effect is
-torque-mediated (identical 3.956e-3 rad whether or not the force stays) while
-its orbital effect is force-mediated (0.94 m versus an unresolved 6e-6 m).
-CASE-B's sail couples the other way: its 0.05 m common CP offset lets attitude
-torques feed back into the orbit, so removing SRP torque alone still moves the
-position by 93 m. Every CASE-C six-hour isolation is unresolved, consistent
-with its unresolved baseline rather than evidence that these sources are
-unimportant. These are finite model-isolation changes over six hours, not local
-derivatives and not uncertainty bounds.
+Removing SRP torque alone leaves CASE-A's translational response below the
+measured numerical envelope while its attitude response remains resolved.
+This supports a distinction between direct-force and torque-mediated changes
+at the tested resolution, not an assertion of zero CP offset or no feedback.
+For CASE-B, removing SRP torque alone produces a resolved 93 m position change:
+coupled attitude can materially affect orbit. CASE-C's large position changes
+pass the finite-response gate, but its six-hour orientation/rate changes do not.
+None of these finite model removals is a local derivative or a physical
+uncertainty bound, and the ordering does not determine the divergence's cause.
 
 ### Demonstrated numerical configurations and cost
 
