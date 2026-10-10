@@ -75,6 +75,26 @@ either, the fixture tests **skip** — they do not pass.
 `LEO_ENABLE_NRLMSISE00` defaults to `OFF`, so the lightweight kernel build is
 unchanged. The target exports `LEO_HAS_NRLMSISE00=1`.
 
+Four environment variables extend the test suite beyond the published fixture. The
+provider-level Ap-mode test needs `LEO_SPICE_TEST_SPK`, `LEO_SPICE_TEST_LSK`,
+`LEO_ATMOSPHERE_TEST_PCK` (ITRF93 orientation) and
+`LEO_NRLMSISE00_TEST_CSSI` (a real CSSI v1.2 archive); without them it **skips** and no
+value is assumed. Every other test in `leo_nrlmsise00_tests` needs nothing beyond the
+pinned sources and `LEO_NRLMSISE00_REFERENCE_DOCUMENTATION`. That target also compiles
+against the pinned C reference directly, so the Ap-mode tests compare the adapter with
+`gtd7d` rather than with a second opinion of the adapter.
+
+The standalone geomagnetic-mode experiment needs no configuration of the build tree:
+
+```sh
+scripts/nrlmsise00_ap_modes.py \
+  --out docs/atmosphere/evidence/validation-amendment-v1/ap-modes.json
+```
+
+It uses an existing build tree (`--build-dir`, default `build-atmosphere-gcc`) only for
+its archives and for the compiler flags recorded in that tree's `CMakeCache.txt`; it
+never rebuilds anything.
+
 ---
 
 ## 3. API
@@ -227,6 +247,82 @@ behaviour rather than assuming symmetry.
 The adapter always passes a valid `ap_a` pointer, so the history path can never read a
 null pointer even when switch 9 is not `-1`.
 
+### Daily Ap versus Ap history: what is upstream, what is exposed, what is validated
+
+Three different claims live here and must not be confused.
+
+**Upstream (documented by the pinned sources, not by this repository).** Switch 9 = -1
+makes the reference read `ap_a[1..6]` through `sg0` (`nrlmsise-00.c:594`) instead of
+`input->ap` (`nrlmsise-00.c:739`); the seven slots mean what `nrlmsise-00.h:72-82` says
+they mean; and switch 0 selects the output unit system. `WeatherDataset::nrlmsise` maps
+the immutable CSSI 3-hourly bins onto those slots (`src/atmosphere/weather.cpp`): slot 1
+is the current bin, slots 2–4 the bins 3, 6 and 9 h earlier, slot 5 the mean of the
+eight bins 12–33 h back, slot 6 the mean of the eight bins 36–57 h back, walking into the
+previous day when the bin index goes negative. Bin selection is `floor(sec / 10800)`
+clamped to 7, so a 86401 s leap second does not run off the end of the day.
+
+**Exposed.** `Nrlmsise00` accepts the whole switch vector, so any caller can select
+`-1`; `WeatherDataset::nrlmsise(utc, history)` fills the seven slots on request; and
+`DirectAtmosphere(..., ap_history = true)` is the single flag that carries that choice
+from the provider into the loader. The default remains `switch 9 = 1`, the daily Ap, and
+no existing configuration changes.
+
+The retained evidence is `evidence/validation-amendment-v1/ap-modes.json`
+(synthetic unequal-slot diagnostic, reproduced by `scripts/nrlmsise00_ap_modes.py`)
+and `ap-provider-historical-case.json` (a real observed storm record through the
+provider). Mode differences are input-mode differences: they may raise or lower
+density depending on altitude, and neither changes the daily-Ap baseline. The
+observed-provider case (2003-10-30T10:00:00 UTC, 60° N / 70° W, 400 km) moves
+from 7.49848838776156e-12 kg/m³ in daily mode to 6.478659717899017e-12 kg/m³
+in history mode, a −13.60046 % signed change, with both modes matching a direct
+native evaluation.
+
+**Validated.** The published 17-case oracle cannot rank these claims: upstream cases 15
+and 16 set all seven slots to 100 (`nrlmsise-00_test.c:36-37`), so they show only that the
+`-1` path runs. The tests therefore call the pinned `gtd7d` directly, with seven
+*distinct* values in the slots, and require the adapter to reproduce that native answer
+bit for bit; and they require the answer to change when any two of the six consumed slots
+are exchanged, which an all-equal history can never detect. The daily mode is checked the
+same way with `ap_a` absent, which is the only way to show the supplied history cannot
+reach the daily path.
+
+### Mode difference and units, measured
+
+`scripts/nrlmsise00_ap_modes.py` is a standalone experiment: it compiles the pinned
+reference twice (from the pinned sources, and against the archive the library links) plus
+a driver that uses the repository adapter, feeds all three byte-identical inputs, and
+writes `evidence/validation-amendment-v1/ap-modes.json`.
+
+At one fixed state (400 km, 60° N, 70° W, day 172, 150 s.f. solar drivers; daily Ap 23,
+which is also history slot 0, so the two modes are the *same* case and not two cases),
+the two modes give materially different answers, and that difference is a **change of the
+modelled geomagnetic driver, not an integration or unit error** — position, time and
+solar drivers are identical. History slots `[23, 118, 7, 156, 44, 91, 12]`; the change is
+signed `(history − daily) / daily`, so the daily mode is the denominator:
+
+| Altitude | daily Ap, kg/m³ | Ap history, kg/m³ | signed change vs daily | temperature change |
+|---|---|---|---|---|
+| 100 km | 3.359108e-07 | 3.020890e-07 | −10.1 % | −2.5 % |
+| 200 km | 2.956089e-10 | 3.358803e-10 | +13.6 % | +3.8 % |
+| 400 km | 4.711010e-12 | 5.566895e-12 | +18.2 % | +4.9 % |
+| 600 km | 3.063818e-13 | 3.791872e-13 | +23.8 % | +5.1 % |
+| 1000 km | 4.644176e-15 | 6.303672e-15 | +35.7 % | +5.1 % |
+
+The sign is not an artefact of the metric: the reference combines slots 1–6 through
+`sg0`, so a three-hourly history can raise or lower the density relative to the daily
+index depending on altitude. A signed column with the daily mode named as the
+denominator is the only honest form of that statement; the evidence file also carries
+`density_relative_difference`, an unsigned symmetric magnitude, and defines both.
+
+Units were verified in the same run. The adapter equals the native SI evaluation
+(`switch 0 = 1`) to **0 relative difference** on density, temperature and all eight
+constituents, in both modes; the adapter's own cgs path equals the native cgs value
+scaled by 10³ and 10⁶ to **0**. The one non-zero number in the evidence is
+`cgs_vs_metric_adapter_density = 3.4e-16`: asking the reference for SI (`d[5] / 1000`)
+and scaling its cgs mass density by 10³ are two different roundings of the same value,
+one part in 10¹⁶ apart. That is floating-point rounding, not a model difference, and it
+is reported rather than absorbed into a tolerance.
+
 ---
 
 ## 6. Coordinate, time and driver conventions
@@ -345,6 +441,12 @@ wrapper and compares it with itself.
 | year independence | 1900…9999 give identical output, as the reference documents |
 | 32.5 km regression | output is finite on and around the lower-atmosphere node |
 | Ap history | slots 1–6 reach the model, slot 0 does not, and switch 9 gates the whole path |
+| Ap history against a native call | the adapter reproduces a direct `gtd7d` call built from the same seven unequal slots, bit for bit, in both unit systems and at every published geometry |
+| daily mode against a native call | the adapter reproduces a native call made with `ap_a` absent; a supplied history cannot leak into the daily path |
+| Ap-slot identifiability | exchanging any two of the six consumed slots changes the answer, which equal-valued published cases cannot demonstrate |
+| daily versus history difference | one fixed state evaluated in both modes reports the density and temperature change as a mode difference |
+| absent history | a missing (NaN) slot is rejected before any native call on the `-1` path and ignored on the daily path |
+| provider Ap mode | `DirectAtmosphere` with the history flag reproduces the native evaluation of the records it loaded (needs CSPICE + CSSI environment; otherwise skips) |
 | switch domains | out-of-domain switch values are rejected; switch value 2 changes the answer rather than being coerced |
 | domain validation | every documented guard throws `std::invalid_argument`, and documented boundaries are evaluated to a finite, positive density rather than merely not throwing |
 | concurrency | eight threads reproducing serial results bit for bit |
@@ -450,6 +552,14 @@ requests beyond it fail loudly instead of returning a number nobody validated.
    spherical altitude and UTC conversion all happen before `evaluate` is called.
 6. **`ghp7` is not exposed.** Only `gtd7d` is adapted; pressure-level queries are out of
    scope and unused.
+7. **The Ap history has no published unequal-value oracle.** The Ap-history tests
+   establish that the seven slots reach `gtd7d` in the documented order and that no
+   supplied history reaches the daily path, by comparing the adapter with direct native
+   calls. They do **not** establish that the CSSI bin-to-slot mapping is the mapping the
+   model author intended, because no published output exists for an unequal history.
+   That mapping rests on `nrlmsise-00.h:72-82` and on the loader tests in
+   `tests/atmosphere_input_tests.cpp`, which restate the slot meanings independently of
+   the loader loop.
 
 ---
 
