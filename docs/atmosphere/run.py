@@ -46,7 +46,7 @@ NRLMSISE_INPUT_LAGS = {
     "f107": "previous UTC day, daily observed 10.7 cm flux",
     "f107_average": "centred 81-day average of observed daily F10.7",
     "ap": "daily Ap of the current UTC day",
-    "ap_history": "seven 3-hourly Ap values ending at the evaluation time",
+    "ap_history": "daily Ap; current, -3, -6, -9 h bins; means of 12..33 h and 36..57 h preceding bins",
 }
 JB2008_INPUT_LAGS = {
     "F10_S10": "1 day",
@@ -491,7 +491,7 @@ def main():
         "LEO_NRLMSISE00_ROOT", "LEO_JB2008_SOURCE", "CSPICE_ROOT", "CSPICE_LIBRARY",
         "Eigen3_DIR", "Boost_INCLUDE_DIR", "Boost_VERSION",
         "LEO_EIGEN3_INCLUDE_DIRS", "LEO_EIGEN3_VERSION", "LEO_BOOST_INCLUDE_DIRS", "LEO_BOOST_VERSION",
-        "CMAKE_C_COMPILER", "CMAKE_CXX_COMPILER", "CMAKE_Fortran_COMPILER",
+        "CMAKE_BUILD_TYPE", "CMAKE_C_COMPILER", "CMAKE_CXX_COMPILER", "CMAKE_Fortran_COMPILER",
     ])
 
     backends = {
@@ -607,6 +607,8 @@ def main():
             "ellipsoid": "WGS84, a = 6378137 m, 1/f = 298.257223563",
             "latitude": "grid points are geodetic; each model receives its own published "
                         "latitude convention",
+            "jb2008_altitude": "WGS84 ellipsoidal height in km (project convention; upstream datum not uniquely specified)",
+            "jb2008_latitude": "geocentric latitude; spacecraft and Sun share the Earth-fixed equator basis",
             "solar_and_geomagnetic": "official archive records at their published lags",
         },
         "atmospheric_outputs": {
@@ -671,8 +673,8 @@ def main():
             else list(NRLMSISE_STANDARD_SWITCHES),
             "nrlmsise_switch_meaning": {
                 "0": "unit system: 1 selects kg/m^3, 0 selects g/cm^3",
-                "9": "Ap history selector: 1 uses only the daily Ap, -1 uses the seven "
-                     "3-hourly values",
+                "9": "Ap selector: 1 uses daily Ap; -1 uses daily/current/-3/-6/-9 h "
+                     "and the means of 12..33 h / 36..57 h preceding three-hourly bins",
             },
             "density_scale_per_case": "read from each CASE definition file by "
                                       "experiments/scenario.hpp; not overridden here",
