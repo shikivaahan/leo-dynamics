@@ -1,0 +1,486 @@
+{
+  "schema_version": 1,
+  "oracle": "ERFA c2t06a / IAU2006-2000A + final IERS-B; Astropy UTC/TT/TDB",
+  "limitations": "SOFA celestial axes and SPICE J2000 orientation realizations and historical EOP products differ; threshold checks frame/time convention, not exact equal realizations",
+  "tolerances": {
+    "rotation_rad": 1e-06,
+    "et_seconds": 5e-05,
+    "utc_sod_seconds": 2e-06,
+    "quasi_mjd_days": 2e-10
+  },
+  "dependencies": {
+    "astropy": "7.1.0",
+    "pyerfa": "2.0.1.5",
+    "astropy-iers-data": "0.2026.10.5.1.0.7",
+    "numpy": "2.2.6",
+    "packaging": "26.3",
+    "pyyaml": "6.0.3"
+  },
+  "iers_b": {
+    "path": "/tmp/leo-atmosphere-validation-env/lib/python3.12/site-packages/astropy_iers_data/data/eopc04.1962-now",
+    "sha256": "e5f40d4d5d1c3e70ae6ca48c103a3cd9414a56e07fc24b12721d8f66f676c668"
+  },
+  "assets": {
+    "binary": {
+      "path": "build-atmosphere/atmosphere_experiment",
+      "sha256": "e6bc40af617f827c3f3f4a15ea5861a8f7436c1cb85617122560a1217b121d39"
+    },
+    "lsk": {
+      "path": "/tmp/leo-atmosphere-deps/naif0012.tls",
+      "sha256": "678e32bdb5a744117a467cd9601cd6b373f0e9bc9bbde1371d5eee39600a039b"
+    },
+    "spk": {
+      "path": "/tmp/leo-atmosphere-deps/de432s.bsp",
+      "sha256": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b"
+    },
+    "pck": {
+      "path": "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc",
+      "sha256": "14deb9ab9dd49482185cc49a9c29fe56ae65d50ab94caf3197db8694836b6f81"
+    }
+  },
+  "commands": [
+    [
+      "/home/user/leo-dynamics/build-atmosphere/atmosphere_experiment",
+      "--mode",
+      "coordinates",
+      "--epoch-utc",
+      "2003-10-30T00:00:00",
+      "--lsk",
+      "/tmp/leo-atmosphere-deps/naif0012.tls",
+      "--spk",
+      "/tmp/leo-atmosphere-deps/de432s.bsp",
+      "--pck",
+      "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc",
+      "--frame",
+      "ITRF93",
+      "--out",
+      "/tmp/tmp4_b3z6lo/0"
+    ],
+    [
+      "/home/user/leo-dynamics/build-atmosphere/atmosphere_experiment",
+      "--mode",
+      "coordinates",
+      "--epoch-utc",
+      "2008-07-01T06:30:00",
+      "--lsk",
+      "/tmp/leo-atmosphere-deps/naif0012.tls",
+      "--spk",
+      "/tmp/leo-atmosphere-deps/de432s.bsp",
+      "--pck",
+      "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc",
+      "--frame",
+      "ITRF93",
+      "--out",
+      "/tmp/tmp4_b3z6lo/1"
+    ],
+    [
+      "/home/user/leo-dynamics/build-atmosphere/atmosphere_experiment",
+      "--mode",
+      "coordinates",
+      "--epoch-utc",
+      "2016-12-31T23:59:60",
+      "--lsk",
+      "/tmp/leo-atmosphere-deps/naif0012.tls",
+      "--spk",
+      "/tmp/leo-atmosphere-deps/de432s.bsp",
+      "--pck",
+      "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc",
+      "--frame",
+      "ITRF93",
+      "--out",
+      "/tmp/tmp4_b3z6lo/2"
+    ],
+    [
+      "/home/user/leo-dynamics/build-atmosphere/atmosphere_experiment",
+      "--mode",
+      "coordinates",
+      "--epoch-utc",
+      "2017-01-01T00:00:00",
+      "--lsk",
+      "/tmp/leo-atmosphere-deps/naif0012.tls",
+      "--spk",
+      "/tmp/leo-atmosphere-deps/de432s.bsp",
+      "--pck",
+      "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc",
+      "--frame",
+      "ITRF93",
+      "--out",
+      "/tmp/tmp4_b3z6lo/3"
+    ]
+  ],
+  "rows": [
+    {
+      "epoch_utc": "2003-10-30T00:00:00",
+      "dut1_seconds": -0.370548,
+      "polar_motion_rad": [
+        1.0300060580644535e-06,
+        1.1014724427968104e-06
+      ],
+      "rotation_difference_rad": 1.3970463067802199e-08,
+      "rotation_position_bound_at_7000km_m": 0.09779324147461539,
+      "et_difference_seconds": -2.4706125259399414e-05,
+      "utc_seconds_of_day_error": 0.0,
+      "utc_doy_error": 0,
+      "quasi_mjd_error_days": 0.0,
+      "spice": {
+        "kind": "coordinate-report",
+        "spice_toolkit_version": "CSPICE_N0067",
+        "purpose": "raw UTC calendar and Earth-fixed rotation products for external comparison against an independent SOFA/IERS oracle",
+        "not_a_validation": "these values come from the same CSPICE wrapper used by the propagator; agreement with another invocation of that wrapper is not independent validation of the convention",
+        "frame": "ITRF93",
+        "epoch_et_seconds": 120744064.18248665,
+        "epoch_definition": "TDB ephemeris seconds past J2000",
+        "utc": "2003-10-30T00:00:00Z",
+        "utc_year": 2003,
+        "utc_month": 10,
+        "utc_day": 30,
+        "utc_day_of_year": 303,
+        "utc_seconds_of_day": 0,
+        "utc_day_length_seconds": 86400,
+        "utc_leap_second_day": false,
+        "utc_quasi_mjd": 52942,
+        "utc_days_since_1970": 12355,
+        "rotation_direction": "acts on SI J2000 positions, producing Earth-fixed positions",
+        "rotation_rows_are_j2000_components": true,
+        "earth_fixed_rotation": [
+          [
+            0.7895957725193784,
+            0.6136272754741016,
+            -0.00028777379472996745
+          ],
+          [
+            -0.6136272474627773,
+            0.7895958244466937,
+            0.000187583585203821
+          ],
+          [
+            0.0003423313910162504,
+            2.8470635681121514e-05,
+            0.9999999409993191
+          ]
+        ],
+        "j2000_from_earth_fixed": [
+          [
+            0.7895957725193784,
+            -0.6136272474627773,
+            0.0003423313910162504
+          ],
+          [
+            0.6136272754741016,
+            0.7895958244466937,
+            2.8470635681121514e-05
+          ],
+          [
+            -0.00028777379472996745,
+            0.000187583585203821,
+            0.9999999409993191
+          ]
+        ],
+        "transpose_orthogonality_residual": 2.573906340413012e-16,
+        "determinant": 0.9999999999999999,
+        "j2000_x_axis_in_fixed_ra_rad": -0.6606462842349521,
+        "j2000_x_axis_in_fixed_dec_rad": 0.00034233139770259793,
+        "j2000_z_axis_in_fixed_dec_rad": 1.5704528135303006,
+        "equinox_offset_from_fixed_x_rad": 0.9101500523063375
+      },
+      "sofa_itrf_rotation": [
+        [
+          0.7895957720122678,
+          0.6136272761310203,
+          -0.0002877644441716846
+        ],
+        [
+          -0.6136272481229719,
+          0.7895958239360875,
+          0.00018757323884070547
+        ],
+        [
+          0.00034231765902014696,
+          2.8473067653439027e-05,
+          0.9999999410039506
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "epoch_utc": "2008-07-01T06:30:00",
+      "dut1_seconds": -0.44480368958333333,
+      "polar_motion_rad": [
+        1.0272140362755137e-06,
+        2.4089728225606825e-06
+      ],
+      "rotation_difference_rad": 1.850763086368711e-08,
+      "rotation_position_bound_at_7000km_m": 0.12955341604580978,
+      "et_difference_seconds": 5.602836608886719e-06,
+      "utc_seconds_of_day_error": 0.0,
+      "utc_doy_error": 0,
+      "quasi_mjd_error_days": 0.0,
+      "spice": {
+        "kind": "coordinate-report",
+        "spice_toolkit_version": "CSPICE_N0067",
+        "purpose": "raw UTC calendar and Earth-fixed rotation products for external comparison against an independent SOFA/IERS oracle",
+        "not_a_validation": "these values come from the same CSPICE wrapper used by the propagator; agreement with another invocation of that wrapper is not independent validation of the convention",
+        "frame": "ITRF93",
+        "epoch_et_seconds": 268165865.18409652,
+        "epoch_definition": "TDB ephemeris seconds past J2000",
+        "utc": "2008-07-01T06:30:00Z",
+        "utc_year": 2008,
+        "utc_month": 7,
+        "utc_day": 1,
+        "utc_day_of_year": 183,
+        "utc_seconds_of_day": 23400,
+        "utc_day_length_seconds": 86400,
+        "utc_leap_second_day": false,
+        "utc_quasi_mjd": 54648.270833333336,
+        "utc_days_since_1970": 14061,
+        "rotation_direction": "acts on SI J2000 positions, producing Earth-fixed positions",
+        "rotation_rows_are_j2000_components": true,
+        "earth_fixed_rotation": [
+          [
+            0.955928910230755,
+            0.2935970884603496,
+            -0.0008174549816255122
+          ],
+          [
+            -0.29359700996191546,
+            0.9559292592003128,
+            0.0002171316743603824
+          ],
+          [
+            0.0008451783624196347,
+            3.2439893535740616e-05,
+            0.9999996423105304
+          ]
+        ],
+        "j2000_from_earth_fixed": [
+          [
+            0.955928910230755,
+            -0.29359700996191546,
+            0.0008451783624196347
+          ],
+          [
+            0.2935970884603496,
+            0.9559292592003128,
+            3.2439893535740616e-05
+          ],
+          [
+            -0.0008174549816255122,
+            0.0002171316743603824,
+            0.9999996423105304
+          ]
+        ],
+        "transpose_orthogonality_residual": 4.830253992637093e-16,
+        "determinant": 1,
+        "j2000_x_axis_in_fixed_ra_rad": -0.2979876255328688,
+        "j2000_x_axis_in_fixed_dec_rad": 0.000845178463041879,
+        "j2000_z_axis_in_fixed_dec_rad": 1.5699505260016569,
+        "equinox_offset_from_fixed_x_rad": 1.2728087286795338
+      },
+      "sofa_itrf_rotation": [
+        [
+          0.9559289082370892,
+          0.2935970949878594,
+          -0.0008174419470549778
+        ],
+        [
+          -0.29359701649848874,
+          0.9559292571952672,
+          0.000217120452778702
+        ],
+        [
+          0.0008451626074467935,
+          3.2446799435369995e-05,
+          0.9999996423236222
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "epoch_utc": "2016-12-31T23:59:60",
+      "dut1_seconds": -0.4087129890823023,
+      "polar_motion_rad": [
+        3.905126219927523e-07,
+        1.2756805412026503e-06
+      ],
+      "rotation_difference_rad": 2.9614540092233073e-08,
+      "rotation_position_bound_at_7000km_m": 0.2073017806456315,
+      "et_difference_seconds": -2.0682811737060547e-05,
+      "utc_seconds_of_day_error": 0.0,
+      "utc_doy_error": 0,
+      "quasi_mjd_error_days": 0.0,
+      "spice": {
+        "kind": "coordinate-report",
+        "spice_toolkit_version": "CSPICE_N0067",
+        "purpose": "raw UTC calendar and Earth-fixed rotation products for external comparison against an independent SOFA/IERS oracle",
+        "not_a_validation": "these values come from the same CSPICE wrapper used by the propagator; agreement with another invocation of that wrapper is not independent validation of the convention",
+        "frame": "ITRF93",
+        "epoch_et_seconds": 536500868.1839298,
+        "epoch_definition": "TDB ephemeris seconds past J2000",
+        "utc": "2016-12-31T24:00:00Z",
+        "utc_year": 2016,
+        "utc_month": 12,
+        "utc_day": 31,
+        "utc_day_of_year": 366,
+        "utc_seconds_of_day": 86400,
+        "utc_day_length_seconds": 86401,
+        "utc_leap_second_day": true,
+        "utc_quasi_mjd": 57753.99998842606,
+        "utc_days_since_1970": 17166,
+        "rotation_direction": "acts on SI J2000 positions, producing Earth-fixed positions",
+        "rotation_rows_are_j2000_components": true,
+        "earth_fixed_rotation": [
+          [
+            -0.18426690407766247,
+            0.9828761806733148,
+            0.0003486067569155593
+          ],
+          [
+            -0.9828748776747224,
+            -0.1842672276864108,
+            0.0016011360542447506
+          ],
+          [
+            0.0016379552903840117,
+            -4.760043983714768e-05,
+            0.9999986574174311
+          ]
+        ],
+        "j2000_from_earth_fixed": [
+          [
+            -0.18426690407766247,
+            -0.9828748776747224,
+            0.0016379552903840117
+          ],
+          [
+            0.9828761806733148,
+            -0.1842672276864108,
+            -4.760043983714768e-05
+          ],
+          [
+            0.0003486067569155593,
+            0.0016011360542447506,
+            0.9999986574174311
+          ]
+        ],
+        "transpose_orthogonality_residual": 2.5426433605847436e-16,
+        "determinant": 1,
+        "j2000_x_axis_in_fixed_ra_rad": -1.7561225204075288,
+        "j2000_x_axis_in_fixed_dec_rad": 0.0016379560227959306,
+        "j2000_z_axis_in_fixed_dec_rad": 1.5691576792615212,
+        "equinox_offset_from_fixed_x_rad": -0.1853262715801292
+      },
+      "sofa_itrf_rotation": [
+        [
+          -0.18426691432512815,
+          0.9828761787452244,
+          0.00034862627825575594
+        ],
+        [
+          -0.9828748757797948,
+          -0.18426723796490077,
+          0.001601116372968402
+        ],
+        [
+          0.0016379395437657672,
+          -4.762323641186989e-05,
+          0.9999986574421379
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "epoch_utc": "2017-01-01T00:00:00",
+      "dut1_seconds": 0.591287,
+      "polar_motion_rad": [
+        3.905125719969201e-07,
+        1.2756805428298996e-06
+      ],
+      "rotation_difference_rad": 2.9614486964777987e-08,
+      "rotation_position_bound_at_7000km_m": 0.2073014087534459,
+      "et_difference_seconds": -2.0682811737060547e-05,
+      "utc_seconds_of_day_error": 0.0,
+      "utc_doy_error": 0,
+      "quasi_mjd_error_days": 0.0,
+      "spice": {
+        "kind": "coordinate-report",
+        "spice_toolkit_version": "CSPICE_N0067",
+        "purpose": "raw UTC calendar and Earth-fixed rotation products for external comparison against an independent SOFA/IERS oracle",
+        "not_a_validation": "these values come from the same CSPICE wrapper used by the propagator; agreement with another invocation of that wrapper is not independent validation of the convention",
+        "frame": "ITRF93",
+        "epoch_et_seconds": 536500869.1839298,
+        "epoch_definition": "TDB ephemeris seconds past J2000",
+        "utc": "2017-01-01T00:00:00Z",
+        "utc_year": 2017,
+        "utc_month": 1,
+        "utc_day": 1,
+        "utc_day_of_year": 1,
+        "utc_seconds_of_day": 0,
+        "utc_day_length_seconds": 86400,
+        "utc_leap_second_day": false,
+        "utc_quasi_mjd": 57754,
+        "utc_days_since_1970": 17167,
+        "rotation_direction": "acts on SI J2000 positions, producing Earth-fixed positions",
+        "rotation_rows_are_j2000_components": true,
+        "earth_fixed_rotation": [
+          [
+            -0.18433857595450642,
+            0.9828627410818429,
+            0.00034872360264415203
+          ],
+          [
+            -0.9828614381068042,
+            -0.18433889965841893,
+            0.0016011106607783515
+          ],
+          [
+            0.0016379553380243188,
+            -4.7600522443180804e-05,
+            0.9999986574173492
+          ]
+        ],
+        "j2000_from_earth_fixed": [
+          [
+            -0.18433857595450642,
+            -0.9828614381068042,
+            0.0016379553380243188
+          ],
+          [
+            0.9828627410818429,
+            -0.18433889965841893,
+            -4.7600522443180804e-05
+          ],
+          [
+            0.00034872360264415203,
+            0.0016011106607783515,
+            0.9999986574173492
+          ]
+        ],
+        "transpose_orthogonality_residual": 2.5084449765653473e-16,
+        "determinant": 1,
+        "j2000_x_axis_in_fixed_ra_rad": -1.7561954415579917,
+        "j2000_x_axis_in_fixed_dec_rad": 0.0016379560704363016,
+        "j2000_z_axis_in_fixed_dec_rad": 1.5691576792115198,
+        "equinox_offset_from_fixed_x_rad": -0.18539919273072952
+      },
+      "sofa_itrf_rotation": [
+        [
+          -0.18433858620190052,
+          0.9828627391529897,
+          0.00034874312382193653
+        ],
+        [
+          -0.9828614362111141,
+          -0.18433890993683705,
+          0.0016010909794570316
+        ],
+        [
+          0.0016379395929955849,
+          -4.762332001465351e-05,
+          0.9999986574420533
+        ]
+      ],
+      "passed": true
+    }
+  ],
+  "passed": true
+}

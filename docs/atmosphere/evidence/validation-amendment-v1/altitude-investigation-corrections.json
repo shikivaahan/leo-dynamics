@@ -1,0 +1,407 @@
+{
+  "problem": "Candidate spacecraft RA omitted official THETA when using fixed east-longitude labels; corner span was mislabeled half-width.",
+  "correction": "Native RA now official THETA(D1950)+east longitude; all candidate results regenerated; (high-low)/rho correctly named full corner span.",
+  "old_native_ra_candidate_summary": {
+    "geodetic_height_geocentric_latitude": {
+      "all_altitudes": {
+        "points_considered": 180,
+        "max_abs_density_percent_difference": 0.0,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 0.0,
+          "geodetic_altitude_km": 120.0
+        },
+        "reference_density_kg_m3": 2.4004945041017992e-08
+      },
+      "altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 0.0,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 0.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 3.334009757388729e-10
+      },
+      "in_backend_domain_and_altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 0.0,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 0.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 3.334009757388729e-10
+      },
+      "max_abs_altitude_offset_km": 0.0
+    },
+    "geocentric_minus_6356.766_geocentric_latitude": {
+      "all_altitudes": {
+        "points_considered": 180,
+        "max_abs_density_percent_difference": 85.30751164480363,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 270.0,
+          "geodetic_altitude_km": 120.0
+        },
+        "reference_density_kg_m3": 2.3593687830924656e-08
+      },
+      "altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 48.76469539537581,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 270.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 2.775550601062248e-10
+      },
+      "in_backend_domain_and_altitude_ge_200km": {
+        "points_considered": 135,
+        "max_abs_density_percent_difference": 48.76469539537581,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 270.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 2.775550601062248e-10
+      },
+      "max_abs_altitude_offset_km": 21.371000000000095
+    },
+    "geocentric_minus_6378.137_geocentric_latitude": {
+      "all_altitudes": {
+        "points_considered": 180,
+        "max_abs_density_percent_difference": 2891.3286689329857,
+        "at": {
+          "geodetic_latitude_deg": 89.9,
+          "geodetic_longitude_deg": 270.0,
+          "geodetic_altitude_km": 120.0
+        },
+        "reference_density_kg_m3": 2.2753744089705942e-08
+      },
+      "altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 106.68639883470057,
+        "at": {
+          "geodetic_latitude_deg": -89.9,
+          "geodetic_longitude_deg": 180.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 3.0965666782199265e-10
+      },
+      "in_backend_domain_and_altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 106.68639883470057,
+        "at": {
+          "geodetic_latitude_deg": -89.9,
+          "geodetic_longitude_deg": 180.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 3.0965666782199265e-10
+      },
+      "max_abs_altitude_offset_km": 21.384685754820566
+    },
+    "geocentric_minus_6356.752_geocentric_latitude": {
+      "all_altitudes": {
+        "points_considered": 180,
+        "max_abs_density_percent_difference": 85.32087325182356,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 270.0,
+          "geodetic_altitude_km": 120.0
+        },
+        "reference_density_kg_m3": 2.3593687830924656e-08
+      },
+      "altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 48.78603319282949,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 270.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 2.775550601062248e-10
+      },
+      "in_backend_domain_and_altitude_ge_200km": {
+        "points_considered": 120,
+        "max_abs_density_percent_difference": 48.78603319282949,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 270.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 2.775550601062248e-10
+      },
+      "max_abs_altitude_offset_km": 21.38499999999931
+    },
+    "geocentric_minus_6371.0_geocentric_latitude": {
+      "all_altitudes": {
+        "points_considered": 180,
+        "max_abs_density_percent_difference": 721.1471809391156,
+        "at": {
+          "geodetic_latitude_deg": -89.9,
+          "geodetic_longitude_deg": 270.0,
+          "geodetic_altitude_km": 120.0
+        },
+        "reference_density_kg_m3": 2.4942419784307028e-08
+      },
+      "altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 60.23749321674232,
+        "at": {
+          "geodetic_latitude_deg": -89.9,
+          "geodetic_longitude_deg": 180.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 3.0965666782199265e-10
+      },
+      "in_backend_domain_and_altitude_ge_200km": {
+        "points_considered": 145,
+        "max_abs_density_percent_difference": 60.23749321674232,
+        "at": {
+          "geodetic_latitude_deg": -89.9,
+          "geodetic_longitude_deg": 180.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 3.0965666782199265e-10
+      },
+      "max_abs_altitude_offset_km": 14.24768575482085
+    },
+    "geodetic_height_geodetic_latitude": {
+      "all_altitudes": {
+        "points_considered": 180,
+        "max_abs_density_percent_difference": 0.17346678629686085,
+        "at": {
+          "geodetic_latitude_deg": 45.0,
+          "geodetic_longitude_deg": 270.0,
+          "geodetic_altitude_km": 600.0
+        },
+        "reference_density_kg_m3": 8.389118662018857e-14
+      },
+      "altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 0.17346678629686085,
+        "at": {
+          "geodetic_latitude_deg": 45.0,
+          "geodetic_longitude_deg": 270.0,
+          "geodetic_altitude_km": 600.0
+        },
+        "reference_density_kg_m3": 8.389118662018857e-14
+      },
+      "in_backend_domain_and_altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 0.17346678629686085,
+        "at": {
+          "geodetic_latitude_deg": 45.0,
+          "geodetic_longitude_deg": 270.0,
+          "geodetic_altitude_km": 600.0
+        },
+        "reference_density_kg_m3": 8.389118662018857e-14
+      },
+      "max_abs_altitude_offset_km": 0.0
+    }
+  },
+  "new_physical_longitude_candidate_summary": {
+    "geodetic_height_geocentric_latitude": {
+      "all_altitudes": {
+        "points_considered": 180,
+        "max_abs_density_percent_difference": 0.0,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 0.0,
+          "geodetic_altitude_km": 120.0
+        },
+        "reference_density_kg_m3": 2.3601646234858723e-08
+      },
+      "altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 0.0,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 0.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 2.88433647436492e-10
+      },
+      "in_backend_domain_and_altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 0.0,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 0.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 2.88433647436492e-10
+      },
+      "max_abs_altitude_offset_km": 0.0
+    },
+    "geocentric_minus_6356.766_geocentric_latitude": {
+      "all_altitudes": {
+        "points_considered": 180,
+        "max_abs_density_percent_difference": 85.27390468201217,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 90.0,
+          "geodetic_altitude_km": 120.0
+        },
+        "reference_density_kg_m3": 2.3614228893655797e-08
+      },
+      "altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 49.03596886402959,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 0.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 2.88433647436492e-10
+      },
+      "in_backend_domain_and_altitude_ge_200km": {
+        "points_considered": 135,
+        "max_abs_density_percent_difference": 49.03596886402959,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 0.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 2.88433647436492e-10
+      },
+      "max_abs_altitude_offset_km": 21.371000000000095
+    },
+    "geocentric_minus_6378.137_geocentric_latitude": {
+      "all_altitudes": {
+        "points_considered": 180,
+        "max_abs_density_percent_difference": 2891.326963890645,
+        "at": {
+          "geodetic_latitude_deg": 89.9,
+          "geodetic_longitude_deg": 0.0,
+          "geodetic_altitude_km": 120.0
+        },
+        "reference_density_kg_m3": 2.2753755340841907e-08
+      },
+      "altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 106.66691371714671,
+        "at": {
+          "geodetic_latitude_deg": -89.9,
+          "geodetic_longitude_deg": 90.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 3.096455822452477e-10
+      },
+      "in_backend_domain_and_altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 106.66691371714671,
+        "at": {
+          "geodetic_latitude_deg": -89.9,
+          "geodetic_longitude_deg": 90.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 3.096455822452477e-10
+      },
+      "max_abs_altitude_offset_km": 21.384685754820566
+    },
+    "geocentric_minus_6356.752_geocentric_latitude": {
+      "all_altitudes": {
+        "points_considered": 180,
+        "max_abs_density_percent_difference": 85.2872828866336,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 90.0,
+          "geodetic_altitude_km": 120.0
+        },
+        "reference_density_kg_m3": 2.3614228893655797e-08
+      },
+      "altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 49.05752104516766,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 0.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 2.88433647436492e-10
+      },
+      "in_backend_domain_and_altitude_ge_200km": {
+        "points_considered": 120,
+        "max_abs_density_percent_difference": 49.05752104516766,
+        "at": {
+          "geodetic_latitude_deg": 0.0,
+          "geodetic_longitude_deg": 0.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 2.88433647436492e-10
+      },
+      "max_abs_altitude_offset_km": 21.38499999999931
+    },
+    "geocentric_minus_6371.0_geocentric_latitude": {
+      "all_altitudes": {
+        "points_considered": 180,
+        "max_abs_density_percent_difference": 721.1466767961957,
+        "at": {
+          "geodetic_latitude_deg": -89.9,
+          "geodetic_longitude_deg": 0.0,
+          "geodetic_altitude_km": 120.0
+        },
+        "reference_density_kg_m3": 2.4942432212017278e-08
+      },
+      "altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 60.222302966201944,
+        "at": {
+          "geodetic_latitude_deg": -89.9,
+          "geodetic_longitude_deg": 90.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 3.096455822452477e-10
+      },
+      "in_backend_domain_and_altitude_ge_200km": {
+        "points_considered": 145,
+        "max_abs_density_percent_difference": 60.222302966201944,
+        "at": {
+          "geodetic_latitude_deg": -89.9,
+          "geodetic_longitude_deg": 90.0,
+          "geodetic_altitude_km": 200.0
+        },
+        "reference_density_kg_m3": 3.096455822452477e-10
+      },
+      "max_abs_altitude_offset_km": 14.24768575482085
+    },
+    "geodetic_height_geodetic_latitude": {
+      "all_altitudes": {
+        "points_considered": 180,
+        "max_abs_density_percent_difference": 0.1730520761401788,
+        "at": {
+          "geodetic_latitude_deg": -45.0,
+          "geodetic_longitude_deg": 180.0,
+          "geodetic_altitude_km": 600.0
+        },
+        "reference_density_kg_m3": 2.371919328469889e-13
+      },
+      "altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 0.1730520761401788,
+        "at": {
+          "geodetic_latitude_deg": -45.0,
+          "geodetic_longitude_deg": 180.0,
+          "geodetic_altitude_km": 600.0
+        },
+        "reference_density_kg_m3": 2.371919328469889e-13
+      },
+      "in_backend_domain_and_altitude_ge_200km": {
+        "points_considered": 150,
+        "max_abs_density_percent_difference": 0.1730520761401788,
+        "at": {
+          "geodetic_latitude_deg": -45.0,
+          "geodetic_longitude_deg": 180.0,
+          "geodetic_altitude_km": 600.0
+        },
+        "reference_density_kg_m3": 2.371919328469889e-13
+      },
+      "max_abs_altitude_offset_km": 0.0
+    }
+  },
+  "physical_production_convention_changed": false,
+  "old_evidence_sha256": "fc516d0f8b7209c0bb6725ef5ea203391ece7ff18657a5b5ca5e7a92ac06fa42",
+  "corrected_evidence_sha256": "0259d9698c27bd0c1d5f846ffa901217156585ffd83902627a2284bd02df3662"
+}

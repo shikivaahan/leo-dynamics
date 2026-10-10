@@ -1,0 +1,44 @@
+[
+  {
+    "command": [
+      "build-atmosphere-gcc/leo_jb2008_tests",
+      "JB2008 reproduces*"
+    ],
+    "returncode": 0,
+    "measurements": [
+      {
+        "model": "jb2008",
+        "fixtures": 13320,
+        "max_density_relative_error": 0.0058605859224980525,
+        "rms_density_relative_error": 0.0032398286550430365,
+        "max_exospheric_temperature_error_k": 0.7501667628996529,
+        "max_local_temperature_error_k": 0.7460527549826566
+      },
+      {
+        "model": "jb2008",
+        "full_precision_fixtures": 12,
+        "max_relative_error": 1.4717105248216975e-05
+      }
+    ],
+    "stdout": "Filters: \"JB2008 reproduces*\"\nRandomness seeded to: 1913952756\n{\"model\":\"jb2008\",\"fixtures\":13320,\"max_density_relative_error\":0.0058605859224980525,\"rms_density_relative_error\":0.0032398286550430365,\"max_exospheric_temperature_error_k\":0.75016676289965289,\"max_local_temperature_error_k\":0.74605275498265655}\n{\"model\":\"jb2008\",\"full_precision_fixtures\":12,\"max_relative_error\":1.4717105248216975e-05}\n===============================================================================\nAll tests passed (39976 assertions in 2 test cases)\n\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "build-atmosphere-gcc/leo_nrlmsise00_tests",
+      "NRLMSISE00 reproduces*"
+    ],
+    "returncode": 0,
+    "measurements": [
+      {
+        "model": "nrlmsise00",
+        "fixtures": 17,
+        "max_density_relative_error": 2.944132010607419e-07,
+        "max_species_relative_error": 3.8658716522502516e-07,
+        "max_temperature_relative_error": 4.802788048679761e-07
+      }
+    ],
+    "stdout": "Filters: \"NRLMSISE00 reproduces*\"\nRandomness seeded to: 2567694846\n{\"model\":\"nrlmsise00\",\"fixtures\":17,\"max_density_relative_error\":2.9441320106074192e-07,\"max_species_relative_error\":3.8658716522502516e-07,\"max_temperature_relative_error\":4.8027880486797611e-07}\n===============================================================================\nAll tests passed (563 assertions in 1 test case)\n\n",
+    "stderr": ""
+  }
+]

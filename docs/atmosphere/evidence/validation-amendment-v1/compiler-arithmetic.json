@@ -1,0 +1,40 @@
+{
+  "cases": 552,
+  "stride": 1000,
+  "inputs": "Identical binary64 native inputs; official SUNPOS/THETA; no coordinate/weather pipeline",
+  "input_binary64_sha256": "2c8ac97e886fc8e1f79527f33f0c77f3328a6d94b301aaf01260ebf4dddd0202",
+  "runtime_env": {
+    "LD_LIBRARY_PATH": "/tmp/leo-fortran/usr/lib/x86_64-linux-gnu"
+  },
+  "arguments": {
+    "kernel_o0": "/tmp/leo-jb-native-o0",
+    "kernel_o3": "/tmp/leo-jb-grid-endtoend/jb2008_native_kernel",
+    "adapter": "/tmp/leo-jb-grid-endtoend/jb2008_adapter_probe",
+    "astro": "/tmp/leo-jb-grid-endtoend/jb2008_official_astronomy",
+    "validation_dir": "/tmp/leo-atmosphere-deps/jb-validation",
+    "output": "/tmp/leo-arithmetic-confirmed.json"
+  },
+  "binary_sha256": {
+    "kernel_o0": "0853295e28236f9622942d25b39ad3b9cde34b16020ba084b92fd9ba32a44251",
+    "kernel_o3": "6e6ce8232e8fe5f069b0028cb46b0cf54f8003f73e6ea15a99e69ae38ea7671a",
+    "adapter": "85eae5f2d6efb49245fd0f3b9f6b4fd7a48ed008e6df505152e5a731d36b9a13",
+    "astro": "98cddf7b8c19619d04362b973c40d9551e6018b5c89b4454f80ad4537f6ed694"
+  },
+  "max_o0_o3_relative_density_difference": 6.896789372549261e-15,
+  "max_o0_o3_absolute_temperature_difference_k": 5.684341886080801e-13,
+  "max_native_adapter_relative_density_difference": 0.0,
+  "max_native_adapter_absolute_temperature_difference_k": 0.0,
+  "producer_compiler_settings": "Unavailable; local agreement cannot exclude a different producer model/compiler",
+  "compile_command_o0": [
+    "/tmp/leo-fortran/usr/bin/gfortran-13",
+    "-std=legacy",
+    "-O0",
+    "/tmp/leo-atmosphere-deps/JB2008.f",
+    "docs/atmosphere/jb2008_native_kernel.f90",
+    "-o",
+    "/tmp/leo-jb-native-o0"
+  ],
+  "compiler": "GNU Fortran 13.3.0",
+  "source_sha256": "b18c1607239db881940a7b91635a7af39edc82306cf10854ec12080397227999",
+  "reproduction_command": "env LD_LIBRARY_PATH=/tmp/leo-fortran/usr/lib/x86_64-linux-gnu python3 docs/atmosphere/jb2008_arithmetic.py --kernel-o0 /tmp/leo-jb-native-o0 --kernel-o3 /tmp/leo-jb-grid-endtoend/jb2008_native_kernel --adapter /tmp/leo-jb-grid-endtoend/jb2008_adapter_probe --astro /tmp/leo-jb-grid-endtoend/jb2008_official_astronomy --validation-dir /tmp/leo-atmosphere-deps/jb-validation --output /tmp/leo-arithmetic-confirmed.json"
+}

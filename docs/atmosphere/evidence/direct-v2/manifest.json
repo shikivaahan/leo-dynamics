@@ -1,0 +1,865 @@
+{
+  "atmospheric_implementation_version": "direct-native-v2; unmodified reference cores, corrected JB2008 boundary guard",
+  "atmospheric_outputs": {
+    "absent_outputs": "marked by has_temperatures / has_constituents, never by a zero",
+    "constituents": "number density in m^-3, order He, O, N2, O2, Ar, H, N, anomalous O",
+    "density": "total mass density in kg/m^3",
+    "exospheric_temperature": "exospheric temperature, when the model produces one",
+    "temperature": "temperature at the requested altitude, when the model produces one"
+  },
+  "backends": {
+    "exponential": {
+      "external": false,
+      "note": "existing lightweight baseline, retained unchanged",
+      "source": "repository src/kernel/aerodynamics.cpp (ExponentialAtmosphere)"
+    },
+    "jb2008": {
+      "density_entry_point": "leo_jb2008 bridge (JB2008.f)",
+      "density_output": "rho = total mass density in kg/m^3",
+      "density_semantics_note": "JB2008 total mass density is a model-form quantity that is not identical to NRLMSISE-00 gtd7d total density: the two models use different constituent sets, different temperature definitions and different fitted upper-boundary conditions. The two densities must be reported as model-form differences and are not evidence that either implementation is wrong.",
+      "external": true,
+      "fortran_compiler_required": "/tmp/leo-fortran/usr/bin/gfortran-13",
+      "source": "official external JB2008 Fortran reference",
+      "source_file": "/tmp/leo-atmosphere-deps/JB2008.f",
+      "thread_safety": "upstream Fortran model keeps mutable COMMON/module state; the adapter serialises native calls on a process-wide mutex"
+    },
+    "nrlmsise00": {
+      "ap_history_enabled": false,
+      "density_entry_point": "gtd7d",
+      "density_output": "output.d[5] = total mass density including anomalous oxygen",
+      "external": true,
+      "root": "/tmp/leo-atmosphere-deps",
+      "source": "pinned Brodowski C reference, gtd7d entry point",
+      "switches_in_force": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "thread_safety": "upstream C model keeps mutable global state; the adapter serialises native calls on a process-wide mutex",
+      "units_switch": "switches[0] = 1 selects kg/m^3 (0 selects g/cm^3)"
+    }
+  },
+  "baseline_change": {
+    "changed_nonphysics_components": [
+      "runner compiler-build-type metadata",
+      "fixture sample duplicate weighting",
+      "validation interpretation and documentation"
+    ],
+    "changed_production_files": {
+      "src/atmosphere/jb2008.cpp": {
+        "after_sha256": "907b22c9cfd27494e9866d94798308a9ebc298bf96e238d873b54b8daaec68c7",
+        "before_sha256": "97a82c9b2c3a59526cfae9c96f6fba7cb6c8eeaef8a91b4732c481ef3458befe"
+      }
+    },
+    "native_core_changes": false,
+    "newly_accepted_inputs": "received JB heights within 1e-9 km of nominal 120/1500 km bounds; never clamped",
+    "physical_outputs_changed_in_frozen_experiments": false,
+    "unchanged_production_files": {
+      "include/leo/atmosphere/coordinates.hpp": "b24efc2bbf38cd8d02745b639c92e4984de9bd59c499fcb9d7c2e0b60ddb9bde",
+      "include/leo/atmosphere/jb2008.hpp": "4a28890bcf3a9f5e7b380e8755bed3bcb52e7a2352df5818bb5dd1883517443d",
+      "include/leo/atmosphere/nrlmsise00.hpp": "304cf49d2bcc41c0de23db6ae0201fa9a63e985558d3e96ba67fbcd10cc03c28",
+      "include/leo/atmosphere/provider.hpp": "ab70ddb9330b957b9d5616e0c022e381100d47ecc5777b3f517426e9bc1fbc53",
+      "include/leo/atmosphere/types.hpp": "11361be8b6dc0d0deac5dce50c26fd70e472808de1ba296bca8e3dae9920ca7d",
+      "include/leo/atmosphere/weather.hpp": "e296f6317e379a208958bc4e55646f83b330b2ee0e81b0979e7568c55100b478",
+      "src/atmosphere/coordinates.cpp": "6dc3e1017cb37a5a03b48ab7cd7b431b8560c3f49ac9aad95cfb63b14cc0bb79",
+      "src/atmosphere/jb2008_bridge.f90": "e576d6ec6b3f91864204b5bcb432fe5b81ae95ffdc5411be3f8ccd7cb646fb8e",
+      "src/atmosphere/nrlmsise00.cpp": "39329f9289982afa0e1521d2aa717522b486c91b3128bfb04ae0263846be712d",
+      "src/atmosphere/provider.cpp": "422bab5765662c8ac1bffba9238d79cffb649dc792cedffda8a774ef172b9673",
+      "src/atmosphere/weather.cpp": "384dafc5697ef7e46fe58b3e9037c34a8096ad60910e1ee82f2738ffb2163eaf"
+    },
+    "unchanged_reference_data_and_sources": {
+      "/tmp/leo-atmosphere-deps/DTCFILE.TXT": "f6485450c363e9be8e71c37e143ac768462deca77565b727ec2e96c025ab8d91",
+      "/tmp/leo-atmosphere-deps/JB2008.f": "b18c1607239db881940a7b91635a7af39edc82306cf10854ec12080397227999",
+      "/tmp/leo-atmosphere-deps/JB2008Test.java": "315e4f1f9191559ce656c9e6f54fb69b3bbf82db611467ec3cff38fd3f687286",
+      "/tmp/leo-atmosphere-deps/NRLMSISE-DOCUMENTATION": "e7db72964c22861e446d4b61931a22a58c32eeaa7f9bb23b45d887751b4ecae3",
+      "/tmp/leo-atmosphere-deps/SOLFSMY.TXT": "891a0767702d11c2cd8432b3b012d4350c4becbf86873c32073cff852155f9d7",
+      "/tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt": "f3eb9e676295bbf93566a054e95d1317de1aba2e410d209d4642dbedebf05ea2",
+      "/tmp/leo-atmosphere-deps/de432s.bsp": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b",
+      "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc": "14deb9ab9dd49482185cc49a9c29fe56ae65d50ab94caf3197db8694836b6f81",
+      "/tmp/leo-atmosphere-deps/jb2008-legacy-fixtures.json": "2b2e6a65a36525f9985377eb3af8fc1c5b83ea8a8473f467e5e66623175fc3f0",
+      "/tmp/leo-atmosphere-deps/jb2008.zip": "0b310c9e259b5ca9285d570610d52afa5964d82506ea4fb43e995a8332535d6a",
+      "/tmp/leo-atmosphere-deps/jb2008validate.zip": "4d18c286b148fc5b2271667dab71dd6a702204bb5176bc8a54200aa17e3fff98",
+      "/tmp/leo-atmosphere-deps/naif0012.tls": "678e32bdb5a744117a467cd9601cd6b373f0e9bc9bbde1371d5eee39600a039b",
+      "/tmp/leo-atmosphere-deps/nrlmsise-00.c": "a20d6523420188241963f095ad0b65df44ac0a6fa6db52d2e1df823c366f0285",
+      "/tmp/leo-atmosphere-deps/nrlmsise-00.h": "d5b45be690bbc6cf394f69b18c0e641a1769da0a87015704fdabf0e7560794aa",
+      "/tmp/leo-atmosphere-deps/nrlmsise-00_data.c": "d0b3022f3c3e7ffdf703cc0e0d02339dfee01c0bf1520b29c68d5f4afd8784d5",
+      "/tmp/leo-atmosphere-deps/nrlmsise-00_test.c": "5a95faa996dc265ab85a0f6db641628abe84c9aef504638b4aa465ed76c89113",
+      "/tmp/leo-atmosphere-deps/pck00011.tpc": "3dff7b1dbeceaa01f25467767d3fa25816051c85d162d1edf04acb310ee28bb1"
+    },
+    "weather_coordinate_time_switch_changes": false
+  },
+  "baseline_version": "direct-v2",
+  "build": {
+    "binary": {
+      "bytes": 2103200,
+      "modified_utc": "2026-10-10T11:45:38.455647+00:00",
+      "path": "build-atmosphere/atmosphere_experiment",
+      "sha256": "e6bc40af617f827c3f3f4a15ea5861a8f7436c1cb85617122560a1217b121d39"
+    },
+    "build_commands": [
+      "cmake --build build-atmosphere --parallel"
+    ],
+    "build_dir": "/home/user/leo-dynamics/build-atmosphere",
+    "test_command": [
+      "ctest --test-dir build-atmosphere-gcc --output-on-failure -j 4"
+    ]
+  },
+  "caching_policy": "no atmospheric caching, memoisation, interpolation, surrogate, quantisation or trajectory precomputation is present in any measurement",
+  "commands": [
+    {
+      "command": [
+        "build-atmosphere/atmosphere_experiment",
+        "--lsk",
+        "/tmp/leo-atmosphere-deps/naif0012.tls",
+        "--spk",
+        "/tmp/leo-atmosphere-deps/de432s.bsp",
+        "--frame",
+        "ITRF93",
+        "--epoch-utc",
+        "2003-10-30T00:00:00",
+        "--duration",
+        "21600.0",
+        "--cadence",
+        "30.0",
+        "--rtol",
+        "1e-10",
+        "--max-step",
+        "15.0",
+        "--refine-rtol",
+        "1e-12",
+        "--refine-max-step",
+        "5.0",
+        "--weather",
+        "/tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt",
+        "--solfsmy",
+        "/tmp/leo-atmosphere-deps/SOLFSMY.TXT",
+        "--dtcfile",
+        "/tmp/leo-atmosphere-deps/DTCFILE.TXT",
+        "--pck",
+        "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc",
+        "--mode",
+        "coordinates",
+        "--out",
+        "docs/atmosphere/evidence/direct-v2/coordinates"
+      ],
+      "command_line": "build-atmosphere/atmosphere_experiment --lsk /tmp/leo-atmosphere-deps/naif0012.tls --spk /tmp/leo-atmosphere-deps/de432s.bsp --frame ITRF93 --epoch-utc 2003-10-30T00:00:00 --duration 21600.0 --cadence 30.0 --rtol 1e-10 --max-step 15.0 --refine-rtol 1e-12 --refine-max-step 5.0 --weather /tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt --solfsmy /tmp/leo-atmosphere-deps/SOLFSMY.TXT --dtcfile /tmp/leo-atmosphere-deps/DTCFILE.TXT --pck /tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc --mode coordinates --out docs/atmosphere/evidence/direct-v2/coordinates",
+      "returncode": 0,
+      "stdout": "{\"kind\":\"coordinate-report\",\"spice_toolkit_version\":\"CSPICE_N0067\",\"purpose\":\"raw UTC calendar and Earth-fixed rotation products for external comparison against an independent SOFA/IERS oracle\",\"not_a_validation\":\"these values come from the same CSPICE wrapper used by the propagator; agreement with another invocation of that wrapper is not independent validation of the convention\",\"frame\":\"ITRF93\",\"epoch_et_seconds\":120744064.18248665,\"epoch_definition\":\"TDB ephemeris seconds past J2000\",\"utc\":\"2003-10-30T00:00:00Z\",\"utc_year\":2003,\"utc_month\":10,\"utc_day\":30,\"utc_day_of_year\":303,\"utc_seconds_of_day\":0,\"utc_day_length_seconds\":86400,\"utc_leap_second_day\":false,\"utc_quasi_mjd\":52942,\"utc_days_since_1970\":12355,\"rotation_direction\":\"acts on SI J2000 positions, producing Earth-fixed positions\",\"rotation_rows_are_j2000_components\":true,\"earth_fixed_rotation\":[[0.7895957725193784,0.61362727547410156,-0.00028777379472996745],[-0.6136272474627773,0.78959582444669374,0.00018758358520382101],[0.00034233139101625038,2.8470635681121514e-05,0.9999999409993191]],\"j2000_from_earth_fixed\":[[0.7895957725193784,-0.6136272474627773,0.00034233139101625038],[0.61362727547410156,0.78959582444669374,2.8470635681121514e-05],[-0.00028777379472996745,0.00018758358520382101,0.9999999409993191]],\"transpose_orthogonality_residual\":2.573906340413012e-16,\"determinant\":0.99999999999999989,\"j2000_x_axis_in_fixed_ra_rad\":-0.66064628423495209,\"j2000_x_axis_in_fixed_dec_rad\":0.00034233139770259793,\"j2000_z_axis_in_fixed_dec_rad\":1.5704528135303006,\"equinox_offset_from_fixed_x_rad\":0.9101500523063375}"
+    },
+    {
+      "command": [
+        "build-atmosphere/atmosphere_experiment",
+        "--lsk",
+        "/tmp/leo-atmosphere-deps/naif0012.tls",
+        "--spk",
+        "/tmp/leo-atmosphere-deps/de432s.bsp",
+        "--frame",
+        "ITRF93",
+        "--epoch-utc",
+        "2003-10-30T00:00:00",
+        "--duration",
+        "21600.0",
+        "--cadence",
+        "30.0",
+        "--rtol",
+        "1e-10",
+        "--max-step",
+        "15.0",
+        "--refine-rtol",
+        "1e-12",
+        "--refine-max-step",
+        "5.0",
+        "--weather",
+        "/tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt",
+        "--solfsmy",
+        "/tmp/leo-atmosphere-deps/SOLFSMY.TXT",
+        "--dtcfile",
+        "/tmp/leo-atmosphere-deps/DTCFILE.TXT",
+        "--pck",
+        "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc",
+        "--fixture",
+        "quiet_june=2008-07-01T00:00:00",
+        "--fixture",
+        "quiet_december=2008-12-15T00:00:00",
+        "--fixture",
+        "active_march=2001-03-20T00:00:00",
+        "--fixture",
+        "active_october=2003-10-28T00:00:00",
+        "--fixture",
+        "storm_october=2003-10-30T00:00:00",
+        "--mode",
+        "fixtures",
+        "--out",
+        "docs/atmosphere/evidence/direct-v2/fixtures"
+      ],
+      "command_line": "build-atmosphere/atmosphere_experiment --lsk /tmp/leo-atmosphere-deps/naif0012.tls --spk /tmp/leo-atmosphere-deps/de432s.bsp --frame ITRF93 --epoch-utc 2003-10-30T00:00:00 --duration 21600.0 --cadence 30.0 --rtol 1e-10 --max-step 15.0 --refine-rtol 1e-12 --refine-max-step 5.0 --weather /tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt --solfsmy /tmp/leo-atmosphere-deps/SOLFSMY.TXT --dtcfile /tmp/leo-atmosphere-deps/DTCFILE.TXT --pck /tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc --fixture quiet_june=2008-07-01T00:00:00 --fixture quiet_december=2008-12-15T00:00:00 --fixture active_march=2001-03-20T00:00:00 --fixture active_october=2003-10-28T00:00:00 --fixture storm_october=2003-10-30T00:00:00 --mode fixtures --out docs/atmosphere/evidence/direct-v2/fixtures",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "build-atmosphere/atmosphere_experiment",
+        "--lsk",
+        "/tmp/leo-atmosphere-deps/naif0012.tls",
+        "--spk",
+        "/tmp/leo-atmosphere-deps/de432s.bsp",
+        "--frame",
+        "ITRF93",
+        "--epoch-utc",
+        "2003-10-30T00:00:00",
+        "--duration",
+        "21600.0",
+        "--cadence",
+        "30.0",
+        "--rtol",
+        "1e-10",
+        "--max-step",
+        "15.0",
+        "--refine-rtol",
+        "1e-12",
+        "--refine-max-step",
+        "5.0",
+        "--weather",
+        "/tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt",
+        "--solfsmy",
+        "/tmp/leo-atmosphere-deps/SOLFSMY.TXT",
+        "--dtcfile",
+        "/tmp/leo-atmosphere-deps/DTCFILE.TXT",
+        "--pck",
+        "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc",
+        "--case",
+        "docs/numerical-audit/experiments/CASE-A-v1.cfg",
+        "--case",
+        "docs/numerical-audit/experiments/CASE-B-v1.cfg",
+        "--case",
+        "docs/numerical-audit/experiments/CASE-C-v1.cfg",
+        "--mode",
+        "propagate",
+        "--out",
+        "docs/atmosphere/evidence/direct-v2/propagate"
+      ],
+      "command_line": "build-atmosphere/atmosphere_experiment --lsk /tmp/leo-atmosphere-deps/naif0012.tls --spk /tmp/leo-atmosphere-deps/de432s.bsp --frame ITRF93 --epoch-utc 2003-10-30T00:00:00 --duration 21600.0 --cadence 30.0 --rtol 1e-10 --max-step 15.0 --refine-rtol 1e-12 --refine-max-step 5.0 --weather /tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt --solfsmy /tmp/leo-atmosphere-deps/SOLFSMY.TXT --dtcfile /tmp/leo-atmosphere-deps/DTCFILE.TXT --pck /tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc --case docs/numerical-audit/experiments/CASE-A-v1.cfg --case docs/numerical-audit/experiments/CASE-B-v1.cfg --case docs/numerical-audit/experiments/CASE-C-v1.cfg --mode propagate --out docs/atmosphere/evidence/direct-v2/propagate",
+      "returncode": 0
+    }
+  ],
+  "compiled_source_git_sha": "7c11f5746cd0ff0f26f46cd81aceff677a110be8",
+  "compiler": {
+    "build_type": "Release",
+    "flags": {
+      "CMAKE_CXX_FLAGS": "-Wall -Wextra -Wpedantic",
+      "CMAKE_CXX_FLAGS_DEBUG": "-g",
+      "CMAKE_CXX_FLAGS_MINSIZEREL": "-Os -DNDEBUG",
+      "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-O2 -g -DNDEBUG",
+      "CMAKE_C_FLAGS_DEBUG": "-g",
+      "CMAKE_C_FLAGS_MINSIZEREL": "-Os -DNDEBUG",
+      "CMAKE_C_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "CMAKE_C_FLAGS_RELWITHDEBINFO": "-O2 -g -DNDEBUG",
+      "CMAKE_Fortran_FLAGS_DEBUG": "-g",
+      "CMAKE_Fortran_FLAGS_MINSIZEREL": "-Os",
+      "CMAKE_Fortran_FLAGS_RELEASE": "-O3",
+      "CMAKE_Fortran_FLAGS_RELWITHDEBINFO": "-O2 -g"
+    },
+    "languages": {
+      "C": {
+        "binary_sha256": "1b99826121ae6682a634e5efe09bd3e3df58ce58e0b28f849114ab5b89139c26",
+        "cache_variable": "CMAKE_C_COMPILER",
+        "path": "/usr/bin/cc",
+        "target": "x86_64-linux-gnu",
+        "used": true,
+        "version": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+      },
+      "CXX": {
+        "binary_sha256": "1353e9bdd29a7295c7226bf6c63abccce056d8cac31f112e5cdbecc3f28c2769",
+        "cache_variable": "CMAKE_CXX_COMPILER",
+        "path": "/usr/bin/c++",
+        "target": "x86_64-linux-gnu",
+        "used": true,
+        "version": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+      },
+      "Fortran": {
+        "binary_sha256": "142861efc95f49e33705852027dae8c2e5382fd1155fcec6116ef973f25d8f84",
+        "cache_variable": "CMAKE_Fortran_COMPILER",
+        "path": "/tmp/leo-fortran/usr/bin/gfortran-13",
+        "target": "x86_64-linux-gnu",
+        "used": true,
+        "version": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+      }
+    },
+    "note": "read from CMakeCache.txt; no flag value is assumed. Target-level options set in cmake/*.cmake are recorded under backends."
+  },
+  "cpu": {
+    "MKL_NUM_THREADS": null,
+    "OMP_NUM_THREADS": null,
+    "OPENBLAS_NUM_THREADS": null,
+    "affinity_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "logical_cores": 16,
+    "machine": "x86_64",
+    "memory_total": "16302680 kB",
+    "model_names": [
+      "AMD Ryzen 7 5800H with Radeon Graphics"
+    ],
+    "note": "measurements are single-threaded except for the explicit concurrency columns; the environment variables are recorded because a machine with them set is not a clean single-thread baseline",
+    "numa_nodes": 1,
+    "processor": "x86_64",
+    "relevant_isa_flags": [
+      "avx",
+      "avx2",
+      "fma",
+      "sse4_2"
+    ]
+  },
+  "density_definitions": {
+    "jb2008": {
+      "altitude_domain_km": [
+        120,
+        1500
+      ],
+      "altitude_roundoff_margin_km": 1e-09,
+      "altitude_semantics": "WGS84 ellipsoidal height in km, explicit provisional project convention; authoritative datum not uniquely specified",
+      "entry_point": "JB2008.f via the leo_jb2008 bridge",
+      "meaning": "total mass density in kg/m^3",
+      "mjd_utc_domain": [
+        33282,
+        88069
+      ],
+      "mjd_utc_domain_note": "An explicit engineering range, not a published model validity claim. The guard exists because the model expands its calendar-dependent coefficients and its century terms in a way that is only characterised over this interval. An epoch outside it is rejected with a clear error rather than extrapolated.",
+      "mjd_utc_domain_utc": [
+        "1950-01-01",
+        "2100-01-01"
+      ],
+      "solar_proxy_domain": [
+        40,
+        null
+      ]
+    },
+    "not_comparable_by_construction": "NRLMSISE-00 gtd7d total density and JB2008 total density are different model quantities: different constituent sets, different temperature definitions and different fitted upper-boundary conditions. Their ratio is a model-form difference and is reported as such; it is not evidence that either implementation is wrong, and neither is calibrated to the other.",
+    "nrlmsise00": {
+      "altitude_domain_km": [
+        0,
+        1000
+      ],
+      "altitude_domain_note": "An explicit project-supported range, not a claimed published sharp validity cutoff. An input outside it is rejected, never clamped: clamping would silently evaluate a different altitude than requested.",
+      "ap_domain": [
+        0,
+        400
+      ],
+      "constituent_conversion_cm3_to_m3": 1000000,
+      "density_conversion_to_kg_m3": 1000,
+      "entry_point": "gtd7d",
+      "f107_domain": "must be positive",
+      "gtd7_vs_gtd7d": "gtd7 omits the anomalous oxygen contribution; gtd7d includes it. The drag-effective density here is the gtd7d value. Using gtd7 would systematically under-report the oxygen contribution at high altitude.",
+      "meaning": "drag-effective total mass density including anomalous oxygen, adapter output kg/m^3",
+      "native_density_units": "g/cm^3",
+      "native_units_switch": 0,
+      "output_index": "d[5]"
+    }
+  },
+  "dependencies": {
+    "boost": {
+      "bytes_hashed": 149594508,
+      "files_hashed": 15653,
+      "header_roots": [
+        "/tmp/leo-deps/usr/include/boost"
+      ],
+      "source_tree_sha256": "8fd22c07cbbd552b43627c1b0c1a6d4c8c6f64277c679fdd9509c7f2daad2f7d",
+      "version": "1.83.0"
+    },
+    "cspice": {
+      "library_bytes": 10715848,
+      "library_path": "/tmp/leo_cspice/cspice/lib/cspice.a",
+      "library_sha256": "22ac28890f746526217cc8a7d242887c2e78c5a83380eb8db34465c2a1092e08",
+      "version_source": "SpiceEphemerisProvider::toolkit_version / tkvrsn_c(\"TOOLKIT\"), recorded in coordinates.json"
+    },
+    "eigen": {
+      "bytes_hashed": 8669561,
+      "files_hashed": 530,
+      "header_roots": [
+        "/tmp/leo-deps/usr/include/eigen3"
+      ],
+      "source_tree_sha256": "5d340de6a5f84ada93fc3c02082f913677c0180b2fb362e6e27c6ec3d4d5068c",
+      "version": "3.4.0"
+    }
+  },
+  "evidence": [
+    "comparison-to-direct-v1.json",
+    "coordinates/coordinates.json",
+    "fixtures/environment.json",
+    "fixtures/fixtures.json",
+    "propagate/environment.json",
+    "propagate/propagation-comparison.json",
+    "propagate/propagation/CASE-A_exponential.json",
+    "propagate/propagation/CASE-A_jb2008.json",
+    "propagate/propagation/CASE-A_nrlmsise00.json",
+    "propagate/propagation/CASE-B_exponential.json",
+    "propagate/propagation/CASE-B_jb2008.json",
+    "propagate/propagation/CASE-B_nrlmsise00.json",
+    "propagate/propagation/CASE-C_exponential.json",
+    "propagate/propagation/CASE-C_jb2008.json",
+    "propagate/propagation/CASE-C_nrlmsise00.json"
+  ],
+  "external_sources": {
+    "jb2008": {
+      "adapter": {
+        "bytes": 2499,
+        "modified_utc": "2026-10-10T11:35:02.479748+00:00",
+        "path": "/home/user/leo-dynamics/src/atmosphere/jb2008.cpp",
+        "repository_relative": "src/atmosphere/jb2008.cpp",
+        "sha256": "907b22c9cfd27494e9866d94798308a9ebc298bf96e238d873b54b8daaec68c7"
+      },
+      "bridge": {
+        "bytes": 900,
+        "modified_utc": "2026-10-10T01:25:44.178218+00:00",
+        "path": "/home/user/leo-dynamics/src/atmosphere/jb2008_bridge.f90",
+        "repository_relative": "src/atmosphere/jb2008_bridge.f90",
+        "sha256": "e576d6ec6b3f91864204b5bcb432fe5b81ae95ffdc5411be3f8ccd7cb646fb8e"
+      },
+      "licence": "external, not redistributed in this repository",
+      "official_source": "/tmp/leo-atmosphere-deps/JB2008.f",
+      "official_source_sha256": "b18c1607239db881940a7b91635a7af39edc82306cf10854ec12080397227999"
+    },
+    "nrlmsise00": {
+      "files": {
+        "nrlmsise-00.c": "a20d6523420188241963f095ad0b65df44ac0a6fa6db52d2e1df823c366f0285",
+        "nrlmsise-00.h": "d5b45be690bbc6cf394f69b18c0e641a1769da0a87015704fdabf0e7560794aa",
+        "nrlmsise-00_data.c": "d0b3022f3c3e7ffdf703cc0e0d02339dfee01c0bf1520b29c68d5f4afd8784d5",
+        "nrlmsise-00_test.c": "5a95faa996dc265ab85a0f6db641628abe84c9aef504638b4aa465ed76c89113"
+      },
+      "root": "/tmp/leo-atmosphere-deps"
+    }
+  },
+  "fixture_epochs": [
+    "quiet_june=2008-07-01T00:00:00",
+    "quiet_december=2008-12-15T00:00:00",
+    "active_march=2001-03-20T00:00:00",
+    "active_october=2003-10-28T00:00:00",
+    "storm_october=2003-10-30T00:00:00"
+  ],
+  "frames": {
+    "earth_fixed": "ITRF93",
+    "ellipsoid": "WGS84, a = 6378137 m, 1/f = 298.257223563",
+    "inertial": "J2000 (ECI), as used by the propagator",
+    "jb2008_altitude": "WGS84 ellipsoidal height in km (project convention; upstream datum not uniquely specified)",
+    "jb2008_latitude": "geocentric latitude; spacecraft and Sun share the Earth-fixed equator basis",
+    "latitude": "grid points are geodetic; each model receives its own published latitude convention",
+    "solar_and_geomagnetic": "official archive records at their published lags"
+  },
+  "generated_utc": "2026-10-10T11:51:10.119999+00:00",
+  "historical_evidence": {
+    "direct_v1_manifest": "../direct-v1/manifest.json",
+    "sha256": "cf71c20f02dd27128cade75329e885e9d8a3d417cac999e420094066c39a0f63",
+    "timing_file": "../direct-v1/timing/performance-baseline.json",
+    "timing_sha256": "07d30ae09556378a3d605d198f35bbce4ce7db571a5095d258e142e30521c33b",
+    "timing_status": "historical measurements only; no direct-v2 performance remeasurement",
+    "unchanged": true
+  },
+  "kernels": {
+    "lsk": {
+      "bytes": 5257,
+      "modified_utc": "2026-10-10T01:58:16.564577+00:00",
+      "path": "/tmp/leo-atmosphere-deps/naif0012.tls",
+      "repository_relative": null,
+      "sha256": "678e32bdb5a744117a467cd9601cd6b373f0e9bc9bbde1371d5eee39600a039b"
+    },
+    "pck": {
+      "bytes": 5144576,
+      "modified_utc": "2026-10-10T01:23:49.248320+00:00",
+      "path": "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc",
+      "repository_relative": null,
+      "sha256": "14deb9ab9dd49482185cc49a9c29fe56ae65d50ab94caf3197db8694836b6f81"
+    },
+    "spk": {
+      "bytes": 10895360,
+      "modified_utc": "2026-10-10T01:58:30.485124+00:00",
+      "path": "/tmp/leo-atmosphere-deps/de432s.bsp",
+      "repository_relative": null,
+      "sha256": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b"
+    }
+  },
+  "kind": "atmospheric-baseline-manifest",
+  "modes": [
+    "coordinates",
+    "fixtures",
+    "propagate"
+  ],
+  "note": "direct-v2: JB2008 altitude-boundary guard corrected to 1e-9 km; no clamping or datum change; daily-Ap baseline retained; timings inherited by reference from immutable direct-v1",
+  "numerical_precision": "IEEE binary64 C++ double, C double and GNU Fortran REAL*8/c_double; native integer fields INTEGER*4",
+  "numerics": {
+    "absolute_tolerances": {
+      "body_rate_rad_s": 1e-12,
+      "position_m": 0.001,
+      "quaternion": 1e-12,
+      "source": "existing project defaults, unchanged",
+      "velocity_m_s": 1e-06
+    },
+    "case_c_threshold": "none; CASE-C remains a sensitive stress test and no attitude convergence threshold is asserted for it",
+    "defaults_changed": "none; rtol, max_step, initial_step, the four absolute tolerances and max_attempts are all the existing project values. Only the named refinement values (refine_rtol, refine_max_step) differ, and only for the RKF78 run.",
+    "initial_step_s": 1.0,
+    "integrators": [
+      "dopri5 nominal (leo::propagate)",
+      "boost odeint controlled RKF7(8) independent refinement"
+    ],
+    "max_attempts": 1000000,
+    "max_attempts_source": "include/leo/integration/options.hpp default, unchanged",
+    "max_step_s": 15.0,
+    "refine_max_step_s": 5.0,
+    "refine_rtol": 1e-12,
+    "rtol": 1e-10
+  },
+  "performance_settings": {
+    "thread_counts": [
+      1,
+      2,
+      4
+    ],
+    "timing_batches": 7,
+    "timing_calls_per_batch": 2000,
+    "timing_propagation_repeats": 3
+  },
+  "preservation": {
+    "historical_files": 17,
+    "historical_hashes_unchanged": true,
+    "historical_tree_sha256": "3e46f7e4f0a9bf6d9d9ba01b1f862d69cfa168f35a2298b5c0be5cf061f1f97a",
+    "outputs_tree_sha256": "58bc0b8fdc5c774df8a8e22cef92aae720e2afbc9c59da85b2d8c2d423e7eaab",
+    "user_output_files": 144,
+    "user_output_hashes_unchanged": true
+  },
+  "project": {
+    "files": {
+      "CMakeLists.txt": "ff89e3860c7154008c9400b3017bc26de93e57d43ad88cf9d753920c59a04616",
+      "benchmarks/cases/bench_support.hpp": "eb849efc5d5b979f6ccc9cbd2eb46f40b7c202833aba74fd1bf50a025ede16ab",
+      "cmake/jb2008.cmake": "0bb829e941ccb54c81c29691cfade805d66b2a58aa3d7df7d90dd6a36b86adec",
+      "cmake/nrlmsise00-tests.cmake": "1b5e629a3db3abd7d81587e3dbfc4c8249e43941ecbf6cdbf2d14304b11ae392",
+      "cmake/nrlmsise00.cmake": "a637cfb85bbe0d90a5e81939b82142edde9db439f4fca2e10628d9a59c8d4f95",
+      "docs/atmosphere/CMakeLists.txt": "92b2c32b221d1c65396689a0b65f6454d6f6ad792be560250e354fff31bc572e",
+      "docs/atmosphere/DECISIONS.md": "72a255e4a860791a5bbca6be7eb92cdfd473f2c5f3e6e13f5e92e94e240111be",
+      "docs/atmosphere/EXPERIMENTS.md": "96a42cef444f3e836c4ede12ae964798f1f71ca6ce24f7dd104842bcc70a1c6a",
+      "docs/atmosphere/experiment.cpp": "107cb0af9f96c4bd5361cf65a3fe2b01313a62b349fbec8a604c1fd4d24709f0",
+      "docs/atmosphere/run.py": "73a7f193fda629199c644caf6e6126a34532a2080e76a7ac0c563f5e485e25e8",
+      "docs/numerical-audit/experiments/CASE-A-v1.cfg": "076c19cc33a20e58427a805828afd2b58cb965897b201fe505bf18d499568d9a",
+      "docs/numerical-audit/experiments/CASE-B-v1.cfg": "2d90c0fd1f0627bc69878a218a0a6f260260ce12f915b7b41ae31f351a95f29f",
+      "docs/numerical-audit/experiments/CASE-C-v1.cfg": "d1c8d8574e465eaca01e9977d87bebfbc25721b049a47aa9f86cbe57e9e2ee77",
+      "docs/numerical-audit/experiments/scenario.hpp": "c37f62982eb70d4db7a90cd7f80db1c62e21db0df34b589c3c914cdbefed5bad",
+      "include/leo/analysis/export.hpp": "90aff0c4e2d7637edf48169f2303dc1c2288da4d73b32feb2d9f86e8ad96dd11",
+      "include/leo/analysis/loads.hpp": "8699dbe812e4e87db9cd7ccd5631e00bd2bda2491c371a8e88f9641084a69825",
+      "include/leo/analysis/orbital.hpp": "f9a0fe78d0de9120656f51a20ceb45306b401805cdd073d789c60e55f7dbb591",
+      "include/leo/atmosphere/coordinates.hpp": "b24efc2bbf38cd8d02745b639c92e4984de9bd59c499fcb9d7c2e0b60ddb9bde",
+      "include/leo/atmosphere/jb2008.hpp": "4a28890bcf3a9f5e7b380e8755bed3bcb52e7a2352df5818bb5dd1883517443d",
+      "include/leo/atmosphere/nrlmsise00.hpp": "304cf49d2bcc41c0de23db6ae0201fa9a63e985558d3e96ba67fbcd10cc03c28",
+      "include/leo/atmosphere/provider.hpp": "ab70ddb9330b957b9d5616e0c022e381100d47ecc5777b3f517426e9bc1fbc53",
+      "include/leo/atmosphere/types.hpp": "11361be8b6dc0d0deac5dce50c26fd70e472808de1ba296bca8e3dae9920ca7d",
+      "include/leo/atmosphere/weather.hpp": "e296f6317e379a208958bc4e55646f83b330b2ee0e81b0979e7568c55100b478",
+      "include/leo/environment/ephemeris.hpp": "c6ffb1d1127e4651a5ad6746f39ce40765326651cb0f73d22c390429cc5e9ec4",
+      "include/leo/environment/interpolated.hpp": "34e16a398beaa502b7debc50c76d9326925e33db21487d0e5585eac89a97a4de",
+      "include/leo/environment/source.hpp": "c672bcd754f38258210c7c6004643b1314bcc2ce1e38afafdf0b36fd473cb88d",
+      "include/leo/environment/spice.hpp": "a139311d3bc9d876359ff92966040f889d81a08f00666045253caab24d3d46ff",
+      "include/leo/integration/detail/error_control.hpp": "298af96cc5e301940c94b6afc6c02b3d18e905a46d7ecec6ac633034fb34c899",
+      "include/leo/integration/detail/packed_state.hpp": "e508f1f4c9285a3b7b53e5edd1e4218778fa425f179a6548796ffa7eed1127a4",
+      "include/leo/integration/options.hpp": "946f79a82f79037b122226e16ce27d76a0d2557773805d4b5f3bf2b8730cc0ed",
+      "include/leo/integration/propagate.hpp": "7f0dccc6a80e700a22dd605ff69905144ee3509fc7a9f4851001ed7ba93566e1",
+      "include/leo/integration/trajectory.hpp": "ca252856a36c088e52d304b569b53165b702b3dde497f76cb1081bf40ff98d7a",
+      "include/leo/kernel/aerodynamics.hpp": "907c7084734617f69ef23ce066fa18ba03ea1ea889f5398d9d51a98a08bb9960",
+      "include/leo/kernel/attitude.hpp": "93e16be66fdfdd3dd80c8910180a1ca7de549bde401c4d3c2e59e384fa57251c",
+      "include/leo/kernel/dynamics.hpp": "5624448b40b69a5361d2a18629c72e0cdcebda88f6458275d9ae20d4adc7614d",
+      "include/leo/kernel/earth.hpp": "e68195fe55f7315462f2685b8509b5cc3d2e8a99b02f73e3803ed9c9e37bf663",
+      "include/leo/kernel/environment.hpp": "722bce0f44f788631af11d54e0008442d78cf79e1be1b2056aff61dc13f82039",
+      "include/leo/kernel/frames.hpp": "be09cbe2292702a44f2f8226e4ebd3b6dfd18e707a270dac0d47362998caea2f",
+      "include/leo/kernel/gravity.hpp": "cf19c9a34522e3e7ace0a8049f82637c71ed7f645c5d9131c3a974948c0c83da",
+      "include/leo/kernel/orbital.hpp": "89584c10cc856dae7f9bc8e26698ee577e7cb9e58c6fead95dea9e60ce114cae",
+      "include/leo/kernel/radiation.hpp": "5daf416b3138c72f4032b7ca3f01ec1fb0e81b2b1e859a64be5ecf593580abf1",
+      "include/leo/kernel/spacecraft.hpp": "db0b28ac6caa1c4ceb9a1166ecacb8911d9f0ea01884fecd2909e2b52690a0ab",
+      "include/leo/kernel/state.hpp": "de76c0492ae4fd9d7527ef43e08538c7f00095f2835e901ffe4ef2879d798a5a",
+      "include/leo/kernel/time.hpp": "dcd66c78ec4d95b5b12c513a0faa5201e53fb6dd5711789f53ff5a64d0ad447e",
+      "src/analysis/export.cpp": "69dc70e569fe87c5ec5c59bf989ee3a15466e3a248b210c8097a5f86b6494091",
+      "src/analysis/loads.cpp": "a5c31327fb0af09672fb02ef589fc26cef05f8d9d8caf4d4773597c7ad010235",
+      "src/analysis/orbital.cpp": "d4f3bffa51172984f96e0b3b9cbfa216b6998e1229732435ae2eb953cdcc8add",
+      "src/atmosphere/coordinates.cpp": "6dc3e1017cb37a5a03b48ab7cd7b431b8560c3f49ac9aad95cfb63b14cc0bb79",
+      "src/atmosphere/jb2008.cpp": "907b22c9cfd27494e9866d94798308a9ebc298bf96e238d873b54b8daaec68c7",
+      "src/atmosphere/jb2008_bridge.f90": "e576d6ec6b3f91864204b5bcb432fe5b81ae95ffdc5411be3f8ccd7cb646fb8e",
+      "src/atmosphere/nrlmsise00.cpp": "39329f9289982afa0e1521d2aa717522b486c91b3128bfb04ae0263846be712d",
+      "src/atmosphere/provider.cpp": "422bab5765662c8ac1bffba9238d79cffb649dc792cedffda8a774ef172b9673",
+      "src/atmosphere/weather.cpp": "384dafc5697ef7e46fe58b3e9037c34a8096ad60910e1ee82f2738ffb2163eaf",
+      "src/environment/spice.cpp": "0e704de71a3265e00dab57d1e9ca21ed9c692a7ee6492d1b27449f67277bce89",
+      "src/integration/error_control.cpp": "973f4ad985ce51a288375dbef845fc1c1008e225835c1f47ab46b66ec27f0480",
+      "src/kernel/aerodynamics.cpp": "cb1f73ce7e957bddd6720fea255c3620364c61caabb0918ca941c3455bc53a2f",
+      "src/kernel/attitude.cpp": "d1acf094199a969719f2c5bb6269fa1c2e82daeabee8dd29893a457e7cb33165",
+      "src/kernel/dynamics.cpp": "1ac761c9aff009b149d38657b0aace701195d53bc91e2c0bd23d5a92db50f012",
+      "src/kernel/gravity.cpp": "1a9640d7f19d21d6c3a962ee72132e53abb935a14dd4d588591c747fb1dfbfa7",
+      "src/kernel/orbital.cpp": "6187c59f6ac03131a4f677134ffa40b86dcd9a8ea180663e54765c503bf89025",
+      "src/kernel/radiation.cpp": "bd6bdd294305a982b49a2d44bb4940caffbd63b33ac40e4f00b4acdb275fffe0",
+      "src/kernel/spacecraft.cpp": "7e73572d9aa48d22bc91d6074613dfc7302732c4012c2e3907328b33a4171264",
+      "src/kernel/state.cpp": "6945a5c9c14f028aea7bcf9d2ffbc9c8b357417db89cca2ee4ce370f1499d197"
+    },
+    "git_describe": "7c11f5746cd0ff0f26f46cd81aceff677a110be8 2026-10-10T12:50:03+01:00 Validate atmospheric altitude and geomagnetic input contracts",
+    "git_sha": "7c11f5746cd0ff0f26f46cd81aceff677a110be8",
+    "git_status": "M docs/atmosphere/BASELINE.md\n M docs/atmosphere/DECISIONS.md\n M docs/atmosphere/DESIGN.md\n M docs/atmosphere/INPUTS.md\n M docs/atmosphere/JB2008.md\n M docs/atmosphere/NRLMSISE00.md\n M docs/atmosphere/PARAMETERS.md\n M docs/atmosphere/VALIDATION.md\n?? docs/atmosphere/altitude/\n?? docs/atmosphere/evidence/direct-v2/\n?? docs/atmosphere/evidence/validation-amendment-v1/\n?? docs/atmosphere/jb2008_adapter_probe.cpp\n?? docs/atmosphere/jb2008_grid_analysis.py\n?? docs/atmosphere/jb2008_grid_bounded_fit.py\n?? docs/atmosphere/jb2008_grid_identify.py\n?? docs/atmosphere/jb2008_grid_scalar_tc.py\n?? docs/atmosphere/jb2008_native_kernel.f90\n?? docs/atmosphere/jb2008_official_astronomy.f90\n?? outputs/\n?? scripts/nrlmsise00_ap_modes.py",
+    "tree_sha256": "2adc6c1a0fb8175929645b14201c9014132da090b902967b2e697141b339a867"
+  },
+  "publication_documentation_sha256": {
+    "docs/atmosphere/BASELINE.md": "5aa952c3a4dd8576f621d3631caff7d2df60cf9a29faf3af3015960e9b80b8dd",
+    "docs/atmosphere/DECISIONS.md": "99b91b5b9cd855e3fb4fcd19855afb9f780e069fdb438314e06b53c2a402214a",
+    "docs/atmosphere/DESIGN.md": "b12d8841be01761d38e3917157b5b5f4b51c94b02cedcc1c4ad2c079a822b6df",
+    "docs/atmosphere/INPUTS.md": "1212f4b687f35d60a69fb6469435a3a8f6c83cd76a7cf84111eeb9904efe2b49",
+    "docs/atmosphere/JB2008.md": "fa1bad7f18aa7de1d55a23d0bf41dcdf77bd52e6240ac3293c420f6a971e2456",
+    "docs/atmosphere/NRLMSISE00.md": "0923cc861f5e1413af21f09ab4997192114436b7cbc73c1ba2b28335b52d90a4",
+    "docs/atmosphere/PARAMETERS.md": "996de638a2bfe37898f96c6aa8ba5a6b795934425d7dc207026f52db62d5c8d7",
+    "docs/atmosphere/README.md": "fcf91d04f5bf5825b3f472133d6401ed45ff59e37b848c642b68e14ad449c71e",
+    "docs/atmosphere/VALIDATION.md": "711588e0458f34d69e509838b5bd51a573396cdda4c110974d3f346dca2c4f4a"
+  },
+  "reference_producer_build_settings": "Not supplied by official grid or twelve-case producer; local compilers/flags are pinned separately",
+  "reproduction_configure_commands": [
+    "cmake -S docs/atmosphere -B build-atmosphere -G Ninja -DCMAKE_BUILD_TYPE=Release -DLEO_ENABLE_NRLMSISE00=ON -DLEO_ENABLE_JB2008=ON -DLEO_NRLMSISE00_ROOT=/tmp/leo-atmosphere-deps -DLEO_JB2008_SOURCE=/tmp/leo-atmosphere-deps/JB2008.f -DCMAKE_Fortran_COMPILER=/tmp/leo-fortran/usr/bin/gfortran-13 -DCMAKE_PREFIX_PATH=/tmp/leo-deps/usr;/tmp/leo-deps/catch-install -DCSPICE_ROOT=/tmp/leo_cspice/cspice"
+  ],
+  "scalar_configuration": {
+    "ap_history_enabled": false,
+    "density_scale_per_case": "read from each CASE definition file by experiments/scenario.hpp; not overridden here",
+    "frame": "ITRF93",
+    "nrlmsise_switch_meaning": {
+      "0": "unit system: 1 selects kg/m^3, 0 selects g/cm^3",
+      "9": "Ap selector: 1 uses daily Ap; -1 uses daily/current/-3/-6/-9 h and the means of 12..33 h / 36..57 h preceding three-hourly bins"
+    },
+    "nrlmsise_switches": [
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  "scenarios": {
+    "cases": [
+      {
+        "bytes": 1180,
+        "modified_utc": "2026-10-09T15:20:37.555881+00:00",
+        "path": "docs/numerical-audit/experiments/CASE-A-v1.cfg",
+        "repository_relative": "docs/numerical-audit/experiments/CASE-A-v1.cfg",
+        "sha256": "076c19cc33a20e58427a805828afd2b58cb965897b201fe505bf18d499568d9a"
+      },
+      {
+        "bytes": 1087,
+        "modified_utc": "2026-10-09T15:11:45.822369+00:00",
+        "path": "docs/numerical-audit/experiments/CASE-B-v1.cfg",
+        "repository_relative": "docs/numerical-audit/experiments/CASE-B-v1.cfg",
+        "sha256": "2d90c0fd1f0627bc69878a218a0a6f260260ce12f915b7b41ae31f351a95f29f"
+      },
+      {
+        "bytes": 361,
+        "modified_utc": "2026-10-09T15:11:45.824010+00:00",
+        "path": "docs/numerical-audit/experiments/CASE-C-v1.cfg",
+        "repository_relative": "docs/numerical-audit/experiments/CASE-C-v1.cfg",
+        "sha256": "d1c8d8574e465eaca01e9977d87bebfbc25721b049a47aa9f86cbe57e9e2ee77"
+      }
+    ],
+    "duration_s": 21600.0,
+    "epoch_interpretation": "TDB ephemeris seconds past J2000, converted from UTC by the leapseconds kernel; UTC itself comes from the kernel, never from elapsed solver time",
+    "epoch_utc": "2003-10-30T00:00:00",
+    "output_cadence_s": 30.0
+  },
+  "schema_version": 2,
+  "scientific_status": {
+    "jb_altitude_datum": "unresolved upstream; WGS84 ellipsoidal height + geocentric latitude retained provisionally",
+    "jb_grid_cause": "unresolved, with quantified partial rounding compatibility",
+    "jb_native_reference_fidelity": "confirmed for identical native inputs and supplied twelve-case bound",
+    "nrl_reference_fidelity": "confirmed on published and independent native/geomagnetic-mode checks"
+  },
+  "space_weather": {
+    "archive": {
+      "bytes": 3036482,
+      "modified_utc": "2026-10-10T01:31:47.680339+00:00",
+      "path": "/tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt",
+      "repository_relative": null,
+      "sha256": "f3eb9e676295bbf93566a054e95d1317de1aba2e410d209d4642dbedebf05ea2"
+    },
+    "archive_format": "CelesTrak/CSSI v1.2 fixed-field with explicit OBSERVED sections",
+    "dtcfile": {
+      "bytes": 1191190,
+      "modified_utc": "2026-10-10T01:29:32.221949+00:00",
+      "path": "/tmp/leo-atmosphere-deps/DTCFILE.TXT",
+      "repository_relative": null,
+      "sha256": "f6485450c363e9be8e71c37e143ac768462deca77565b727ec2e96c025ab8d91"
+    },
+    "policy": "observed records only; no observed value is silently replaced by a prediction, and no missing value is filled with a climatological default",
+    "solfsmy": {
+      "bytes": 835692,
+      "modified_utc": "2026-10-10T01:29:30.530222+00:00",
+      "path": "/tmp/leo-atmosphere-deps/SOLFSMY.TXT",
+      "repository_relative": null,
+      "sha256": "891a0767702d11c2cd8432b3b012d4350c4becbf86873c32073cff852155f9d7"
+    },
+    "used": true
+  },
+  "space_weather_input_lags": {
+    "jb2008": {
+      "DSTDTC": "hourly storm correction, from the official DTCFILE",
+      "F10B_S10B": "1 day; supplied centred 81-day averages",
+      "F10_S10": "1 day",
+      "M10": "2 days",
+      "M10B": "2 days; supplied centred 81-day average",
+      "Y10": "5 days",
+      "Y10B": "5 days; supplied centred 81-day average"
+    },
+    "note": "lags are configuration of the driver data, not derived here; they must match the WeatherDataset that produced the results",
+    "nrlmsise00": {
+      "ap": "daily Ap of the current UTC day",
+      "ap_history": "daily Ap; current, -3, -6, -9 h bins; means of 12..33 h and 36..57 h preceding bins",
+      "f107": "previous UTC day, daily observed 10.7 cm flux",
+      "f107_average": "centred 81-day average of observed daily F10.7"
+    }
+  },
+  "threading": {
+    "MKL_NUM_THREADS": null,
+    "OMP_NUM_THREADS": null,
+    "OMP_PLACES": null,
+    "OMP_PROC_BIND": null,
+    "OPENBLAS_NUM_THREADS": null
+  },
+  "validation_results": {
+    "altitude_record": "../validation-amendment-v1/altitude-datum.json",
+    "boundary_after_rejected": 0,
+    "boundary_before_rejected": 10,
+    "boundary_cases": 22,
+    "coordinate_record": "../validation-amendment-v1/coordinates.json",
+    "geomagnetic_records": [
+      "../validation-amendment-v1/ap-modes.json",
+      "../validation-amendment-v1/ap-provider-historical-case.json"
+    ],
+    "grid_record": "../validation-amendment-v1/jb2008-grid-investigation.json",
+    "physical_comparison": "comparison-to-direct-v1.json",
+    "published_fixture_measurements": [
+      {
+        "fixtures": 13320,
+        "max_density_relative_error": 0.0058605859224980525,
+        "max_exospheric_temperature_error_k": 0.7501667628996529,
+        "max_local_temperature_error_k": 0.7460527549826566,
+        "model": "jb2008",
+        "rms_density_relative_error": 0.0032398286550430365
+      },
+      {
+        "full_precision_fixtures": 12,
+        "max_relative_error": 1.4717105248216975e-05,
+        "model": "jb2008"
+      },
+      {
+        "fixtures": 17,
+        "max_density_relative_error": 2.944132010607419e-07,
+        "max_species_relative_error": 3.8658716522502516e-07,
+        "max_temperature_relative_error": 4.802788048679761e-07,
+        "model": "nrlmsise00"
+      }
+    ],
+    "tests": {
+      "environment": {
+        "LEO_ATMOSPHERE_TEST_LOW_PRECISION_PCK": "/tmp/leo-atmosphere-deps/pck00011.tpc",
+        "LEO_ATMOSPHERE_TEST_PCK": "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc",
+        "LEO_JB2008_VALIDATION_DIR": "/tmp/leo-atmosphere-deps/jb-validation",
+        "LEO_NRLMSISE00_REFERENCE_DOCUMENTATION": "/tmp/leo-atmosphere-deps/NRLMSISE-DOCUMENTATION",
+        "LEO_NRLMSISE00_TEST_CSSI": "/tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt",
+        "LEO_SPICE_TEST_LSK": "/tmp/leo-atmosphere-deps/naif0012.tls",
+        "LEO_SPICE_TEST_SPK": "/tmp/leo-atmosphere-deps/de432s.bsp"
+      },
+      "failed": 0,
+      "passed": 166,
+      "record": "../validation-amendment-v1/regression-suite.json",
+      "skipped": 0
+    }
+  },
+  "validation_tolerance_definitions": {
+    "coordinate_oracle": {
+      "et_seconds": 5e-05,
+      "quasi_mjd_days": 2e-10,
+      "rotation_rad": 1e-06,
+      "utc_sod_seconds": 2e-06
+    },
+    "jb_printed_grid": {
+      "corrected_distinct_evaluations": 13320,
+      "density_relative_max": 0.015,
+      "density_relative_rms": 0.006,
+      "density_units": "kg/m^3",
+      "formula": "abs(computed-reference)/reference; RMS=sqrt(sum(error^2)/N)",
+      "full_grid_evaluations": 545528,
+      "historical_evaluations": 13328,
+      "interpretation": "broad consistency bounds, not model accuracy or a proven rounding floor",
+      "reference_density_range_kg_m3": [
+        5.2864e-14,
+        2.5156e-08
+      ],
+      "temperature_absolute_max_k": 1.5,
+      "zero_handling": "historical/test denominator unchecked; actual positive references; standalone excludes/counts zeros, no near-zero floor"
+    },
+    "jb_twelve": {
+      "density_relative_max": 2e-05,
+      "density_units": "kg/m^3",
+      "formula": "abs(computed-reference)/reference",
+      "precision": "supplied double input literals, about eight significant density digits; original producer precision unknown",
+      "zero_handling": "no guard/floor in pinned test; all twelve references positive"
+    },
+    "native_units": {
+      "meaning": "representation/unit consistency; identical native inputs compared bitwise where asserted",
+      "relative_max": 1e-12
+    },
+    "nrl_published": {
+      "density_units": "kg/m^3; drag mass reconstructed from printed constituents including anomalous O",
+      "formula": "abs(computed-reference)/max(abs(computed),abs(reference))",
+      "precision": "seven-significant-digit publication",
+      "relative_max": 1e-06,
+      "zero_handling": "equal including two zeros ->0; unequal nonfinite ->infinity; no near-zero floor"
+    }
+  },
+  "validation_tooling_git_sha": "cec4d4662a5b6a745e9438020abc8478d7358043"
+}

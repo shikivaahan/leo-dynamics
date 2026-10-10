@@ -1,0 +1,91 @@
+{
+  "provider": "nrlmsise00",
+  "epoch_utc": "2003-10-30T10:00:00",
+  "ap_history": [
+    191,
+    39,
+    56,
+    154,
+    300,
+    203.875,
+    24.875
+  ],
+  "daily_density_kg_m3": 7.49848838776156e-12,
+  "history_density_kg_m3": 6.478659717899017e-12,
+  "density_signed_change_vs_daily": -0.13600456747082879,
+  "purpose": "Same historical physical position/time/observed archive records; only explicit geomagnetic input mode differs. Native gtd7d agreement asserted by exercised provider test.",
+  "command": [
+    "build-atmosphere-gcc/leo_nrlmsise00_tests",
+    "DirectAtmosphere selects the NRLMSISE Ap-history mode and matches a native evaluation"
+  ],
+  "environment": {
+    "LEO_JB2008_VALIDATION_DIR": "/tmp/leo-atmosphere-deps/jb-validation",
+    "LEO_SPICE_TEST_LSK": "/tmp/leo-atmosphere-deps/naif0012.tls",
+    "LEO_SPICE_TEST_SPK": "/tmp/leo-atmosphere-deps/de432s.bsp",
+    "LEO_ATMOSPHERE_TEST_PCK": "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc",
+    "LEO_ATMOSPHERE_TEST_LOW_PRECISION_PCK": "/tmp/leo-atmosphere-deps/pck00011.tpc",
+    "LEO_NRLMSISE00_TEST_CSSI": "/tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt",
+    "LEO_NRLMSISE00_REFERENCE_DOCUMENTATION": "/tmp/leo-atmosphere-deps/NRLMSISE-DOCUMENTATION"
+  },
+  "weather_sha256": "f3eb9e676295bbf93566a054e95d1317de1aba2e410d209d4642dbedebf05ea2",
+  "requested_geodetic_site": {
+    "latitude_deg": 60.0,
+    "longitude_deg": -70.0,
+    "height_km": 400.0,
+    "ellipsoid": "WGS84"
+  },
+  "mode_switches": {
+    "daily": [
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "history": [
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      -1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  }
+}

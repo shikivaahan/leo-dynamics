@@ -100,7 +100,7 @@ coverage is an error, never a silent substitution.
 | Model | Latitude | Height | Evidence |
 |---|---|---|---|
 | NRLMSISE-00 | Geodetic | WGS84 ellipsoidal | Native `g_lat`, `g_long`, `alt` |
-| JB2008 | Geocentric (`atan2(z, hypot(x,y))`) | Ellipsoidal height, km | Official `JB2008.f` input header (`SAT2` geocentric latitude) |
+| JB2008 | Geocentric (`atan2(z, hypot(x,y))`) | WGS84 ellipsoidal height, km (selected project convention) | Official `SAT2` specifies latitude only; it does not establish the height datum. See the versioned altitude investigation linked from `VALIDATION.md`. |
 
 The two models deliberately receive different latitudes for the same physical
 point. That is a model-form difference, recorded per model, not an inconsistency.

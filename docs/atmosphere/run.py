@@ -40,6 +40,12 @@ NRLMSISE_STANDARD_SWITCHES = [0] + [1] * 23
 NRLMSISE_HISTORY_SWITCHES = [0] + [1] * 23
 NRLMSISE_HISTORY_SWITCHES[9] = -1
 
+# direct-v2 adds provenance the first manifest omitted: the compiled source
+# revision, validation-tooling revision, tolerance definitions, measured test
+# results, historical/preservation fingerprints and the corrected-source change
+# list. The amended manifest states its own schema below.
+MANIFEST_SCHEMA_VERSION = 2
+
 # Driver index lags, in force at the time these experiments were defined. They
 # are recorded as configuration, not re-derived here.
 NRLMSISE_INPUT_LAGS = {

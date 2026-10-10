@@ -16,6 +16,8 @@ NRLMSISE uses a pinned established C reference, not rewritten equations. JB2008 
 
 No density-result caches, interpolation, spatial grids, trajectory precomputation, approximations or fallback drivers exist. Holding parsed immutable weather records is input loading, not model evaluation caching. Any interpolation required by the official DTC input convention acts on weather indices only and is documented explicitly.
 
+JB2008's native interface specifies geocentric latitude but does not uniquely specify the height datum. The provider's WGS84 ellipsoidal height is an explicit, provisional spatial convention, not a datum established by the official scalar-height grid. `src/atmosphere/provider.cpp` applies it after J2000→ITRF93; `Jb2008::evaluate` admits a `1e-9 km` representation margin at the 120/1500 km boundaries and forwards the received height unchanged. The margin fixes a reproduced numerical rejection; it does not change the empirical equations or select a different physical datum.
+
 ## Physical limitations
 
 Empirical density uncertainty is not numerical implementation error. The lightweight exponential profile remains spherical in its original API; matched-location comparison may explicitly give it the same height supplied to empirical models. Corotation remains the existing `{0,0,7.292115e-5}` rad/s inertial vector; no winds added. Existing Sentman molecular assumptions, plate geometry, optical radiation, torque and numerical tolerances remain unchanged. New densities change the differential equations, so the historical convergence study is not transferred to these runs. CASE-C six-hour instantaneous attitude remains a stress-test diagnostic, not an acceptance oracle.

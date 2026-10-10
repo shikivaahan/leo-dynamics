@@ -45,3 +45,81 @@ Question: the archived CSSI file repeats recent dates inside predicted and month
 Both reference model suites print their measured residuals as JSON so the first real run supplies the numbers instead of pre-computed claims. Documentation of accuracy status is derived from those measured values; no numerical claim in this project originates from a transcription of either model's equations.
 ## ATM-010 — Preserve exponential's spherical spatial definition (final)
 Question: should the new selection provider pass WGS84 ellipsoidal height to the existing spherical exponential profile? Initially considered shared-height inputs for all three. Selected: exponential retains `norm(r_J2000) - 6378137 m`, exactly the existing EarthEnvironment convention; empirical models receive their model-specific coordinates at the same physical position. Rationale: changing the exponential's spatial definition would change more than the selected atmosphere and add unnecessary SPICE cost to a lightweight density lookup. Consequence: matched physical locations need not have equal native altitude values, particularly near poles; report this as the baseline's existing spherical model-form approximation. Raw native timing remains distinct from provider acquisition. Supersedes DESIGN.md's initially considered optional shared-height exponential comparison and any common-height interpretation of ATM-009 for exponential. No production exponential API or force law changed.
+
+## ATM-015 — Recover exact compiler configuration in new manifests (confirmed)
+
+| Field | Record |
+|---|---|
+| Problem | `run.py` asked `cmake_cache` for compiler paths/flags but omitted `CMAKE_BUILD_TYPE`; `compiler.build_type` was therefore null in `direct-v1` despite a Release build. |
+| Alternatives | Infer Release from the flags; edit the historical manifest; read the actual cache value in future manifests. |
+| Selection | Add `CMAKE_BUILD_TYPE` to the requested cache keys. Preserve historical evidence and explain the omission in a versioned amendment. |
+| Justification | Actual runner invocation before the fix produced null; the same invocation after it produced `Release`. |
+| Parameters | GCC/GNU Fortran 13.3.0; C++ `-O3 -DNDEBUG -Wall -Wextra -Wpedantic`, C `-O3 -DNDEBUG`, Fortran `-O3 -std=legacy`; binary64, no fast-math. |
+| Consequences | Metadata correction only. Coordinate output JSON was identical before/after; atmospheric source and input settings are untouched. |
+| Validation | `evidence/validation-amendment-v1/manifest-provenance-smoke.json`; commands and observed before/after values retained. |
+| Status | Confirmed. Historical null means an omitted field, not an unknown build configuration: the inspected cache and actual compiler commands establish Release. |
+
+## ATM-016 — Daily Ap is a selected baseline mode (confirmed interface)
+
+| Field | Record |
+|---|---|
+| Problem | A reader must distinguish upstream geomagnetic capabilities, adapter exposure, and the mode used in historical propagation. |
+| Alternatives | Daily Ap; explicit seven-slot history; silently change the historical baseline. |
+| Selection | Retain `[0,1 × 23]`, switch 9 = 1 and `ap_history=false` for `direct-v1`. History remains explicitly selectable: constructor switches[9] = −1, `DirectAtmosphere(..., frame, true)`, runner `--ap-history`. |
+| Justification | Integrated native header/C implementation and adapter/provider code expose both paths; the published seventeen-case oracle includes two history cases. Additional unequal-slot/timing evidence is recorded in the amendment. |
+| Parameters | Switch 0 = 0 gives native cgs, converted to SI; switch 0 = 1 gives native SI. History slots: daily, current 3 h, −3/−6/−9 h, means of preceding 12–33 h and 36–57 h bins. No interpolation of Ap or atmospheric output. |
+| Consequences | Selecting history can change density and temperature; it changes model inputs/response, not integration correctness. No baseline mode change. |
+| Validation | Published cases 15/16 alone use equal slots and cannot establish ordering. See the separate native, unequal-slot and UTC-bin evidence linked in `VALIDATION.md`. |
+| Status | Interface confirmed; numerical validation results and limits are stated in the versioned amendment, not inferred from API presence. |
+
+## ATM-017 — Amend validation, preserve measured physical evidence (confirmed for documentary corrections)
+
+| Field | Record |
+|---|---|
+| Problem | Historical source SHA identifies a dirty tree, compiler build type was omitted, and model-comparison counts/medians in prose disagree with the frozen JSON. |
+| Alternatives | Rewrite `direct-v1`; regenerate all trajectories; preserve numerical files and publish a versioned validation/provenance amendment. |
+| Selection | Retain `direct-v1` unchanged; use `validation-amendment-v1` for new investigation and corrected interpretation. The original manifest's source hashes identify the physical implementation. |
+| Justification | All twelve atmospheric source/header hashes at inspected HEAD match the original manifest. Fresh matched-location fixture evaluation is byte-identical to the frozen file. |
+| Parameters | Five epochs × seven latitudes × six longitudes × seventeen altitudes = 3 570 evaluations/model, 10 710 total; longitude spacing 60° / 4 h. Actual aggregate median ratios: NRLMSISE/exponential 1.7284952584619058, JB/exponential 1.5303465758538617. |
+| Consequences | Corrects earlier prose 4 284 / 1 428 counts, 6 h spacing and 1.086 / 0.706 medians; changes no density, temperature, force, torque, trajectory or work record. History-mode diagnostics are separate experiments, never substitutions into the daily baseline. |
+| Validation | `initial-inspection.json` and `physical-baseline-smoke.json` under the amendment: all 10 710 density/temperature outputs identical, fixture SHA-256 `01d16c5c9f08f3b6df5955a07fdb7d93215e7c6a45023d8d4500a9f2577d820c`. No propagation remeasurement is required for these metadata/prose corrections. |
+| Status | Confirmed. Future direct comparisons must carry both the immutable physical baseline and its validation amendment. |
+
+## ATM-018 — JB2008 boundary round-off guard and `direct-v2` (confirmed defect)
+
+| Field | Record |
+|---|---|
+| Problem | Strict `height < 120` / `height > 1500` rejects exactly-on-boundary Cartesian requests after coordinate/frame round-off. Example: requested 120 km at equator/longitude 0 recovers 119.99999999999906 km. |
+| Alternatives | Clamp native height; nudge or remove fixture endpoints; change the physical datum; admit a documented representation-error margin. |
+| Selection | `Jb2008::evaluate` admits `1e-9 km` at both endpoints and evaluates the received altitude unchanged. No coordinate-adapter datum or reference-model equation changes. |
+| Justification | Independently constructed positions and the real rotation reproduce signed height errors of a few `1e-12 km`; MSISE already applies the same margin at its upper boundary (ATM-011). A true excursion exceeding the margin still fails. |
+| Parameters | Nominal native supported interval [120,1500] km; numeric guard [120−1e-9,1500+1e-9] km. Margin is 1 μm, not a density-validation tolerance. |
+| Consequences | Previously rejected representation-level endpoints become evaluable; no native input is clamped. Preserve `direct-v1` and freeze a corrected-source `direct-v2` with comparison evidence rather than conceal the implementation change inside a documentation-only amendment. |
+| Validation | Boundary regressions, explicit failing-before/passing-after smoke and fresh matched fixtures/CASE-A/B/C six-hour propagation are recorded in `direct-v2` and the validation amendment. |
+| Status | Confirmed defect; selected correction supersedes ATM-017's amendment-only policy for the production-code fix, but not its immutable-history or documentary-statistics decisions. |
+
+## ATM-019 — JB2008 height remains an explicit project convention (provisional)
+
+| Field | Record |
+|---|---|
+| Problem | Upstream specifies geocentric latitude but only “Height of Position (km)” for SAT(3), without a unique height datum. |
+| Alternatives | WGS84 geodetic height; radius offsets from 6378.137 km, WGS84 semi-minor radius, 6356.766 km internal gravity radius, or 6371 km mean radius; geodetic versus specified geocentric latitude. |
+| Selection | Retain existing WGS84 ellipsoidal height with geocentric latitude. No physical coordinate-adapter correction or new selectable datum. |
+| Justification | Source, official driver, SET index-format documentation and JB papers are scalar-height specifications, without Earth-centred positions that establish a datum. The internal gravity radius alone is insufficient. Examined primary locators/hashes are in `altitude-datum.json`. Retention avoids a material unsupported physics change. |
+| Parameters | WGS84 a = 6378137 m, inverse flattening = 298.257223563; h in km; geocentric latitude atan2(z,hypot(x,y)); common Sun/spacecraft ITRF93 equator basis. |
+| Consequences | Competing in-domain datums materially change density. At 400 km, longitude-averaged r−6356.766 ratios are 0.6831/0.8262/1.00024 at 0°/45°/89.9°; r−6378.137 ratios are 1/1.2121/1.4631. These are candidate sensitivity diagnostics, not production corrections. |
+| Validation | Unmodified Fortran at independently calculated candidate heights; official THETA reconstructs candidate RA. Coordinate/native consistency, poles/wrapping/boundary regressions pass. See `altitude-investigation-corrections.json` for superseded omitted-THETA diagnostics. |
+| Status | Latitude confirmed; physical height datum unresolved upstream; project convention provisional. Supersedes any upstream-datum interpretation of ATM-004/009, while retaining their actual implementation. |
+
+## ATM-020 — Quantify rounding, leave complete grid attribution unresolved
+
+| Field | Record |
+|---|---|
+| Problem | Reported JB grid max/RMS were not accompanied by a measured causal explanation; aggregate-oracle comparisons cannot establish rounding as the cause. |
+| Alternatives | Assume printer effects; relax tolerances; replace printed inputs with current archive; reconstruct official astronomy/native calls, perturb indices and measure residuals. |
+| Selection | Preserve all original thresholds. Record historical 13 328 entries, correct duplicate weighting to 13 320 sampled rows, independently evaluate all 545 528 published rows, and classify complete attribution as unresolved. |
+| Justification | Density-bit-exact adapter/native agreement over the full grid; DSTDTC exact at eight published epochs; local compiler arithmetic differences ≤6.90e-15 relative density. Correctly lagged current archive differs in seven solar fields and makes sampled RMS 54–60× worse. Original dated records and producer compiler/model build are absent. |
+| Parameters | Unsigned abs(rho−rho_ref)/rho_ref, kg/m³; RMS over all valid evaluation entries. Solar perturbation ±0.5 index unit; derivative h=1 and 0.5 with divisor 2h and central Richardson (4D(h/2)−D(h))/3. Bounded nonlinear fits use 46 rows/epoch. Density print maximum half-ulp 5e-5. |
+| Consequences | Per-epoch hypothetical rounding offsets remove 92.7–97.4% of sampled RMS but leave 9.11e-5–2.25e-4; no searched epoch reaches print precision. Rounding is quantitatively plausible, not proven to fully explain the grid. Fits do not recover original records, rule out optimisation limits or establish one shared daily vector. |
+| Validation | Full reproducible grid/sensitivity/fit pipeline and twenty worst-case records in `jb2008-grid-investigation.json`; all original native model acceptance bounds retained. Corrected sampling changes RMS 0.0032388564212367911→0.0032398286550430365, max unchanged. |
+| Status | Measurements confirmed; complete causal attribution unresolved. Supersedes earlier unquantified or fully-attributed rounding claims, not the empirical model equations or twelve-case acceptance bound. |

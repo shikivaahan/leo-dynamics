@@ -1,0 +1,298 @@
+{
+  "purpose": "actual DirectAtmosphere::evaluate() behaviour at the JB2008 domain edge, captured against the pre-fix build (source tree at this point still carries the strict <120 / >1500 comparison)",
+  "what_this_is_not": "not a re-derivation of the guard arithmetic: every 'status' below is the real provider evaluating a real position through the real J2000 -> ITRF93 -> WGS84 pipeline and the real native JB2008 adapter",
+  "binary": "/home/user/leo-dynamics/build-atmosphere (pre-fix, not rebuilt after the guard change)",
+  "probe_source": "boundary_probe.cpp in this directory",
+  "build_command": "g++ -std=c++20 -O2 -I /home/user/leo-dynamics/include -isystem /tmp/leo-deps/usr/include/eigen3 -DLEO_HAS_JB2008 -DLEO_HAS_NRLMSISE00 boundary_probe.cpp leo/libleo_integration.a leo/libleo_analysis.a leo/libleo_environment.a leo/libleo_atmosphere.a /tmp/leo_cspice/cspice/lib/cspice.a leo/libleo_kernel.a leo/libleo_nrlmsise00_reference.a leo/libleo_jb2008_reference.a -o /tmp/boundary_probe",
+  "run_command": "/tmp/boundary_probe /tmp/leo-atmosphere-deps/naif0012.tls /tmp/leo-atmosphere-deps/de432s.bsp /tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc /tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt /tmp/leo-atmosphere-deps/SOLFSMY.TXT /tmp/leo-atmosphere-deps/DTCFILE.TXT ITRF93",
+  "epoch": "2003-10-30T00:00:00 UTC",
+  "cases": 25,
+  "boundary_cases": 22,
+  "boundary_cases_rejected": 10,
+  "interior_cases": 3,
+  "interior_cases_evaluated": 3,
+  "rejections": [
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 0.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 123.456,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999998,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 359.999,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": 0.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": 123.456,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": -179.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": -45.0,
+      "lon_deg": 180.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": -89.9,
+      "lon_deg": 270.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": 90.0,
+      "lon_deg": 123.456,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": -90.0,
+      "lon_deg": 270.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    }
+  ],
+  "all_cases": [
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 0.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 123.456,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999998,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 359.999,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": 0.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": 123.456,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": -179.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": -45.0,
+      "lon_deg": 180.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": -45.0,
+      "lon_deg": 270.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 120,
+      "status": "evaluated",
+      "density_kg_m3": 2.208412551e-08
+    },
+    {
+      "lat_deg": 89.9,
+      "lon_deg": 123.456,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 120,
+      "status": "evaluated",
+      "density_kg_m3": 3.023410123e-08
+    },
+    {
+      "lat_deg": -89.9,
+      "lon_deg": 0.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 120,
+      "status": "evaluated",
+      "density_kg_m3": 1.983060841e-08
+    },
+    {
+      "lat_deg": -89.9,
+      "lon_deg": 270.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": 90.0,
+      "lon_deg": 0.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 120,
+      "status": "evaluated",
+      "density_kg_m3": 3.02342015e-08
+    },
+    {
+      "lat_deg": -90.0,
+      "lon_deg": 45.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 120,
+      "status": "evaluated",
+      "density_kg_m3": 1.983076208e-08
+    },
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 0.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 2.692854065e-15
+    },
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 90.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 2.803474319e-15
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": 180.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 4.22600628e-15
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": 270.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 3.690255771e-15
+    },
+    {
+      "lat_deg": -45.0,
+      "lon_deg": 0.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 3.014463147e-15
+    },
+    {
+      "lat_deg": 89.9,
+      "lon_deg": 0.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 3.264794636e-15
+    },
+    {
+      "lat_deg": 89.9,
+      "lon_deg": 359.999,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 3.264794645e-15
+    },
+    {
+      "lat_deg": 90.0,
+      "lon_deg": 123.456,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": -90.0,
+      "lon_deg": 270.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "threw",
+      "what": "JB2008 input outside supported domain"
+    },
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 0.0,
+      "requested_km": 400.0,
+      "pipeline_altitude_km": 399.999999999999,
+      "status": "evaluated",
+      "density_kg_m3": 1.095674916e-11
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": 123.456,
+      "requested_km": 400.0,
+      "pipeline_altitude_km": 399.999999999999,
+      "status": "evaluated",
+      "density_kg_m3": 1.265849239e-11
+    },
+    {
+      "lat_deg": -89.9,
+      "lon_deg": 0.0,
+      "requested_km": 400.0,
+      "pipeline_altitude_km": 399.999999999999,
+      "status": "evaluated",
+      "density_kg_m3": 1.400566415e-11
+    }
+  ]
+}

@@ -1,0 +1,222 @@
+{
+  "command": [
+    "/tmp/leo-boundary-after",
+    "/tmp/leo-atmosphere-deps/naif0012.tls",
+    "/tmp/leo-atmosphere-deps/de432s.bsp",
+    "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc",
+    "/tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt",
+    "/tmp/leo-atmosphere-deps/SOLFSMY.TXT",
+    "/tmp/leo-atmosphere-deps/DTCFILE.TXT",
+    "ITRF93"
+  ],
+  "binary_sha256": "7b821c5e10a8321efd54ff2cd46cdc48e606755a8e10fde3d8f382e01afdae96",
+  "source": "docs/atmosphere/altitude/boundary_probe.cpp",
+  "source_sha256": "043c7b1e21d13b44da11742d15f8fb744112d304b5edbd4d474b913007250fa4",
+  "guard_margin_km": 1e-09,
+  "boundary_cases": 22,
+  "before_boundary_rejections": 10,
+  "after_boundary_rejections": 0,
+  "interior_cases_evaluated": 3,
+  "cases": [
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 0.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "evaluated",
+      "density_kg_m3": 2.438388389e-08
+    },
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 123.456,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999998,
+      "status": "evaluated",
+      "density_kg_m3": 2.446748076e-08
+    },
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 359.999,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "evaluated",
+      "density_kg_m3": 2.438388456e-08
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": 0.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "evaluated",
+      "density_kg_m3": 2.71002651e-08
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": 123.456,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "evaluated",
+      "density_kg_m3": 2.716499931e-08
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": -179.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "evaluated",
+      "density_kg_m3": 2.726754781e-08
+    },
+    {
+      "lat_deg": -45.0,
+      "lon_deg": 180.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "evaluated",
+      "density_kg_m3": 2.212354869e-08
+    },
+    {
+      "lat_deg": -45.0,
+      "lon_deg": 270.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 120,
+      "status": "evaluated",
+      "density_kg_m3": 2.208412551e-08
+    },
+    {
+      "lat_deg": 89.9,
+      "lon_deg": 123.456,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 120,
+      "status": "evaluated",
+      "density_kg_m3": 3.023410123e-08
+    },
+    {
+      "lat_deg": -89.9,
+      "lon_deg": 0.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 120,
+      "status": "evaluated",
+      "density_kg_m3": 1.983060841e-08
+    },
+    {
+      "lat_deg": -89.9,
+      "lon_deg": 270.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 119.999999999999,
+      "status": "evaluated",
+      "density_kg_m3": 1.983082433e-08
+    },
+    {
+      "lat_deg": 90.0,
+      "lon_deg": 0.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 120,
+      "status": "evaluated",
+      "density_kg_m3": 3.02342015e-08
+    },
+    {
+      "lat_deg": -90.0,
+      "lon_deg": 45.0,
+      "requested_km": 120.0,
+      "pipeline_altitude_km": 120,
+      "status": "evaluated",
+      "density_kg_m3": 1.983076208e-08
+    },
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 0.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 2.692854065e-15
+    },
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 90.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 2.803474319e-15
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": 180.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 4.22600628e-15
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": 270.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 3.690255771e-15
+    },
+    {
+      "lat_deg": -45.0,
+      "lon_deg": 0.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 3.014463147e-15
+    },
+    {
+      "lat_deg": 89.9,
+      "lon_deg": 0.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 3.264794636e-15
+    },
+    {
+      "lat_deg": 89.9,
+      "lon_deg": 359.999,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 3.264794645e-15
+    },
+    {
+      "lat_deg": 90.0,
+      "lon_deg": 123.456,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 3.266657952e-15
+    },
+    {
+      "lat_deg": -90.0,
+      "lon_deg": 270.0,
+      "requested_km": 1500.0,
+      "pipeline_altitude_km": 1500,
+      "status": "evaluated",
+      "density_kg_m3": 3.911955308e-15
+    },
+    {
+      "lat_deg": 0.0,
+      "lon_deg": 0.0,
+      "requested_km": 400.0,
+      "pipeline_altitude_km": 399.999999999999,
+      "status": "evaluated",
+      "density_kg_m3": 1.095674916e-11
+    },
+    {
+      "lat_deg": 45.0,
+      "lon_deg": 123.456,
+      "requested_km": 400.0,
+      "pipeline_altitude_km": 399.999999999999,
+      "status": "evaluated",
+      "density_kg_m3": 1.265849239e-11
+    },
+    {
+      "lat_deg": -89.9,
+      "lon_deg": 0.0,
+      "requested_km": 400.0,
+      "pipeline_altitude_km": 399.999999999999,
+      "status": "evaluated",
+      "density_kg_m3": 1.400566415e-11
+    }
+  ]
+}

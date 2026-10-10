@@ -1,0 +1,35 @@
+{
+  "kind": "pre-guard-unchanged-baseline-smoke",
+  "command": "build-atmosphere/atmosphere_experiment --lsk /tmp/leo-atmosphere-deps/naif0012.tls --spk /tmp/leo-atmosphere-deps/de432s.bsp --frame ITRF93 --epoch-utc 2003-10-30T00:00:00 --duration 21600.0 --cadence 30.0 --rtol 1e-10 --max-step 15.0 --refine-rtol 1e-12 --refine-max-step 5.0 --weather /tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt --solfsmy /tmp/leo-atmosphere-deps/SOLFSMY.TXT --dtcfile /tmp/leo-atmosphere-deps/DTCFILE.TXT --pck /tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc --fixture quiet_june=2008-07-01T00:00:00 --fixture quiet_december=2008-12-15T00:00:00 --fixture active_march=2001-03-20T00:00:00 --fixture active_october=2003-10-28T00:00:00 --fixture storm_october=2003-10-30T00:00:00 --mode fixtures --out /tmp/leo-direct-fixtures-confirmation/fixtures",
+  "historical_fixture_sha256": "01d16c5c9f08f3b6df5955a07fdb7d93215e7c6a45023d8d4500a9f2577d820c",
+  "confirmation_fixture_sha256": "01d16c5c9f08f3b6df5955a07fdb7d93215e7c6a45023d8d4500a9f2577d820c",
+  "outputs_identical": true,
+  "sample_count": 10710,
+  "evaluated_points": {
+    "exponential": 3570,
+    "jb2008": 3570,
+    "nrlmsise00": 3570
+  },
+  "max_density_absolute_difference_kg_m3": 0.0,
+  "max_temperature_absolute_difference_k": 0.0,
+  "corrected_documentary_statistics": {
+    "jb2008_over_exponential": {
+      "median": 1.5303465758538617,
+      "minimum": 0.030137356334132212,
+      "maximum": 45.80111377173059,
+      "mean": 4.082764911928133,
+      "points": 3570,
+      "unusable_points": 0
+    },
+    "nrlmsise00_over_exponential": {
+      "median": 1.7284952584619058,
+      "minimum": 0.03314229395523354,
+      "maximum": 25.160270706040873,
+      "mean": 3.133887169655109,
+      "points": 3570,
+      "unusable_points": 0
+    }
+  },
+  "physical_changes": "none at this smoke; before guard correction",
+  "superseded_baseline_policy": "Guard correction subsequently prompted direct-v2, including nine rerun propagations; see direct-v2/comparison-to-direct-v1.json."
+}
