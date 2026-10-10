@@ -46,21 +46,25 @@ using leo::atmosphere::Jb2008Input;
 
 // ---------------------------------------------------------------- tolerances
 //
-// PROVISIONAL.  These thresholds are derived from the *printed* resolution of
-// the published fixture, which is observable in the source formats and in the
-// files themselves; they are not yet calibrated against measured residuals of
-// the compiled Fortran backend.  Before the JB2008 baseline is frozen, replace
-// them with the measured native residuals and the sensitivity of the density to
-// a +-0.5 perturbation of each printed index (both obtainable by perturbing
-// inputs at run time through this same backend).  Until then a pass means "not
-// grossly inconsistent with the published output", not "accurate to 1.5 %".
+// Historical structural-consistency bounds, unchanged by the investigation;
+// not model-physics accuracy tolerances. Full-grid native/adapter comparison
+// is bit-exact. Printed-input disagreement remains about 0.6% maximum.
+// The dated full-precision solar record is absent; the current archive is a
+// different vintage. Bounded perturbations establish rounding sensitivity,
+// not recovery of the original inputs or complete attribution of the residual.
+// See the versioned evidence for measured sensitivities and unresolved limits.
+// A pass here is a broad consistency check. The twelve independent native-input
+// reference cases below retain their separately inherited 2e-5 bound.
 //
 // The input uncertainty that sets the floor:
 //   * the eight solar indices are written with Fortran F8.0, i.e. whole
-//     numbers, although the source SOLFSMY records carry one decimal (F6.1);
+//     numbers, although the driver reads them as F6.1;
 //   * the solar right ascension and declination are written to 1e-4 rad;
-//   * both temperatures are written to 0.05 K;
-//   * the density is written with five significant digits.
+//   * temperatures are written to 0.1 K (half-width 0.05 K);
+//   * the density is written with five significant digits (D15.5).
+//
+// Evidence: docs/atmosphere/evidence/validation-amendment-v1/
+// jb2008-grid-investigation.json, reproducible with the reproduce.sh beside it.
 constexpr double kTempAbsK = 1.5;
 constexpr double kRhoRelMax = 1.5e-2;
 constexpr double kRhoRelRms = 6.0e-3;
@@ -68,7 +72,8 @@ constexpr double kRhoRelRms = 6.0e-3;
 // Deterministic decimation of the 68191-row epoch files.  41 is coprime with the
 // grid dimensions (97 altitudes x 37 longitudes x 19 latitudes), so the sample
 // walks across all three axes instead of repeatedly hitting the same grid
-// planes; both endpoints of every file are added unconditionally.
+// planes.  The trailing endpoint is added only when the stride does not land on
+// it; the leading one is always stride index 0 and must not be repeated.
 constexpr std::size_t kStride = 41;
 
 // ------------------------------------------------------------------ SHA-256
@@ -277,8 +282,11 @@ std::vector<Epoch> load_epochs() {
             throw std::runtime_error("JB2008 validation fixture " + std::string(name) +
                                      " is missing its epoch/index header or data rows");
         for (std::size_t i = 0; i < all.size(); i += kStride) e.rows.push_back(all[i]);
-        e.rows.push_back(all.front());
-        e.rows.push_back(all.back());
+        // The stride already starts at index 0, so appending all.front() as well
+        // evaluated that row twice and inflated the sample count by one per
+        // epoch without adding coverage.  Only the trailing endpoint can be
+        // new, and only when the stride does not land on it.
+        if ((all.size() - 1) % kStride != 0) e.rows.push_back(all.back());
         out.push_back(std::move(e));
     }
     if (!missing.empty()) {

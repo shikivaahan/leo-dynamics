@@ -816,3 +816,309 @@ TEST_CASE("Earth-fixed rotation is an explicit frame with no fallback",
     // would indicate a stale or transposed matrix.
     REQUIRE(advance.norm() == Catch::Approx(1.0).margin(1e-12));
 }
+TEST_CASE("NRLMSISE Ap history needs the full 57 hour tail that daily Ap does not",
+          "[atmosphere][weather]") {
+    const WeatherFixture fixture;
+    const WeatherDataset data = fixture.load();
+    // The archive starts on 2016-11-30. At 00:00 UTC on 2016-12-01 the daily
+    // drivers resolve (the previous day supplies F10.7) but the 36..57 h mean
+    // reaches two days and three bins further back, so the history query is
+    // refused instead of being completed from a shorter record.
+    const UtcCalendar early = utc(2016, 12, 1, 0.0);
+    REQUIRE_NOTHROW(data.nrlmsise(early, false));
+    const NrlmsiseInput daily = data.nrlmsise(early, false);
+    REQUIRE(daily.ap == Catch::Approx(ap_daily_value(serial(2016, 12, 1))));
+    REQUIRE_THROWS_AS(data.nrlmsise(early, true), std::runtime_error);
+    // Three days later the whole 57 hour tail is present and every slot is a
+    // real record again, so the same query succeeds.
+    const UtcCalendar covered = utc(2016, 12, 3, 0.0);
+    const NrlmsiseInput history = data.nrlmsise(covered, true);
+    for (int i = 1; i < 7; ++i) {
+        CAPTURE(i);
+        REQUIRE(std::isfinite(history.ap_history[i]));
+    }
+    // The far window really does reach past the query day: its upper edge is
+    // the bin 57 h earlier, which at 00:00 UTC is 07:00 two days back.
+    const long long days = serial(2016, 12, 3);
+    // This fixture is an arithmetic progression in absolute bin number; each
+    // eight-bin window mean is exactly the midpoint of its two endpoints.
+    REQUIRE(history.ap_history[6] == Catch::Approx(
+        (ap_at_offset(days, 0, 12) + ap_at_offset(days, 0, 19)) / 2.0));
+    REQUIRE(history.ap_history[5] == Catch::Approx(
+        (ap_at_offset(days, 0, 4) + ap_at_offset(days, 0, 11)) / 2.0));
+    // Nothing in the history is read from the future, so the last archived day
+    // resolves even though no later day exists to corroborate it.
+    REQUIRE_NOTHROW(data.nrlmsise(utc(2017, 1, 4, 86399.0), true));
+    const NrlmsiseInput last = data.nrlmsise(utc(2017, 1, 4, 86399.0), true);
+    REQUIRE(last.ap_history[1] == Catch::Approx(ap_at_offset(serial(2017, 1, 4), 7, 0)));
+    REQUIRE(last.ap_history[2] == Catch::Approx(ap_at_offset(serial(2017, 1, 4), 7, 1)));
+}
+
+TEST_CASE("NRLMSISE Ap history crosses the leap second and the year boundary",
+          "[atmosphere][weather]") {
+    const WeatherFixture fixture;
+    const WeatherDataset data = fixture.load();
+    // 2016-12-31 is a leap second day: its record carries 86401 seconds and the
+    // eight bins still cover 0..86400, so the bin index never runs off the end.
+    const NrlmsiseInput leap_last = data.nrlmsise(utc(2016, 12, 31, 86399.0, 86401.0), true);
+    REQUIRE(leap_last.ap_history[1] == Catch::Approx(ap_at_offset(serial(2016, 12, 31), 7, 0)));
+    REQUIRE(leap_last.ap_history[2] == Catch::Approx(ap_at_offset(serial(2016, 12, 31), 7, 1)));
+    // One second later the same bin is still current: a leap second does not
+    // advance the three-hourly geomagnetic record.
+    const NrlmsiseInput leap_extra = data.nrlmsise(utc(2016, 12, 31, 86400.0, 86401.0), true);
+    REQUIRE(leap_extra.ap_history[1] == Catch::Approx(leap_last.ap_history[1]));
+    // Crossing midnight on 2017-01-01 walks back into the previous day rather
+    // than clamping to a quiet Ap.
+    const NrlmsiseInput new_year = data.nrlmsise(utc(2017, 1, 1, 0.0), true);
+    REQUIRE(new_year.ap_history[1] == Catch::Approx(ap_bin_value(serial(2017, 1, 1), 0)));
+    REQUIRE(new_year.ap_history[4] == Catch::Approx(ap_bin_value(serial(2016, 12, 31), 5)));
+    REQUIRE(new_year.ap_history[0] == Catch::Approx(ap_daily_value(serial(2017, 1, 1))));
+    // The daily Ap of the new day is the one the daily mode would use.
+    const NrlmsiseInput new_year_daily = data.nrlmsise(utc(2017, 1, 1, 0.0), false);
+    REQUIRE(new_year_daily.ap == Catch::Approx(new_year.ap_history[0]));
+}
+
+// ---------------------------------------------------------------------------
+// JB2008 altitude semantics
+//
+// The upstream Fortran takes two scalars for a position: SAT(2), documented as
+// geocentric latitude, and SAT(3), documented only as "height of position".
+// Nothing in the vendor distribution says which surface SAT(3) is measured from,
+// so these tests pin the convention the project uses rather than asserting a
+// vendor fact that does not exist:
+//
+//   SAT(2) = atan2(z, hypot(x, y)) of the Earth-fixed position, i.e. geocentric
+//            latitude, taken straight from the Cartesian vector;
+//   SAT(3) = the WGS84 ellipsoidal height of that same position.
+//
+// Both are checked against an independently constructed Cartesian position and
+// against each other, never by comparing the provider only with itself.
+// ---------------------------------------------------------------------------
+#ifdef LEO_HAS_JB2008
+#include "leo/atmosphere/provider.hpp"
+#include "leo/atmosphere/jb2008.hpp"
+
+namespace {
+
+// 2016-12-20T00:00:00 UTC, twelve days before 2017-01-01T00:00:00 UTC. The
+// anchor is the same IERS-derived instant the tests above use: 6209 days from
+// the J2000 reference, TT - UTC = 68.184 s through 2016, and 2016-12-31 is a
+// leap second day so 2017-01-01 is a further 86401 s, not 86400 s. The date is
+// inside the fixture weather archive with all five solar lags satisfied.
+constexpr double kAltitudeEpochEt = 6209.0 * 86400.0 + 68.184 - 43200.0 + 86401.0
+                                  - 12.0 * 86400.0;
+
+// Forward conversion only: the inertial position a caller would construct for an
+// exact WGS84 geodetic triple. The provider is never involved, and the position
+// is rotated back to Earth-fixed by the same measured matrix before use, which
+// is what the provider does with it.
+InertialVector position_at(double latitude_deg, double longitude_deg, double altitude_km,
+                           Epoch epoch) {
+    const Eigen::Matrix3d to_fixed = SpiceEphemerisProvider::earth_fixed_rotation(epoch, "ITRF93");
+    const Eigen::Vector3d fixed = earth_fixed({latitude_deg * kPi / 180.0,
+                                               longitude_deg * kPi / 180.0, altitude_km * 1e3});
+    return InertialVector{to_fixed.transpose() * fixed};
+}
+
+// The two scalars the upstream model is documented to receive, derived here from
+// the Cartesian position alone: geocentric latitude from the direction of the
+// radius vector, and the requested ellipsoidal height unchanged. No repository
+// geodetic converter is involved, so agreement with the provider is a statement
+// about the convention and not about the converter.
+struct NativeScalars {
+    double latitude_rad;
+    double longitude_rad;
+    double altitude_km;
+};
+
+NativeScalars native_scalars(const Eigen::Vector3d& fixed, double altitude_km) {
+    const double longitude = std::hypot(fixed.x(), fixed.y()) < 1e-9
+        ? 0.0 : std::atan2(fixed.y(), fixed.x());
+    return {std::atan2(fixed.z(), std::hypot(fixed.x(), fixed.y())), longitude, altitude_km};
+}
+
+// Assembles the complete native input for a provider call, from the same public
+// pieces the provider is documented to use, so that the two can be compared.
+Jb2008Input native_input(const SpiceEphemerisProvider& spice, const WeatherDataset& data,
+                         const Eigen::Matrix3d& to_fixed, Epoch epoch,
+                         const NativeScalars& scalars) {
+    Jb2008Input in = data.jb2008(SpiceEphemerisProvider::utc_calendar(epoch));
+    const Eigen::Vector3d fixed_sun =
+        to_fixed * spice.geometric_state(sun_naif_id, epoch).position_m.as_eigen();
+    in.sun_ra_dec_rad = {std::atan2(fixed_sun.y(), fixed_sun.x()),
+                         std::atan2(fixed_sun.z(), std::hypot(fixed_sun.x(), fixed_sun.y()))};
+    in.position_ra_lat_alt = {scalars.longitude_rad, scalars.latitude_rad, scalars.altitude_km};
+    return in;
+}
+
+}  // namespace
+
+TEST_CASE("JB2008 receives geodetic height and Cartesian geocentric latitude",
+          "[atmosphere][jb2008][external]") {
+    const char* lsk = env_path("LEO_SPICE_TEST_LSK");
+    const char* spk = env_path("LEO_SPICE_TEST_SPK");
+    const char* pck = env_path("LEO_ATMOSPHERE_TEST_PCK");
+    if (lsk == nullptr || spk == nullptr || pck == nullptr)
+        SKIP("Set LEO_SPICE_TEST_LSK, LEO_SPICE_TEST_SPK and LEO_ATMOSPHERE_TEST_PCK "
+             "to drive the real provider");
+    const WeatherFixture fixture;
+    const WeatherDataset data = fixture.load();
+    const SpiceEphemerisProvider spice{{lsk, spk, pck}};
+    const DirectAtmosphere atmosphere(Model::jb2008, spice, data, "ITRF93", false);
+    const Epoch epoch{kAltitudeEpochEt};
+    const Eigen::Matrix3d to_fixed = SpiceEphemerisProvider::earth_fixed_rotation(epoch, "ITRF93");
+
+    // Equator, both mid-latitudes, a near-polar pair and the pole, with
+    // longitudes on both sides of the wrap; 200/400/600 km are interior
+    // altitudes where no domain guard is involved.
+    const double latitudes[] = {0.0, 45.0, -45.0, 89.9, -89.9, 90.0, -90.0};
+    const double longitudes[] = {0.0, 90.0, 179.9999999, 180.0, 270.0, 359.9999999, -179.0};
+    const double altitudes[] = {200.0, 400.0, 600.0};
+    for (const double latitude : latitudes) {
+        for (const double longitude : longitudes) {
+            for (const double altitude : altitudes) {
+                CAPTURE(latitude);
+                CAPTURE(longitude);
+                CAPTURE(altitude);
+                const InertialVector position = position_at(latitude, longitude, altitude, epoch);
+                const Eigen::Vector3d fixed = to_fixed * position.as_eigen();
+                const NativeScalars scalars = native_scalars(fixed, altitude);
+
+                const Result via_provider = atmosphere.evaluate(epoch, position);
+                const Result via_native =
+                    Jb2008{}.evaluate(native_input(spice, data, to_fixed, epoch, scalars));
+                REQUIRE(via_provider.density_kg_m3 == Catch::Approx(via_native.density_kg_m3).epsilon(1e-12));
+                REQUIRE(via_provider.exospheric_temperature_k ==
+                        Catch::Approx(via_native.exospheric_temperature_k).epsilon(1e-12));
+                REQUIRE(via_provider.temperature_k ==
+                        Catch::Approx(via_native.temperature_k).epsilon(1e-12));
+            }
+        }
+    }
+}
+
+TEST_CASE("JB2008 altitude is the ellipsoidal height and not a spherical radius offset",
+          "[atmosphere][jb2008][coordinates]") {
+    // The candidate datums differ by up to 21.4 km, so the distinction has to be
+    // stated numerically rather than by naming a constant. At 45 degrees
+    // geodetic latitude and 400 km the geocentric radius is 10.6496 km shorter
+    // than the ellipsoidal height plus the WGS84 semi-major axis, 10.7214 km
+    // longer than the height above JB2008's own 6356.766 km gravity sphere and
+    // 10.7351 km longer than the height above the semi-minor axis. A
+    // convention error of either kind cannot hide inside a metre of tolerance.
+    const double latitude = 45.0, longitude = 30.0, altitude_km = 400.0;
+    const Eigen::Vector3d fixed =
+        earth_fixed({latitude * kPi / 180.0, longitude * kPi / 180.0, altitude_km * 1e3});
+    const double radius_km = fixed.norm() / 1e3;
+    REQUIRE(radius_km - kA / 1e3 == Catch::Approx(altitude_km - 10.6496).margin(1e-3));
+    REQUIRE(radius_km - 6356.766 == Catch::Approx(altitude_km + 10.7214).margin(1e-3));
+    REQUIRE(radius_km - kB / 1e3 == Catch::Approx(altitude_km + 10.7351).margin(1e-3));
+    // The three readings are mutually far apart: this is the assertion that makes
+    // the two lines above discriminating rather than merely true.
+    REQUIRE(altitude_km - (radius_km - kA / 1e3) > 10.6);
+    REQUIRE((radius_km - 6356.766) - altitude_km > 10.7);
+    // The same point seen from the other side of the wrap is the same position.
+    const Eigen::Vector3d wrapped =
+        earth_fixed({latitude * kPi / 180.0, (longitude + 360.0) * kPi / 180.0, altitude_km * 1e3});
+    REQUIRE((wrapped - fixed).norm() == Catch::Approx(0.0).margin(1e-6));
+
+    // Geocentric latitude is the direction of the radius vector. At the same
+    // point it is 44.818950 degrees where the geodetic latitude is 45 degrees:
+    // a real 0.18 degree distinction, small enough that the density barely
+    // notices. The closed form below restates tan(phi') from the geodetic
+    // triple, so it is checked against the Cartesian direction independently.
+    const double n = kA / std::sqrt(1.0 - kE2 * 0.5);            // prime vertical radius at 45 deg
+    const double closed_form = std::atan(
+        ((n * (1.0 - kE2) + altitude_km * 1e3) * std::sin(kLat45)) /
+        ((n + altitude_km * 1e3) * std::cos(kLat45)));
+    const NativeScalars scalars = native_scalars(fixed, altitude_km);
+    REQUIRE(scalars.latitude_rad == Catch::Approx(closed_form).epsilon(1e-12));
+    REQUIRE(std::abs(scalars.latitude_rad - kLat45) > 1e-3);
+    // The geocentric latitude of a point on the ellipsoid surface itself is the
+    // published relation tan(phi') = (1 - e^2) tan(phi), which is why the
+    // difference above is a fraction of a degree rather than a constant.
+    const double on_surface = std::atan((1.0 - kE2) * std::tan(kLat45));
+    REQUIRE(on_surface == Catch::Approx(kGeocentricLat45).epsilon(1e-15));
+}
+
+TEST_CASE("JB2008 accepts a position built exactly on its 120 km and 1500 km domain edge",
+          "[atmosphere][jb2008][external]") {
+    // The provider recovers height by rotating into Earth-fixed and converting
+    // to WGS84 geodetic coordinates. That round trip is exact in real
+    // arithmetic but its floating-point residual is signed, so a position built
+    // to land exactly on the domain edge can come back a fraction of a
+    // nanometre below 120 km or above 1500 km. Comparing the recovered
+    // altitude with a strict inequality would then reject a position the
+    // caller placed exactly on the accepted boundary, and would do it for some
+    // longitudes and not for others.
+    const char* lsk = env_path("LEO_SPICE_TEST_LSK");
+    const char* spk = env_path("LEO_SPICE_TEST_SPK");
+    const char* pck = env_path("LEO_ATMOSPHERE_TEST_PCK");
+    if (lsk == nullptr || spk == nullptr || pck == nullptr)
+        SKIP("Set LEO_SPICE_TEST_LSK, LEO_SPICE_TEST_SPK and LEO_ATMOSPHERE_TEST_PCK "
+             "to drive the real provider");
+    const WeatherFixture fixture;
+    const WeatherDataset data = fixture.load();
+    const SpiceEphemerisProvider spice{{lsk, spk, pck}};
+    const DirectAtmosphere atmosphere(Model::jb2008, spice, data, "ITRF93", false);
+    const Epoch epoch{kAltitudeEpochEt};
+    const Eigen::Matrix3d to_fixed = SpiceEphemerisProvider::earth_fixed_rotation(epoch, "ITRF93");
+
+    const double latitudes[] = {0.0, 45.0, -45.0, 89.9, -89.9, 90.0, -90.0};
+    const double longitudes[] = {0.0, 123.456, 180.0, 270.0, 359.9999999, -179.0};
+    for (const double latitude : latitudes) {
+        for (const double longitude : longitudes) {
+            for (const double edge : {120.0, 1500.0}) {
+                CAPTURE(latitude);
+                CAPTURE(longitude);
+                CAPTURE(edge);
+                const InertialVector position = position_at(latitude, longitude, edge, epoch);
+                const Result result = atmosphere.evaluate(epoch, position);
+                const NativeScalars scalars = native_scalars(
+                    to_fixed * position.as_eigen(), edge);
+                const Result native = Jb2008{}.evaluate(
+                    native_input(spice, data, to_fixed, epoch, scalars));
+                REQUIRE(result.density_kg_m3 ==
+                        Catch::Approx(native.density_kg_m3).epsilon(1e-12));
+                REQUIRE(result.temperature_k ==
+                        Catch::Approx(native.temperature_k).epsilon(1e-12));
+                REQUIRE(result.exospheric_temperature_k ==
+                        Catch::Approx(native.exospheric_temperature_k).epsilon(1e-12));
+            }
+        }
+    }
+}
+
+TEST_CASE("JB2008 still rejects a position genuinely outside its domain",
+          "[atmosphere][jb2008][external]") {
+    // The boundary tolerance must absorb a round trip of order a nanometre, not
+    // a position a kilometre outside the model's supported band. One metre is
+    // six orders of magnitude beyond the observed round-trip residual and must
+    // still be refused.
+    const char* lsk = env_path("LEO_SPICE_TEST_LSK");
+    const char* spk = env_path("LEO_SPICE_TEST_SPK");
+    const char* pck = env_path("LEO_ATMOSPHERE_TEST_PCK");
+    if (lsk == nullptr || spk == nullptr || pck == nullptr)
+        SKIP("Set LEO_SPICE_TEST_LSK, LEO_SPICE_TEST_SPK and LEO_ATMOSPHERE_TEST_PCK "
+             "to drive the real provider");
+    const WeatherFixture fixture;
+    const WeatherDataset data = fixture.load();
+    const SpiceEphemerisProvider spice{{lsk, spk, pck}};
+    const DirectAtmosphere atmosphere(Model::jb2008, spice, data, "ITRF93", false);
+    const Epoch epoch{kAltitudeEpochEt};
+
+    const double latitudes[] = {0.0, 45.0, -45.0, 89.9};
+    const double longitudes[] = {0.0, 123.456, 180.0, 359.9999999};
+    for (const double latitude : latitudes) {
+        for (const double longitude : longitudes) {
+            for (const double outside : {119.999, 1500.001}) {
+                CAPTURE(latitude);
+                CAPTURE(longitude);
+                CAPTURE(outside);
+                const InertialVector position = position_at(latitude, longitude, outside, epoch);
+                REQUIRE_THROWS_AS(atmosphere.evaluate(epoch, position), std::invalid_argument);
+            }
+        }
+    }
+}
+#endif

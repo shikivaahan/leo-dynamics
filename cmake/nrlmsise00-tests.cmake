@@ -3,6 +3,17 @@
 # 17-case oracle lives outside the repository and is supplied by path.
 add_executable(leo_nrlmsise00_tests tests/nrlmsise00_tests.cpp)
 target_link_libraries(leo_nrlmsise00_tests PRIVATE leo::atmosphere Catch2::Catch2WithMain Threads::Threads)
+# The Ap-mode tests call the pinned C reference directly, side by side with the
+# adapter, so they compare against a native gtd7d call rather than against a
+# second adapter. leo_atmosphere hides the reference behind PRIVATE, so the test
+# target is given the same pinned source directory and archive explicitly.
+target_include_directories(leo_nrlmsise00_tests PRIVATE "${LEO_NRLMSISE00_ROOT}")
+target_link_libraries(leo_nrlmsise00_tests PRIVATE leo_nrlmsise00_reference)
+if(LEO_ENABLE_CSPICE)
+  # Only this target's provider-level test needs CSPICE; everything else runs
+  # against the model alone.
+  target_compile_definitions(leo_nrlmsise00_tests PRIVATE LEO_NRLMSISE00_TESTS_HAVE_CSPICE=1)
+endif()
 
 # Path to the pinned upstream DOCUMENTATION file holding the published 17-case output.
 # Leave empty to compile the fixture tests without a baked path; they then resolve the

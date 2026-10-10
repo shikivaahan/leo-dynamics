@@ -7,6 +7,19 @@
 // unavailable the fixture tests SKIP explicitly instead of silently passing.
 #include <catch2/catch_test_macros.hpp>
 #include "leo/atmosphere/nrlmsise00.hpp"
+#include "leo/atmosphere/weather.hpp"
+#ifdef LEO_NRLMSISE00_TESTS_HAVE_CSPICE
+#include "leo/atmosphere/coordinates.hpp"
+#include "leo/atmosphere/provider.hpp"
+#include "leo/environment/spice.hpp"
+#include <numbers>
+#endif
+// The pinned C reference itself, called directly. Every Ap-mode expectation in
+// this file is therefore a native gtd7d evaluation, not a second opinion from
+// the adapter under test.
+extern "C" {
+#include "nrlmsise-00.h"
+}
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -502,3 +515,303 @@ TEST_CASE("NRLMSISE00 serialises concurrent evaluation of the reference global s
         }
     }
 }
+// ---------------------------------------------------------------------------
+// Daily Ap versus the seven-slot Ap history, against the pinned C reference.
+//
+// The published cases 15 and 16 set every entry of the Ap history to 100, so
+// they show that the -1 switch path runs but cannot distinguish one slot from
+// another, cannot order them, and cannot show that slot 0 (the daily Ap) is
+// unused on that path. Every expectation below is produced by calling the
+// pinned gtd7d directly with an explicit seven-element ap_array, so the
+// adapter is compared against the reference rather than against itself.
+// ---------------------------------------------------------------------------
+namespace {
+
+// Seven distinct values, one per documented slot of struct ap_array
+// (nrlmsise-00.h:72-82): daily Ap, current 3 h bin, -3 h, -6 h, -9 h, mean of
+// the eight bins 12..33 h back, mean of the eight bins 36..57 h back.
+constexpr std::array<double, 7> kUnequalApHistory{23, 118, 7, 156, 44, 91, 12};
+
+struct NativeResult {
+    double density_kg_m3{};
+    double temperature_k{};
+    double exospheric_temperature_k{};
+    std::array<double, 8> number_density_m3{};
+};
+
+// Fills the reference C structs directly from NrlmsiseInput. The only unit
+// handling here is the reference's own switch 0 convention restated from
+// nrlmsise-00.h:41 (1 = metres and kilograms) and nrlmsise-00.c:1047.
+NativeResult native_evaluate(const std::array<int, 24>& switches, const NrlmsiseInput& in,
+                             const std::array<double, 7>* history) {
+    ap_array ap{};
+    for (std::size_t i = 0; i < 7; ++i) ap.a[i] = history != nullptr ? (*history)[i] : 0.0;
+    // Compare identical model-native inputs, including the adapter's documented
+    // canonical longitude/LST representation (which can round by one ulp even
+    // for an already in-range coordinate recovered from Cartesian geometry).
+    const auto wrap = [](double value, double period) {
+        const double remainder = std::fmod(value, period);
+        return remainder < 0 ? remainder + period : remainder;
+    };
+    nrlmsise_input native{in.year,     in.day_of_year, in.utc_seconds,
+                           in.altitude_km, in.latitude_deg, wrap(in.longitude_deg + 180, 360) - 180,
+                           wrap(in.local_solar_time_hours, 24), in.f107_average, in.f107, in.ap,
+                           history != nullptr ? &ap : nullptr};
+    nrlmsise_flags flags{};
+    std::copy(switches.begin(), switches.end(), flags.switches);
+    nrlmsise_output output{};
+    gtd7d(&native, &flags, &output);
+    const double mass = switches[0] == 0 ? 1e3 : 1.0;    // g/cm^3 -> kg/m^3
+    const double number = switches[0] == 0 ? 1e6 : 1.0;  // cm^-3 -> m^-3
+    NativeResult result{output.d[5] * mass, output.t[1], output.t[0], {}};
+    for (std::size_t i = 0; i < kNativeIndex.size(); ++i)
+        result.number_density_m3[i] = output.d[kNativeIndex[i]] * number;
+    return result;
+}
+
+NrlmsiseInput unequal_history_case(const ReferenceCase& c) {
+    NrlmsiseInput in = make_input(c);
+    in.ap_history = kUnequalApHistory;
+    return in;
+}
+
+void require_same_as_native(const Result& adapter, const NativeResult& native) {
+    REQUIRE(adapter.density_kg_m3 == native.density_kg_m3);
+    REQUIRE(adapter.temperature_k == native.temperature_k);
+    REQUIRE(adapter.exospheric_temperature_k == native.exospheric_temperature_k);
+    REQUIRE(adapter.number_density_m3 == native.number_density_m3);
+}
+
+}  // namespace
+
+TEST_CASE("NRLMSISE00 Ap-history mode reproduces a direct native gtd7d call",
+          "[atmosphere][nrlmsise00][ap_modes]") {
+    auto history_switches = Nrlmsise00::standard_switches();
+    history_switches[9] = -1;
+    auto metric_switches = history_switches;
+    metric_switches[0] = 1;
+    const Nrlmsise00 history_cgs{history_switches};
+    const Nrlmsise00 history_si{metric_switches};
+
+    // Every published geometry, so the seven-slot path is checked from the
+    // ground to 1000 km and through both unit systems, with values that no
+    // equal-valued history could ever produce.
+    for (const auto& c : kCases) {
+        const NrlmsiseInput in = unequal_history_case(c);
+        const NativeResult native_cgs =
+            native_evaluate(history_switches, in, &in.ap_history);
+        const NativeResult native_si = native_evaluate(metric_switches, in, &in.ap_history);
+        CAPTURE(c.alt);
+        CAPTURE(c.doy);
+        require_same_as_native(history_cgs.evaluate(in), native_cgs);
+        require_same_as_native(history_si.evaluate(in), native_si);
+        // The two unit systems are the same physical answer, so the native
+        // cgs and metric evaluations must also agree through the scaling.
+        REQUIRE(relative_error(native_cgs.density_kg_m3, native_si.density_kg_m3) <= kUnitRtol);
+        REQUIRE(relative_error(history_cgs.evaluate(in).density_kg_m3,
+                               history_si.evaluate(in).density_kg_m3) <= kUnitRtol);
+    }
+}
+
+TEST_CASE("NRLMSISE00 daily mode reproduces a native gtd7d call that never sees the Ap history",
+          "[atmosphere][nrlmsise00][ap_modes]") {
+    const Nrlmsise00 daily;
+    // Storm-time daily Ap from published case 9, plus the unequal history the
+    // adapter would forward. On the daily path the reference reads only
+    // input->ap (nrlmsise-00.c:739) and never dereferences ap_a.
+    NrlmsiseInput in = make_input(kCases[9]);
+    in.ap_history = kUnequalApHistory;
+    require_same_as_native(daily.evaluate(in),
+                           native_evaluate(daily.switches(), in, nullptr));
+    require_same_as_native(daily.evaluate(in),
+                           native_evaluate(daily.switches(), in, &in.ap_history));
+    // Same storm daily Ap without any history supplied at all.
+    NrlmsiseInput plain = make_input(kCases[9]);
+    require_same_as_native(daily.evaluate(plain),
+                           native_evaluate(daily.switches(), plain, nullptr));
+}
+
+TEST_CASE("NRLMSISE00 history mode ignores the daily Ap field, as the reference does",
+          "[atmosphere][nrlmsise00][ap_modes]") {
+    auto history_switches = Nrlmsise00::standard_switches();
+    history_switches[9] = -1;
+    const Nrlmsise00 history{history_switches};
+    NrlmsiseInput in = unequal_history_case(kCases[0]);
+    const Result reference = history.evaluate(in);
+    require_same_as_native(reference, native_evaluate(history_switches, in, &in.ap_history));
+
+    // nrlmsise-00.c reads input->ap only in the else branch of line 716, which
+    // switches[9] == -1 skips; sg0 (line 594) consumes slots 1..6 only. Both
+    // the daily field and slot 0 therefore leave the -1 result untouched, and
+    // the native reference confirms it rather than the adapter alone.
+    for (double daily_ap : {4.0, 40.0, 200.0}) {
+        NrlmsiseInput probe = in;
+        probe.ap = daily_ap;
+        CAPTURE(daily_ap);
+        REQUIRE(history.evaluate(probe).density_kg_m3 == reference.density_kg_m3);
+        require_same_as_native(history.evaluate(probe),
+                               native_evaluate(history_switches, probe, &probe.ap_history));
+    }
+    NrlmsiseInput slot0 = in;
+    slot0.ap_history[0] = 200.0;
+    REQUIRE(history.evaluate(slot0).density_kg_m3 == reference.density_kg_m3);
+    require_same_as_native(history.evaluate(slot0),
+                           native_evaluate(history_switches, slot0, &slot0.ap_history));
+}
+
+TEST_CASE("NRLMSISE00 Ap-history slots are individually identifiable, unlike equal published values",
+          "[atmosphere][nrlmsise00][ap_modes]") {
+    auto history_switches = Nrlmsise00::standard_switches();
+    history_switches[9] = -1;
+    const Nrlmsise00 history{history_switches};
+    const NrlmsiseInput in = unequal_history_case(kCases[0]);
+    const Result reference = history.evaluate(in);
+
+    // Cases 15/16 cannot make this statement because all seven slots hold the
+    // same number. With seven distinct values, exchanging any two of the six
+    // slots the reference consumes changes the answer, so no implementation can
+    // satisfy the published fixtures while getting the ordering wrong.
+    for (std::size_t i = 1; i < 7; ++i) {
+        for (std::size_t j = i + 1; j < 7; ++j) {
+            NrlmsiseInput swapped = in;
+            std::swap(swapped.ap_history[i], swapped.ap_history[j]);
+            CAPTURE(i);
+            CAPTURE(j);
+            const Result r = history.evaluate(swapped);
+            REQUIRE(r.density_kg_m3 != reference.density_kg_m3);
+            require_same_as_native(r, native_evaluate(history_switches, swapped,
+                                                       &swapped.ap_history));
+        }
+    }
+}
+
+TEST_CASE("NRLMSISE00 daily and Ap-history modes differ physically at one fixed state",
+          "[atmosphere][nrlmsise00][ap_modes]") {
+    auto history_switches = Nrlmsise00::standard_switches();
+    history_switches[9] = -1;
+    const Nrlmsise00 history{history_switches};
+    const Nrlmsise00 daily;
+    NrlmsiseInput in = unequal_history_case(kCases[0]);
+    // Same case in both modes: the daily Ap scalar is the number in slot 0, so the
+    // only thing that differs between the two evaluations is whether the model is
+    // driven by the daily index or by the seven-slot history.
+    in.ap = kUnequalApHistory[0];
+    const Result with_history = history.evaluate(in);
+    const Result with_daily = daily.evaluate(in);
+    // The difference is a change of the modelled geomagnetic driver, not an
+    // integration or unit error: same state, same solar drivers, same position.
+    REQUIRE(with_history.density_kg_m3 != with_daily.density_kg_m3);
+    REQUIRE(with_history.temperature_k != with_daily.temperature_k);
+    std::printf("{\"model\":\"nrlmsise00\",\"ap_mode\":\"switch9_minus1\",\"alt_km\":%.0f,"
+        "\"ap_daily\":%.0f,\"ap_history\":[%.0f,%.0f,%.0f,%.0f,%.0f,%.0f,%.0f],"
+        "\"daily_density_kg_m3\":%.17g,\"history_density_kg_m3\":%.17g,"
+        "\"density_signed_change_vs_daily\":%.17g,"
+        "\"density_relative_difference\":%.17g,\"daily_temperature_k\":%.17g,"
+        "\"history_temperature_k\":%.17g}\n",
+        in.altitude_km, in.ap, kUnequalApHistory[0], kUnequalApHistory[1],
+        kUnequalApHistory[2], kUnequalApHistory[3], kUnequalApHistory[4],
+        kUnequalApHistory[5], kUnequalApHistory[6],
+        with_daily.density_kg_m3, with_history.density_kg_m3,
+        (with_history.density_kg_m3 - with_daily.density_kg_m3) / with_daily.density_kg_m3,
+        relative_error(with_history.density_kg_m3, with_daily.density_kg_m3),
+        with_daily.temperature_k, with_history.temperature_k);
+}
+
+TEST_CASE("NRLMSISE00 rejects an absent Ap history before any native call",
+          "[atmosphere][nrlmsise00][ap_modes]") {
+    auto history_switches = Nrlmsise00::standard_switches();
+    history_switches[9] = -1;
+    const Nrlmsise00 history{history_switches};
+    // The default NrlmsiseInput carries a quiet Ap of 4 in all seven slots, so a
+    // caller that forgets to fill the history is silently evaluated against
+    // climatology by the reference unless the adapter refuses it first. A NaN
+    // slot is how WeatherDataset::nrlmsise reports "this record is absent".
+    NrlmsiseInput in = make_input(kCases[0]);
+    for (std::size_t slot = 1; slot < 7; ++slot) {
+        NrlmsiseInput absent = in;
+        absent.ap_history[slot] = std::numeric_limits<double>::quiet_NaN();
+        CAPTURE(slot);
+        REQUIRE_THROWS_AS(history.evaluate(absent), std::invalid_argument);
+    }
+    // The same NaN slots are ignored entirely on the daily path, which is why
+    // the provider's history flag, not the record set, decides the mode.
+    NrlmsiseInput daily_only = in;
+    for (std::size_t slot = 1; slot < 7; ++slot)
+        daily_only.ap_history[slot] = std::numeric_limits<double>::quiet_NaN();
+    REQUIRE(Nrlmsise00{}.evaluate(daily_only).density_kg_m3 ==
+            Nrlmsise00{}.evaluate(in).density_kg_m3);
+}
+
+#ifdef LEO_NRLMSISE00_TESTS_HAVE_CSPICE
+// ---------------------------------------------------------------------------
+// Provider-level Ap mode: the boolean that selects the seven-slot loader must
+// reach the reference, and the answer must be the native gtd7d evaluation of
+// the very records the provider loaded.
+// ---------------------------------------------------------------------------
+namespace {
+
+const char* optional_path(const char* name) {
+    const char* value = std::getenv(name);
+    return value != nullptr && *value != '\0' ? value : nullptr;
+}
+
+}  // namespace
+
+TEST_CASE("DirectAtmosphere selects the NRLMSISE Ap-history mode and matches a native evaluation",
+          "[atmosphere][nrlmsise00][ap_modes][provider]") {
+    const char* spk = optional_path("LEO_SPICE_TEST_SPK");
+    const char* lsk = optional_path("LEO_SPICE_TEST_LSK");
+    const char* cssi = optional_path("LEO_NRLMSISE00_TEST_CSSI");
+    const char* pck = optional_path("LEO_ATMOSPHERE_TEST_PCK");
+    if (spk == nullptr || lsk == nullptr || cssi == nullptr || pck == nullptr)
+        SKIP("Provider Ap-mode test needs LEO_SPICE_TEST_SPK, LEO_SPICE_TEST_LSK, "
+             "LEO_ATMOSPHERE_TEST_PCK and LEO_NRLMSISE00_TEST_CSSI. No value is assumed.");
+
+    using namespace leo;
+    const SpiceEphemerisProvider spice{std::vector<std::filesystem::path>{spk, lsk, pck}};
+    const WeatherDataset weather = WeatherDataset::load(cssi, {}, {});
+    const DirectAtmosphere daily{Model::nrlmsise00, spice, weather, "ITRF93", false};
+    const DirectAtmosphere history{Model::nrlmsise00, spice, weather, "ITRF93", true};
+
+    // Real observed storm records, including the complete preceding 57 h tail.
+    const Epoch epoch = SpiceEphemerisProvider::epoch_from_utc("2003-10-30 T10:00:00");
+    // A geodetic site is chosen first and then taken to J2000 through the same
+    // documented rotation the provider uses in reverse, so the provider's own
+    // Earth-fixed geodetic recovery is what gets tested.
+    const Geodetic site{60.0 * std::numbers::pi / 180.0, -70.0 * std::numbers::pi / 180.0,
+                        400e3};
+    const auto rotation = SpiceEphemerisProvider::earth_fixed_rotation(epoch, "ITRF93");
+    const InertialVector inertial{rotation.transpose() * earth_fixed(site)};
+
+    const Result with_daily = daily.evaluate(epoch, inertial);
+    const Result with_history = history.evaluate(epoch, inertial);
+    REQUIRE(with_history.density_kg_m3 != with_daily.density_kg_m3);
+
+    // Independent oracle: the same immutable records, the same geodetic site and
+    // the same local-solar-time convention, fed straight to the pinned reference.
+    const UtcCalendar utc = SpiceEphemerisProvider::utc_calendar(epoch);
+    NrlmsiseInput in = weather.nrlmsise(utc, true);
+    const Geodetic recovered = geodetic(rotation * inertial.as_eigen());
+    // Match the provider's binary64 input construction, not an algebraically
+    // equivalent reassociation that changes the native latitude by one ulp.
+    constexpr double degrees_per_radian = 180.0 / std::numbers::pi;
+    in.latitude_deg = recovered.latitude_rad * degrees_per_radian;
+    in.longitude_deg = recovered.longitude_rad * degrees_per_radian;
+    in.altitude_km = recovered.altitude_m / 1000.0;
+    in.local_solar_time_hours =
+        std::fmod(utc.seconds_of_day / 3600.0 + in.longitude_deg / 15.0 + 24.0, 24.0);
+
+    auto history_switches = Nrlmsise00::standard_switches();
+    history_switches[9] = -1;
+    require_same_as_native(with_history,
+                           native_evaluate(history_switches, in, &in.ap_history));
+    require_same_as_native(with_daily,
+                           native_evaluate(Nrlmsise00::standard_switches(), in, nullptr));
+    std::printf("{\"provider\":\"nrlmsise00\",\"epoch_utc\":\"2003-10-30T10:00:00\","
+        "\"ap_history\":[%.17g,%.17g,%.17g,%.17g,%.17g,%.17g,%.17g],"
+        "\"daily_density_kg_m3\":%.17g,\"history_density_kg_m3\":%.17g}\n",
+        in.ap_history[0], in.ap_history[1], in.ap_history[2], in.ap_history[3],
+        in.ap_history[4], in.ap_history[5], in.ap_history[6],
+        with_daily.density_kg_m3, with_history.density_kg_m3);
+}
+#endif
