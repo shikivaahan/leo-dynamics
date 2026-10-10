@@ -1,0 +1,1175 @@
+{
+  "schema": "leo.atmosphere.nrlmsise00.parameters/1",
+  "generated_for": {
+    "project": "leo-dynamics",
+    "component": "NRLMSISE-00 backend",
+    "adapter_header": "include/leo/atmosphere/nrlmsise00.hpp",
+    "adapter_source": "src/atmosphere/nrlmsise00.cpp",
+    "cmake_fragment": "cmake/nrlmsise00.cmake",
+    "test_source": "tests/nrlmsise00_tests.cpp",
+    "documentation": "docs/atmosphere/NRLMSISE00.md"
+  },
+  "upstream": {
+    "model_name": "NRLMSISE-00",
+    "model_authors": [
+      "M. Picone",
+      "A. Hedin",
+      "D. Drob"
+    ],
+    "reference_entry_point": "gtd7d",
+    "reference_distribution": "Brodowski C translation of the NRLMSISE-00 FORTRAN model 2001",
+    "upstream_repository": "https://git.linta.de/~brodo/nrlmsise-00.git",
+    "upstream_revision": "bc9a2feba4344e74201281e563332688a4d09cc3",
+    "upstream_release": "20190709",
+    "acquisition_url_template": "https://git.linta.de/~brodo/nrlmsise-00.git/plain/<file>?id=bc9a2feba4344e74201281e563332688a4d09cc3",
+    "retrieval_date": "2026-10-10",
+    "redistribution": "not vendored; no redistribution grant is claimed. Configure LEO_NRLMSISE00_ROOT to a local acquisition of the files below.",
+    "files": [
+      {
+        "name": "nrlmsise-00.c",
+        "sha256": "a20d6523420188241963f095ad0b65df44ac0a6fa6db52d2e1df823c366f0285",
+        "bytes": 44170,
+        "required_by_cmake": true
+      },
+      {
+        "name": "nrlmsise-00.h",
+        "sha256": "d5b45be690bbc6cf394f69b18c0e641a1769da0a87015704fdabf0e7560794aa",
+        "bytes": 7930,
+        "required_by_cmake": true
+      },
+      {
+        "name": "nrlmsise-00_data.c",
+        "sha256": "d0b3022f3c3e7ffdf703cc0e0d02339dfee01c0bf1520b29c68d5f4afd8784d5",
+        "bytes": 48114,
+        "required_by_cmake": true
+      },
+      {
+        "name": "DOCUMENTATION",
+        "sha256": "e7db72964c22861e446d4b61931a22a58c32eeaa7f9bb23b45d887751b4ecae3",
+        "bytes": 11469,
+        "required_by_cmake": false,
+        "role": "published 17-case validation oracle, consumed by tests at run time only"
+      },
+      {
+        "name": "nrlmsise-00_test.c",
+        "sha256": "5a95faa996dc265ab85a0f6db641628abe84c9aef504638b4aa465ed76c89113",
+        "bytes": 4616,
+        "required_by_cmake": false,
+        "role": "upstream case definitions transcribed into tests/nrlmsise00_tests.cpp"
+      }
+    ]
+  },
+  "classification_legend": {
+    "published_constant": "fixed coefficient of the published model; not configurable",
+    "published_switch": "published model variation switch with a fixed default selection",
+    "space_weather_driver": "external observed index supplied by the caller",
+    "coordinate_convention": "input normalisation performed by the adapter",
+    "user_configurable": "exposed by the adapter and selectable per Nrlmsise00 instance",
+    "engineering_guard": "adapter-side domain check, not a published model boundary",
+    "engineering_limit": "adapter-side support limit chosen by this project"
+  },
+  "switches": [
+    {
+      "index": 0,
+      "identifier": "flags.switches[0]",
+      "meaning": "output unit system: 0 = native centimetres and grams, 1 = metres and kilograms",
+      "value": 0,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1
+      ],
+      "default_source": "nrlmsise-00.h:34 standard values and nrlmsise-00.h:41",
+      "rationale": "Explicit 0 keeps the reference in its native cgs output; the adapter converts to SI itself so the conversion is visible and testable rather than hidden inside the reference.",
+      "sensitivity": "pure scaling: densities x1e3 g/cm^3 -> kg/m^3, number densities x1e6 cm^-3 -> m^-3",
+      "reproducibility": "Nrlmsise00::standard_switches() index 0",
+      "units": "dimensionless integer flag selecting the reference output unit system",
+      "alternatives": {
+        "0": "native centimetres and grams (reference default)",
+        "1": "metres and kilograms"
+      }
+    },
+    {
+      "index": 1,
+      "identifier": "flags.switches[1]",
+      "meaning": "F10.7 effect on mean",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "controls the F10.7 contribution to the mean thermospheric density and temperature",
+      "reproducibility": "Nrlmsise00::standard_switches() index 1",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 2,
+      "identifier": "flags.switches[2]",
+      "meaning": "time independent (latitude variation of gravity disabled when 0)",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "0 fixes the effective latitude at 45 degrees in glatf (nrlmsise-00.c:937)",
+      "reproducibility": "Nrlmsise00::standard_switches() index 2",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 3,
+      "identifier": "flags.switches[3]",
+      "meaning": "symmetrical annual",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "seasonal variation about day 172 and 355",
+      "reproducibility": "Nrlmsise00::standard_switches() index 3",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 4,
+      "identifier": "flags.switches[4]",
+      "meaning": "symmetrical semiannual",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "hemispheric seasonal variation",
+      "reproducibility": "Nrlmsise00::standard_switches() index 4",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 5,
+      "identifier": "flags.switches[5]",
+      "meaning": "asymmetrical annual",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "solar longitude dependent annual term",
+      "reproducibility": "Nrlmsise00::standard_switches() index 5",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 6,
+      "identifier": "flags.switches[6]",
+      "meaning": "asymmetrical semiannual",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "solar longitude dependent semiannual term",
+      "reproducibility": "Nrlmsise00::standard_switches() index 6",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 7,
+      "identifier": "flags.switches[7]",
+      "meaning": "diurnal",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "local solar time dependence of density and temperature",
+      "reproducibility": "Nrlmsise00::standard_switches() index 7",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 8,
+      "identifier": "flags.switches[8]",
+      "meaning": "semidiurnal",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "12-hour density variation",
+      "reproducibility": "Nrlmsise00::standard_switches() index 8",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 9,
+      "identifier": "flags.switches[9]",
+      "meaning": "daily Ap index; -1 selects the seven-element three-hourly Ap history instead",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2,
+        -1
+      ],
+      "default_source": "nrlmsise-00.h:50",
+      "rationale": "1 uses the single daily Ap value. -1 is accepted and tested because the reference exposes the full three-hour history; the value 2 is accepted by tselec (nrlmsise-00.c:95) but the upstream header documents only 0, 1 and -1 for this switch.",
+      "sensitivity": "selects the geomagnetic driver path in globe7 (nrlmsise-00.c:716) and glob7s (nrlmsise-00.c:884)",
+      "reproducibility": "Nrlmsise00 constructor argument; NrlmsiseInput::ap_history",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off",
+        "1": "daily Ap from NrlmsiseInput::ap",
+        "2": "accepted verbatim by tselec but not documented by the upstream header; treat as unsupported",
+        "-1": "seven-element three-hourly Ap history from NrlmsiseInput::ap_history"
+      }
+    },
+    {
+      "index": 10,
+      "identifier": "flags.switches[10]",
+      "meaning": "all UT/long effects",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "master switch for UT and longitude terms",
+      "reproducibility": "Nrlmsise00::standard_switches() index 10",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 11,
+      "identifier": "flags.switches[11]",
+      "meaning": "longitudinal",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "longitude variation",
+      "reproducibility": "Nrlmsise00::standard_switches() index 11",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 12,
+      "identifier": "flags.switches[12]",
+      "meaning": "UT and mixed UT/longitude",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "universal time variation",
+      "reproducibility": "Nrlmsise00::standard_switches() index 12",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 13,
+      "identifier": "flags.switches[13]",
+      "meaning": "mixed Ap/UT/longitude",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "cross term between geomagnetic activity and local time",
+      "reproducibility": "Nrlmsise00::standard_switches() index 13",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 14,
+      "identifier": "flags.switches[14]",
+      "meaning": "terdiurnal",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "8-hour density variation",
+      "reproducibility": "Nrlmsise00::standard_switches() index 14",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 15,
+      "identifier": "flags.switches[15]",
+      "meaning": "departures from diffusive equilibrium",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "diffusive separation in the thermosphere",
+      "reproducibility": "Nrlmsise00::standard_switches() index 15",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 16,
+      "identifier": "flags.switches[16]",
+      "meaning": "all TINF (exospheric temperature) variations",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "variability of the exospheric temperature",
+      "reproducibility": "Nrlmsise00::standard_switches() index 16",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 17,
+      "identifier": "flags.switches[17]",
+      "meaning": "all TLB (temperature at the lower boundary) variations",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "72.5 km boundary temperature variability",
+      "reproducibility": "Nrlmsise00::standard_switches() index 17",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 18,
+      "identifier": "flags.switches[18]",
+      "meaning": "all TN1 variations",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "lower thermosphere temperature node variability",
+      "reproducibility": "Nrlmsise00::standard_switches() index 18",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 19,
+      "identifier": "flags.switches[19]",
+      "meaning": "all S (special) variations",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "special processing term variability",
+      "reproducibility": "Nrlmsise00::standard_switches() index 19",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 20,
+      "identifier": "flags.switches[20]",
+      "meaning": "all TN2 variations",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "mesospheric temperature node variability",
+      "reproducibility": "Nrlmsise00::standard_switches() index 20",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 21,
+      "identifier": "flags.switches[21]",
+      "meaning": "all NLB variations",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "lower boundary node variability",
+      "reproducibility": "Nrlmsise00::standard_switches() index 21",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 22,
+      "identifier": "flags.switches[22]",
+      "meaning": "all TN3 variations",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "lower stratospheric temperature node variability",
+      "reproducibility": "Nrlmsise00::standard_switches() index 22",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    },
+    {
+      "index": 23,
+      "identifier": "flags.switches[23]",
+      "meaning": "turbo scale height variation",
+      "value": 1,
+      "class": "published_switch",
+      "permitted": [
+        0,
+        1,
+        2
+      ],
+      "default_source": "nrlmsise-00.h:34",
+      "rationale": "published standard setting",
+      "sensitivity": "turbulent scale height below 95 km",
+      "reproducibility": "Nrlmsise00::standard_switches() index 23",
+      "units": "dimensionless integer flag",
+      "alternatives": {
+        "0": "variation off (sw=0, swc=0)",
+        "1": "main effect on, cross terms on (sw=1, swc=1)",
+        "2": "main effect off, cross terms on (sw=0, swc=1)"
+      }
+    }
+  ],
+  "switch_value_semantics": {
+    "source": "nrlmsise-00.h:32 and tselec at nrlmsise-00.c:82",
+    "0": "variation off",
+    "1": "variation on",
+    "2": "main effects off but cross terms on (sw[i] = 0, swc[i] = 1)",
+    "-1": "accepted for switch 9 only; selects the seven-element Ap history",
+    "adapter_policy": "the adapter rejects switch 0 outside {0,1} and switches 1..23 outside {0,1,2,-1 for index 9}; it does not silently coerce values"
+  },
+  "fixed_coefficients": {
+    "note": "These are fixed published coefficients, not tunable hyperparameters. They live in the pinned upstream nrlmsise-00_data.c and are never copied into this repository; the SHA-256 values below pin the exact text block so any drift is detectable. explicit_initializers counts only the values actually written in the source, with C comments removed first; implied_zero_initializers is the C-initialisation remainder of the declared slots. Regenerate with scripts/extract_nrlmsise00_parameters.py <path>/nrlmsise-00_data.c --check.",
+    "source_file": "nrlmsise-00_data.c",
+    "source_sha256": "d0b3022f3c3e7ffdf703cc0e0d02339dfee01c0bf1520b29c68d5f4afd8784d5",
+    "arrays": [
+      {
+        "symbol": "pt",
+        "declared_shape": [
+          150
+        ],
+        "slots": 150,
+        "explicit_initializers": 150,
+        "implied_zero_initializers": 0,
+        "fully_initialized": true,
+        "explicit_per_row": null,
+        "first_line": 26,
+        "last_line": 57,
+        "block_sha256": "dc98e59c1820e5007ef5a4cac0fc6fd193febfc3e4dff03d4071819737521a28",
+        "role": "thermospheric temperature coefficients (TEMPERATURE block)",
+        "values": "not reproduced; read from the pinned source file verified by source_sha256"
+      },
+      {
+        "symbol": "pd",
+        "declared_shape": [
+          9,
+          150
+        ],
+        "slots": 1350,
+        "explicit_initializers": 1350,
+        "implied_zero_initializers": 0,
+        "fully_initialized": true,
+        "explicit_per_row": [
+          150,
+          150,
+          150,
+          150,
+          150,
+          150,
+          150,
+          150,
+          150
+        ],
+        "first_line": 59,
+        "last_line": 339,
+        "block_sha256": "ad1b77baa96a06b1911a1221c403e7e92a243b1832f7ec06d6fc43f328419fb0",
+        "role": "thermospheric constituent density coefficients, rows He, O, N2, O2, Ar, mass density, H, N, anomalous O",
+        "values": "not reproduced; read from the pinned source file verified by source_sha256"
+      },
+      {
+        "symbol": "ps",
+        "declared_shape": [
+          150
+        ],
+        "slots": 150,
+        "explicit_initializers": 150,
+        "implied_zero_initializers": 0,
+        "fully_initialized": true,
+        "explicit_per_row": null,
+        "first_line": 341,
+        "last_line": 372,
+        "block_sha256": "20d83a38226d907b4270800667bc019a063bdfa47f8d498f75bef3b4cfc72dce",
+        "role": "special (S) processing coefficients",
+        "values": "not reproduced; read from the pinned source file verified by source_sha256"
+      },
+      {
+        "symbol": "pdl",
+        "declared_shape": [
+          2,
+          25
+        ],
+        "slots": 50,
+        "explicit_initializers": 50,
+        "implied_zero_initializers": 0,
+        "fully_initialized": true,
+        "explicit_per_row": [
+          25,
+          25
+        ],
+        "first_line": 375,
+        "last_line": 386,
+        "block_sha256": "706f50803b16cff4d9b615413f80de0cb6742effc97c7c9420730259fd7f2470",
+        "role": "lower-boundary (TURBO / LOWER BOUNDARY block) coefficients used by ghp7",
+        "values": "not reproduced; read from the pinned source file verified by source_sha256"
+      },
+      {
+        "symbol": "ptm",
+        "declared_shape": [
+          50
+        ],
+        "slots": 50,
+        "explicit_initializers": 10,
+        "implied_zero_initializers": 40,
+        "fully_initialized": false,
+        "explicit_per_row": null,
+        "first_line": 388,
+        "last_line": 391,
+        "block_sha256": "1312f9419f53537b56cc8754dde8eecb92c708787524663e8fc62a0ab1da5026",
+        "role": "thermospheric/mesospheric transition temperature coefficients; only the first ten entries are declared as extern by nrlmsise-00.c:64, the remaining forty are zero-initialised and unreferenced",
+        "values": "not reproduced; read from the pinned source file verified by source_sha256",
+        "published_quirk": "declared dimension 50 versus extern dimension 10 in nrlmsise-00.c; harmless because only ptm[0..9] are read"
+      },
+      {
+        "symbol": "pdm",
+        "declared_shape": [
+          8,
+          10
+        ],
+        "slots": 80,
+        "explicit_initializers": 80,
+        "implied_zero_initializers": 0,
+        "fully_initialized": true,
+        "explicit_per_row": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ],
+        "first_line": 392,
+        "last_line": 408,
+        "block_sha256": "8320ffb8e2b0bfefe5f2b3b98aeedac33f0a0a51d22d35810c69da8a30355f2a",
+        "role": "lower-atmosphere constituent/mass ratios; pdm[2][4] supplies the N2 mean molecular weight (nrlmsise-00.c:942)",
+        "values": "not reproduced; read from the pinned source file verified by source_sha256"
+      },
+      {
+        "symbol": "ptl",
+        "declared_shape": [
+          4,
+          100
+        ],
+        "slots": 400,
+        "explicit_initializers": 400,
+        "implied_zero_initializers": 0,
+        "fully_initialized": true,
+        "explicit_per_row": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "first_line": 411,
+        "last_line": 496,
+        "block_sha256": "91f4794365307647a35fd1dcb77a282fbd4fabfc981b4d8bb84ceab59626e71e",
+        "role": "lower thermosphere temperature node coefficients (TN1 block)",
+        "values": "not reproduced; read from the pinned source file verified by source_sha256"
+      },
+      {
+        "symbol": "pma",
+        "declared_shape": [
+          10,
+          100
+        ],
+        "slots": 1000,
+        "explicit_initializers": 1000,
+        "implied_zero_initializers": 0,
+        "fully_initialized": true,
+        "explicit_per_row": [
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100
+        ],
+        "first_line": 498,
+        "last_line": 709,
+        "block_sha256": "1ae2f8afa2d5cc4d22109bdeafc9cde99282fb068022e8c33480ce1b225e7053",
+        "role": "lower mesosphere temperature node coefficients (TN2 block)",
+        "values": "not reproduced; read from the pinned source file verified by source_sha256"
+      },
+      {
+        "symbol": "sam",
+        "declared_shape": [
+          100
+        ],
+        "slots": 100,
+        "explicit_initializers": 100,
+        "implied_zero_initializers": 0,
+        "fully_initialized": true,
+        "explicit_per_row": null,
+        "first_line": 712,
+        "last_line": 733,
+        "block_sha256": "837ab015e9d647741ab9ece8d38ef99437b15a76619212b60dda9af1de7e512b",
+        "role": "semiannual multipliers (SEMIANNUAL MULT SAM block)",
+        "values": "not reproduced; read from the pinned source file verified by source_sha256"
+      },
+      {
+        "symbol": "pavgm",
+        "declared_shape": [
+          10
+        ],
+        "slots": 10,
+        "explicit_initializers": 10,
+        "implied_zero_initializers": 0,
+        "fully_initialized": true,
+        "explicit_per_row": null,
+        "first_line": 737,
+        "last_line": 739,
+        "block_sha256": "776b7e798603149eb6a8800f7dffbc54bdcbeb3831c8fc70d7d5e64084410b61",
+        "role": "middle-atmosphere annual and semiannual averages (MIDDLE ATMOSPHERE AVERAGES block)",
+        "values": "not reproduced; read from the pinned source file verified by source_sha256"
+      }
+    ],
+    "extraction_tool": {
+      "path": "scripts/extract_nrlmsise00_parameters.py",
+      "invocation": "scripts/extract_nrlmsise00_parameters.py <LEO_NRLMSISE00_ROOT>/nrlmsise-00_data.c --check",
+      "exit_status": "0 when the source matches pinned_source_sha256, 1 otherwise",
+      "counting_rules": [
+        "C comments are removed before counting so that numbers inside comments are never counted.",
+        "Only complete numeric tokens at the row level are counted; trailing commas are not values.",
+        "explicit_initializers is the number of values written in the source.",
+        "implied_zero_initializers is the C-initialisation remainder of the declared slots; those entries are zero by language semantics and are part of the published behaviour.",
+        "block_sha256 hashes the exact source text of the declaration block, comments included, so any upstream drift is detectable."
+      ]
+    },
+    "totals": {
+      "declared_slots": 3340,
+      "explicit_initializers": 3300,
+      "implied_zero_initializers": 40
+    }
+  },
+  "scalar_constants": [
+    {
+      "name": "amu_to_gram",
+      "value": 1.66e-24,
+      "units": "gram per atomic mass unit",
+      "class": "published_constant",
+      "source": "nrlmsise-00.c:1027, 1046, 1119, 1447",
+      "note": "not the exact atomic mass unit 1.66053906660e-24 g; the model deliberately uses 1.66e-24"
+    },
+    {
+      "name": "constituent_mass_numbers",
+      "value": [
+        4,
+        16,
+        28,
+        32,
+        40,
+        1,
+        14,
+        16
+      ],
+      "units": "atomic mass number",
+      "class": "published_constant",
+      "source": "nrlmsise-00.c:1027 (gtd7) and nrlmsise-00.c:1046 (gtd7d, adds anomalous oxygen)",
+      "note": "order is He, O, N2, O2, Ar, H, N, anomalous O; hydrogen uses mass number 1, not 1.008, exactly as published"
+    },
+    {
+      "name": "specific_gas_constant",
+      "value": 831.4,
+      "units": "native composite units of the reference exponent integral; the upstream sources state no unit for rgas. It appears only in `gamm = xm * glb * zgdif / rgas`, where xm is the mean molecular weight taken from pdm[2][4], glb = gsurf/(1+z1/re)^2 in cm/s^2 and zgdif in km. This project applies no SI reinterpretation and records the literal value only.",
+      "class": "published_constant",
+      "source": "nrlmsise-00.c:177, 357, 479, 1059"
+    },
+    {
+      "name": "boltzmann_constant",
+      "value": 1.3806e-19,
+      "units": "native composite units of the ghp7 pressure iteration `p = bm * xn * output->t[1]`, with xn a number density in cm^-3 and t[1] in K; ghp7 is not exposed by this adapter. Value recorded verbatim, no SI reinterpretation.",
+      "class": "published_constant",
+      "source": "nrlmsise-00.c:1058",
+      "note": "used only by ghp7, which this adapter does not expose"
+    },
+    {
+      "name": "degree_to_radian",
+      "value": 0.0174533,
+      "units": "radians per degree",
+      "class": "published_constant",
+      "source": "nrlmsise-00.c:108 (dgtr = 1.74533E-2), also 609, 829, 1168"
+    },
+    {
+      "name": "lower_atmosphere_nodes_km",
+      "value": [
+        32.5,
+        20.0,
+        15.0,
+        10.0,
+        0.0
+      ],
+      "units": "km",
+      "class": "published_constant",
+      "source": "nrlmsise-00.c:920 (zn3)"
+    },
+    {
+      "name": "middle_atmosphere_nodes_km",
+      "value": [
+        72.5,
+        55.0,
+        45.0,
+        32.5
+      ],
+      "units": "km",
+      "class": "published_constant",
+      "source": "nrlmsise-00.c:922 (zn2)"
+    },
+    {
+      "name": "mixing_transition_altitude_km",
+      "value": 62.5,
+      "units": "km",
+      "class": "published_constant",
+      "source": "nrlmsise-00.c:924 (zmix)"
+    },
+    {
+      "name": "thermospheric_lower_node_km",
+      "value": [
+        120.0,
+        110.0,
+        100.0,
+        90.0,
+        72.5
+      ],
+      "units": "km",
+      "class": "published_constant",
+      "source": "nrlmsise-00.c:1147 (zn1, gts7)"
+    },
+    {
+      "name": "cgs_to_si_number_density_factor",
+      "value": 1000000.0,
+      "units": "m^-3 per cm^-3",
+      "class": "coordinate_convention",
+      "source": "src/atmosphere/nrlmsise00.cpp (number_scale) and nrlmsise-00.c:1456 when switch 0 is set",
+      "note": "exact: 1 cm^-3 = 1e6 m^-3"
+    },
+    {
+      "name": "cgs_to_si_mass_density_factor",
+      "value": 1000.0,
+      "units": "kg/m^3 per g/cm^3",
+      "class": "coordinate_convention",
+      "source": "src/atmosphere/nrlmsise00.cpp (mass_scale) and nrlmsise-00.c:1048 when switch 0 is set",
+      "note": "exact: 1 g/cm^3 = 1e3 kg/m^3"
+    }
+  ],
+  "input_contract": {
+    "struct": "leo::atmosphere::NrlmsiseInput",
+    "fields": [
+      {
+        "name": "year",
+        "units": "calendar year",
+        "class": "space_weather_driver",
+        "adapter_domain": "1..9999",
+        "reference_behaviour": "ignored; nrlmsise-00.c never reads input->year and nrlmsise-00.h:86 labels it 'currently ignored'. The upstream driver passes 0. The adapter requires a Gregorian year so that day_of_year can be validated; any accepted year yields the same model output."
+      },
+      {
+        "name": "day_of_year",
+        "units": "UTC day of year",
+        "class": "space_weather_driver",
+        "adapter_domain": "1..365 or 1..366 in a Gregorian leap year",
+        "reference_behaviour": "used directly by the annual, semiannual and UT variations"
+      },
+      {
+        "name": "utc_seconds",
+        "units": "seconds of UTC day",
+        "class": "coordinate_convention",
+        "adapter_domain": "0..86400 inclusive",
+        "reference_behaviour": "used directly; the reference applies no wrap"
+      },
+      {
+        "name": "altitude_km",
+        "units": "km",
+        "class": "coordinate_convention",
+        "adapter_domain": "0..1000",
+        "reference_behaviour": "geodetic altitude above the WGS-84-like surface used internally; the model is defined from the ground to the lower exosphere"
+      },
+      {
+        "name": "latitude_deg",
+        "units": "degrees",
+        "class": "coordinate_convention",
+        "adapter_domain": "-90..90",
+        "reference_behaviour": "geodetic latitude"
+      },
+      {
+        "name": "longitude_deg",
+        "units": "degrees",
+        "class": "coordinate_convention",
+        "adapter_domain": "any finite value",
+        "reference_behaviour": "geodetic longitude; the adapter wraps to [-180, 180)"
+      },
+      {
+        "name": "local_solar_time_hours",
+        "units": "hours",
+        "class": "coordinate_convention",
+        "adapter_domain": "any finite value",
+        "reference_behaviour": "local apparent solar time; the adapter wraps to [0, 24)"
+      },
+      {
+        "name": "f107",
+        "units": "sfu",
+        "class": "space_weather_driver",
+        "adapter_domain": "> 0",
+        "reference_behaviour": "daily 10.7 cm flux for the PREVIOUS UTC day (nrlmsise-00.h:94); should be the flux at the actual Earth-Sun distance"
+      },
+      {
+        "name": "f107_average",
+        "units": "sfu",
+        "class": "space_weather_driver",
+        "adapter_domain": "> 0",
+        "reference_behaviour": "81-day running average centred on the current day of year (nrlmsise-00.h:93)"
+      },
+      {
+        "name": "ap",
+        "units": "dimensionless index",
+        "class": "space_weather_driver",
+        "adapter_domain": "0..400",
+        "reference_behaviour": "daily Ap; used only when switch 9 is not -1"
+      },
+      {
+        "name": "ap_history",
+        "units": "dimensionless index",
+        "class": "space_weather_driver",
+        "adapter_domain": "each element 0..400, validated only when switch 9 is -1",
+        "reference_behaviour": "seven elements: daily Ap, 3-hourly Ap for the current hour, 3 h, 6 h and 9 h earlier, then the means of eight 3-hourly indices over 12-33 h and 36-57 h earlier (nrlmsise-00.h:72). sg0 (nrlmsise-00.c:594) consumes elements 1..6; element 0 is only reached through the daily-index switch path."
+      }
+    ],
+    "reference_dominance_note": "nrlmsise-00.h:115 states that f107, f107A and ap effects are neither large nor well established below 80 km and that they should be set to 150, 150 and 4 there."
+  },
+  "output_contract": {
+    "struct": "leo::atmosphere::Result",
+    "fields": [
+      {
+        "name": "density_kg_m3",
+        "units": "kg/m^3",
+        "definition": "gtd7d effective total mass density including anomalous oxygen, converted from the reference g/cm^3"
+      },
+      {
+        "name": "temperature_k",
+        "units": "K",
+        "definition": "reference output t[1], temperature at the requested altitude"
+      },
+      {
+        "name": "exospheric_temperature_k",
+        "units": "K",
+        "definition": "reference output t[0] (TINF), exospheric temperature"
+      },
+      {
+        "name": "number_density_m3",
+        "units": "m^-3",
+        "definition": "reference d[0], d[1], d[2], d[3], d[4], d[6], d[7], d[8] mapped to the order He, O, N2, O2, Ar, H, N, anomalous O and converted from cm^-3"
+      }
+    ]
+  },
+  "adapter_guards": [
+    {
+      "name": "nonfinite_input",
+      "class": "engineering_guard",
+      "rule": "every floating-point input must be finite",
+      "exception": "std::invalid_argument",
+      "units": "dimensionless (applies to every floating-point input field)",
+      "enforced_in": "src/atmosphere/nrlmsise00.cpp"
+    },
+    {
+      "name": "latitude_domain",
+      "class": "engineering_guard",
+      "rule": "abs(latitude_deg) <= 90",
+      "exception": "std::invalid_argument",
+      "units": "degrees geodetic",
+      "enforced_in": "src/atmosphere/nrlmsise00.cpp"
+    },
+    {
+      "name": "altitude_domain",
+      "class": "engineering_limit",
+      "rule": "0 <= altitude_km <= 1000",
+      "exception": "std::invalid_argument",
+      "note": "a project support limit chosen to span the intended LEO to upper-LEO domain plus the published 1000 km fixture; it is not a published sharp validity cutoff",
+      "units": "km geodetic",
+      "enforced_in": "src/atmosphere/nrlmsise00.cpp"
+    },
+    {
+      "name": "utc_seconds_domain",
+      "class": "engineering_guard",
+      "rule": "0 <= utc_seconds <= 86400",
+      "exception": "std::invalid_argument",
+      "units": "seconds of UTC day",
+      "enforced_in": "src/atmosphere/nrlmsise00.cpp"
+    },
+    {
+      "name": "day_of_year_domain",
+      "class": "engineering_guard",
+      "rule": "1..365, or 1..366 in a Gregorian leap year",
+      "exception": "std::invalid_argument",
+      "units": "UTC day of year, dimensionless calendar index",
+      "enforced_in": "src/atmosphere/nrlmsise00.cpp"
+    },
+    {
+      "name": "year_domain",
+      "class": "engineering_guard",
+      "rule": "1..9999",
+      "exception": "std::invalid_argument",
+      "units": "calendar year, dimensionless",
+      "enforced_in": "src/atmosphere/nrlmsise00.cpp"
+    },
+    {
+      "name": "solar_flux_domain",
+      "class": "engineering_guard",
+      "rule": "f107 > 0 and f107_average > 0",
+      "exception": "std::invalid_argument",
+      "units": "sfu (W m^-2 Hz^-1 at 10.7 cm)",
+      "enforced_in": "src/atmosphere/nrlmsise00.cpp"
+    },
+    {
+      "name": "ap_domain",
+      "class": "engineering_guard",
+      "rule": "0 <= ap <= 400 and, when switch 9 is -1, every history element in the same range",
+      "exception": "std::invalid_argument",
+      "units": "dimensionless index",
+      "enforced_in": "src/atmosphere/nrlmsise00.cpp"
+    },
+    {
+      "name": "switch_domain",
+      "class": "engineering_guard",
+      "rule": "switch 0 in {0,1}; switches 1..23 in {0,1,2}; switch 9 additionally -1",
+      "exception": "std::invalid_argument",
+      "units": "dimensionless integer flag",
+      "enforced_in": "src/atmosphere/nrlmsise00.cpp"
+    },
+    {
+      "name": "invalid_reference_output",
+      "class": "engineering_guard",
+      "rule": "non-finite or negative constituent densities, non-positive temperatures",
+      "exception": "std::runtime_error",
+      "units": "kg/m^3, K and m^-3",
+      "enforced_in": "src/atmosphere/nrlmsise00.cpp"
+    }
+  ],
+  "threading": {
+    "policy": "serialised",
+    "reason": "the upstream reference keeps file-scope mutable state: gsurf, re, dd, dm04, dm16, dm28, dm32, dm40, dm01, dm14, meso_tn1, meso_tn2, meso_tn3, meso_tgn1, meso_tgn2, meso_tgn3, dfa, plg, ctloc, stloc, c2tloc, s2tloc, s3tloc, c3tloc, apdf and apt (nrlmsise-00.c:37-74)",
+    "mechanism": "a single process-wide std::mutex held for the whole gtd7d call in src/atmosphere/nrlmsise00.cpp",
+    "reentrancy": "the reference is not reentrant; concurrent evaluation of the same adapter instance is safe only because the adapter serialises it",
+    "order_dependence": "every global is assigned before it is read within a single gtd7d call; tests/nrlmsise00_tests.cpp asserts bit-identical results regardless of the order of preceding evaluations and across eight concurrent threads"
+  },
+  "validation": {
+    "oracle": "published 17-case output in the pinned upstream DOCUMENTATION file",
+    "oracle_sha256": "e7db72964c22861e446d4b61931a22a58c32eeaa7f9bb23b45d887751b4ecae3",
+    "oracle_precision": "seven significant digits (%E)",
+    "relative_tolerance": 1e-06,
+    "tolerance_rationale": "1e-06 sits above the 5e-07 worst-case publication rounding and above the 3.04e-07 actually observed when the gtd7 mass is recomputed from the printed RHO column. The margin is small by design: the oracle is only published to seven significant digits, so a looser tolerance would validate nothing, and a tighter one would be defeated by publication rounding rather than by any model error.",
+    "skip_policy": "the fixture tests SKIP explicitly when LEO_NRLMSISE00_REFERENCE_DOCUMENTATION is not supplied; they never pass silently",
+    "coverage": [
+      "seventeen published cases including both Ap-history cases",
+      "gtd7 versus gtd7d drag density separation",
+      "SI constituent physical mass identity",
+      "unit-system switch scaling identity",
+      "longitude and local-solar-time wrapping",
+      "repeat-evaluation determinism and evaluation-order independence",
+      "calendar-year independence",
+      "32.5 km boundary regression fixed by release 20190709",
+      "Ap history slot selection",
+      "input and switch domain validation",
+      "eight-thread concurrent evaluation"
+    ],
+    "rounding_analysis": {
+      "printed_significant_digits": 7,
+      "printed_form": "%E, i.e. m x 10^e with 1.000000 <= m < 10",
+      "maximum_relative_rounding_per_value": "5e-07, attained when the leading digit is 1 (half an ulp of 1e-06 relative); smaller as the leading digit grows",
+      "drag_mass_propagation": "the drag mass is a positive weighted sum of the constituents, so its inherited relative error is bounded by the same 5e-07",
+      "observed_oracle_integrity_error": 3.04e-07,
+      "chosen_tolerance": 1e-06,
+      "tolerance_justification": "1e-06 sits above the 5e-07 worst-case publication rounding and above the 3.04e-07 actually observed when the gtd7 mass is recomputed from the printed RHO column. The margin is small by design: the oracle is only published to seven significant digits, so a looser tolerance would validate nothing, and a tighter one would be defeated by publication rounding rather than by any model error."
+    }
+  }
+}

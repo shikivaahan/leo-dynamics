@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "purpose": "summary of executed regression builds; frozen baseline measurements live under direct-v1/",
+  "environment": {
+    "gcc_version": "GNU 13.3.0",
+    "clang_version": "Clang 18.1.3",
+    "fortran": "GNU Fortran 13.3.0 in a private prefix (apt-get download + dpkg-deb -x, no sudo, no system file modified)",
+    "cspice": "CSPICE N0067, prebuilt external library (not sanitizer instrumented)"
+  },
+  "builds": [
+    {
+      "name": "GCC Release, both backends, CSPICE, tests",
+      "result": "153/153 tests passed",
+      "regressions_preserved": "all pre-existing kernel, integration, analysis and SPICE tests included in that count"
+    },
+    {
+      "name": "Clang Debug ASan/UBSan with both backends",
+      "result": "configured; build blocked by an external toolchain limitation, not by project code",
+      "blocker": "the private GNU Fortran prefix cannot link -fsanitize=address,undefined (no libasan_preinit.o / -lasan available for that compiler); the C++ objects are clang-instrumented, the reference Fortran object is not",
+      "implication": "no sanitizer claim is made for the JB2008 Fortran object; C++ and C reference paths were not exercised under sanitizers in this run"
+    }
+  ],
+  "independent_reference_measurements": {
+    "nrlmsise00_published_17_cases": {"max_density_relative_error": 2.9441320106074192e-07, "max_species_relative_error": 3.8658716522502516e-07, "max_temperature_relative_error": 4.8027880486797611e-07},
+    "jb2008_full_precision_12_cases": {"max_relative_error": 1.4717105248216975e-05, "tolerance": 2e-05, "margin": 0.264},
+    "jb2008_official_set_grid_13328_rows": {"max_density_relative_error": 0.0058605859224980525, "rms_density_relative_error": 0.0032388564212367911, "max_exospheric_temperature_error_k": 0.75016676289965289, "max_local_temperature_error_k": 0.74605275498265655, "note": "printed fixture rounds its solar inputs; the full-precision fixtures agree ~700x better, so the grid residual is dominated by printed-input resolution"},
+    "coordinates_erfa_iers_b": {"max_rotation_difference_rad": 2.9614536201497242e-08, "max_et_difference_seconds": 2.4706125259399414e-05, "epochs": 4},
+    "source": "docs/atmosphere/evidence/coordinate-reference-v1.json and the printf lines of tests/nrlmsise00_tests.cpp and tests/jb2008_tests.cpp"
+  },
+  "skips": [
+    "JB2008 official-grid and legacy fixtures require LEO_JB2008_VALIDATION_DIR; present and run here",
+    "SPICE-dependent UTC/frame tests require LEO_SPICE_TEST_LSK and LEO_ATMOSPHERE_TEST_PCK; present and run here"
+  ]
+}

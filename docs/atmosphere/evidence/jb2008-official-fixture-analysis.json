@@ -1,0 +1,347 @@
+{
+  "schema": "leo-dynamics/atmosphere-evidence/1",
+  "model": "JB2008",
+  "variant": "external official SET Fortran reference, unmodified",
+  "generated": "2026-10-10",
+  "generated_by": "JB2008 backend agent",
+  "measurement_status": {
+    "state": "MEASURED (both oracles)",
+    "primary_oracle": {
+      "description": "twelve full-precision independent reference densities",
+      "test_file": "tests/jb2008_tests.cpp",
+      "test_case": "JB2008 reproduces twelve full-precision independent reference densities",
+      "table": "kLegacyReferences",
+      "source": "LegacyInputParams / checkLegacy.rhoRef in src/test/java/org/orekit/models/earth/atmosphere/JB2008Test.java, Orekit commit 6fdf97c133c1ab8c56d7608688419bf4becacf80, Apache-2.0; fetched and parsed outside this repository",
+      "origin_limitation": "that file names no Fortran driver for these rows, so their upstream origin is undocumented",
+      "environment": "gcc Release, official unmodified JB2008.f, LEO_JB2008_VALIDATION_DIR=/tmp/leo-atmosphere-deps/jb-validation",
+      "stdout": "{\"model\":\"jb2008\",\"full_precision_fixtures\":12,\"max_relative_error\":1.4717105248216975e-05}",
+      "fixtures": 12,
+      "max_relative_error": 1.4717105248216975e-05,
+      "inherited_upstream_tolerance": 2e-05,
+      "tolerance_provenance": "inherited from the upstream test, not fitted to this implementation",
+      "margin_below_tolerance": 0.264,
+      "coverage": {
+        "mjd_range": [
+          53316.00454861111,
+          53321.50556
+        ],
+        "height_km_range": [
+          373.45,
+          398.91
+        ],
+        "geocentric_latitude_rad_range": [
+          -0.9063499805606553,
+          1.2978268317829835
+        ],
+        "dstdtc_k_range": [
+          3,
+          327
+        ],
+        "distinct_index_sets": 4
+      },
+      "status": "final"
+    },
+    "secondary_oracle": {
+      "description": "official SET 2023 DOY 91 grid, 8 epochs x 68191 rows, sampled every 41st row plus endpoints",
+      "test_case": "JB2008 reproduces the official SET validation epochs",
+      "status": "measured; thresholds calibrated against this residual, but provisional for input rounding because the fixture prints whole-number solar indices",
+      "environment": "gcc Release, official unmodified JB2008.f, LEO_JB2008_VALIDATION_DIR=/tmp/leo-atmosphere-deps/jb-validation",
+      "stdout": "{\"model\":\"jb2008\",\"fixtures\":13328,\"max_density_relative_error\":0.0058605859224980525,\"rms_density_relative_error\":0.0032388564212367911,\"max_exospheric_temperature_error_k\":0.75016676289965289,\"max_local_temperature_error_k\":0.74605275498265655}",
+      "samples": 13328,
+      "max_density_relative_error": 0.0058605859224980525,
+      "rms_density_relative_error": 0.003238856421236791,
+      "max_exospheric_temperature_error_k": 0.7501667628996529,
+      "max_local_temperature_error_k": 0.7460527549826566,
+      "ratio_to_full_precision_residual": 398.3,
+      "ratio_note": "5.8605859224980525e-03 / 1.4717105248216975e-05 = 398.3, same binary, same environment. Consistent with printed-input rounding dominating this residual, but not proof of that attribution: the two oracles sample different regions. The +-0.5 index sensitivity is still unquantified."
+    },
+    "sensitivity_analysis": {
+      "performed": false,
+      "statement": "The density response to a +-0.5 index perturbation has deliberately NOT been quantified. It would require either measuring the response through this backend by perturbing inputs at run time, or differentiating the model analytically. Neither has been done and no sensitivity figure is asserted. No transcription of the model into another language was used at any point.",
+      "procedure_if_required": "perturb each of F10, F10B, S10, S10B, M10, M10B, Y10, Y10B by +-0.5 through Jb2008::evaluate at a fixed point and record the density change",
+      "known_first_order_coefficients_k_per_index_unit": {
+        "TSUBC_FSB": 3.227,
+        "TSUBC_F10_minus_F10B": 0.298,
+        "TSUBC_S10_minus_S10B": 2.259,
+        "TSUBC_M10_minus_M10B": 0.312,
+        "TSUBC_Y10_minus_Y10B": 0.178
+      }
+    },
+    "reproduce_command": "run the JB2008 test binary with LEO_JB2008_VALIDATION_DIR=/tmp/leo-atmosphere-deps/jb-validation; test cases 'JB2008 reproduces twelve full-precision independent reference densities' and 'JB2008 reproduces the official SET validation epochs' each print a JSON line on stdout",
+    "prohibited": "transcribing the Fortran model into another language to generate numbers; such numbers would have no independent provenance and the task forbids rewriting the equations"
+  },
+  "provenance": {
+    "distribution": "https://spacewx.com/jb2008/",
+    "revision": "Rev J, 27 Apr 2023 (D. Bouwer) + 17/18 May 2023 path refactor (S. Mutschler)",
+    "licence": "Copyright, 2008, Space Environment Technologies. All rights reserved.",
+    "redistribution": "not permitted; official source and validation output are used in place, never vendored",
+    "sha256": {
+      "leo-jb2008.zip": "0b310c9e259b5ca9285d570610d52afa5964d82506ea4fb43e995a8332535d6a",
+      "leo-jb2008validate.zip": "4d18c286b148fc5b2271667dab71dd6a702204bb5176bc8a54200aa17e3fff98",
+      "JB2008.f": "b18c1607239db881940a7b91635a7af39edc82306cf10854ec12080397227999",
+      "JB08DRVAUTO.f": "061516b02b8af490b49f5745bddc44f53fd9b0ab738565753f9230e8ea00467f",
+      "DTCMAKEDR_AUTO.f": "a55772eef12811b4cc33c303619b8488095e43ce0d3151d0081d6333abcd420f",
+      "JB2008_AUTO_OUT_2023_091_00.DAT": "de0f03197dd798ce5d4c9ef27124c50cc63d8e3e941fe998cebff4503897f943",
+      "JB2008_AUTO_OUT_2023_091_03.DAT": "f56540134bf6662c0b336a568a4138b57f96c3eac35b37b148e725ee0f2ca44b",
+      "JB2008_AUTO_OUT_2023_091_06.DAT": "2add080c9ab1dad86d22cdbadce90b029c9669fef02a66f4c52456bfa320a7c0",
+      "JB2008_AUTO_OUT_2023_091_09.DAT": "ba7a8885a5335702fbdefa949b0601f2643502e0ec10b2581eaf0dd8e6ed2b7e",
+      "JB2008_AUTO_OUT_2023_091_12.DAT": "9c2da398fdb9fdbb1d8ee2e9155a949c8daed60f3231c39485ab88a2fb7fbf58",
+      "JB2008_AUTO_OUT_2023_091_15.DAT": "29c5b51aed1c969a39a9bfc0e3e1b6f3c624c2132ee0893ce1f9ee7add449cc6",
+      "JB2008_AUTO_OUT_2023_091_18.DAT": "9060320be794bbd06d015d197098a5bc1533140b05a8bcb9aedac7d92eb6a422",
+      "JB2008_AUTO_OUT_2023_091_21.DAT": "78361c97a249991a9d36545493b7e735d7086d9a56f79f4bfdbb70c2089e88a2"
+    },
+    "coefficient_block_anchors": {
+      "note": "SHA-256 of the raw block text (first 16 hex) so a re-release that moves a coefficient is detectable even if the whole-file digest is re-pinned.",
+      "JB2008.f:147-205": "a3e356b5a4327772",
+      "JB2008.f:570-576": "f8d467d6ac55ba1d",
+      "JB2008.f:637-646": "18f8f15b027c3156",
+      "JB2008.f:647-657": "bd4cf3bb2fe46dcc",
+      "JB2008.f:789-804": "c6d60cb9bc44fdde"
+    }
+  },
+  "toolchain": {
+    "fortran_compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "acquired_without_sudo": true,
+    "private_prefix": "/tmp/leo-fortran",
+    "cmake_variable": "CMAKE_Fortran_COMPILER",
+    "cmake_value": "/tmp/leo-fortran/usr/bin/gfortran-13",
+    "driver_runs_without_environment": true,
+    "fortran_flags": [
+      "-std=legacy",
+      "Fortran_FORMAT=FIXED"
+    ],
+    "runtime_dependency": "binaries need libgfortran.so.5 unless linked with -static-libgfortran (verified to produce a binary with no libgfortran dependency) or run with LD_LIBRARY_PATH=/tmp/leo-fortran/usr/lib/x86_64-linux-gnu",
+    "verified": "from a clean prefix: fixed-form F77 subroutine and program compiled with -std=legacy, linked, and produced the correct result; the same pair linked with -static-libgfortran ran with no libgfortran dependency"
+  },
+  "abi": {
+    "kind": "IEEE binary64 for every real, all arguments by reference",
+    "bridge": "src/atmosphere/jb2008_bridge.f90, ISO_C_BINDING bind(C) name=\"leo_jb2008\"",
+    "hidden_length_arguments": "none; the reference has no CHARACTER dummy arguments and is only called through the bridge",
+    "outputs": {
+      "TEMP(1)": "exospheric temperature above the input position, K (TSUBL + DSTDTC)",
+      "TEMP(2)": "temperature at the input position, K",
+      "RHO": "total mass density, kg/m^3"
+    },
+    "fixture_label_caveat": "the published files label TEMP(1) as 'TINF'; the driver's internal TINF additionally carries DTCLST and is never written",
+    "reentrancy": "reference routine has no COMMON/SAVE/module state and is reentrant by inspection; the linked bridge adds none",
+    "thread_policy": "process-wide mutex serialises evaluate(); no in-library parallelism",
+    "fortran_signal_note": "the official read-me warns the model may signal IEEE underflow/denormal at high altitude"
+  },
+  "input_conventions": {
+    "time_base": {
+      "d1950": "days since 1950 Jan 0.0 (1949-12-31 00:00 UT), fractional",
+      "amjd": "AMJD = D1950 + 33281.0 (JD - 2400000.5)",
+      "semiannual_phase": "CAPPHI = DMOD((AMJD - 36204.0)/365.2422, 1.0)"
+    },
+    "solar_index_lags_days": {
+      "F10": 1,
+      "F10B": 1,
+      "S10": 1,
+      "S10B": 1,
+      "M10": 2,
+      "M10B": 2,
+      "Y10": 5,
+      "Y10B": 5,
+      "note": "record index is truncated, so the previous calendar day record is always used; the 81-day centred averages are read from the same lagged record and are not recomputed"
+    },
+    "geomagnetic": {
+      "quantity": "DSTDTC, kelvin temperature increment added to the exospheric temperature",
+      "source_series": "hourly, built from 1-hourly Dst by DTCMAKEDR_AUTO",
+      "interpolation": "linear between the two bracketing hourly values, then +0.5 and assigned to INTEGER*4 (nearest whole kelvin)",
+      "aborts_when": "request outside the loaded range, gap (IDTCH > 2000 or DT > 1.01/24 day), or DST > 2000",
+      "note": "interpolation of an input index series only, never of atmospheric results; performed by the caller, never inside the atmosphere evaluation"
+    },
+    "coordinates": {
+      "SUN(1)": "solar right ascension, rad",
+      "SUN(2)": "solar declination, rad",
+      "SAT(1)": "right ascension of the evaluation point, rad; driver forms DMOD(GWRAS + XLON_east*deg2rad + 2pi, 2pi) with XLON east longitude in degrees",
+      "SAT(2)": "geocentric latitude, rad (no geodetic conversion anywhere in the model)",
+      "SAT(3)": "height, km; altitude datum is NOT defined by the distributed source",
+      "datum_finding": "the 6356.766 km in the gravity term 9.80665/(1+Z/6356.766)^2 is an effective-gravity fit constant, not a declared reference ellipsoid, and is not the WGS-84 semi-major axis 6378.137 km; the published grid is passed through untouched and gives no evidence either way",
+      "project_choice": "ellipsoidal (geodetic) altitude from the common coordinate layer, consistent with docs/atmosphere/DECISIONS.md ATM-004; a project engineering choice, not a model requirement; see decision JB-D05",
+      "frame_rule": "the model uses only SAT(1) - SUN(1), SAT(2) and SAT(3), so both right ascensions may share any single consistent frame; mixing a mean-of-date solar right ascension with a J2000/ITRF point right ascension is forbidden"
+    },
+    "solar_and_sidereal_of_the_reference_driver": {
+      "SUNPOS": "Astronomical Almanac C24 low-precision solar position on the mean ecliptic and equinox of date, no aberration or nutation, accurate to 0.01 deg over 1950-2050",
+      "THETA": "Greenwich mean sidereal time on the mean equinox of date, evaluated directly from the UTC argument with no UT1 term",
+      "earth_rotation": "the driver implicitly treats UT1 as UTC; for 2023 |DUT1| stayed below 0.9 s, an hour-angle discrepancy of at most 6.6e-5 rad",
+      "not_applicable": "the 37 s figure is TAI-UTC, not UT1-UTC, and does not apply to the sidereal argument",
+      "project_paths": {
+        "validation": "same UTC-as-UT1 convention as the driver, so the published epochs are reproducible; the fixture grid point is rebuilt with the IAU 1982 GMST expression, a published standard independent of the SET distribution",
+        "propagation": "actual Earth rotation angle from SPICE Earth-orientation kernels; differs from the validation convention by DUT1",
+        "impact": "not measured; no test asserts a numeric magnitude"
+      }
+    }
+  },
+  "fixture": {
+    "epochs": 8,
+    "epoch_utc": [
+      "2023-04-01T00:00",
+      "2023-04-01T03:00",
+      "2023-04-01T06:00",
+      "2023-04-01T09:00",
+      "2023-04-01T12:00",
+      "2023-04-01T15:00",
+      "2023-04-01T18:00",
+      "2023-04-01T21:00"
+    ],
+    "rows_per_epoch": 68191,
+    "grid": {
+      "altitude_km": {
+        "first": 120.0,
+        "last": 600.0,
+        "step": 5.0,
+        "count": 97
+      },
+      "east_longitude_deg": {
+        "first": 0.0,
+        "last": 360.0,
+        "step": 10.0,
+        "count": 37
+      },
+      "geocentric_latitude_deg": {
+        "first": -90.0,
+        "last": 90.0,
+        "step": 10.0,
+        "count": 19
+      },
+      "ordering": "latitude outermost, then longitude, then altitude"
+    },
+    "indices_common_to_all_epochs": {
+      "F10": 129,
+      "F10B": 152,
+      "S10": 120,
+      "S10B": 120,
+      "M10": 172,
+      "M10B": 170,
+      "Y10": 170,
+      "Y10B": 165
+    },
+    "dstdtc_k_by_epoch": [
+      50,
+      85,
+      115,
+      50,
+      24,
+      50,
+      85,
+      85
+    ],
+    "printed_resolution": {
+      "solar_indices": "F8.0, whole numbers, although the source SOLFSMY records are read with F6.1; recoverable to +-0.5 index",
+      "sun_right_ascension_rad": 0.0001,
+      "temperatures_k": 0.05,
+      "density": "D15.5, five significant digits"
+    },
+    "input_uncertainty_note": "the eight indices enter TSUBC with sensitivities of order 0.2 to 3.2 K per index unit, so the +-0.5 print uncertainty maps to a sub-kelvin TSUBC uncertainty and a density uncertainty of order a few times 1e-3 relative. The exact figure must be measured."
+  },
+  "tolerances": {
+    "primary_oracle": {
+      "test_constant": "kLegacyRtol",
+      "value": 2e-05,
+      "status": "final",
+      "provenance": "inherited from the upstream Orekit test, not fitted to this implementation",
+      "measured_max_relative_error": 1.4717105248216975e-05,
+      "margin": 0.264
+    },
+    "secondary_oracle_official_grid": {
+      "rho_rel_max": 0.015,
+      "rho_rel_rms": 0.006,
+      "temperature_abs_k": 1.5,
+      "status": "MEASURED-AND-PROVISIONAL-FOR-INPUT-ROUNDING",
+      "derived_from": "calibrated against the measured official-grid residual above, with roughly a two-fold margin on each threshold; not an accuracy figure because the residual is dominated by the fixture's whole-number index printing",
+      "meaning_of_a_pass": "consistent with the published output across a wide grid; the accuracy claim is the full-precision oracle above, not this one",
+      "tightening_requires": "the measured +-0.5 index sensitivity through this backend, which does not exist yet; until then this oracle's residual floor is unknown",
+      "measured": {
+        "max_density_relative_error": 0.0058605859224980525,
+        "rms_density_relative_error": 0.003238856421236791,
+        "max_exospheric_temperature_error_k": 0.7501667628996529,
+        "max_local_temperature_error_k": 0.7460527549826566
+      },
+      "margins": {
+        "max_density_relative_error": 2.56,
+        "rms_density_relative_error": 1.85,
+        "max_exospheric_temperature_error_k": 2.0,
+        "max_local_temperature_error_k": 2.01
+      }
+    }
+  },
+  "tests": {
+    "file": "tests/jb2008_tests.cpp",
+    "compiled_only_when": "LEO_ENABLE_JB2008 is on; the file is not part of any default build",
+    "oracle": "external official SET expected output, SHA-256 verified at run time, never vendored",
+    "environment_variable": "LEO_JB2008_VALIDATION_DIR (may point at the file directory, or at a parent containing expected output/ or jb-validation/)",
+    "sampling": {
+      "stride": 41,
+      "stride_rationale": "41 is coprime with the grid dimensions 97, 37 and 19, so the sample crosses all three axes instead of repeatedly landing on the same grid planes",
+      "endpoints_included": true,
+      "rows_per_epoch": 1666,
+      "total_evaluations": 13328
+    },
+    "cases": [
+      "reproduces twelve full-precision independent reference densities (PRIMARY accuracy oracle, kLegacyRtol = 2e-5)",
+      "reproduces the official SET validation epochs (secondary structural check, provisional thresholds)",
+      "storm index enters the exospheric temperature exactly",
+      "is a pure function of its arguments (bitwise repeatable)",
+      "longitude shift is exactly a right-ascension shift",
+      "common equator-origin shift preserves the solar hour angle",
+      "right ascension wrapping is irrelevant",
+      "profile is continuous in altitude over 120-600 km",
+      "rejects inputs outside the documented domain",
+      "provides no constituent number densities",
+      "fixture point reconstruction uses the published IAU 1982 sidereal standard"
+    ],
+    "negative_paths_verified": [
+      "a fixture file with an altered SHA-256 is rejected",
+      "a partially extracted archive is rejected rather than treated as a smaller validation set"
+    ],
+    "skip_behaviour": "reports SKIP with acquisition instructions when LEO_JB2008_VALIDATION_DIR is unset; never claims a pass it did not make",
+    "requires_no_external_data": "the twelve full-precision fixtures always run; the official-grid case reports SKIP without LEO_JB2008_VALIDATION_DIR"
+  },
+  "domain_enforced": {
+    "altitude_km": [
+      120.0,
+      1500.0
+    ],
+    "geocentric_latitude_rad": [
+      -1.5707963267948966,
+      1.5707963267948966
+    ],
+    "solar_declination_rad": [
+      -1.5707963267948966,
+      1.5707963267948966
+    ],
+    "amjd_min": 0.0,
+    "solar_indices_min": 40.0,
+    "dstdtc_k": [
+      0.0,
+      2000.0
+    ],
+    "all_inputs_finite": true,
+    "violation": "std::invalid_argument",
+    "note": "the reference driver silently zeroes indices below 40 and retries at the next record; this backend fails instead"
+  },
+  "output_definition": {
+    "density_kg_m3": "total mass density, native JB2008 RHO",
+    "exospheric_temperature_k": "native TEMP(1), K",
+    "temperature_k": "native TEMP(2), K, at the evaluation point",
+    "number_density_m3": "not produced by the reference implementation; always zero",
+    "unit_conversions": "none; the model is natively SI (kg/m^3, K, rad, km)"
+  },
+  "open_items": [
+    "the +-0.5 index sensitivity is deliberately unquantified, so the official grid's residual floor is unknown and its thresholds cannot be tightened to the accuracy actually achieved",
+    "the upstream origin of the twelve full-precision reference rows is undocumented",
+    "the altitude datum of SAT(3) is not defined by the distributed source and the project engineering convention is not backed by a measured sensitivity",
+    "the full-precision accuracy oracle covers a narrow altitude and latitude slice (373-399 km, -52 to +74 deg); wider coverage relies on the rounded official grid, whose residual is dominated by its own input rounding",
+    "input parsing and the hourly DSTDTC interpolation live in the weather layer and are validated separately from this backend"
+  ],
+  "acquisition": {
+    "script": "docs/atmosphere/acquire.py",
+    "groups": [
+      "jb2008"
+    ],
+    "flag": "--acknowledge-external-terms",
+    "validation_layout": "<destination>/jb-validation/",
+    "compiler_script": null
+  }
+}

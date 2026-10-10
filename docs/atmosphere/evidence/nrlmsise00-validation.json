@@ -1,0 +1,312 @@
+{
+  "schema": "leo.atmosphere.nrlmsise00.validation/1",
+  "component": "NRLMSISE-00 backend",
+  "project_git_sha_at_authoring": "d3f7c1410ada915db3544da1fd37f7414f0febcc",
+  "authored": "2026-10-10",
+  "oracle": {
+    "description": "Published 17-case output of the pinned upstream NRLMSISE-00 DOCUMENTATION file (release 20190709).",
+    "file": "DOCUMENTATION",
+    "upstream_revision": "bc9a2feba4344e74201281e563332688a4d09cc3",
+    "sha256": "e7db72964c22861e446d4b61931a22a58c32eeaa7f9bb23b45d887751b4ecae3",
+    "vendored": false,
+    "consumed_by": "tests/nrlmsise00_tests.cpp at run time",
+    "printed_precision_significant_digits": 7,
+    "note": "No expected value from this distribution is reproduced in the repository. Only derived ratios and reconstruction errors are recorded here."
+  },
+  "tolerance": {
+    "fixture_relative_tolerance": 1e-06,
+    "identity_relative_tolerance": 1e-12,
+    "printed_significant_digits": 7,
+    "printed_form": "%E, i.e. m x 10^e with 1.000000 <= m < 10",
+    "maximum_relative_rounding_per_value": 5e-07,
+    "maximum_relative_rounding_derivation": "relative ulp is 1e-6/m, so the half-ulp bound is 5e-7 at m=1 and falls below 1e-7 once m reaches 9",
+    "drag_mass_propagation": "the drag mass is a positive weighted sum of the constituents, so it inherits the same 5e-7 bound and cannot amplify it",
+    "observed_oracle_integrity_error": 3.04e-07,
+    "tolerance_justification": "1e-6 clears both the 5e-7 worst-case publication rounding and the 3.04e-7 actually observed. The margin is deliberately small: the oracle is published only to seven significant digits, so a looser tolerance would validate nothing while a tighter one would be measuring the printer instead of the model. Exact-equality assertions (1e-12 or bitwise) are used only for identities that must be exact, never for the published fixture."
+  },
+  "oracle_integrity_check": {
+    "statement": "Recomputing the gtd7 mass from the published constituent columns reproduces the printed RHO column to a maximum 3.04e-7 relative error across all 17 cases. That figure is consistent with the 5e-7 worst-case half-ulp rounding of seven-significant-digit %E output and confirms both that the oracle is the published reference output rather than a re-run of this project's own wrapper, and the scale of the publication-rounding error entering the gtd7d expectation.",
+    "maximum_relative_error_over_17_cases": 3.04e-07,
+    "consequence": "Confirms the oracle is the published reference output rather than a re-run of this project's own wrapper, and bounds the publication-rounding error entering the gtd7d expectation."
+  },
+  "gtd7d_versus_gtd7_sensitivity": {
+    "statement": "Ratio of the drag-effective gtd7d mass to the gtd7 mass, derived from the published constituent columns.",
+    "maximum_ratio_over_17_cases": 1.22876,
+    "maximum_ratio_case": 2,
+    "maximum_ratio_altitude_km": 1000,
+    "significance": "At and above the upper LEO the anomalous-oxygen term dominates the mass budget, so a backend reporting gtd7 rather than gtd7d understates drag density by more than twenty percent at 1000 km. This is the justification for the gtd7d choice.",
+    "per_case": [
+      {
+        "case": 0,
+        "altitude_km": 400,
+        "gtd7d_over_gtd7_mass_ratio": 1.000174,
+        "gtd7_reconstruction_relative_error": 1.8e-07
+      },
+      {
+        "case": 1,
+        "altitude_km": 400,
+        "gtd7d_over_gtd7_mass_ratio": 1.000037,
+        "gtd7_reconstruction_relative_error": 2.83e-07
+      },
+      {
+        "case": 2,
+        "altitude_km": 1000,
+        "gtd7d_over_gtd7_mass_ratio": 1.22876,
+        "gtd7_reconstruction_relative_error": 5e-08
+      },
+      {
+        "case": 3,
+        "altitude_km": 100,
+        "gtd7d_over_gtd7_mass_ratio": 1.0,
+        "gtd7_reconstruction_relative_error": 1.26e-07
+      },
+      {
+        "case": 4,
+        "altitude_km": 400,
+        "gtd7d_over_gtd7_mass_ratio": 1.000007,
+        "gtd7_reconstruction_relative_error": 1.14e-07
+      },
+      {
+        "case": 5,
+        "altitude_km": 400,
+        "gtd7d_over_gtd7_mass_ratio": 1.000163,
+        "gtd7_reconstruction_relative_error": 1.02e-07
+      },
+      {
+        "case": 6,
+        "altitude_km": 400,
+        "gtd7d_over_gtd7_mass_ratio": 1.000287,
+        "gtd7_reconstruction_relative_error": 2.74e-07
+      },
+      {
+        "case": 7,
+        "altitude_km": 400,
+        "gtd7d_over_gtd7_mass_ratio": 1.000154,
+        "gtd7_reconstruction_relative_error": 1.84e-07
+      },
+      {
+        "case": 8,
+        "altitude_km": 400,
+        "gtd7d_over_gtd7_mass_ratio": 1.000155,
+        "gtd7_reconstruction_relative_error": 5.2e-08
+      },
+      {
+        "case": 9,
+        "altitude_km": 400,
+        "gtd7d_over_gtd7_mass_ratio": 1.00015,
+        "gtd7_reconstruction_relative_error": 1.3e-07
+      },
+      {
+        "case": 10,
+        "altitude_km": 0,
+        "gtd7d_over_gtd7_mass_ratio": 1.0,
+        "gtd7_reconstruction_relative_error": 3.04e-07
+      },
+      {
+        "case": 11,
+        "altitude_km": 10,
+        "gtd7d_over_gtd7_mass_ratio": 1.0,
+        "gtd7_reconstruction_relative_error": 3e-08
+      },
+      {
+        "case": 12,
+        "altitude_km": 30,
+        "gtd7d_over_gtd7_mass_ratio": 1.0,
+        "gtd7_reconstruction_relative_error": 2.38e-07
+      },
+      {
+        "case": 13,
+        "altitude_km": 50,
+        "gtd7d_over_gtd7_mass_ratio": 1.0,
+        "gtd7_reconstruction_relative_error": 1.23e-07
+      },
+      {
+        "case": 14,
+        "altitude_km": 70,
+        "gtd7d_over_gtd7_mass_ratio": 1.0,
+        "gtd7_reconstruction_relative_error": 2.19e-07
+      },
+      {
+        "case": 15,
+        "altitude_km": 400,
+        "gtd7d_over_gtd7_mass_ratio": 1.00012,
+        "gtd7_reconstruction_relative_error": 5.4e-08
+      },
+      {
+        "case": 16,
+        "altitude_km": 100,
+        "gtd7d_over_gtd7_mass_ratio": 1.0,
+        "gtd7_reconstruction_relative_error": 3.6e-08
+      }
+    ]
+  },
+  "case_reconstruction": {
+    "source": "tests/nrlmsise00_tests.cpp constant kCases, transcribed from nrlmsise-00_test.c",
+    "shared_state": {
+      "year_reported_as_2000": "the upstream driver passes year=0, which the reference ignores; 2000 is used because the adapter validates day_of_year against a Gregorian calendar",
+      "day_of_year": 172,
+      "utc_seconds": 29000,
+      "altitude_km": 400,
+      "latitude_deg": 60,
+      "longitude_deg": -70,
+      "local_solar_time_hours": 16,
+      "f107": 150,
+      "f107_average": 150,
+      "ap": 4
+    },
+    "switches": {
+      "0": 0,
+      "1_to_23": 1,
+      "9_for_cases_15_and_16": -1
+    },
+    "ap_history_for_cases_15_and_16": [
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100
+    ],
+    "per_case_overrides": {
+      "1": {
+        "day_of_year": 81
+      },
+      "2": {
+        "utc_seconds": 75000,
+        "altitude_km": 1000
+      },
+      "3": {
+        "altitude_km": 100
+      },
+      "4": {
+        "latitude_deg": 0
+      },
+      "5": {
+        "longitude_deg": 0
+      },
+      "6": {
+        "local_solar_time_hours": 4
+      },
+      "7": {
+        "f107_average": 70
+      },
+      "8": {
+        "f107": 180
+      },
+      "9": {
+        "ap": 40
+      },
+      "10": {
+        "altitude_km": 0
+      },
+      "11": {
+        "altitude_km": 10
+      },
+      "12": {
+        "altitude_km": 30
+      },
+      "13": {
+        "altitude_km": 50
+      },
+      "14": {
+        "altitude_km": 70
+      },
+      "16": {
+        "altitude_km": 100
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "published-17-cases",
+      "target": "all eight constituent number densities, exospheric temperature, temperature at altitude, drag density",
+      "oracle": "published DOCUMENTATION output",
+      "status": "specified; executed by the parent integration run"
+    },
+    {
+      "id": "gtd7d-vs-gtd7",
+      "target": "adapter reports the drag-effective quantity and not the printed gtd7 RHO column",
+      "oracle": "derived ratio threshold plus the integrity check above",
+      "status": "specified"
+    },
+    {
+      "id": "switch-domain-and-value-2",
+      "target": "out-of-domain switch values rejected at construction; switch value 2 changes the result rather than being coerced to 0 or 1",
+      "oracle": "tselec sw/swc mapping at nrlmsise-00.c:82",
+      "status": "specified"
+    },
+    {
+      "id": "si-physical-mass-identity",
+      "target": "density_kg_m3 == 1.66e-27 kg * sum(m_i * n_i) over He,O,N2,O2,Ar,H,N,anomalous O",
+      "oracle": "adapter arithmetic identity",
+      "tolerance": "1e-12 relative",
+      "status": "specified"
+    },
+    {
+      "id": "unit-switch-rescale",
+      "target": "native cgs and metric switch 0 evaluations agree",
+      "oracle": "exact rescaling identity",
+      "tolerance": "1e-12 relative",
+      "status": "specified"
+    },
+    {
+      "id": "angle-wrapping",
+      "target": "longitude +/-360 and +/-720 deg and local solar time +/-24 and +/-48 h are bit-identical; 190 deg equals -170 deg",
+      "oracle": "exact identity",
+      "tolerance": "bitwise",
+      "status": "specified"
+    },
+    {
+      "id": "determinism-and-order-independence",
+      "target": "repeat evaluation and evaluation after unrelated states",
+      "oracle": "exact identity",
+      "tolerance": "bitwise",
+      "status": "specified"
+    },
+    {
+      "id": "year-independence",
+      "target": "years 1900..9999 identical",
+      "oracle": "reference documents year as ignored and never reads it",
+      "tolerance": "bitwise",
+      "status": "specified"
+    },
+    {
+      "id": "32.5km-regression",
+      "target": "finite output at 32.4999, 32.5 and 32.5001 km; O, H, N and anomalous O exactly zero at and below the node",
+      "oracle": "release 20190709 fix plus published lower-atmosphere behaviour",
+      "status": "specified"
+    },
+    {
+      "id": "ap-history-slots",
+      "target": "slots 1..6 reach the model, slot 0 does not, switch 9 gates the path",
+      "oracle": "sg0 at nrlmsise-00.c:594 consumes ap[1..6]",
+      "status": "specified"
+    },
+    {
+      "id": "input-and-switch-domains",
+      "target": "every documented guard throws std::invalid_argument; documented boundaries are accepted",
+      "oracle": "adapter contract in nrlmsise00-parameters.json; out-of-domain values must throw std::invalid_argument, and documented boundaries must be evaluated to a finite positive density rather than merely not throwing",
+      "status": "specified"
+    },
+    {
+      "id": "concurrency",
+      "target": "eight threads reproduce serial results bit for bit",
+      "oracle": "mutex-serialised reference call",
+      "status": "specified"
+    }
+  ],
+  "execution_status": "Tests are specified and registered but were not executed by this component; builds and test runs are performed once by the parent after full integration. No pass or fail claim is made in this file.",
+  "known_limitations": [
+    "The oracle file is not redistributed; fixture tests SKIP when it is absent rather than passing.",
+    "Concurrent evaluation is safe but serialised by a process-wide mutex.",
+    "The 1000 km altitude ceiling is a project support limit, not a published validity boundary.",
+    "Geodetic/geocentric, ellipsoidal/spherical and UTC reduction happen upstream of this backend."
+  ],
+  "extraction_tool": {
+    "path": "scripts/extract_nrlmsise00_parameters.py",
+    "purpose": "regenerate the fixed-coefficient inventory (nested shape, explicit versus implied-zero initialiser counts, line spans, block SHA-256) from the pinned source without reproducing any coefficient value",
+    "invocation": "scripts/extract_nrlmsise00_parameters.py <LEO_NRLMSISE00_ROOT>/nrlmsise-00_data.c --check",
+    "exit_status": "0 when the source matches the pinned SHA-256, 1 otherwise"
+  }
+}
