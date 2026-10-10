@@ -1,170 +1,142 @@
 {
-  "amendment": "validation-amendment-v1",
-  "question": "JB2008 SAT(3) altitude datum (geodetic height vs spherical height) and SAT(2) latitude convention",
-  "outcome": "datum unresolved by every authoritative artifact; existing geodetic-height + geocentric-latitude convention retained, documented, quantified and regression-tested; no physical correction made",
-  "separate_finding": "the JB2008 120 km / 1500 km domain check rejected an exact boundary position in 10 of 22 provider-level cases before the fix (boundary-before.json) and 0 of 22 after it (boundary-after.json)",
-  "ownership": {
-    "README.md and manifest.json": "altitude agent (this amendment)",
-    "altitude-datum.json, boundary-before.json, boundary-after.json": "altitude agent",
-    "jb2008-grid-investigation.json, build_jb2008_grid_evidence.py, extract_official_astronomy.py, reproduce.sh": "grid agent; indexed here, not authored here"
+  "baseline_version": "direct-v2",
+  "compiled_source_git_sha": "7c11f5746cd0ff0f26f46cd81aceff677a110be8",
+  "compiler": {
+    "build_type": "Release",
+    "flags": {
+      "CMAKE_CXX_FLAGS": "-Wall -Wextra -Wpedantic",
+      "CMAKE_CXX_FLAGS_DEBUG": "-g",
+      "CMAKE_CXX_FLAGS_MINSIZEREL": "-Os -DNDEBUG",
+      "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-O2 -g -DNDEBUG",
+      "CMAKE_C_FLAGS_DEBUG": "-g",
+      "CMAKE_C_FLAGS_MINSIZEREL": "-Os -DNDEBUG",
+      "CMAKE_C_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "CMAKE_C_FLAGS_RELWITHDEBINFO": "-O2 -g -DNDEBUG",
+      "CMAKE_Fortran_FLAGS_DEBUG": "-g",
+      "CMAKE_Fortran_FLAGS_MINSIZEREL": "-Os",
+      "CMAKE_Fortran_FLAGS_RELEASE": "-O3",
+      "CMAKE_Fortran_FLAGS_RELWITHDEBINFO": "-O2 -g"
+    },
+    "languages": {
+      "C": {
+        "binary_sha256": "1b99826121ae6682a634e5efe09bd3e3df58ce58e0b28f849114ab5b89139c26",
+        "cache_variable": "CMAKE_C_COMPILER",
+        "path": "/usr/bin/cc",
+        "target": "x86_64-linux-gnu",
+        "used": true,
+        "version": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+      },
+      "CXX": {
+        "binary_sha256": "1353e9bdd29a7295c7226bf6c63abccce056d8cac31f112e5cdbecc3f28c2769",
+        "cache_variable": "CMAKE_CXX_COMPILER",
+        "path": "/usr/bin/c++",
+        "target": "x86_64-linux-gnu",
+        "used": true,
+        "version": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+      },
+      "Fortran": {
+        "binary_sha256": "142861efc95f49e33705852027dae8c2e5382fd1155fcec6116ef973f25d8f84",
+        "cache_variable": "CMAKE_Fortran_COMPILER",
+        "path": "/tmp/leo-fortran/usr/bin/gfortran-13",
+        "target": "x86_64-linux-gnu",
+        "used": true,
+        "version": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+      }
+    },
+    "note": "read from CMakeCache.txt; no flag value is assumed. Target-level options set in cmake/*.cmake are recorded under backends."
   },
-  "redistribution": "no external original code or data is retained in this tree; the experiment compiles the acquired JB2008.f in place and copies the upstream THETA block into its own build directory at run time",
-  "manifest_scope_note": "repository_files covers every file this amendment directory holds, including contributions from other agents; the hashes are current as of this regeneration and go stale if a file is edited again, so regenerate after any change",
-  "host": {
-    "platform": "Linux-6.18.40.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
-    "python": "3.12.3"
+  "executed_commands": {
+    "altitude_datum": "python3 docs/atmosphere/altitude/altitude_datum_experiment.py --jb2008 /tmp/leo-atmosphere-deps/JB2008.f --vendor-driver \"/tmp/jbzip-jb2008/JB2008 Code/JB08DRVAUTO.f\" --official-grid /tmp/leo-atmosphere-deps/jb-validation/JB2008_AUTO_OUT_2023_091_00.DAT --fortran /tmp/leo-fortran/usr/bin/gfortran-13 --coordinates-json docs/atmosphere/evidence/direct-v2/coordinates/coordinates.json --out /tmp/leo-altitude-reproduction",
+    "arithmetic_comparison": "env LD_LIBRARY_PATH=/tmp/leo-fortran/usr/lib/x86_64-linux-gnu python3 docs/atmosphere/jb2008_arithmetic.py --kernel-o0 /tmp/leo-jb-native-o0 --kernel-o3 /tmp/leo-jb-grid-endtoend/jb2008_native_kernel --adapter /tmp/leo-jb-grid-endtoend/jb2008_adapter_probe --astro /tmp/leo-jb-grid-endtoend/jb2008_official_astronomy --validation-dir /tmp/leo-atmosphere-deps/jb-validation --output /tmp/leo-arithmetic-confirmed.json",
+    "boundary_run": "/tmp/leo-boundary-after <lsk> <spk> <pck> <cssi> <solfsmy> <dtcfile> ITRF93",
+    "boundary_smoke_after": "g++ -std=c++20 -O2 -I include -isystem /tmp/leo-deps/usr/include/eigen3 -DLEO_HAS_JB2008 -DLEO_HAS_NRLMSISE00 docs/atmosphere/altitude/boundary_probe.cpp build-atmosphere/leo/libleo_integration.a build-atmosphere/leo/libleo_analysis.a build-atmosphere/leo/libleo_environment.a build-atmosphere/leo/libleo_atmosphere.a /tmp/leo_cspice/cspice/lib/cspice.a build-atmosphere/leo/libleo_kernel.a build-atmosphere/leo/libleo_nrlmsise00_reference.a build-atmosphere/leo/libleo_jb2008_reference.a -o /tmp/leo-boundary-after",
+    "boundary_smoke_before": "g++ -std=c++20 -O2 -I include -isystem /tmp/leo-deps/usr/include/eigen3 -DLEO_HAS_JB2008 -DLEO_HAS_NRLMSISE00 docs/atmosphere/altitude/boundary_probe.cpp <pre-fix libraries> -o /tmp/boundary_probe; see boundary-before.json",
+    "build": [
+      "cmake --build build-atmosphere-gcc --parallel",
+      "cmake --build build-atmosphere --parallel"
+    ],
+    "coordinate_oracle": [
+      "/tmp/leo-atmosphere-validation-env/bin/python docs/atmosphere/validate_coordinates.py --binary build-atmosphere/atmosphere_experiment --lsk /tmp/leo-atmosphere-deps/naif0012.tls --spk /tmp/leo-atmosphere-deps/de432s.bsp --pck /tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc --output docs/atmosphere/evidence/validation-amendment-v1/coordinates.json --epoch 2003-10-30T00:00:00 --epoch 2008-07-01T06:30:00 --epoch 2016-12-31T23:59:60 --epoch 2017-01-01T00:00:00"
+    ],
+    "geomagnetic_modes": "python3 scripts/nrlmsise00_ap_modes.py --nrlmsise-root /tmp/leo-atmosphere-deps --build-dir build-atmosphere-gcc --out docs/atmosphere/evidence/validation-amendment-v1/ap-modes.json",
+    "grid_investigation": "bash docs/atmosphere/evidence/validation-amendment-v1/reproduce.sh /tmp/leo-jb-grid-endtoend",
+    "regression_suite": [
+      "ctest",
+      "--test-dir",
+      "build-atmosphere-gcc",
+      "--output-on-failure",
+      "-j",
+      "4"
+    ]
   },
-  "fortran": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
-  "repository_files": {
-    "experiment_script": {
-      "path": "docs/atmosphere/altitude/altitude_datum_experiment.py",
-      "sha256": "b4fae1a89720b8b5f7db7e8c1ceb3f24a138ad50a34db8c28ab6624600fdc24c"
-    },
-    "probe_driver": {
-      "path": "docs/atmosphere/altitude/jb2008_altitude_probe.f90",
-      "sha256": "ee758007320d0c6a0be6b8109b145fecf449f56b089381eba4ce12ae0de8c3df"
-    },
-    "grid_driver": {
-      "path": "docs/atmosphere/altitude/jb2008_official_grid_check.f90",
-      "sha256": "7ce10760ed315da08a1e4b92a01ee09eb9dcd3846dc84603d25b75a3e40018c1"
-    },
-    "boundary_probe_source": {
-      "path": "docs/atmosphere/altitude/boundary_probe.cpp",
-      "sha256": "043c7b1e21d13b44da11742d15f8fb744112d304b5edbd4d474b913007250fa4"
-    },
-    "measurement": {
-      "path": "docs/atmosphere/evidence/validation-amendment-v1/altitude-datum.json",
-      "sha256": "fc516d0f8b7209c0bb6725ef5ea203391ece7ff18657a5b5ca5e7a92ac06fa42"
-    },
-    "boundary_before": {
-      "path": "docs/atmosphere/evidence/validation-amendment-v1/boundary-before.json",
-      "sha256": "e0c6cb71cbe3564a506efb9f8b8e4b563405d1497ba8c8fdd3f5f57152c735da"
-    },
-    "boundary_after": {
-      "path": "docs/atmosphere/evidence/validation-amendment-v1/boundary-after.json",
-      "sha256": "b5a99d67294c27b59bc20d3913aacb051775a2df4bfc6b539b39efdeafb5607a"
-    },
-    "readme": {
-      "path": "docs/atmosphere/evidence/validation-amendment-v1/README.md",
-      "sha256": "f25522efeee56ef8ba7b6c142694355f484d0ec538c246d92911244c822dd731"
-    },
-    "regression_tests": {
-      "path": "tests/atmosphere_input_tests.cpp",
-      "sha256": "95fd924e8412c51115cbe7398ad3896be195d25838f935b3c18e74242e4b3c92"
-    },
-    "grid_investigation_record": {
-      "path": "docs/atmosphere/evidence/validation-amendment-v1/jb2008-grid-investigation.json",
-      "sha256": "3e1ab9468b4ffc4c1c394238dad1b1b3e88c033a50f9cf32c7a48c80bb97a393"
-    },
-    "grid_investigation_builder": {
-      "path": "docs/atmosphere/evidence/validation-amendment-v1/build_jb2008_grid_evidence.py",
-      "sha256": "3e03c3274f39d8657869a4e39d5dc2b44d3e3bb3ef3967ab8478ca080c1e3e55"
-    },
-    "grid_investigation_astronomy": {
-      "path": "docs/atmosphere/evidence/validation-amendment-v1/extract_official_astronomy.py",
-      "sha256": "5b783a58c669529b8c4eea3e13b2946c309883f00473796d2b8b134ac0e8896d"
-    },
-    "grid_investigation_reproduce": {
-      "path": "docs/atmosphere/evidence/validation-amendment-v1/reproduce.sh",
-      "sha256": "01f9f094fca1e0991828dd10ff0d19f2e60b8570e0ef26b37f26875ed903bb79"
-    },
-    "published_model_fixtures": {
-      "path": "docs/atmosphere/evidence/validation-amendment-v1/published-model-fixtures.json",
-      "sha256": "57e823141e8f42ad029aead167688f34c3a2385c992bc3c9c721a5758bdba817"
-    },
-    "regression_initial": {
-      "path": "docs/atmosphere/evidence/validation-amendment-v1/regression-initial.json",
-      "sha256": "47c86be3d307b5f87c52054679bb9246c8a877392b40a1606c24081cd622855b"
-    },
-    "regression_oracle_intermediate": {
-      "path": "docs/atmosphere/evidence/validation-amendment-v1/regression-oracle-intermediate.json",
-      "sha256": "8c24c974c02b0cebbf4b2f527be29c5e23591b68c470822f7f23fa818d7f1361"
-    },
-    "regression_oracle_intermediate2": {
-      "path": "docs/atmosphere/evidence/validation-amendment-v1/regression-oracle-intermediate2.json",
-      "sha256": "f08bf4e635cae40e3aaad6c44566b7bac9f4d86bec58146364c5f7ce552f9f7a"
-    },
-    "regression_suite": {
-      "path": "docs/atmosphere/evidence/validation-amendment-v1/regression-suite.json",
-      "sha256": "0e0af0bc2c80fe30898a420cb81ffb3b78c67b136af5567ed985364326e96e94"
+  "external_sources_sha256": {
+    "/tmp/leo-atmosphere-deps/DTCFILE.TXT": "f6485450c363e9be8e71c37e143ac768462deca77565b727ec2e96c025ab8d91",
+    "/tmp/leo-atmosphere-deps/JB2008.f": "b18c1607239db881940a7b91635a7af39edc82306cf10854ec12080397227999",
+    "/tmp/leo-atmosphere-deps/JB2008Test.java": "315e4f1f9191559ce656c9e6f54fb69b3bbf82db611467ec3cff38fd3f687286",
+    "/tmp/leo-atmosphere-deps/NRLMSISE-DOCUMENTATION": "e7db72964c22861e446d4b61931a22a58c32eeaa7f9bb23b45d887751b4ecae3",
+    "/tmp/leo-atmosphere-deps/SOLFSMY.TXT": "891a0767702d11c2cd8432b3b012d4350c4becbf86873c32073cff852155f9d7",
+    "/tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt": "f3eb9e676295bbf93566a054e95d1317de1aba2e410d209d4642dbedebf05ea2",
+    "/tmp/leo-atmosphere-deps/de432s.bsp": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b",
+    "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc": "14deb9ab9dd49482185cc49a9c29fe56ae65d50ab94caf3197db8694836b6f81",
+    "/tmp/leo-atmosphere-deps/jb2008-legacy-fixtures.json": "2b2e6a65a36525f9985377eb3af8fc1c5b83ea8a8473f467e5e66623175fc3f0",
+    "/tmp/leo-atmosphere-deps/jb2008.zip": "0b310c9e259b5ca9285d570610d52afa5964d82506ea4fb43e995a8332535d6a",
+    "/tmp/leo-atmosphere-deps/jb2008validate.zip": "4d18c286b148fc5b2271667dab71dd6a702204bb5176bc8a54200aa17e3fff98",
+    "/tmp/leo-atmosphere-deps/naif0012.tls": "678e32bdb5a744117a467cd9601cd6b373f0e9bc9bbde1371d5eee39600a039b",
+    "/tmp/leo-atmosphere-deps/nrlmsise-00.c": "a20d6523420188241963f095ad0b65df44ac0a6fa6db52d2e1df823c366f0285",
+    "/tmp/leo-atmosphere-deps/nrlmsise-00.h": "d5b45be690bbc6cf394f69b18c0e641a1769da0a87015704fdabf0e7560794aa",
+    "/tmp/leo-atmosphere-deps/nrlmsise-00_data.c": "d0b3022f3c3e7ffdf703cc0e0d02339dfee01c0bf1520b29c68d5f4afd8784d5",
+    "/tmp/leo-atmosphere-deps/nrlmsise-00_test.c": "5a95faa996dc265ab85a0f6db641628abe84c9aef504638b4aa465ed76c89113",
+    "/tmp/leo-atmosphere-deps/pck00011.tpc": "3dff7b1dbeceaa01f25467767d3fa25816051c85d162d1edf04acb310ee28bb1"
+  },
+  "generated_utc": "2026-10-10T13:44:14.628565+00:00",
+  "preservation": {
+    "historical_files": 17,
+    "historical_hashes_unchanged": true,
+    "historical_tree_sha256": "3e46f7e4f0a9bf6d9d9ba01b1f862d69cfa168f35a2298b5c0be5cf061f1f97a",
+    "outputs_tree_sha256": "58bc0b8fdc5c774df8a8e22cef92aae720e2afbc9c59da85b2d8c2d423e7eaab",
+    "user_output_files": 144,
+    "user_output_hashes_unchanged": true
+  },
+  "production_change": {
+    "src/atmosphere/jb2008.cpp": {
+      "after_sha256": "907b22c9cfd27494e9866d94798308a9ebc298bf96e238d873b54b8daaec68c7",
+      "before_sha256": "97a82c9b2c3a59526cfae9c96f6fba7cb6c8eeaef8a91b4732c481ef3458befe"
     }
   },
-  "external_sources": {
-    "JB2008.f": {
-      "path": "/tmp/leo-atmosphere-deps/JB2008.f",
-      "locator": "https://sol.spacenvironment.net/JB2008/downloadables/jb2008.zip",
-      "sha256": "b18c1607239db881940a7b91635a7af39edc82306cf10854ec12080397227999",
-      "note": "SET JB2008 model source, unmodified"
-    },
-    "JB08DRVAUTO.f": {
-      "path": "/tmp/jbzip-jb2008/JB2008 Code/JB08DRVAUTO.f",
-      "locator": "https://sol.spacenvironment.net/JB2008/downloadables/jb2008.zip",
-      "sha256": "061516b02b8af490b49f5745bddc44f53fd9b0ab738565753f9230e8ea00467f",
-      "note": "SET JB2008 driver, unmodified; THETA block compiled verbatim from it"
-    },
-    "jb2008.zip": {
-      "path": "/tmp/leo-atmosphere-deps/jb2008.zip",
-      "locator": "https://sol.spacenvironment.net/JB2008/downloadables/jb2008.zip",
-      "sha256": "0b310c9e259b5ca9285d570610d52afa5964d82506ea4fb43e995a8332535d6a",
-      "note": "SET JB2008 distribution archive"
-    },
-    "jb2008validate.zip": {
-      "path": "/tmp/leo-atmosphere-deps/jb2008validate.zip",
-      "locator": "https://sol.spacenvironment.net/JB2008/downloadables/jb2008validate.zip",
-      "sha256": "4d18c286b148fc5b2271667dab71dd6a702204bb5176bc8a54200aa17e3fff98",
-      "note": "SET official validation archive"
-    },
-    "JB2008_AUTO_OUT_2023_091_00.DAT": {
-      "path": "/tmp/leo-atmosphere-deps/jb-validation/JB2008_AUTO_OUT_2023_091_00.DAT",
-      "locator": "https://sol.spacenvironment.net/JB2008/downloadables/jb2008validate.zip",
-      "sha256": "de0f03197dd798ce5d4c9ef27124c50cc63d8e3e941fe998cebff4503897f943",
-      "note": "official validation output, 68191 points"
-    },
-    "jb2008fileformats.pdf": {
-      "path": "/tmp/leo-atmosphere-deps/jb2008/jb2008fileformats.pdf",
-      "locator": "https://sol.spacenvironment.net/JB2008/downloadables/jb2008fileformats.pdf",
-      "sha256": "98bd9d1583aa79167dea9b06cb5afd1abbfe1bb17c3a62e45dafc9b075cb8c4f",
-      "note": "SET file format document"
-    },
-    "AIAA_2008-6438_JB2008_Model.pdf": {
-      "path": "/tmp/alt-src/AIAA_2008-6438_JB2008_Model.pdf",
-      "locator": "https://sol.spacenvironment.net/JB2008/pubs/AIAA_2008-6438_JB2008_Model.pdf",
-      "sha256": "bcab52e60259046587acbd5f845b386a2ec319fa40cbf37254846cd3f84b5bf0",
-      "note": "Bowman et al. 2008 model paper, US Government work"
-    },
-    "SET_TR2008_002.pdf": {
-      "path": "/tmp/alt-src/SET_TR2008_002.pdf",
-      "locator": "https://spacewx.com/wp-content/uploads/2020/11/SET_TR2008_002.pdf",
-      "sha256": "ee787a4990dff5a8a0032ed8443306ca84c4c7c75a3670195b9ebc0b16c6a572",
-      "note": "Tobiska/Bowman/Bouwer 2008 index report"
-    },
-    "nrlmsise-00.h": {
-      "path": "/tmp/leo-atmosphere-deps/nrlmsise-00.h",
-      "locator": null,
-      "sha256": "d5b45be690bbc6cf394f69b18c0e641a1769da0a87015704fdabf0e7560794aa",
-      "note": "NRLMSISE-00 reference header"
-    },
-    "SatelliteToolboxAtmosphericModels_jb2008.jl": {
-      "path": "/tmp/alt-src/julia_jb2008.jl",
-      "locator": "https://github.com/JuliaSpace/SatelliteToolboxAtmosphericModels.jl",
-      "sha256": "f7c20c41ce5edbf824ec8179dbdee1f099f4999e48a747e2835a774c1635cdc7",
-      "note": "cited, not redistributed"
-    },
-    "Orekit_AbstractJacchiaBowmanModel.java": {
-      "path": "/tmp/alt-src/AbstractJacchiaBowmanModel.java",
-      "locator": "https://github.com/CS-SI/Orekit",
-      "sha256": "b162285a4f3902c0908e47f9216151d2086605b8c69ebd075dfde8381cc7d799",
-      "note": "cited, not redistributed"
-    },
-    "coordinates.json": {
-      "path": "/tmp/coordprobe/coordinates.json",
-      "locator": null,
-      "sha256": "f31f9b2a93758dc7ce8029f1363a022407d1505a4cff039f668052548cb643f9",
-      "note": "measured ITRF93 rotation from the project coordinate report"
-    }
+  "purpose": "Scientific investigation, native-model comparisons, documented limitations and a confirmed boundary-guard regression. Not a replacement for frozen physical runs: see ../direct-v2/.",
+  "repository_files_sha256": {
+    "README.md": "782fea78e66c291cb23f7728c3dcc1e445919a2d75aef9999df5b00e82d09255",
+    "docs/atmosphere/evidence/validation-amendment-v1/README.md": "782fea78e66c291cb23f7728c3dcc1e445919a2d75aef9999df5b00e82d09255",
+    "docs/atmosphere/evidence/validation-amendment-v1/altitude-datum.json": "0259d9698c27bd0c1d5f846ffa901217156585ffd83902627a2284bd02df3662",
+    "docs/atmosphere/evidence/validation-amendment-v1/altitude-investigation-corrections.json": "31f36ec019508163faeadc55bdf85818895d2ad2a78659903191c951ee5b2c96",
+    "docs/atmosphere/evidence/validation-amendment-v1/ap-modes.json": "1e425ca2619c55d31e2bbc0124b0ca8351339c2dc056f97dde884ff3f82f3a18",
+    "docs/atmosphere/evidence/validation-amendment-v1/ap-provider-historical-case.json": "9ea46303aa4b19b0e94f449f59e60390b706457fc93efa788ae5fc8a8e79e922",
+    "docs/atmosphere/evidence/validation-amendment-v1/boundary-after.json": "b5a99d67294c27b59bc20d3913aacb051775a2df4bfc6b539b39efdeafb5607a",
+    "docs/atmosphere/evidence/validation-amendment-v1/boundary-before.json": "e0c6cb71cbe3564a506efb9f8b8e4b563405d1497ba8c8fdd3f5f57152c735da",
+    "docs/atmosphere/evidence/validation-amendment-v1/build_jb2008_grid_evidence.py": "5ec41d4e8430538752b0c107fee9862995b98e0ffa1a07a12d6ad2024f9f3e37",
+    "docs/atmosphere/evidence/validation-amendment-v1/compiler-arithmetic.json": "696586a3a4df5bdc751b49cc20e5996f6819d22b3c85821a85746eadaa1fe78a",
+    "docs/atmosphere/evidence/validation-amendment-v1/coordinates.json": "f0feb86358599e0c9e6975b68f679de7b7c7cbc58a585572de29e5d24f842d94",
+    "docs/atmosphere/evidence/validation-amendment-v1/extract_official_astronomy.py": "5b783a58c669529b8c4eea3e13b2946c309883f00473796d2b8b134ac0e8896d",
+    "docs/atmosphere/evidence/validation-amendment-v1/initial-inspection.json": "fea42b4c0f83ebf9111044ed7773b1ef83db347ba6da1318ecc95c3346331c25",
+    "docs/atmosphere/evidence/validation-amendment-v1/jb2008-grid-investigation.json": "5313a1804f5a017ffbf0fdedbcfb6fb2eda9062a05269383b45ffbcc85c48eab",
+    "docs/atmosphere/evidence/validation-amendment-v1/manifest-provenance-smoke.json": "0d7ddc31ffba0d2ab045145e2f42a72da1ab004f05dd166f947e38f67c7e161a",
+    "docs/atmosphere/evidence/validation-amendment-v1/physical-baseline-smoke.json": "ee9a4ccf50f889eb67f3ea1d635561121f588fa73b42186da59ba925134acad2",
+    "docs/atmosphere/evidence/validation-amendment-v1/preservation.json": "e15e9894adc3d0b6d49d743bdf5b01bcbbecb22a1fb6779e7cc651d36da02900",
+    "docs/atmosphere/evidence/validation-amendment-v1/published-model-fixtures.json": "57e823141e8f42ad029aead167688f34c3a2385c992bc3c9c721a5758bdba817",
+    "docs/atmosphere/evidence/validation-amendment-v1/regression-suite.json": "810de4c026ebbc6225fa3744c099f5da64e5a3018850812bdd35fdf82a8d1512",
+    "docs/atmosphere/evidence/validation-amendment-v1/reproduce.sh": "bbc792858154e8d8e4f19132d5ce31ce1c6f9d22d77f44fe6a07ec1e115a42be"
   },
-  "commands": [
-    "build-atmosphere/atmosphere_experiment --lsk /tmp/leo-atmosphere-deps/naif0012.tls --spk /tmp/leo-atmosphere-deps/de432s.bsp --pck /tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc --frame ITRF93 --epoch-utc 2003-10-30T00:00:00 --mode coordinates --out /tmp/coordprobe",
-    "python3 docs/atmosphere/altitude/altitude_datum_experiment.py --jb2008 /tmp/leo-atmosphere-deps/JB2008.f --vendor-driver \"/tmp/jbzip-jb2008/JB2008 Code/JB08DRVAUTO.f\" --official-grid /tmp/leo-atmosphere-deps/jb-validation/JB2008_AUTO_OUT_2023_091_00.DAT --fortran /tmp/leo-fortran/usr/bin/gfortran-13 --coordinates-json /tmp/coordprobe/coordinates.json --out docs/atmosphere/evidence/validation-amendment-v1"
-  ]
+  "schema": "leo-dynamics/atmospheric-validation-amendment/1",
+  "tests": {
+    "failed": 0,
+    "passed": 166,
+    "skipped": 0
+  },
+  "unresolved": [
+    "JB2008 printed-grid residual cause",
+    "original dated solar-index and producer build provenance behind the 2023 official grid",
+    "JB2008 physical altitude datum"
+  ],
+  "validation_tooling_git_sha": "cec4d4662a5b6a745e9438020abc8478d7358043"
 }
