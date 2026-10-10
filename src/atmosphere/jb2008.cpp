@@ -14,7 +14,12 @@ Result Jb2008::evaluate(const Jb2008Input& in) const {
         in.f10,in.f10_average,in.s10,in.s10_average,in.m10,in.m10_average,
         in.y10,in.y10_average,in.dstdtc_k})
         if(!std::isfinite(v)) throw std::invalid_argument("nonfinite JB2008 input");
-    if(in.position_ra_lat_alt[2]<120 || in.position_ra_lat_alt[2]>1500 ||
+    // Cartesian/frame/geodetic round trips can move an exact boundary by a few
+    // 1e-12 km. Admit the same explicit margin as MSISE; evaluate the received
+    // altitude unchanged, never clamp it to a different physical position.
+    constexpr double altitude_roundoff_km = 1e-9;
+    if(in.position_ra_lat_alt[2]<120-altitude_roundoff_km ||
+       in.position_ra_lat_alt[2]>1500+altitude_roundoff_km ||
        std::abs(in.position_ra_lat_alt[1])>std::numbers::pi/2 ||
        std::abs(in.sun_ra_dec_rad[1])>std::numbers::pi/2 ||
        in.mjd_utc<33282 || in.mjd_utc>=88069 ||
