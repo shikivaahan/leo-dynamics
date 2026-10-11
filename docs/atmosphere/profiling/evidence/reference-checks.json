@@ -1,0 +1,46 @@
+{
+  "checks": [
+    {
+      "command": [
+        "/home/user/leo-dynamics/build-atmosphere-gcc/leo_nrlmsise00_tests",
+        "NRLMSISE00 reproduces the official seventeen published reference cases",
+        "--reporter",
+        "console"
+      ],
+      "returncode": 0,
+      "stdout": "Filters: \"NRLMSISE00 reproduces the official seventeen published reference cases\"\nRandomness seeded to: 3704774709\n{\"model\":\"nrlmsise00\",\"fixtures\":17,\"max_density_relative_error\":2.9441320106074192e-07,\"max_species_relative_error\":3.8658716522502516e-07,\"max_temperature_relative_error\":4.8027880486797611e-07}\n===============================================================================\nAll tests passed (563 assertions in 1 test case)\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/user/leo-dynamics/build-atmosphere-gcc/leo_jb2008_tests",
+        "JB2008 reproduces the official SET validation epochs",
+        "--reporter",
+        "console"
+      ],
+      "returncode": 0,
+      "stdout": "Filters: \"JB2008 reproduces the official SET validation epochs\"\nRandomness seeded to: 4170464927\n{\"model\":\"jb2008\",\"fixtures\":13320,\"max_density_relative_error\":0.0058605859224980525,\"rms_density_relative_error\":0.0032398286550430365,\"max_exospheric_temperature_error_k\":0.75016676289965289,\"max_local_temperature_error_k\":0.74605275498265655}\n===============================================================================\nAll tests passed (39964 assertions in 1 test case)\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/user/leo-dynamics/build-atmosphere-gcc/leo_jb2008_tests",
+        "JB2008 reproduces twelve full-precision independent reference densities",
+        "--reporter",
+        "console"
+      ],
+      "returncode": 0,
+      "stdout": "Filters: \"JB2008 reproduces twelve full-precision independent reference densities\"\nRandomness seeded to: 2037116258\n{\"model\":\"jb2008\",\"full_precision_fixtures\":12,\"max_relative_error\":1.4717105248216975e-05}\n===============================================================================\nAll tests passed (12 assertions in 1 test case)\n\n",
+      "stderr": ""
+    }
+  ],
+  "environment": {
+    "LEO_SPICE_TEST_SPK": "/tmp/leo-atmosphere-deps/de432s.bsp",
+    "LEO_SPICE_TEST_LSK": "/tmp/leo-atmosphere-deps/naif0012.tls",
+    "LEO_ATMOSPHERE_TEST_PCK": "/tmp/leo-atmosphere-deps/earth_000101_270105_261009.bpc",
+    "LEO_ATMOSPHERE_TEST_LOW_PRECISION_PCK": "/tmp/leo-atmosphere-deps/pck00011.tpc",
+    "LEO_NRLMSISE00_TEST_CSSI": "/tmp/leo-atmosphere-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt",
+    "LEO_NRLMSISE00_REFERENCE_DOCUMENTATION": "/tmp/leo-atmosphere-deps/NRLMSISE-DOCUMENTATION",
+    "LEO_JB2008_VALIDATION_DIR": "/tmp/leo-atmosphere-deps/jb-validation"
+  }
+}

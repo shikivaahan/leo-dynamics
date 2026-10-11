@@ -1,0 +1,55 @@
+{
+  "cause": "Reducer originally stored gzip bytes under .jsonl suffix; runner nested gzip. Fixed reducer preserves .gz suffix. Normalised wrappers only; uncompressed request bytes unchanged.",
+  "repairs": [
+    {
+      "path": "original/propagation/raw/CASE-C_nrlmsise00_requests.jsonl.gz",
+      "gzip_layers_before": 2,
+      "decompressed_sha256": "4e36fbac46e22ea20a2ca6271dd46cc1c6ca141adb9bd48acfaebe45b1316d42"
+    },
+    {
+      "path": "original/propagation/raw/CASE-B_jb2008_requests.jsonl.gz",
+      "gzip_layers_before": 1,
+      "decompressed_sha256": "f3396a39c8141a0d6a1f63eeef037de677c5444247a65e1598a8b4a487881fcf"
+    },
+    {
+      "path": "original/propagation/raw/CASE-A_jb2008_requests.jsonl.gz",
+      "gzip_layers_before": 2,
+      "decompressed_sha256": "f52c75ea6e97550e96093b4e0fa89d8cd070dd8dbfb63104fe682cc720fdcfdf"
+    },
+    {
+      "path": "original/propagation/raw/CASE-A_nrlmsise00_requests.jsonl.gz",
+      "gzip_layers_before": 2,
+      "decompressed_sha256": "ba245925d91c89edbbd11518faf67e00e27121ee16cb777676924915640b4dd2"
+    },
+    {
+      "path": "original/propagation/raw/CASE-C_jb2008_requests.jsonl.gz",
+      "gzip_layers_before": 2,
+      "decompressed_sha256": "2e2373250ea5a01c4796ae6d183756b62a5011d4edebb409ffa9aadc2766a50c"
+    },
+    {
+      "path": "instrumented/propagation/raw/CASE-C_nrlmsise00_requests.jsonl.gz",
+      "gzip_layers_before": 2,
+      "decompressed_sha256": "485f6a18b5c58d9654225e9399386c63bdf17ec08a7fd51fd929ef9879eb4aa2"
+    },
+    {
+      "path": "instrumented/propagation/raw/CASE-B_jb2008_requests.jsonl.gz",
+      "gzip_layers_before": 1,
+      "decompressed_sha256": "1b366424ee0e7ec3efb0082721409e23ab6bd77bf5cc3b3bceef141a0da007d4"
+    },
+    {
+      "path": "instrumented/propagation/raw/CASE-A_jb2008_requests.jsonl.gz",
+      "gzip_layers_before": 2,
+      "decompressed_sha256": "782049b3590f76b35bbb3d9d70fa7777c62787d1f5b8b55ea36dd2eeb66c3a09"
+    },
+    {
+      "path": "instrumented/propagation/raw/CASE-A_nrlmsise00_requests.jsonl.gz",
+      "gzip_layers_before": 2,
+      "decompressed_sha256": "935b636eb81f5701eba96ad4e0902132efe946c1345217f4e051c40cadc37746"
+    },
+    {
+      "path": "instrumented/propagation/raw/CASE-C_jb2008_requests.jsonl.gz",
+      "gzip_layers_before": 2,
+      "decompressed_sha256": "c878c166f25b3d6f24efefc163ec5ea4f7c8866bb56ccb5eb1213f170ee626a8"
+    }
+  ]
+}

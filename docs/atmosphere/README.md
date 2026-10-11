@@ -9,6 +9,7 @@ Direct reference evaluations of Exponential, NRLMSISE-00 and official JB2008. At
 - [NRLMSISE00.md](NRLMSISE00.md), [JB2008.md](JB2008.md), [EXPERIMENTS.md](EXPERIMENTS.md): model backends and experiment procedure.
 - [VALIDATION.md](VALIDATION.md): independent fixtures, boundary/metamorphic checks and exercised builds.
 - [BASELINE.md](BASELINE.md): frozen direct measurements and reproducibility commands.
+- [profiling/README.md](profiling/README.md): ATM-PROF-001 function-level timing, actual RHS locality, mutex contention and evidence-based optimisation ceilings; measurement only, no optimisation implementation.
 - `evidence/`: machine-readable parameters, provenance and measured records; `direct-v1/` is immutable historical evidence, `direct-v2/` is the corrected-source physical baseline, and `validation-amendment-v1/` records the final scientific investigation and remaining limitations.
 
 ## Acquire and build
