@@ -82,12 +82,61 @@ void enter_spice() {
     SpiceChar action[]="RETURN";
     erract_c("SET",0,action);
 }
+// The fragile part of the UTC calendar: one SPICE conversion, one parse, two
+// midnight conversions, one rounded day length and one quasi-MJD. Both the
+// direct (reuse disabled) and the reused paths call this, so there is exactly
+// one definition of the conversion and its error/leap-second behaviour.
+struct CalendarConversion {
+    int year,month,day,hour,minute;
+    double seconds;
+    long long serial;
+    int day_of_year;
+    double start_et,end_et,length;
+};
 [[noreturn]] void throw_spice_error(const std::string& context) {
     char message[64]={};
     getmsg_c("SHORT",static_cast<SpiceInt>(sizeof(message)),message);
     const std::string detail=message;
     reset_c();
     throw std::runtime_error("CSPICE "+context+" failed: "+detail);
+}
+// Requires the SPICE mutex. Performs every CSPICE call in the original order.
+CalendarConversion convert_calendar_locked(Epoch epoch) {
+    enter_spice();
+    char text[64]{};
+    REUSE_COUNT(et2utc_calls);
+    et2utc_c(epoch.et_seconds,"ISOC",9,sizeof(text),text);
+    if(failed_c()) throw_spice_error("ET to UTC conversion (LSK required)");
+    int y=0,m=0,d=0,h=0,minute=0;double seconds=0;
+    if(std::sscanf(text,"%d-%d-%dT%d:%d:%lf",&y,&m,&d,&h,&minute,&seconds)!=6)
+        throw std::runtime_error("unsupported SPICE UTC calendar representation");
+    using namespace std::chrono;
+    const year_month_day date{year{y},month{static_cast<unsigned>(m)},day{static_cast<unsigned>(d)}};
+    if(!date.ok()) throw std::runtime_error("invalid SPICE UTC calendar date");
+    const sys_days today{date};
+    const auto serial=today.time_since_epoch().count();
+    const year_month_day tomorrow{today+days{1}};
+    char start[40]{},end[40]{};
+    std::snprintf(start,sizeof(start),"%04d-%02d-%02dT00:00:00",y,m,d);
+    std::snprintf(end,sizeof(end),"%04d-%02u-%02uT00:00:00",
+        static_cast<int>(tomorrow.year()),static_cast<unsigned>(tomorrow.month()),static_cast<unsigned>(tomorrow.day()));
+    double start_et=0,end_et=0;
+    REUSE_COUNT(str2et_calls);
+    str2et_c(start,&start_et);
+    REUSE_COUNT(str2et_calls);
+    str2et_c(end,&end_et);
+    if(failed_c()) throw_spice_error("UTC day-length conversion");
+    // TDB rate differs from UTC by much less than 0.5 second per day.
+    const double length=std::round(end_et-start_et);
+    if(length<86399 || length>86401) throw std::runtime_error("unsupported UTC day length");
+    return {y,m,d,h,minute,seconds,serial,
+        static_cast<int>((today-sys_days{year{y}/January/1}).count())+1,start_et,end_et,length};
+}
+// Final request-specific fields, recomputed per request in the original order.
+UtcCalendar finish_calendar(const CalendarConversion& conversion) {
+    const double sod=3600*conversion.hour+60*conversion.minute+conversion.seconds;
+    return {conversion.year,conversion.month,conversion.day,conversion.day_of_year,conversion.serial,
+        sod,conversion.length,40587+static_cast<double>(conversion.serial)+sod/conversion.length};
 }
 std::string kernel_key(const std::filesystem::path& file) {
     std::error_code ec;
@@ -195,6 +244,13 @@ Epoch SpiceEphemerisProvider::epoch_from_utc(std::string_view utc) {
 }
 UtcCalendar SpiceEphemerisProvider::utc_calendar(Epoch epoch,bool reuse) {
     if(!std::isfinite(epoch.et_seconds)) throw std::invalid_argument("nonfinite UTC epoch");
+    if(!reuse) {
+        // Direct path: the original single-lock conversion with no cache
+        // bookkeeping, generation checks or re-lock. One acquisition, the same
+        // CSPICE call order, the same errors and the same leap-day length.
+        SpiceLock lock{spice_mutex};
+        return finish_calendar(convert_calendar_locked(epoch));
+    }
     for(;;) {
         SpiceLock lock{spice_mutex};
         const auto generation=configuration_generation;
@@ -218,7 +274,7 @@ UtcCalendar SpiceEphemerisProvider::utc_calendar(Epoch epoch,bool reuse) {
         if(generation!=configuration_generation) continue;
         CivilDay metadata;
         bool hit=false;
-        if(reuse) for(const auto& entry:civil_days)
+        for(const auto& entry:civil_days)
             if(entry.generation==generation && entry.serial==serial) {
                 metadata=entry;
                 hit=true;
@@ -249,16 +305,14 @@ UtcCalendar SpiceEphemerisProvider::utc_calendar(Epoch epoch,bool reuse) {
             metadata.length=std::round(metadata.end_et-metadata.start_et);
             if(metadata.length<86399 || metadata.length>86401) throw std::runtime_error("unsupported UTC day length");
             metadata.generation=generation;
-            if(reuse) {
-                // Another reader may have populated this date while formatting.
-                bool present=false;
-                for(const auto& entry:civil_days)
-                    present|=entry.generation==generation && entry.serial==serial;
-                if(!present) {
-                    if(civil_days[civil_next].generation!=0) REUSE_COUNT(utc_evictions);
-                    civil_days[civil_next]=metadata;
-                    civil_next=(civil_next+1)%civil_days.size();
-                }
+            // Another reader may have populated this date while formatting.
+            bool present=false;
+            for(const auto& entry:civil_days)
+                present|=entry.generation==generation && entry.serial==serial;
+            if(!present) {
+                if(civil_days[civil_next].generation!=0) REUSE_COUNT(utc_evictions);
+                civil_days[civil_next]=metadata;
+                civil_next=(civil_next+1)%civil_days.size();
             }
         }
         lock.unlock();

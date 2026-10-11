@@ -229,6 +229,31 @@ TEST_CASE("UTC reuse is bounded and cannot survive the last kernel owner","[spic
     require_same_calendar(SpiceEphemerisProvider::utc_calendar(epoch),
                           SpiceEphemerisProvider::utc_calendar(epoch,false));
 }
+TEST_CASE("Disabled UTC reuse takes the direct single-lock conversion","[spice][reuse][external]") {
+    const char* lsk=env_path("LEO_SPICE_TEST_LSK");
+    if(!lsk) SKIP("Set LEO_SPICE_TEST_LSK for the direct UTC path");
+    SpiceEphemerisProvider provider{{lsk}};
+    const auto epoch=SpiceEphemerisProvider::epoch_from_utc("2016-12-31T23:59:60");
+    const auto direct=SpiceEphemerisProvider::utc_calendar(epoch,false);
+    const auto reused=SpiceEphemerisProvider::utc_calendar(epoch);
+    require_same_calendar(direct,reused);
+    require_same_calendar(direct,SpiceEphemerisProvider::utc_calendar(epoch,false));
+    REQUIRE(direct.day_length_seconds==86401);
+    REQUIRE(direct.seconds_of_day==86400);
+    // Repeated disabled calls are the original direct conversion every time,
+    // and only the reused call populated the cache.
+    SpiceEphemerisProvider::invalidate_reuse();
+    for(int i=0;i<50;++i) require_same_calendar(SpiceEphemerisProvider::utc_calendar(epoch,false),direct);
+    REQUIRE(SpiceEphemerisProvider::reuse_statistics().utc_entries==0);
+    require_same_calendar(SpiceEphemerisProvider::utc_calendar(epoch),direct);
+    REQUIRE(SpiceEphemerisProvider::reuse_statistics().utc_entries==1);
+    SpiceEphemerisProvider::invalidate_reuse();
+    REQUIRE(SpiceEphemerisProvider::reuse_statistics().utc_entries==0);
+    for(int i=0;i<50;++i) require_same_calendar(SpiceEphemerisProvider::utc_calendar(epoch,false),direct);
+    REQUIRE(SpiceEphemerisProvider::reuse_statistics().utc_entries==0);
+    REQUIRE_THROWS_AS(SpiceEphemerisProvider::utc_calendar({std::nan("")},false),std::invalid_argument);
+    REQUIRE_THROWS_AS(SpiceEphemerisProvider::utc_calendar({std::nan("")}),std::invalid_argument);
+}
 TEST_CASE("Concurrent civil-day readers tolerate managed lifecycle operations","[spice][reuse][external]") {
     const char* lsk=env_path("LEO_SPICE_TEST_LSK");
     if(!lsk) SKIP("Set LEO_SPICE_TEST_LSK for concurrent civil-day reuse");
