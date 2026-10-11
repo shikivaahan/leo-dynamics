@@ -1,0 +1,11 @@
+{
+  "all_configurations_bitwise_identical": true,
+  "all_equal_to_unchanged_original": true,
+  "models": [
+    "nrlmsise00",
+    "jb2008"
+  ],
+  "nrlmsise00_sun_toggle_identical_operation_counts": true,
+  "nrlmsise00_spkez_calls_per_call": 0.0,
+  "nrlmsise00_sun_toggle_verdict": "NRLMSISE-00 performs no Sun lookup in any configuration, so sun_sharing changes no operation and no result; every timing difference is scheduling/variability only"
+}

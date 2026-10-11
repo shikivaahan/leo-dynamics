@@ -1,0 +1,610 @@
+{
+  "kind": "atm-opt-001-interleaved-summary",
+  "protocol": "every configuration is warmed once, then configurations are executed round-robin inside each repetition with a recorded seed; per-repetition batch means and all per-call samples are retained; Welch 95% intervals compare each configuration against the all-off control; process pinned by the caller",
+  "seed": 20251011,
+  "repetitions": 12,
+  "calls_per_batch": 2000,
+  "warmup": 256,
+  "models": {
+    "candidate": [
+      {
+        "model": "nrlmsise00",
+        "result_checksum": "b3b699b2b310bc65",
+        "all_configurations_bitwise_identical": true,
+        "per_configuration": {
+          "off_off_off": {
+            "mean_ns": 29846.674958333333,
+            "median_ns": 28076,
+            "p95_ns": 43744,
+            "p99_ns": 58962.08999999998,
+            "batch_mean_sd_ns": 1062.2953597005935,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "utc_only": {
+            "mean_ns": 9866.166416666667,
+            "median_ns": 9414,
+            "p95_ns": 10148,
+            "p99_ns": 21987.089999999986,
+            "batch_mean_sd_ns": 242.24020335405743,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "sun_only": {
+            "mean_ns": 30573.625166666665,
+            "median_ns": 28131,
+            "p95_ns": 47913,
+            "p99_ns": 61471.64999999973,
+            "batch_mean_sd_ns": 3195.7222116802072,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "orientation_only": {
+            "mean_ns": 27531.943625,
+            "median_ns": 26009,
+            "p95_ns": 38151.899999999994,
+            "p99_ns": 52579.54999999991,
+            "batch_mean_sd_ns": 690.7263986519791,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "utc_orientation": {
+            "mean_ns": 7634.867125,
+            "median_ns": 7375,
+            "p95_ns": 7623,
+            "p99_ns": 14512.739999999721,
+            "batch_mean_sd_ns": 128.86760450340836,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "utc_sun": {
+            "mean_ns": 9953.389875,
+            "median_ns": 9386,
+            "p95_ns": 11783,
+            "p99_ns": 22932.36999999994,
+            "batch_mean_sd_ns": 280.61058295577214,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "sun_orientation": {
+            "mean_ns": 27167.154458333334,
+            "median_ns": 25972,
+            "p95_ns": 33045.45,
+            "p99_ns": 48988.279999999955,
+            "batch_mean_sd_ns": 377.93981544545846,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "all": {
+            "mean_ns": 8283.526041666666,
+            "median_ns": 7394,
+            "p95_ns": 13060,
+            "p99_ns": 18240.459999999926,
+            "batch_mean_sd_ns": 1684.3427592045675,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          }
+        },
+        "sun_toggle_test": {
+          "utc_only_vs_utc_sun": {
+            "identical_operation_counts": true,
+            "spkez_calls_per_call": [
+              0.0,
+              0.0
+            ],
+            "mean_difference_ns": -88.47745833333283,
+            "t_statistic": -0.8267879844519471,
+            "ci95_ns": [
+              -298.22387651366535,
+              121.26895984699968
+            ],
+            "difference_distinguishable_from_variability": false
+          },
+          "orientation_only_vs_sun_orientation": {
+            "identical_operation_counts": true,
+            "spkez_calls_per_call": [
+              0.0,
+              0.0
+            ],
+            "mean_difference_ns": 366.13129166666477,
+            "t_statistic": 1.6108389757822017,
+            "ci95_ns": [
+              -79.36161138293869,
+              811.6241947162682
+            ],
+            "difference_distinguishable_from_variability": false
+          }
+        }
+      },
+      {
+        "model": "jb2008",
+        "result_checksum": "f712343616e717e5",
+        "all_configurations_bitwise_identical": true,
+        "per_configuration": {
+          "off_off_off": {
+            "mean_ns": 36170.76279166667,
+            "median_ns": 33815,
+            "p95_ns": 52341.399999999994,
+            "p99_ns": 73592.18999999997,
+            "batch_mean_sd_ns": 1407.556318972229,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "utc_only": {
+            "mean_ns": 15872.039416666667,
+            "median_ns": 15117,
+            "p95_ns": 20030.499999999993,
+            "p99_ns": 32144.459999999926,
+            "batch_mean_sd_ns": 516.746533983939,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "sun_only": {
+            "mean_ns": 35529.196958333334,
+            "median_ns": 33669,
+            "p95_ns": 50192.39999999998,
+            "p99_ns": 66016.44999999992,
+            "batch_mean_sd_ns": 1231.1928514803772,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "orientation_only": {
+            "mean_ns": 34323.20520833333,
+            "median_ns": 31850,
+            "p95_ns": 52754,
+            "p99_ns": 64298.45999999993,
+            "batch_mean_sd_ns": 2253.056521759626,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "utc_orientation": {
+            "mean_ns": 13855.493041666667,
+            "median_ns": 13143,
+            "p95_ns": 18451.449999999993,
+            "p99_ns": 27708.18999999997,
+            "batch_mean_sd_ns": 403.55060796120273,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "utc_sun": {
+            "mean_ns": 16409.744166666667,
+            "median_ns": 15163,
+            "p95_ns": 24218,
+            "p99_ns": 33375.08999999998,
+            "batch_mean_sd_ns": 1517.4758669398868,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "sun_orientation": {
+            "mean_ns": 34002.80141666667,
+            "median_ns": 31832,
+            "p95_ns": 49484.45,
+            "p99_ns": 60386.26999999996,
+            "batch_mean_sd_ns": 2727.6314287041023,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "all": {
+            "mean_ns": 13939.851875,
+            "median_ns": 13115,
+            "p95_ns": 18800.449999999993,
+            "p99_ns": 29205.01,
+            "batch_mean_sd_ns": 440.9200323283977,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 0.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          }
+        },
+        "sun_toggle_test": {
+          "utc_only_vs_utc_sun": {
+            "identical_operation_counts": true,
+            "spkez_calls_per_call": [
+              0.0,
+              0.0
+            ],
+            "mean_difference_ns": -536.3537499999984,
+            "t_statistic": -1.1590326310779857,
+            "ci95_ns": [
+              -1443.3630280927591,
+              370.6555280927622
+            ],
+            "difference_distinguishable_from_variability": false
+          },
+          "orientation_only_vs_sun_orientation": {
+            "identical_operation_counts": true,
+            "spkez_calls_per_call": [
+              0.0,
+              0.0
+            ],
+            "mean_difference_ns": 320.06175000000803,
+            "t_statistic": 0.3133917151159878,
+            "ci95_ns": [
+              -1681.653674314388,
+              2321.777174314404
+            ],
+            "difference_distinguishable_from_variability": false
+          }
+        }
+      }
+    ],
+    "diagnostics": [
+      {
+        "model": "nrlmsise00",
+        "result_checksum": "b3b699b2b310bc65",
+        "all_configurations_bitwise_identical": true,
+        "per_configuration": {
+          "off_off_off": {
+            "mean_ns": 31756.296666666665,
+            "median_ns": 28655,
+            "p95_ns": 50925.049999999996,
+            "p99_ns": 66741.82999999987,
+            "batch_mean_sd_ns": 2995.6393157229686,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 2.0,
+              "pxform": 1.0,
+              "spkez": 0.0
+            }
+          },
+          "utc_only": {
+            "mean_ns": 10598.187166666667,
+            "median_ns": 9717,
+            "p95_ns": 12142,
+            "p99_ns": 24494,
+            "batch_mean_sd_ns": 895.6866498548201,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 0.0,
+              "pxform": 1.0,
+              "spkez": 0.0
+            }
+          },
+          "sun_only": {
+            "mean_ns": 31175.474375,
+            "median_ns": 29013,
+            "p95_ns": 46875.05,
+            "p99_ns": 61359.739999999874,
+            "batch_mean_sd_ns": 1738.188753150438,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 2.0,
+              "pxform": 1.0,
+              "spkez": 0.0
+            }
+          },
+          "orientation_only": {
+            "mean_ns": 28548.001666666667,
+            "median_ns": 26460,
+            "p95_ns": 44414.45,
+            "p99_ns": 52946.17999999997,
+            "batch_mean_sd_ns": 1288.495996248328,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 2.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "utc_orientation": {
+            "mean_ns": 8355.574083333333,
+            "median_ns": 7687,
+            "p95_ns": 13657,
+            "p99_ns": 18864.089999999986,
+            "batch_mean_sd_ns": 1028.6569886438717,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "utc_sun": {
+            "mean_ns": 10716.809583333334,
+            "median_ns": 9772,
+            "p95_ns": 17551.449999999993,
+            "p99_ns": 24834.639999999898,
+            "batch_mean_sd_ns": 1289.9580699955086,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 0.0,
+              "pxform": 1.0,
+              "spkez": 0.0
+            }
+          },
+          "sun_orientation": {
+            "mean_ns": 29698.013083333335,
+            "median_ns": 26460,
+            "p95_ns": 41806.05,
+            "p99_ns": 56776.17999999997,
+            "batch_mean_sd_ns": 5173.399831759533,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 2.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          },
+          "all": {
+            "mean_ns": 8198.409333333333,
+            "median_ns": 7669,
+            "p95_ns": 11746.05,
+            "p99_ns": 18248.099999999984,
+            "batch_mean_sd_ns": 503.7094213273403,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 0.0
+            }
+          }
+        },
+        "sun_toggle_test": {
+          "utc_only_vs_utc_sun": {
+            "identical_operation_counts": true,
+            "spkez_calls_per_call": [
+              0.0,
+              0.0
+            ],
+            "mean_difference_ns": -118.81774999999834,
+            "t_statistic": -0.2620919700018066,
+            "ci95_ns": [
+              -1007.3714512003498,
+              769.7359512003532
+            ],
+            "difference_distinguishable_from_variability": false
+          },
+          "orientation_only_vs_sun_orientation": {
+            "identical_operation_counts": true,
+            "spkez_calls_per_call": [
+              0.0,
+              0.0
+            ],
+            "mean_difference_ns": -1150.1498750000028,
+            "t_statistic": -0.7473090885720408,
+            "ci95_ns": [
+              -4166.697899737013,
+              1866.3981497370078
+            ],
+            "difference_distinguishable_from_variability": false
+          }
+        }
+      },
+      {
+        "model": "jb2008",
+        "result_checksum": "f712343616e717e5",
+        "all_configurations_bitwise_identical": true,
+        "per_configuration": {
+          "off_off_off": {
+            "mean_ns": 36602.47445833333,
+            "median_ns": 34293,
+            "p95_ns": 52671.5,
+            "p99_ns": 69414.19999999981,
+            "batch_mean_sd_ns": 2402.2471209459045,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 2.0,
+              "pxform": 1.0,
+              "spkez": 1.0
+            }
+          },
+          "utc_only": {
+            "mean_ns": 16273.337916666667,
+            "median_ns": 15466,
+            "p95_ns": 21218.249999999967,
+            "p99_ns": 32934.6399999999,
+            "batch_mean_sd_ns": 437.986837893941,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 0.0,
+              "pxform": 1.0,
+              "spkez": 1.0
+            }
+          },
+          "sun_only": {
+            "mean_ns": 36181.51525,
+            "median_ns": 34293,
+            "p95_ns": 48649.89999999998,
+            "p99_ns": 63067.08999999998,
+            "batch_mean_sd_ns": 725.037990130217,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 2.0,
+              "pxform": 1.0,
+              "spkez": 1.0
+            }
+          },
+          "orientation_only": {
+            "mean_ns": 34027.730416666665,
+            "median_ns": 32227,
+            "p95_ns": 46894.49999999999,
+            "p99_ns": 62703.02999999952,
+            "batch_mean_sd_ns": 567.109666420535,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 2.0,
+              "pxform": 0.0,
+              "spkez": 1.0
+            }
+          },
+          "utc_orientation": {
+            "mean_ns": 14025.210458333333,
+            "median_ns": 13464,
+            "p95_ns": 16871,
+            "p99_ns": 27691.079999999987,
+            "batch_mean_sd_ns": 282.31064072694664,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 1.0
+            }
+          },
+          "utc_sun": {
+            "mean_ns": 16281.549041666667,
+            "median_ns": 15457,
+            "p95_ns": 19700,
+            "p99_ns": 33347,
+            "batch_mean_sd_ns": 345.9394892127308,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 0.0,
+              "pxform": 1.0,
+              "spkez": 1.0
+            }
+          },
+          "sun_orientation": {
+            "mean_ns": 33872.94216666667,
+            "median_ns": 32218,
+            "p95_ns": 45562.94999999998,
+            "p99_ns": 60495.009999999995,
+            "batch_mean_sd_ns": 544.7146462414751,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 2.0,
+              "pxform": 0.0,
+              "spkez": 1.0
+            }
+          },
+          "all": {
+            "mean_ns": 14052.097916666668,
+            "median_ns": 13473,
+            "p95_ns": 16798,
+            "p99_ns": 28205.269999999957,
+            "batch_mean_sd_ns": 222.02188568066222,
+            "calls": 24000,
+            "per_call_operations": {
+              "et2utc": 1.0,
+              "str2et": 0.0,
+              "pxform": 0.0,
+              "spkez": 1.0
+            }
+          }
+        },
+        "sun_toggle_test": {
+          "utc_only_vs_utc_sun": {
+            "identical_operation_counts": true,
+            "spkez_calls_per_call": [
+              1.0,
+              1.0
+            ],
+            "mean_difference_ns": -9.084750000001804,
+            "t_statistic": -0.05638582992541308,
+            "ci95_ns": [
+              -324.8752601965774,
+              306.7057601965738
+            ],
+            "difference_distinguishable_from_variability": false
+          },
+          "orientation_only_vs_sun_orientation": {
+            "identical_operation_counts": true,
+            "spkez_calls_per_call": [
+              1.0,
+              1.0
+            ],
+            "mean_difference_ns": 156.83366666665825,
+            "t_statistic": 0.6909087078080034,
+            "ci95_ns": [
+              -288.0789291550054,
+              601.7462624883219
+            ],
+            "difference_distinguishable_from_variability": false
+          }
+        }
+      }
+    ]
+  }
+}

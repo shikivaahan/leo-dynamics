@@ -1,5 +1,39 @@
 # ATM-OPT-001 validation
 
+## Numerical Accuracy Impact
+
+**Did these optimisations change numerical accuracy? No — none of the measured outputs changed by a single bit.**
+
+Every comparison below used a numerical tolerance of **zero**. JSON numeric fields were compared after packing each value into binary64 (so signed zero and every bit of every double matter), and native JB2008 streams were compared byte-for-byte.
+
+| Scientific output | Changed? | Comparison method |
+|---|---|---|
+| Density | No | binary64 equality over 85,680 fixture outputs and 144 complete series |
+| Temperature (local and exospheric) | No | binary64 equality in the extended series of every configuration |
+| Native atmospheric inputs (15 JB2008 arguments) | No | byte-for-byte over 3,392,200 real bridge invocations |
+| Native atmospheric outputs (3 JB2008 results) | No | byte-for-byte over the same 3,392,200 invocations |
+| Drag force and torque | No | binary64 equality in the extended series |
+| Position and velocity | No | binary64 equality, plus frozen trajectory checksums |
+| Quaternion and angular velocity | No | binary64 equality, plus frozen trajectory checksums |
+| Cumulative work (drag and non-gravitational) | No | binary64 equality in the extended series |
+| Nominal trajectory outputs | No | nine frozen direct-v2 series, byte-equal |
+| Refined trajectory outputs | No | nine frozen refined checksums, equal |
+
+### Three distinct claims
+
+**Numerical equivalence — established within the tested scope.** For every configuration tested, the optimised implementation produced bitwise identical outputs to the unchanged `6a1ad59` original across 10,710 fixture grid points, nine frozen nominal series, nine frozen refined checksums, 144 complete nominal/refined series (state, velocity, attitude, body rate, altitude, density, temperatures, constituents, drag force/torque, cumulative works, matched energy change) and 3,392,200 actual native JB2008 invocations. Test scope: three cases × three models × two integrators, five fixture epochs, two Earth-fixed frames, and the concurrent/lifecycle boundaries listed below.
+
+**Numerical convergence — preserved, and not exercised as a new claim.** The integrator path is unchanged: identical Dopri5 production settings, identical RKF7(8) refinement tolerances, identical force models and identical RHS call counts. Because outputs are bitwise identical, the integrator is not asked to converge through any different evaluation sequence — the same calls occur in the same order. This is the strongest available statement short of re-deriving convergence: optimisation removed redundant identical SPICE calls, it did not change which epochs the integrator visits, how many times, or what it computes. No new convergence experiment was run, and none is claimed.
+
+**Physical model accuracy — unchanged, and no improvement is claimed.** NRLMSISE-00 and JB2008 were neither modified nor re-tuned. Atmospheric density is still a fresh unchanged native evaluation on every call; nothing was cached, interpolated or approximated. The optimisations removed repeated *identical* preprocessing, so they cannot make the empirical models better representations of the real atmosphere. Two pre-existing limitations are unchanged and remain open:
+
+- **JB2008 altitude datum.** The model is supplied geodetic ellipsoidal height, not a spherical radius offset; its treatment of the reference datum is a property of the frozen upstream model and is untouched by this work.
+- **CASE-C numerical sensitivity.** CASE-C remains the sensitive stress case; its sensitivity characteristics are unchanged. As before, no convergence threshold is asserted for it.
+
+Scientific equivalence to the previous implementation is **not** proof of absolute physical accuracy. Bitwise equality proves only that the optimisation preserved the original behaviour, including any pre-existing error. Absolute accuracy still rests on the upstream model validation evidence (17 official NRLMSISE-00 cases, 13,320 JB2008 SET validation fixtures, 12 full-precision independent densities), all of which passed with their existing, unchanged tolerances and no skips. Those tolerances are model-validation tolerances, not optimisation tolerances, and were neither relaxed nor re-pinned.
+
+Finite testing cannot prove universal mathematical equivalence. The claim made here is bounded and explicit: across the enumerated workloads, configurations, epochs, frames and concurrency boundaries, every measured value is bitwise identical.
+
 ## Exercised result
 
 `evidence/validation/verification.json`: all comparisons passed. `commands.json` retains command arguments, return codes, stdout/stderr and test environment. `comparisons.json` records each exact comparison and the first difference (null for every completed comparison).

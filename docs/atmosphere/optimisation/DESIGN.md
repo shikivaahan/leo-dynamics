@@ -65,6 +65,20 @@ A process-owned 256-entry cache comprises 64 sets and four FIFO ways. Keys conta
 
 ## Synchronisation and lifecycle
 
+### Two UTC execution paths
+
+`utc_calendar(epoch, reuse)` has two distinct paths, sharing one conversion helper:
+
+**Direct path (`reuse=false`).** One `SpiceLock` acquisition wraps the entire conversion: SPICE error mode, `et2utc_c`, parsing, both midnight `str2et_c` calls, day-length validation and quasi-MJD. This is a transcription of the original `6a1ad59` function, not an approximation of it. No generation is sampled, no lock is dropped, no cache is searched and no cache entry is written. This path is what diagnostic and A/B comparisons use to isolate the unchanged cost, so it must not carry reuse bookkeeping overhead.
+
+**Reused path (`reuse=true`).** The generation-rechecked, two-phase path described above: SPICE conversion under lock, parsing unlocked, generation recheck, cache search, and a second locked phase for a miss.
+
+Both call `convert_calendar_locked`, which performs every CSPICE call in the original order and holds the original error and leap-second validation. There is exactly one definition of the fragile time-conversion logic, so the two paths cannot drift in meaning, in error behaviour or in leap-second handling. `finish_calendar` likewise computes seconds-of-day and quasi-MJD once, in the original operation order.
+
+The original `6a1ad59` behaviour is therefore preserved *exactly* in the disabled path and *provably identically* in the reused path, which is why the whole optimisation can be switched off without a measurable penalty.
+
+### Locking
+
 The existing CSPICE mutex protects all library CSPICE calls, cache accesses, generation changes and diagnostic counters. Orientation hits use that same mutex; no obsolete-generation hit can linearize after a managed mutation. UTC generation rechecking covers its unlocked non-SPICE interval. Const observations can be shared across concurrently evaluated trajectories; no mutable observation is shared.
 
 Every actual library `furnsh_c` or `unload_c` attempt invalidates both caches and advances the generation **before** mutation. Partial metakernel load failure and cleanup unload also invalidate. Adding/removing a refcount owner without a kernel mutation does not invalidate. Cache entries are cleared, FIFO indices reset, and old observations become incompatible. Generation wrap terminates rather than reviving old provenance. Cache storage is process-owned for the library lifetime, not provider-owned; the final kernel owner unloading invalidates entries before they can be reused.

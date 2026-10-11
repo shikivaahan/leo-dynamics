@@ -51,7 +51,17 @@ Sun sharing interacts strongly with UTC reuse: measured Sun-only speedups (0.71�
 
 ## C. Cache statistics
 
-Fixed cache memory: 26,376 bytes total, of which 26,112 bytes are the 256 orientation matrices and 256 bytes the 32-date civil-day table. Capacity: 32 civil dates (FIFO), 256 matrices (64 sets × 4 FIFO ways). Occupancy after every workload reached full capacity where reuse existed.
+Fixed cache storage is 26,376 bytes, reported by the provider as the sum of real `sizeof` expressions rather than a hand-written constant. Verified on this toolchain/ABI by compiling the exact struct definitions from `src/environment/spice.cpp`:
+
+| Storage | Bytes | Derivation |
+|---|---:|---|
+| Civil-day entries | 1,536 | `sizeof(CivilDay)` 48 × 32 |
+| Orientation entries | 24,576 | `sizeof(Orientation)` 96 × 256 |
+| Orientation FIFO indices | 256 | `sizeof(std::array<unsigned,64>)` |
+| Civil-day FIFO index | 8 | `sizeof(std::size_t)` |
+| **Total** | **26,376** | matches the retained `cache_bytes` counter |
+
+`sizeof(CivilDay)` is 48 and `sizeof(Orientation)` is 96 (9 doubles matrix plus two `uint64` keys and a padded frame flag, 8-byte alignment). The earlier claim of "26,112 bytes of orientation matrices and 256 bytes of civil-day table" was wrong and is corrected here. These figures are ABI- and compiler-specific; the code never hard-codes them, so the counter is authoritative on any platform. This is fixed cache storage only, excluding the kernel-ownership `std::map`, the SPICE mutex, diagnostic counters, and CSPICE's own state. Capacity: 32 civil dates (FIFO), 256 matrices (64 sets × 4 FIFO ways). Occupancy after every workload reached full capacity where reuse existed.
 
 Six-hour propagation, diagnostic counters (three repeats summed):
 
@@ -133,3 +143,65 @@ No individual optimisation was reverted. No optimisation was found that regresse
 ## H. Independent speedups are not additive
 
 The All configuration is measured directly in every table (provider 3.19×/3.22×, propagation 2.26–2.73×, RHS 2.20–2.33×). Individual figures (UTC 2.03–2.61×, Sun 0.81–1.05×, orientation 1.05–1.05×) illustrate attribution and interaction; their sum exceeds the measured combination because the removed SPICE calls share the same critical section. Amdahl reasoning supports interpretation only; every speedup in this report is a runtime measurement.
+---
+
+# Closure measurements (2026-10-11)
+
+Everything below is a **new** experiment in `evidence/cleanup-interleave/`, measured after the disabled-path fix with an order-interleaved protocol. The earlier tables in this document (sections A–H) remain the original evidence in `evidence/measurements/` and are unmodified. Where the two disagree, the earlier block-order measurement is the one known to confound configuration with execution order; the interleaved numbers are the trustworthy provider-latency figures. Propagation, concurrency and counter results were not re-measured because the code change cannot affect them: it is confined to the `reuse=false` UTC branch, which production never takes.
+
+## Protocol
+
+Every configuration is warmed (256 calls) before any measurement. Configurations are then executed round-robin inside each of 12 repetitions, with the order shuffled per repetition from recorded seed `20251011` and the order written to the evidence. Each configuration contributes 2,000 timed calls per repetition; all 24,000 per-call samples and all 12 batch means are retained per configuration. Comparisons use Welch intervals on batch means (95%, normal approximation). Three binaries ran serially on CPU0: unchanged original, uninstrumented candidate, diagnostic candidate. Nothing was compiled during measurement.
+
+## Provider latency, order-interleaved (mean of 24,000 calls)
+
+| Model | Configuration | Mean ns | Median ns | p95 ns | p99 ns | Batch SD ns |
+|---|---|---:|---:|---:|---:|---:|
+| NRLMSISE-00 | Unchanged original | 29,265 | 27,938 | — | — | 720 |
+| NRLMSISE-00 | **All off (control)** | 31,756 | 28,655 | 50,925 | 66,742 | 2,996 |
+| NRLMSISE-00 | Sun only | 31,176 | 29,013 | 46,875 | 61,360 | 1,738 |
+| NRLMSISE-00 | Orientation only | 28,548 | 26,460 | 44,414 | 52,946 | 1,289 |
+| NRLMSISE-00 | UTC only | 10,598 | 9,717 | 12,142 | 24,494 | 896 |
+| NRLMSISE-00 | UTC + Sun | 10,717 | 9,772 | 12,730 | 23,410 | 1,290 |
+| NRLMSISE-00 | UTC + Orientation | 8,356 | 7,687 | 12,021 | 23,777 | 1,029 |
+| NRLMSISE-00 | **All on** | 8,198 | 7,669 | 11,634 | 23,229 | 504 |
+| JB2008 | Unchanged original | 36,482 | 34,193 | — | — | 1,866 |
+| JB2008 | **All off (control)** | 36,603 | 34,293 | 50,180 | 66,529 | 2,402 |
+| JB2008 | Sun only | 36,182 | 34,293 | 49,336 | 68,635 | 725 |
+| JB2008 | Orientation only | 34,028 | 32,227 | 45,140 | 55,033 | 567 |
+| JB2008 | UTC only | 16,273 | 15,466 | 22,545 | 36,018 | 438 |
+| JB2008 | UTC + Sun | 16,282 | 15,457 | 22,041 | 33,706 | 346 |
+| JB2008 | UTC + Orientation | 14,025 | 13,464 | 19,829 | 31,353 | 282 |
+| JB2008 | **All on** | 14,052 | 13,473 | 19,377 | 30,494 | 222 |
+
+Combined speedups against the unchanged original, measured directly: NRLMSISE-00 3.57×, JB2008 2.60× on mean provider latency. Interleaved ratios are modestly better than the earlier block-order figures (3.19×/3.22×), because the earlier all-on batches were measured in the thermally and cache-worst position of their sequence.
+
+## Disabled-path regression: resolved
+
+The all-off control previously measured 34,168 ns (NRLMSISE-00) and 44,621 ns (JB2008), an 0.81–0.89× regression against the unchanged original. After the two-path change (OPT-D10) it measures 31,756 ns and 36,603 ns. Against the unchanged original, measured in the same interleaved run:
+
+| Model | Configuration | Mean difference | t | 95% interval | Distinguishable? |
+|---|---|---:|---:|---:|---|
+| NRLMSISE-00 | All off | +581.7 ns | +1.57 | [−144.5, +1,307.9] ns | No |
+| JB2008 | All off | −309.9 ns | −0.45 | [−1,661.0, +1,041.2] ns | No |
+| NRLMSISE-00 | All on | −20,982.1 ns | −39.68 | [−22,018.6, −19,945.6] ns | Yes (gain) |
+| JB2008 | All on | −22,544.7 ns | −39.47 | [−23,664.3, −21,425.2] ns | Yes (gain) |
+
+The disabled path is now statistically indistinguishable from the unchanged original (both intervals contain zero), and the default optimised path is unchanged and remains a large, highly significant gain (|t| ≈ 40). Residual difference is within WSL2 run-to-run variation: 12 repetitions on one shared CPU, no frequency control, no dedicated cores.
+
+## Benchmark consistency: the NRLMSISE-00 anomaly resolved
+
+The apparent inconsistency was **measurement order, not code**. Under the interleaved protocol, with actual per-call operation counts from the diagnostic build:
+
+| Model | Configuration pair | str2et/call | spkez/call | Result checksum | Mean difference | t | 95% interval | Distinguishable? |
+|---|---|---|---|---|---:|---:|---:|---|
+| NRLMSISE-00 | UTC only vs UTC + Sun | 0.00 / 0.00 | **0.00 / 0.00** | identical | −118.8 ns | −0.26 | [−1,007.4, +769.7] | No |
+| NRLMSISE-00 | Orientation only vs Sun + Orientation | 2.00 / 2.00 | **0.00 / 0.00** | identical | −1,150.1 ns | −0.75 | [−4,166.7, +1,866.4] | No |
+| JB2008 | UTC only vs UTC + Sun | 0.00 / 0.00 | 1.00 / 1.00 | identical | −9.1 ns | −0.06 | [−324.9, +306.7] | No |
+| JB2008 | Orientation only vs Sun + Orientation | 2.00 / 2.00 | 1.00 / 1.00 | identical | +156.8 ns | +0.69 | [−288.1, +601.7] | No |
+
+NRLMSISE-00 performs **zero** Sun lookups per call in every configuration — it acquires no Sun at all — and all eight configurations return one identical result checksum, equal to the unchanged original. Every Sun-toggle difference has a 95% interval spanning zero. The earlier 11,652 / 10,133 / 8,177 / 9,543 ns spread was an artefact of contiguous, non-randomised execution order. JB2008, which does consume a Sun, shows the same pattern here because at a *fixed* epoch both its UTC-only and UTC+Sun variants still perform exactly one Sun lookup; Sun sharing only removes the duplicate when a caller supplies an observation, which the propagation workload does and this fixed-epoch provider workload does not.
+
+## Untouched by the cleanup
+
+Disabled-path overhead is the only performance dimension the code change can affect, and it is confined to `utc_calendar(reuse=false)`, which production never takes. The six-hour propagation, RHS latency, concurrency throughput, cache counters and SPICE-call elimination in sections B–G above were re-verified for scientific equality (all bitwise identical) but are not re-timed; the timing values there stand.

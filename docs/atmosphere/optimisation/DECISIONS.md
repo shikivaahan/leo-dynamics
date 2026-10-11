@@ -100,3 +100,42 @@ Performance values and retention verdicts are in RESULTS.md and machine-readable
 - **Performance effect:** only the completed identified run informs RESULTS.md.
 - **Correctness:** real-section smoke, actual baseline CSPICE counts and exact output equality. Source/input/kernel/dependency/output hashes make the completed run reproducible.
 - **Limits:** WSL2 variability and limited repeated wall-time samples remain documented; a descriptive p99 is not a precise population-tail estimate.
+
+---
+
+# Closure decisions (2026-10-11)
+
+The three optimisations are **retained unchanged in purpose, behaviour and API**. The closure pass changed one implementation detail (OPT-D10), corrected one documented fact (OPT-D11), and resolved one measurement artefact (OPT-D12). No optimisation was reverted.
+
+## OPT-D10 — Two explicit UTC paths instead of one shared path
+
+- **Problem:** with reuse disabled, `utc_calendar` still paid for a two-phase lock/unlock/relock cycle, a generation sample, a generation recheck and a cache search that could never hit. The all-off control measured 0.81–0.89× of the unchanged original, which is an artefact of the new interface rather than of any optimisation.
+- **Alternatives:** accept the regression and document it; keep one unified path; branch on `reuse` and give the disabled path a single-lock transcription of the original conversion; micro-optimise the shared path instead.
+- **Chosen:** branch on `reuse`. The disabled path performs the original conversion under one lock with no generation sampling, no unlock/relock and no cache access. The reused path keeps its existing generation-rechecked structure. Both call one shared helper (`convert_calendar_locked`) plus one shared finisher (`finish_calendar`), so the fragile time-conversion logic, error behaviour, leap-second validation and quasi-MJD order exist in exactly one place and cannot drift.
+- **Rationale:** the disabled path must be a faithful baseline for A/B measurement. Adding a branch is cheaper than carrying reuse bookkeeping in a path that cannot use reuse, and factoring the conversion avoids duplicating fragile logic. Reuse semantics, generation behaviour, leap-second handling, error types and thread safety are untouched.
+- **Source:** `src/environment/spice.cpp` (`convert_calendar_locked`, `finish_calendar`, `utc_calendar`).
+- **Performance effect:** measured after the change. The all-off control is now statistically indistinguishable from the unchanged original (see RESULTS.md); the all-on path is unchanged and remains a large, highly significant gain.
+- **Correctness evidence:** new `[spice][reuse]` test asserting the disabled path equals the reused path bitwise, never populates the cache, repeats identically, and preserves both invalid-argument behaviours; full regression suite and all-eight-combination equivalence re-verified after the change.
+- **Known limitations:** two entry paths must be maintained. The shared helper is what bounds the risk; a future change to conversion semantics must be made in the helper, not in one path.
+
+## OPT-D11 — Cache footprint reported from real `sizeof`, not a prose estimate
+
+- **Problem:** RESULTS.md stated a 26,376-byte total with an incorrect breakdown (26,112 orientation + 256 civil-day), which does not sum to the total and misstated the composition.
+- **Alternatives:** keep the estimate; state only the total; verify each component by compiling the actual struct definitions and correct the breakdown.
+- **Chosen:** measured the real `sizeof` values by compiling the exact struct definitions from `src/environment/spice.cpp` on this toolchain, and corrected RESULTS.md and PARAMETERS.md to a verified per-component table (48 × 32 = 1,536 civil-day; 96 × 256 = 24,576 orientation; 256 FIFO indices; 8 index). The provider already reports this total from `sizeof` expressions at run time; the retained `cache_bytes` counter matches exactly.
+- **Rationale:** documentation must not hard-code unverified struct sizes. Sizes are ABI/compiler dependent, so the run-time `sizeof` sum is authoritative and the prose is explicitly labelled as toolchain-specific.
+- **Source:** RESULTS.md §C, PARAMETERS.md, `docs/atmosphere/optimisation/evidence/cleanup-*/…` counter evidence.
+- **Performance effect:** none; documentation only. Corrects a reported fact.
+- **Correctness evidence:** compiled `sizeof` probe; retained `cache_bytes` counter equals 26,376.
+- **Known limitations:** the breakdown is specific to this toolchain/ABI; the total is authoritative everywhere.
+
+## OPT-D12 — The NRLMSISE-00 Sun-toggle timing anomaly was measurement order, not code
+
+- **Problem:** the previous run reported materially different provider times for NRLMSISE-00 across configurations that differ only in `sun_sharing` (UTC only 11,652 ns, UTC + Sun 10,133 ns, UTC + orientation 8,177 ns, All 9,543 ns), even though NRLMSISE-00 consumes no Sun. The cause was not identified in the previous pass.
+- **Alternatives:** attribute the differences to a real code path; accept them as unexplained; re-measure with an order-balanced, interleaved protocol and diagnostic operation counts.
+- **Chosen:** a new interleaved experiment (separate source, binaries and evidence) that warms every configuration, then executes configurations round-robin inside each repetition with a recorded seed, retains per-repetition batch means and all per-call samples, and records the actual per-call SPICE operation counts for every configuration.
+- **Rationale:** the previous protocol ran each configuration's batches as one contiguous block, so a configuration difference was confounded with execution order and drift. Under the interleaved protocol, NRLMSISE-00 performs **zero** `spkez` calls in every configuration (it acquires no Sun at all) and all eight configurations return one identical result checksum. Every Sun-toggle mean difference has a Welch 95% interval spanning zero. The anomaly is therefore measurement variance, and toggling Sun sharing for NRLMSISE-00 changes no operation and no result.
+- **Source:** `docs/atmosphere/optimisation/interleave.cpp`, `run_interleave.py`, `evidence/cleanup-interleave/`.
+- **Performance effect:** no production change. Supplies the trustworthy provider-latency table used in RESULTS.md and confirms the disabled-path fix.
+- **Correctness evidence:** interleaved run requires every configuration to share one result checksum and one checksum equal to the unchanged original; both verified.
+- **Known limitations:** 12 repetitions give descriptive distributions and batch-level intervals, not a precise population p99. WSL2 scheduling remains uncontrolled.

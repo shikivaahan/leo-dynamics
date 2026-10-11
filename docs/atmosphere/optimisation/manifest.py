@@ -37,6 +37,16 @@ def main():
     benchmark=load(out/args.measurements/'manifest.json')
     if not validation['all_bitwise_equal'] or not controls['all_bitwise_equal']:
         raise RuntimeError('scientific evidence is not complete')
+    # Closure-pass evidence (2026-10-11) is additional, versioned and never
+    # replaces the original evidence above.
+    cleanup={}
+    for name in ('cleanup-interleave','cleanup-validation','cleanup-controls'):
+        directory=out/name
+        if directory.is_dir():
+            verification=load(directory/'verification.json')
+            cleanup[name]=dict(verification=verification,
+                manifest=sha(directory/'manifest.json') if (directory/'manifest.json').is_file() else None,
+                files=sorted(q.name for q in directory.iterdir() if q.is_file()))
     if not (out/args.measurements/'summary.json').is_file():
         raise RuntimeError('benchmark reduction is absent')
     builds={}
@@ -76,7 +86,8 @@ def main():
         source_revision=fact(['git','rev-parse','HEAD']),original_revision=fact(['git','-C',args.original_source,'rev-parse','HEAD']),
         implementation_commits={'utc':'eca483f','sun':'856dacf','orientation':'a03b98f'},
         manifest_lifecycle='Generated after the source/tooling/evidence commit and before the documentation commit; final documentation commit is reported in delivery, avoiding a self-referential hash.',
-        science=validation,independent_controls=controls,benchmark_manifest=str((out/args.measurements/'manifest.json').relative_to(ROOT)),
+        science=validation,independent_controls=controls,cleanup_pass=cleanup,
+        benchmark_manifest=str((out/args.measurements/'manifest.json').relative_to(ROOT)),
         benchmark_environment=benchmark['source'],platform=platform.platform(),compilers=compilers,builds=builds,
         build_cache_variables=caches,source_hashes=source_hashes,tool_and_doc_hashes=tool_and_doc_hashes,
         dependency_hashes=dependencies,installed_header_dependencies=header_hashes,cspice_library=benchmark['cspice_library'],
