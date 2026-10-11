@@ -1,0 +1,44 @@
+{
+  "provider_bitwise_equal_to_original": true,
+  "locality_bitwise_equal_to_original": true,
+  "concurrency_bitwise_equal_to_original": true,
+  "propagate_bitwise_equal_to_original": true,
+  "propagate_checksums": {
+    "CASE-A_exponential": "c62559158595e38b",
+    "CASE-A_jb2008": "c4efb98e5a5d53b1",
+    "CASE-A_nrlmsise00": "349cb3a2623b7fb4",
+    "CASE-B_exponential": "ef137c6c71673689",
+    "CASE-B_jb2008": "abc7208a5238c164",
+    "CASE-B_nrlmsise00": "a448f2a488cfe78",
+    "CASE-C_exponential": "5b85591bde790979",
+    "CASE-C_jb2008": "df04599b172ddc9c",
+    "CASE-C_nrlmsise00": "b83356ec9d7c4ed2"
+  },
+  "original_diagnostics": {
+    "provider_bitwise_equal_to_original": true,
+    "locality_bitwise_equal_to_original": true,
+    "concurrency_bitwise_equal_to_original": true,
+    "propagate_bitwise_equal_to_original": true,
+    "propagate_checksums": {
+      "CASE-A_exponential": "c62559158595e38b",
+      "CASE-A_jb2008": "c4efb98e5a5d53b1",
+      "CASE-A_nrlmsise00": "349cb3a2623b7fb4",
+      "CASE-B_exponential": "ef137c6c71673689",
+      "CASE-B_jb2008": "abc7208a5238c164",
+      "CASE-B_nrlmsise00": "a448f2a488cfe78",
+      "CASE-C_exponential": "5b85591bde790979",
+      "CASE-C_jb2008": "df04599b172ddc9c",
+      "CASE-C_nrlmsise00": "b83356ec9d7c4ed2"
+    }
+  },
+  "invalidation": {
+    "results_identical_across_invalidation": true,
+    "cross_provider_compatible_sun": true,
+    "wrong_epoch_compatible_sun": false,
+    "invalidate_reuse_ns_mean": 101.636,
+    "invalidate_reuse_ns_p99": 110
+  },
+  "preserved_evidence_unchanged": true,
+  "profiling_unchanged": true,
+  "production_sources_unchanged": true
+}

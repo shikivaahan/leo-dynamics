@@ -1181,12 +1181,26 @@ TEST_CASE("JB2008 shared Sun preserves standalone results and rejects incompatib
     }
     REQUIRE_FALSE(spice.compatible_sun(old,first));
     require_same_result(expected,atmosphere.evaluate(first,position,&old));
+    const auto cross_provider=[&] {
+        const SpiceEphemerisProvider other{{lsk,spk,pck}};
+        return other.observe_sun(first);
+    }(); // Observation survives its originating provider; another owner remains.
+    REQUIRE(spice.compatible_sun(cross_provider,first));
+    require_same_result(expected,atmosphere.evaluate(first,position,&cross_provider));
+    REQUIRE_THROWS_AS(SpiceEphemerisProvider({std::filesystem::temp_directory_path()}),std::runtime_error);
+    REQUIRE_FALSE(spice.compatible_sun(cross_provider,first));
+    require_same_result(expected,atmosphere.evaluate(first,position,&cross_provider));
     const auto current=spice.observe_sun(first);
     std::vector<std::future<Result>> readers;
-    for(int i=0;i<4;++i) readers.push_back(std::async(std::launch::async,[&] {
-        return atmosphere.evaluate(first,position,&current);
-    }));
-    for(auto& result:readers) require_same_result(expected,result.get());
+    std::vector<Result> independent;
+    for(int i=0;i<4;++i) {
+        const auto trajectory_position=position_at(-45+30*i,30+40*i,350+50*i,first);
+        independent.push_back(atmosphere.evaluate(first,trajectory_position));
+        readers.push_back(std::async(std::launch::async,[&,trajectory_position] {
+            return atmosphere.evaluate(first,trajectory_position,&current);
+        }));
+    }
+    for(std::size_t i=0;i<readers.size();++i) require_same_result(independent[i],readers[i].get());
     const DirectAtmosphere exponential(Model::exponential,spice,data);
     require_same_result(exponential.evaluate(first,position),exponential.evaluate(first,position,&old));
 #ifdef LEO_HAS_NRLMSISE00

@@ -1,0 +1,16 @@
+{
+  "configurations": [
+    "off_off_off",
+    "utc_only",
+    "sun_only",
+    "orientation_only",
+    "utc_sun",
+    "utc_orientation",
+    "sun_orientation"
+  ],
+  "full_series": 126,
+  "fixture_outputs": 74970,
+  "native_calls": 2968175,
+  "all_bitwise_equal": true,
+  "baseline_verification_sha256": "168af3097154e85ec3824e670f3db4df914d3778443fa2218a6066e948420f19"
+}

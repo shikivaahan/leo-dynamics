@@ -183,6 +183,11 @@ TEST_CASE("UTC reuse preserves exact calendars across nonmonotonic boundaries","
         "2017-01-01T00:00:00","2017-01-31T23:59:59.999","2017-02-01T00:00:00",
         "2000-02-29T23:59:59.999","2000-03-01T00:00:00"})
         epochs.push_back(SpiceEphemerisProvider::epoch_from_utc(utc));
+    const auto boundary_count=epochs.size();
+    for(std::size_t i=0;i<boundary_count;++i) {
+        epochs.push_back({std::nextafter(epochs[i].et_seconds,-INFINITY)});
+        epochs.push_back({std::nextafter(epochs[i].et_seconds,INFINITY)});
+    }
     for(int pass=0;pass<3;++pass) {
         for(std::size_t i=0;i<epochs.size();++i) {
             const auto epoch=epochs[pass%2 ? epochs.size()-1-i:i];

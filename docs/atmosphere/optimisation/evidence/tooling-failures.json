@@ -1,0 +1,31 @@
+{
+  "context": "ATM-OPT-001 benchmark tooling development. Recorded for transparency; none of these runs produced published performance or scientific evidence.",
+  "policy": "A failed tooling run is not a measurement. Corrected code was rebuilt, every section of every binary was smoke-exercised, and only the completed identified run in evidence/measurements informs RESULTS.md.",
+  "failures": [
+    {
+      "run": 1,
+      "stage": "first full serial matrix",
+      "symptom": "Generated JSON nested a summary object inside a numeric field (per_call_ns written with j.add instead of j.raw), so the runner could not parse the first original benchmark document.",
+      "resolution": "Corrected serialization in benchmark.cpp; rebuilt; smoke-verified all sections."
+    },
+    {
+      "run": 2,
+      "stage": "second full serial matrix",
+      "symptom": "Object-valued sections (locality_keys, replay by-thread rows) were emitted without member names, producing malformed JSON at the recorded byte offset.",
+      "resolution": "Corrected member-name emission in benchmark.cpp; rebuilt; smoke-verified all sections."
+    },
+    {
+      "run": 3,
+      "stage": "smoke of candidate sections",
+      "symptom": "The invalidate section constructed a second provider from an empty kernel vector and aborted with 'no SPICE kernels supplied'.",
+      "resolution": "Uses the real experiment Environment::make_kernels(c) kernel set; the observation survives its originating provider only by refcount. Also corrected a stale comment claiming the cross-provider check itself changes the generation (it does not: those exact paths are already loaded, so only refcounts change)."
+    },
+    {
+      "run": 4,
+      "stage": "independent evidence review",
+      "symptom": "Read-only review of the harness identified five tooling defects before any published measurement: thread-local replay capacity loss for thread counts other than 1/2/4; cold replay initial state mismatching the warmed measured batches; a UTC 'miss path' workload that stayed within one civil date; unavailable original diagnostics reported as zeros; scientific driver and CASE input files missing from provenance hashes.",
+      "resolution": "Replay thread counts restricted to 1/2/4; replay warm state seeded from the first recorded request; UTC miss workload now cycles exact distinct civil dates prepared outside timing; original counters sourced from an identified original diagnostic binary and unavailable values emitted as null; experiment, bench support, scenario loader and CASE-A/B/C files hashed before and after the run."
+    }
+  ],
+  "not_treated_as_evidence": "evidence/benchmarks and evidence/benchmarks-complete directories were removed after the corrected complete run replaced them; retained evidence is only evidence/measurements."
+}
