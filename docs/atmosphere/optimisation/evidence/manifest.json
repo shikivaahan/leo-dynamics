@@ -20104,5 +20104,16 @@
   },
   "reproduction_commands": "docs/atmosphere/optimisation/README.md",
   "retained_baseline_build": "/tmp/atm-opt-original/build-opt-original/atmosphere_experiment",
-  "historical_preservation": "Validation compared all atmospheric/profiling/numerical-audit evidence hashes before/after; benchmark checked atmospheric evidence, frozen profiling tools/evidence and scientific driver/case inputs."
+  "historical_preservation": "Validation compared all atmospheric/profiling/numerical-audit evidence hashes before/after; benchmark checked atmospheric evidence, frozen profiling tools/evidence and scientific driver/case inputs.",
+  "source_revision_after_evidence_commit": {
+    "command": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "stdout": "27fcbb9265d530ebc64fdcef4ffa2285eb43e5c6"
+  },
+  "evidence_commit": "27fcbb9",
+  "documentation_commit": "recorded in delivery; docs committed after manifest generation so manifest hashes stay valid",
+  "retained_original_baseline_build": "/tmp/atm-opt-original/build-opt-original/atmosphere_experiment (unchanged 6a1ad59 experiment; built for an independent fixture/propagation reproduction)"
 }
