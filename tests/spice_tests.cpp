@@ -1,5 +1,8 @@
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <bit>
+#include <future>
+#include <thread>
 #include <chrono>
 #include <cmath>
 #include <cstdlib>
@@ -155,4 +158,86 @@ TEST_CASE("UTC strings convert through a leapseconds kernel","[spice][external]"
     // noon sits at ET 64.184 while TDB noon is UTC 11:58:55.816.
     REQUIRE(SpiceEphemerisProvider::epoch_from_utc("2000-01-01T12:00:00").et_seconds==Catch::Approx(64.184).margin(0.05));
     REQUIRE(SpiceEphemerisProvider::epoch_from_utc("2000-01-01T11:58:55.816").et_seconds==Catch::Approx(0.0).margin(0.05));
+}
+
+namespace {
+void require_same_calendar(const UtcCalendar& a,const UtcCalendar& b) {
+    REQUIRE(a.year==b.year);
+    REQUIRE(a.month==b.month);
+    REQUIRE(a.day==b.day);
+    REQUIRE(a.day_of_year==b.day_of_year);
+    REQUIRE(a.days_since_1970==b.days_since_1970);
+    REQUIRE(std::bit_cast<std::uint64_t>(a.seconds_of_day)==std::bit_cast<std::uint64_t>(b.seconds_of_day));
+    REQUIRE(std::bit_cast<std::uint64_t>(a.day_length_seconds)==std::bit_cast<std::uint64_t>(b.day_length_seconds));
+    REQUIRE(std::bit_cast<std::uint64_t>(a.mjd)==std::bit_cast<std::uint64_t>(b.mjd));
+}
+}
+TEST_CASE("UTC reuse preserves exact calendars across nonmonotonic boundaries","[spice][reuse][external]") {
+    const char* lsk=env_path("LEO_SPICE_TEST_LSK");
+    if(!lsk) SKIP("Set LEO_SPICE_TEST_LSK for civil-day reuse");
+    SpiceEphemerisProvider provider{{lsk}};
+    SpiceEphemerisProvider::invalidate_reuse();
+    std::vector<Epoch> epochs;
+    for(const char* utc:{"2016-12-30T23:59:59.999","2016-12-31T00:00:00",
+        "2016-12-31T23:59:59.999","2016-12-31T23:59:60","2016-12-31T23:59:60.999",
+        "2017-01-01T00:00:00","2017-01-31T23:59:59.999","2017-02-01T00:00:00",
+        "2000-02-29T23:59:59.999","2000-03-01T00:00:00"})
+        epochs.push_back(SpiceEphemerisProvider::epoch_from_utc(utc));
+    for(int pass=0;pass<3;++pass) {
+        for(std::size_t i=0;i<epochs.size();++i) {
+            const auto epoch=epochs[pass%2 ? epochs.size()-1-i:i];
+            require_same_calendar(SpiceEphemerisProvider::utc_calendar(epoch),
+                                  SpiceEphemerisProvider::utc_calendar(epoch,false));
+        }
+    }
+    const auto leap=SpiceEphemerisProvider::utc_calendar(epochs[3]);
+    REQUIRE(leap.day_length_seconds==86401);
+    REQUIRE(leap.seconds_of_day==86400);
+    REQUIRE(SpiceEphemerisProvider::utc_calendar(epochs[5]).day_length_seconds==86400);
+    REQUIRE_THROWS_AS(SpiceEphemerisProvider::utc_calendar({std::nan("")}),std::invalid_argument);
+}
+TEST_CASE("UTC reuse is bounded and cannot survive the last kernel owner","[spice][reuse][external]") {
+    const char* lsk=env_path("LEO_SPICE_TEST_LSK");
+    if(!lsk) SKIP("Set LEO_SPICE_TEST_LSK for civil-day lifecycle");
+    Epoch epoch{};
+    {
+        SpiceEphemerisProvider provider{{lsk}};
+        SpiceEphemerisProvider::invalidate_reuse();
+        epoch=SpiceEphemerisProvider::epoch_from_utc("2017-01-01T12:00:00");
+        for(int i=0;i<80;++i) {
+            const Epoch at{epoch.et_seconds+i*86400.0};
+            require_same_calendar(SpiceEphemerisProvider::utc_calendar(at),
+                                  SpiceEphemerisProvider::utc_calendar(at,false));
+        }
+        REQUIRE(SpiceEphemerisProvider::reuse_statistics().utc_entries==32);
+        require_same_calendar(SpiceEphemerisProvider::utc_calendar(epoch),
+                              SpiceEphemerisProvider::utc_calendar(epoch,false));
+        {
+            SpiceEphemerisProvider second{{lsk}};
+            REQUIRE(SpiceEphemerisProvider::reuse_statistics().utc_entries==32);
+        }
+        REQUIRE(SpiceEphemerisProvider::reuse_statistics().utc_entries==32);
+    }
+    REQUIRE(SpiceEphemerisProvider::reuse_statistics().utc_entries==0);
+    REQUIRE_THROWS_AS(SpiceEphemerisProvider::utc_calendar(epoch),std::runtime_error);
+    SpiceEphemerisProvider reloaded{{lsk}};
+    require_same_calendar(SpiceEphemerisProvider::utc_calendar(epoch),
+                          SpiceEphemerisProvider::utc_calendar(epoch,false));
+}
+TEST_CASE("Concurrent civil-day readers tolerate managed lifecycle operations","[spice][reuse][external]") {
+    const char* lsk=env_path("LEO_SPICE_TEST_LSK");
+    if(!lsk) SKIP("Set LEO_SPICE_TEST_LSK for concurrent civil-day reuse");
+    TempKernel fixture;
+    write_sun_fixture(fixture.path); // external fixture creation is quiescent
+    SpiceEphemerisProvider provider{{lsk}};
+    const auto epoch=SpiceEphemerisProvider::epoch_from_utc("2016-12-31T23:59:60");
+    const auto expected=SpiceEphemerisProvider::utc_calendar(epoch,false);
+    std::vector<std::future<std::vector<UtcCalendar>>> readers;
+    for(int t=0;t<4;++t) readers.push_back(std::async(std::launch::async,[epoch] {
+        std::vector<UtcCalendar> results;
+        for(int i=0;i<200;++i) results.push_back(SpiceEphemerisProvider::utc_calendar(epoch));
+        return results;
+    }));
+    for(int i=0;i<50;++i) { SpiceEphemerisProvider transient{only(fixture.path)}; }
+    for(auto& reader:readers) for(const auto& value:reader.get()) require_same_calendar(value,expected);
 }
