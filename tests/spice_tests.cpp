@@ -241,3 +241,72 @@ TEST_CASE("Concurrent civil-day readers tolerate managed lifecycle operations","
     for(int i=0;i<50;++i) { SpiceEphemerisProvider transient{only(fixture.path)}; }
     for(auto& reader:readers) for(const auto& value:reader.get()) require_same_calendar(value,expected);
 }
+
+namespace {
+void require_same_rotation(const Eigen::Matrix3d& a,const Eigen::Matrix3d& b) {
+    for(int i=0;i<3;++i) for(int j=0;j<3;++j)
+        REQUIRE(std::bit_cast<std::uint64_t>(a(i,j))==std::bit_cast<std::uint64_t>(b(i,j)));
+}
+}
+TEST_CASE("Orientation reuse is exact across frames adjacent epochs and eviction","[spice][reuse][external]") {
+    const char* pck=env_path("LEO_ATMOSPHERE_TEST_PCK");
+    const char* text_pck=env_path("LEO_SPICE_TEST_TEXT_PCK");
+    if(!pck || !text_pck) SKIP("Supply binary and text PCK kernels for orientation reuse");
+    SpiceEphemerisProvider provider{{pck,text_pck}};
+    SpiceEphemerisProvider::invalidate_reuse();
+    const Epoch first{64.184};
+    for(const char* frame:{"ITRF93","IAU_EARTH"}) {
+        for(const double et:{first.et_seconds,std::nextafter(first.et_seconds,INFINITY),
+                std::nextafter(first.et_seconds,-INFINITY),86464.184,first.et_seconds}) {
+            // Independent raw CSPICE oracle; no library readers are active.
+            SpiceDouble raw[3][3]{};
+            spice_return_mode();
+            pxform_c("J2000",frame,et,raw);
+            REQUIRE_FALSE(failed_c());
+            Eigen::Matrix3d expected;
+            for(int i=0;i<3;++i) for(int j=0;j<3;++j) expected(i,j)=raw[i][j];
+            require_same_rotation(SpiceEphemerisProvider::earth_fixed_rotation({et},frame),expected);
+        }
+    }
+    for(int i=0;i<1200;++i) {
+        const Epoch at{first.et_seconds+i*30.0};
+        const auto frame=i%2 ? "ITRF93":"IAU_EARTH";
+        require_same_rotation(SpiceEphemerisProvider::earth_fixed_rotation(at,frame),
+                              SpiceEphemerisProvider::earth_fixed_rotation(at,frame,false));
+    }
+    REQUIRE(SpiceEphemerisProvider::reuse_statistics().orientation_entries<=256);
+    require_same_rotation(SpiceEphemerisProvider::earth_fixed_rotation(first,"ITRF93"),
+                          SpiceEphemerisProvider::earth_fixed_rotation(first,"ITRF93",false));
+    REQUIRE_THROWS_AS(SpiceEphemerisProvider::earth_fixed_rotation({INFINITY},"ITRF93"),std::invalid_argument);
+    REQUIRE_THROWS_AS(SpiceEphemerisProvider::earth_fixed_rotation(first,"J2000"),std::invalid_argument);
+}
+TEST_CASE("Orientation hits cannot outlive kernel configuration and provider lifetimes","[spice][reuse][external]") {
+    const char* pck=env_path("LEO_ATMOSPHERE_TEST_PCK");
+    if(!pck) SKIP("Supply binary PCK for orientation lifecycle");
+    const Epoch epoch{64.184};
+    Eigen::Matrix3d expected;
+    {
+        SpiceEphemerisProvider provider{{pck}};
+        expected=SpiceEphemerisProvider::earth_fixed_rotation(epoch,"ITRF93",false);
+        require_same_rotation(SpiceEphemerisProvider::earth_fixed_rotation(epoch,"ITRF93"),expected);
+        {
+            SpiceEphemerisProvider second{{pck}};
+            require_same_rotation(SpiceEphemerisProvider::earth_fixed_rotation(epoch,"ITRF93"),expected);
+        }
+        require_same_rotation(SpiceEphemerisProvider::earth_fixed_rotation(epoch,"ITRF93"),expected);
+    }
+    REQUIRE(SpiceEphemerisProvider::reuse_statistics().orientation_entries==0);
+    REQUIRE_THROWS_AS(SpiceEphemerisProvider::earth_fixed_rotation(epoch,"ITRF93"),std::runtime_error);
+    SpiceEphemerisProvider reloaded{{pck}};
+    require_same_rotation(SpiceEphemerisProvider::earth_fixed_rotation(epoch,"ITRF93"),expected);
+    TempKernel fixture;
+    write_sun_fixture(fixture.path);
+    std::vector<std::future<std::vector<Eigen::Matrix3d>>> readers;
+    for(int t=0;t<4;++t) readers.push_back(std::async(std::launch::async,[epoch] {
+        std::vector<Eigen::Matrix3d> results;
+        for(int i=0;i<200;++i) results.push_back(SpiceEphemerisProvider::earth_fixed_rotation(epoch,"ITRF93"));
+        return results;
+    }));
+    for(int i=0;i<50;++i) { SpiceEphemerisProvider transient{only(fixture.path)}; }
+    for(auto& reader:readers) for(const auto& result:reader.get()) require_same_rotation(result,expected);
+}

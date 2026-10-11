@@ -169,6 +169,8 @@ CSPICE is process-global. Provider calls, reuse hits and library-managed kernel 
 
 `utc_calendar(epoch, reuse=true)` retains each request's `et2utc_c("ISOC",9)` conversion, seconds-of-day and leap-aware quasi-MJD. A process-owned 32-date FIFO cache reuses only exact civil-day metadata (midnight ETs, rounded day length, serial date and day-of-year). Every managed load/unload attempt invalidates reuse under the SPICE mutex, including partial-load failure. Parsing and date arithmetic run outside that mutex; a generation change retries the conversion. Pass `false` for independent diagnostic evaluation.
 
+`earth_fixed_rotation(epoch, frame, reuse=true)` uses a process-owned 256-matrix cache (64 sets, four FIFO ways). Keys contain exact ET bits, `ITRF93`/`IAU_EARTH`, fixed J2000-to-Earth direction and managed kernel generation. No rounding or interpolation; misses call `pxform_c` directly. Hits use the existing SPICE mutex, so a managed mutation cannot race an obsolete hit. Pass `false` to disable this cache independently.
+
 The environmental example runs a six-face rigid box for 60 s with J2, SRP, Sentman drag, albedo and all environmental torques, printing Sun distance, illumination, density, angular acceleration and final state diagnostics.
 
 ### Optional interpolated Sun provider (experimental)

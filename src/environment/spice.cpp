@@ -27,6 +27,24 @@ struct CivilDay {
 };
 std::array<CivilDay,32> civil_days;
 std::size_t civil_next=0;
+struct Orientation {
+    std::uint64_t epoch_bits=0,generation=0;
+    bool itrf=false;
+    Eigen::Matrix3d matrix;
+};
+// Fixed direction J2000 -> requested Earth frame; reverse transforms are not
+// served by this API. 64 sets x 4 ways retain nonmonotonic stage/ensemble reuse.
+std::array<std::array<Orientation,4>,64> orientations;
+std::array<unsigned,64> orientation_next{};
+std::size_t orientation_set(std::uint64_t bits,bool itrf) {
+    // Avalanche both high and low ET bits; adjacent representable epochs remain
+    // distinct keys even if the set index collides.
+    bits^=static_cast<std::uint64_t>(itrf);
+    bits^=bits>>30;bits*=0xbf58476d1ce4e5b9ULL;
+    bits^=bits>>27;bits*=0x94d049bb133111ebULL;
+    bits^=bits>>31;
+    return bits%orientations.size();
+}
 #ifdef LEO_SPICE_REUSE_DIAGNOSTICS
 #define REUSE_COUNT(field) (++statistics.field)
 class SpiceLock {
@@ -53,6 +71,8 @@ void invalidate_locked() {
     if(++configuration_generation==0) std::terminate();
     for(auto& entry:civil_days) entry.generation=0;
     civil_next=0;
+    for(auto& set:orientations) for(auto& entry:set) entry.generation=0;
+    orientation_next.fill(0);
     REUSE_COUNT(invalidations);
 }
 
@@ -248,10 +268,19 @@ UtcCalendar SpiceEphemerisProvider::utc_calendar(Epoch epoch,bool reuse) {
     }
 }
 Eigen::Matrix3d SpiceEphemerisProvider::earth_fixed_rotation(Epoch epoch,const std::string& frame,bool reuse) {
-    (void)reuse; // Enabled by the separately attributable orientation change.
     if(!std::isfinite(epoch.et_seconds) || (frame!="ITRF93" && frame!="IAU_EARTH"))
         throw std::invalid_argument("Earth-fixed frame must explicitly be ITRF93 or IAU_EARTH");
     SpiceLock lock{spice_mutex};
+    const auto bits=reuse ? std::bit_cast<std::uint64_t>(epoch.et_seconds):0;
+    const bool itrf=reuse && frame=="ITRF93";
+    const auto index=reuse ? orientation_set(bits,itrf):0;
+    auto& set=orientations[index];
+    if(reuse) for(const auto& entry:set)
+        if(entry.generation==configuration_generation && entry.epoch_bits==bits && entry.itrf==itrf) {
+            REUSE_COUNT(orientation_hits);
+            return entry.matrix;
+        }
+    REUSE_COUNT(orientation_misses);
     enter_spice();
     SpiceDouble rotation[3][3]{};
     REUSE_COUNT(pxform_calls);
@@ -259,6 +288,16 @@ Eigen::Matrix3d SpiceEphemerisProvider::earth_fixed_rotation(Epoch epoch,const s
     if(failed_c()) throw_spice_error("J2000 to "+frame+" rotation (covering orientation kernel required)");
     Eigen::Matrix3d result;
     for(int i=0;i<3;++i) for(int j=0;j<3;++j) result(i,j)=rotation[i][j];
+    if(reuse) {
+        auto& next=orientation_next[index];
+        auto& entry=set[next];
+        if(entry.generation!=0) REUSE_COUNT(orientation_evictions);
+        entry.epoch_bits=bits;
+        entry.generation=configuration_generation;
+        entry.itrf=itrf;
+        entry.matrix=result;
+        next=(next+1)%set.size();
+    }
     return result;
 }
 std::string SpiceEphemerisProvider::toolkit_version() {
@@ -275,8 +314,9 @@ void SpiceEphemerisProvider::invalidate_reuse() {
 SpiceReuseStatistics SpiceEphemerisProvider::reuse_statistics() {
     std::lock_guard lock{spice_mutex};
     auto result=statistics;
-    result.cache_bytes=sizeof(civil_days)+sizeof(civil_next);
+    result.cache_bytes=sizeof(civil_days)+sizeof(civil_next)+sizeof(orientations)+sizeof(orientation_next);
     for(const auto& entry:civil_days) result.utc_entries+=entry.generation!=0;
+    for(const auto& set:orientations) for(const auto& entry:set) result.orientation_entries+=entry.generation!=0;
     return result;
 }
 void SpiceEphemerisProvider::reset_reuse_statistics() {
