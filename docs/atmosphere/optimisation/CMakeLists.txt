@@ -185,3 +185,33 @@ target_link_libraries(atmosphere_experiment PRIVATE leo::integration leo::analys
 
 message(STATUS "ATM-OPT-001 benchmark: ${ATM_OPT_BENCHMARK_NAME} "
                "(candidate=${ATM_OPT_CANDIDATE}, source=${LEO_SOURCE_DIR})")
+
+# Cleanup experiment: order-interleaved provider timing with recorded seeds.
+# Separate executables and sources so previous evidence and the main benchmark
+# protocol are untouched.
+if(ATM_OPT_CANDIDATE)
+  set(ATM_OPT_INTERLEAVE_NAME atm_opt_interleave)
+else()
+  set(ATM_OPT_INTERLEAVE_NAME atm_opt_interleave_original)
+endif()
+add_executable(${ATM_OPT_INTERLEAVE_NAME} interleave.cpp)
+target_compile_definitions(${ATM_OPT_INTERLEAVE_NAME} PRIVATE
+  ATM_OPT_EXPERIMENT_HEADER="${ATM_OPT_EXPERIMENT_HEADER}")
+if(ATM_OPT_CANDIDATE)
+  target_compile_definitions(${ATM_OPT_INTERLEAVE_NAME} PRIVATE ATM_OPT_CANDIDATE=1)
+endif()
+target_include_directories(${ATM_OPT_INTERLEAVE_NAME} PRIVATE
+  "${LEO_SOURCE_DIR}/benchmarks/cases" "${LEO_SOURCE_DIR}/docs/numerical-audit")
+target_link_libraries(${ATM_OPT_INTERLEAVE_NAME} PRIVATE
+  leo::integration leo::analysis leo::atmosphere "${ATM_OPT_CSPICE_LIBRARY}" Threads::Threads)
+# Same code, diagnostic counters, separate binary and process.
+if(ATM_OPT_CANDIDATE)
+  add_executable(atm_opt_interleave_diagnostics interleave.cpp)
+  target_compile_definitions(atm_opt_interleave_diagnostics PRIVATE
+    ATM_OPT_CANDIDATE=1 ATM_OPT_EXPERIMENT_HEADER="${ATM_OPT_EXPERIMENT_HEADER}")
+  target_include_directories(atm_opt_interleave_diagnostics PRIVATE
+    "${LEO_SOURCE_DIR}/benchmarks/cases" "${LEO_SOURCE_DIR}/docs/numerical-audit")
+  target_link_libraries(atm_opt_interleave_diagnostics PRIVATE
+    leo::integration leo::analysis atm_opt_atmosphere_diagnostics
+    "${ATM_OPT_CSPICE_LIBRARY}" Threads::Threads)
+endif()
