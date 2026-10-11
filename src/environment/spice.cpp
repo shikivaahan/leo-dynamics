@@ -127,13 +127,10 @@ SpiceEphemerisProvider::~SpiceEphemerisProvider() {
     SpiceLock lock{spice_mutex};
     for(const auto& key:kernel_files_) release_kernel(key);
 }
-EphemerisState SpiceEphemerisProvider::geometric_state(int target_naif_id,Epoch epoch) const {
-    if(target_naif_id!=sun_naif_id)
-        throw std::invalid_argument("unsupported SPICE target NAIF id "+std::to_string(target_naif_id)
-            +"; this provider serves the Sun ("+std::to_string(sun_naif_id)+") only");
+namespace {
+EphemerisState sun_state_locked(Epoch epoch) {
     if(!std::isfinite(epoch.et_seconds))
         throw std::invalid_argument("nonfinite ephemeris epoch (TDB seconds past J2000)");
-    SpiceLock lock{spice_mutex};
     enter_spice();
     SpiceDouble state[6]={},light_time=0;
     REUSE_COUNT(spkez_calls);
@@ -147,6 +144,23 @@ EphemerisState SpiceEphemerisProvider::geometric_state(int target_naif_id,Epoch 
     if(!result.position_m.as_eigen().allFinite()||!result.velocity_m_s.as_eigen().allFinite())
         throw std::runtime_error("nonfinite Sun ephemeris state at ET="+std::to_string(epoch.et_seconds)+" s past J2000");
     return result;
+}
+}
+EphemerisState SpiceEphemerisProvider::geometric_state(int target_naif_id,Epoch epoch) const {
+    if(target_naif_id!=sun_naif_id)
+        throw std::invalid_argument("unsupported SPICE target NAIF id "+std::to_string(target_naif_id)
+            +"; this provider serves the Sun ("+std::to_string(sun_naif_id)+") only");
+    SpiceLock lock{spice_mutex};
+    return sun_state_locked(epoch);
+}
+SunObservation SpiceEphemerisProvider::observe_sun(Epoch epoch) const {
+    SpiceLock lock{spice_mutex};
+    return SunObservation{epoch,sun_state_locked(epoch),configuration_generation};
+}
+bool SpiceEphemerisProvider::compatible_sun(const SunObservation& observation,Epoch epoch) const {
+    SpiceLock lock{spice_mutex};
+    return std::bit_cast<std::uint64_t>(observation.epoch_.et_seconds)==std::bit_cast<std::uint64_t>(epoch.et_seconds)
+        && observation.generation_==configuration_generation;
 }
 Epoch SpiceEphemerisProvider::epoch_from_utc(std::string_view utc) {
     const std::string time{utc};
@@ -233,7 +247,8 @@ UtcCalendar SpiceEphemerisProvider::utc_calendar(Epoch epoch,bool reuse) {
             40587+static_cast<double>(serial)+sod/metadata.length};
     }
 }
-Eigen::Matrix3d SpiceEphemerisProvider::earth_fixed_rotation(Epoch epoch,const std::string& frame) {
+Eigen::Matrix3d SpiceEphemerisProvider::earth_fixed_rotation(Epoch epoch,const std::string& frame,bool reuse) {
+    (void)reuse; // Enabled by the separately attributable orientation change.
     if(!std::isfinite(epoch.et_seconds) || (frame!="ITRF93" && frame!="IAU_EARTH"))
         throw std::invalid_argument("Earth-fixed frame must explicitly be ITRF93 or IAU_EARTH");
     SpiceLock lock{spice_mutex};

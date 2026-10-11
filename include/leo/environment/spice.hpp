@@ -21,6 +21,20 @@ struct SpiceReuseStatistics {
     std::uint64_t mutex_acquisitions=0,mutex_contended=0,mutex_wait_ns=0;
     std::size_t utc_entries=0,orientation_entries=0,utc_capacity=32,orientation_capacity=256,cache_bytes=0;
 };
+// Only CSPICE acquisition can construct this immutable observation. Geometry is
+// fixed: Sun 10 / Earth 399, J2000, geometric NONE, metres and metres/second.
+// The generation stamps the process-wide kernel configuration, not SRP state.
+class SunObservation {
+    const Epoch epoch_;
+    const EphemerisState state_;
+    const std::uint64_t generation_;
+    SunObservation(Epoch epoch,EphemerisState state,std::uint64_t generation)
+        :epoch_(epoch),state_(state),generation_(generation) {}
+    friend class SpiceEphemerisProvider;
+public:
+    Epoch epoch() const { return epoch_; }
+    const EphemerisState& state() const { return state_; }
+};
 // Real Sun ephemeris computed by CSPICE from kernels the caller lists explicitly.
 // CSPICE is linked only by the optional leo::environment component, never by
 // leo::kernel, and the force models never load kernels themselves.
@@ -55,6 +69,9 @@ public:
     // Non-finite epochs are std::invalid_argument; missing kernel coverage,
     // SPICE failures and non-finite results are std::runtime_error.
     EphemerisState geometric_state(int target_naif_id,Epoch) const override;
+    SunObservation observe_sun(Epoch) const;
+    // Exact epoch bits and current process-wide managed configuration.
+    bool compatible_sun(const SunObservation&,Epoch) const;
     // Optional convenience for callers holding UTC strings: needs a leapseconds
     // kernel (LSK) among kernel_files, otherwise std::runtime_error.
     static Epoch epoch_from_utc(std::string_view utc);
@@ -62,7 +79,7 @@ public:
     // seconds_of_day retains 86400 during a positive leap second.
     static UtcCalendar utc_calendar(Epoch,bool reuse=true);
     // Explicit frame, no Earth-rotation fallback. Matrix acts on SI J2000 positions.
-    static Eigen::Matrix3d earth_fixed_rotation(Epoch,const std::string& frame);
+    static Eigen::Matrix3d earth_fixed_rotation(Epoch,const std::string& frame,bool reuse=true);
     // Version of the actually linked toolkit, for reproducibility manifests.
     static std::string toolkit_version();
     // Process-owned bounded caches; all managed furnsh/unload attempts invalidate.

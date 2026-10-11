@@ -121,6 +121,8 @@ Optional `leo::atmosphere` adds direct, pinned `leo::atmosphere::Nrlmsise00` and
 
 With CSPICE enabled, `DirectAtmosphere(Model, spice, weather, "ITRF93")::evaluate(Epoch, position_J2000)` supplies density, temperatures and available constituent diagnostics. It uses model-specific latitude, explicit WGS84 height, LSK-based UTC and strict archived weather, including JB's 1/2/5-day proxy lags. Missing drivers/orientation fail rather than falling back. Exponential selection retains the original spherical height. Feed the returned density into the existing `EnvironmentSnapshot`; force laws, torque, corotation and solver defaults remain unchanged. No atmospheric result caching or interpolation is implemented. [Atmospheric reference documentation, validation and direct benchmarks](docs/atmosphere/README.md).
 
+For JB2008, an already-acquired `const auto sun = spice.observe_sun(epoch)` may be supplied as `atmosphere.evaluate(epoch, position, &sun)`. `SunObservation` has immutable fields and provider-only construction fixing Sun/Earth/J2000/NONE/SI geometry. Exact ET bits and the managed process-wide kernel generation are checked; mismatches trigger the independent Sun lookup. Two-argument evaluation remains standalone. NRLMSISE-00 and exponential ignore the optional Sun. This shares environmental input, not SRP: no SRP object or enabled force is required. `EvaluationOptions` independently controls UTC reuse, Sun sharing and orientation reuse.
+
 `AerodynamicProperties(Cd=2.2,accommodation=0.9)` attaches nonnegative finite flat-plate Cd and accommodation in [0,1] to each surface.
 
 - `flat_plate_drag`: `F=-0.5 rho |v_rel|² Cd A max(0,n·vhat) vhat`; projected area and force opposing relative velocity. Normal faces incoming molecules when `n·vhat>0`.

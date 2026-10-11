@@ -21,8 +21,9 @@ std::array<int,24> selected_switches(bool history) {
 #endif
 }
 DirectAtmosphere::DirectAtmosphere(Model model,const SpiceEphemerisProvider& spice,
-    const WeatherDataset& weather,std::string frame,bool ap_history)
+    const WeatherDataset& weather,std::string frame,bool ap_history,EvaluationOptions options)
     :model_(model),spice_(spice),weather_(weather),frame_(std::move(frame)),ap_history_(ap_history)
+    ,options_(options)
 #ifdef LEO_HAS_NRLMSISE00
     ,nrlmsise_(selected_switches(ap_history))
 #endif
@@ -44,15 +45,16 @@ DirectAtmosphere::DirectAtmosphere(Model model,const SpiceEphemerisProvider& spi
     default:throw std::invalid_argument("invalid atmosphere selection");
     }
 }
-Result DirectAtmosphere::evaluate(Epoch epoch,InertialVector position) const {
+Result DirectAtmosphere::evaluate(Epoch epoch,InertialVector position,
+                                 const SunObservation* supplied_sun) const {
     if(!std::isfinite(epoch.et_seconds) || !position.as_eigen().allFinite())
         throw std::invalid_argument("nonfinite atmosphere epoch or position");
     if(model_==Model::exponential)
         return {exponential_.density_kg_m3(norm(position)-wgs84_a_m),0,0,{}};
-    const auto rotation=SpiceEphemerisProvider::earth_fixed_rotation(epoch,frame_);
+    const auto rotation=SpiceEphemerisProvider::earth_fixed_rotation(epoch,frame_,options_.orientation_reuse);
     const Eigen::Vector3d fixed=rotation*position.as_eigen();
     const auto g=geodetic(fixed);
-    const auto utc=SpiceEphemerisProvider::utc_calendar(epoch);
+    const auto utc=SpiceEphemerisProvider::utc_calendar(epoch,options_.utc_reuse);
 #ifdef LEO_HAS_NRLMSISE00
     constexpr double deg=180/std::numbers::pi;
     if(model_==Model::nrlmsise00) {
@@ -66,7 +68,18 @@ Result DirectAtmosphere::evaluate(Epoch epoch,InertialVector position) const {
 #ifdef LEO_HAS_JB2008
     if(model_==Model::jb2008) {
         auto in=weather_.jb2008(utc);
-        const auto sun=spice_.geometric_state(sun_naif_id,epoch).position_m;
+        // A caller that already needs the Sun this step (illumination, SRP) hands
+        // the observation over. The compatibility check is exact in the epoch
+        // bits and in the current kernel generation, so an observation from
+        // another epoch or from before a load/unload cycle can never be used
+        // here; the fallback lookup is then the whole cost of one spkez call,
+        // identical to what this path used to do unconditionally.
+        const SunObservation* observation=nullptr;
+        if(supplied_sun!=nullptr && options_.sun_sharing && spice_.compatible_sun(*supplied_sun,epoch))
+            observation=supplied_sun;
+        const InertialVector sun=observation!=nullptr
+            ?observation->state().position_m
+            :spice_.observe_sun(epoch).state().position_m;
         const Eigen::Vector3d fixed_sun=rotation*sun.as_eigen();
         // JB2008 uses RA only through H=SAT(1)-SUN(1). A common z-axis rotation
         // cancels exactly; use longitudes in the same terrestrial equator basis.

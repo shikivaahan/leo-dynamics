@@ -139,6 +139,10 @@ struct Config {
     std::size_t timing_calls = 2000, timing_repeats = 7, timing_propagation_repeats = 3;
     std::vector<std::size_t> timing_threads{1, 2, 4};
     bool ap_history = false;
+    // Candidate preprocessing controls. Defaults are the optimised production
+    // configuration; each is passed verbatim to every DirectAtmosphere built by
+    // this tool, so a benchmark can turn exactly one optimisation off.
+    leo::atmosphere::EvaluationOptions options{};
 };
 
 // Named apart from bench::parse, which this file inherits through bench_support.hpp.
@@ -189,6 +193,15 @@ Config parse_arguments(int argc, char** argv) {
             if (c.timing_threads.empty()) throw std::invalid_argument("--timing-threads needs at least one count");
         }
         else if (key == "--ap-history") c.ap_history = true;
+        else if (key == "--utc-reuse" || key == "--sun-sharing" || key == "--orientation-reuse") {
+            const std::string raw = value();
+            if (raw != "on" && raw != "off")
+                throw std::invalid_argument(key + " expects on or off, got: " + raw);
+            const bool enabled = raw == "on";
+            if (key == "--utc-reuse") c.options.utc_reuse = enabled;
+            else if (key == "--sun-sharing") c.options.sun_sharing = enabled;
+            else c.options.orientation_reuse = enabled;
+        }
         else throw std::invalid_argument("unknown argument: " + key);
     }
     if (c.mode != "all" && c.mode != "fixtures" && c.mode != "propagate" && c.mode != "timing" &&
@@ -527,7 +540,7 @@ void run_fixtures(const Config& c, Environment& env, const std::filesystem::path
             // run failure. Recording it and continuing would silently publish a
             // benchmark over fewer models than were asked for.
             const leo::atmosphere::DirectAtmosphere atmosphere(
-                model, env.ephemeris, env.weather, c.frame, c.ap_history);
+                model, env.ephemeris, env.weather, c.frame, c.ap_history, c.options);
             std::size_t count = 0;
             for (const double latitude : latitudes) {
                 for (const double longitude : longitudes) {
@@ -819,7 +832,7 @@ RunRecord execute(const Config& c, Environment& env, const experiment::Case& spe
     const State start = spec.start();
     const Earth earth;
     const auto atmosphere = leo::atmosphere::DirectAtmosphere(
-        model, env.ephemeris, env.weather, c.frame, c.ap_history);
+        model, env.ephemeris, env.weather, c.frame, c.ap_history, c.options);
     const auto labels = sample_labels(c);
 
     std::size_t atmosphere_calls = 0;
@@ -829,12 +842,15 @@ RunRecord execute(const Config& c, Environment& env, const experiment::Case& spe
         snapshot.epoch = at;
         // Existing atmospheric corotation assumption, unchanged.
         snapshot.atmosphere_angular_velocity_rad_s = InertialVector{0, 0, 7.292115e-5};
-        const auto sun = env.ephemeris.geometric_state(leo::sun_naif_id, at);
-        snapshot.sun_position_m = sun.position_m;
-        snapshot.illumination = illumination_factor(EclipseModel::conical, s.r, sun.position_m,
+        const auto observation = env.ephemeris.observe_sun(at);
+        const InertialVector sun_position = observation.state().position_m;
+        snapshot.sun_position_m = sun_position;
+        snapshot.illumination = illumination_factor(EclipseModel::conical, s.r, sun_position,
                                                      earth.equatorial_radius_m);
-        // One fresh reference-model call per environment query.
-        const auto result = atmosphere.evaluate(at, s.r);
+        // One fresh reference-model call per environment query. The Sun the
+        // snapshot already needs is handed to the model, which uses it only when
+        // its epoch and generation match this query exactly.
+        const auto result = atmosphere.evaluate(at, s.r, &observation);
         if (!std::isfinite(result.density_kg_m3) || result.density_kg_m3 < 0)
             throw std::runtime_error("nonfinite or negative atmosphere density");
         snapshot.density_kg_m3 = result.density_kg_m3;
@@ -1419,7 +1435,7 @@ void run_timing(const Config& c, Environment& env, const std::filesystem::path& 
         // No exception handling: a compiled-in backend that fails to construct
         // is a run failure, not a missing measurement.
         auto atmosphere = std::make_unique<leo::atmosphere::DirectAtmosphere>(
-            model, env.ephemeris, env.weather, c.frame, c.ap_history);
+            model, env.ephemeris, env.weather, c.frame, c.ap_history, c.options);
         const double construct_seconds = elapsed(construct_timer);
         const auto* pointer = atmosphere.get();
 
@@ -1612,11 +1628,12 @@ void run_timing(const Config& c, Environment& env, const std::filesystem::path& 
                 leo::EnvironmentSnapshot snapshot;
                 snapshot.epoch = at;
                 snapshot.atmosphere_angular_velocity_rad_s = InertialVector{0, 0, 7.292115e-5};
-                const auto sun = env.ephemeris.geometric_state(leo::sun_naif_id, at);
-                snapshot.sun_position_m = sun.position_m;
+                const auto observation = env.ephemeris.observe_sun(at);
+                const InertialVector sun_position = observation.state().position_m;
+                snapshot.sun_position_m = sun_position;
                 snapshot.illumination = illumination_factor(EclipseModel::conical, s.r,
-                                                             sun.position_m, Earth{}.equatorial_radius_m);
-                const auto result = pointer->evaluate(at, s.r);
+                                                             sun_position, Earth{}.equatorial_radius_m);
+                const auto result = pointer->evaluate(at, s.r, &observation);
                 if (!std::isfinite(result.density_kg_m3) || result.density_kg_m3 < 0)
                     throw std::runtime_error("timed propagation got an invalid density");
                 snapshot.density_kg_m3 = result.density_kg_m3;

@@ -23,6 +23,9 @@
 #include "leo/environment/spice.hpp"
 #include <Eigen/Core>
 #include <array>
+#include <bit>
+#include <future>
+#include <type_traits>
 #include <chrono>
 #include <cmath>
 #include <cstdio>
@@ -1120,5 +1123,75 @@ TEST_CASE("JB2008 still rejects a position genuinely outside its domain",
             }
         }
     }
+}
+
+namespace {
+void require_same_result(const Result& a,const Result& b) {
+    REQUIRE(std::bit_cast<std::uint64_t>(a.density_kg_m3)==std::bit_cast<std::uint64_t>(b.density_kg_m3));
+    REQUIRE(std::bit_cast<std::uint64_t>(a.temperature_k)==std::bit_cast<std::uint64_t>(b.temperature_k));
+    REQUIRE(std::bit_cast<std::uint64_t>(a.exospheric_temperature_k)==std::bit_cast<std::uint64_t>(b.exospheric_temperature_k));
+    REQUIRE(a.has_temperatures==b.has_temperatures);
+    REQUIRE(a.has_constituents==b.has_constituents);
+    for(std::size_t i=0;i<a.number_density_m3.size();++i)
+        REQUIRE(std::bit_cast<std::uint64_t>(a.number_density_m3[i])==std::bit_cast<std::uint64_t>(b.number_density_m3[i]));
+}
+}
+TEST_CASE("JB2008 shared Sun preserves standalone results and rejects incompatible provenance",
+          "[atmosphere][jb2008][reuse][external]") {
+    static_assert(!std::is_default_constructible_v<SunObservation>);
+    static_assert(!std::is_copy_assignable_v<SunObservation>);
+    const char* lsk=env_path("LEO_SPICE_TEST_LSK");
+    const char* spk=env_path("LEO_SPICE_TEST_SPK");
+    const char* pck=env_path("LEO_ATMOSPHERE_TEST_PCK");
+    if(!lsk || !spk || !pck) SKIP("Supply real SPICE kernels for shared Sun tests");
+    const WeatherFixture fixture;
+    const auto data=fixture.load();
+    const SpiceEphemerisProvider spice{{lsk,spk,pck}};
+    const DirectAtmosphere atmosphere(Model::jb2008,spice,data);
+    const DirectAtmosphere disabled(Model::jb2008,spice,data,"ITRF93",false,{true,false,true});
+    const Epoch first{kAltitudeEpochEt};
+    const auto old=spice.observe_sun(first);
+    REQUIRE(spice.compatible_sun(old,first));
+    REQUIRE_FALSE(spice.compatible_sun(old,{std::nextafter(first.et_seconds,INFINITY)}));
+    for(const double offset:{0.0,30.0,86400.0,-30.0}) {
+        const Epoch epoch{first.et_seconds+offset};
+        const auto sun=spice.observe_sun(epoch);
+        const auto direct_sun=spice.geometric_state(sun_naif_id,epoch);
+        for(int i=0;i<3;++i)
+            REQUIRE(std::bit_cast<std::uint64_t>(sun.state().position_m.as_eigen()[i])==
+                    std::bit_cast<std::uint64_t>(direct_sun.position_m.as_eigen()[i]));
+        for(const double latitude:{-60.0,0.0,45.0}) {
+            const auto position=position_at(latitude,123.0,400,epoch);
+            const auto standalone=atmosphere.evaluate(epoch,position);
+            // No SRP object exists: environmental sharing is model-independent.
+            require_same_result(standalone,atmosphere.evaluate(epoch,position,&sun));
+            require_same_result(standalone,disabled.evaluate(epoch,position,&sun));
+            require_same_result(standalone,atmosphere.evaluate(epoch,position,&old));
+        }
+    }
+    const auto position=position_at(45,123,400,first);
+    const auto expected=atmosphere.evaluate(first,position);
+    {
+        // A different path forces a real managed kernel load and later unload.
+        const auto copy=fixture.scratch.dir/"copied-lsk.tls";
+        std::filesystem::copy_file(lsk,copy);
+        const SpiceEphemerisProvider reconfiguration{{copy}};
+        REQUIRE_FALSE(spice.compatible_sun(old,first));
+        require_same_result(expected,atmosphere.evaluate(first,position,&old));
+    }
+    REQUIRE_FALSE(spice.compatible_sun(old,first));
+    require_same_result(expected,atmosphere.evaluate(first,position,&old));
+    const auto current=spice.observe_sun(first);
+    std::vector<std::future<Result>> readers;
+    for(int i=0;i<4;++i) readers.push_back(std::async(std::launch::async,[&] {
+        return atmosphere.evaluate(first,position,&current);
+    }));
+    for(auto& result:readers) require_same_result(expected,result.get());
+    const DirectAtmosphere exponential(Model::exponential,spice,data);
+    require_same_result(exponential.evaluate(first,position),exponential.evaluate(first,position,&old));
+#ifdef LEO_HAS_NRLMSISE00
+    const DirectAtmosphere nrl(Model::nrlmsise00,spice,data);
+    require_same_result(nrl.evaluate(first,position),nrl.evaluate(first,position,&old));
+#endif
 }
 #endif
