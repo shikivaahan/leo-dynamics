@@ -1,0 +1,433 @@
+{
+  "kind": "MT-002 compact scaling comparison",
+  "batch_size": 64,
+  "duration_seconds": 1800,
+  "cadence_seconds": 30,
+  "seed": 20261012,
+  "case": "CASE-A",
+  "workers": [
+    1,
+    4,
+    8
+  ],
+  "warmups_per_configuration": 1,
+  "measured_repetitions": 3,
+  "execution_order": "model order J2/exponential/NRLMSISE-00/JB2008; sequential(1), threads(1,4,8), processes(1,4,8); no concurrent timing jobs",
+  "boundary": "Starts before child launch; includes exec, own kernel/weather/native initialization, propagation, binary output and atomic merge. Parent Python interpreter startup excluded equally for every route.",
+  "complete_binary_equality_checks": 112,
+  "measured_configurations": 28,
+  "rows": [
+    {
+      "model": "two_body_j2",
+      "rows": [
+        {
+          "executor": "sequential",
+          "workers": 1,
+          "wall_seconds": 0.13547642499906942,
+          "min_seconds": 0.12938945594942197,
+          "max_seconds": 0.13797486101975664,
+          "repetitions_seconds": [
+            0.13547642499906942,
+            0.13797486101975664,
+            0.12938945594942197
+          ],
+          "trajectories_per_second": 472.4069150809051,
+          "speedup": 1.0
+        },
+        {
+          "executor": "threads",
+          "workers": 1,
+          "wall_seconds": 0.13019662798615173,
+          "min_seconds": 0.12891841598320752,
+          "max_seconds": 0.13810417096829042,
+          "repetitions_seconds": [
+            0.12891841598320752,
+            0.13019662798615173,
+            0.13810417096829042
+          ],
+          "trajectories_per_second": 491.5641901786221,
+          "speedup": 1.0405524866087874
+        },
+        {
+          "executor": "threads",
+          "workers": 4,
+          "wall_seconds": 0.08497217303374782,
+          "min_seconds": 0.08480577700538561,
+          "max_seconds": 0.0873808860196732,
+          "repetitions_seconds": [
+            0.08480577700538561,
+            0.0873808860196732,
+            0.08497217303374782
+          ],
+          "trajectories_per_second": 753.1877521195269,
+          "speedup": 1.5943622501599808
+        },
+        {
+          "executor": "threads",
+          "workers": 8,
+          "wall_seconds": 0.079466130991932,
+          "min_seconds": 0.07702315098140389,
+          "max_seconds": 0.08371903299121186,
+          "repetitions_seconds": [
+            0.079466130991932,
+            0.07702315098140389,
+            0.08371903299121186
+          ],
+          "trajectories_per_second": 805.3745564446539,
+          "speedup": 1.7048322764427024
+        },
+        {
+          "executor": "processes",
+          "workers": 1,
+          "wall_seconds": 0.13057802204275504,
+          "min_seconds": 0.12820221699075773,
+          "max_seconds": 0.1316802489454858,
+          "repetitions_seconds": [
+            0.13057802204275504,
+            0.12820221699075773,
+            0.1316802489454858
+          ],
+          "trajectories_per_second": 490.12842282941415,
+          "speedup": 1.0375132268025204
+        },
+        {
+          "executor": "processes",
+          "workers": 4,
+          "wall_seconds": 0.10768688097596169,
+          "min_seconds": 0.10138951102271676,
+          "max_seconds": 0.12687068397644907,
+          "repetitions_seconds": [
+            0.10768688097596169,
+            0.12687068397644907,
+            0.10138951102271676
+          ],
+          "trajectories_per_second": 594.3156624091132,
+          "speedup": 1.2580587697521952
+        },
+        {
+          "executor": "processes",
+          "workers": 8,
+          "wall_seconds": 0.12170335097471252,
+          "min_seconds": 0.11913218902191147,
+          "max_seconds": 0.12754142103949562,
+          "repetitions_seconds": [
+            0.11913218902191147,
+            0.12754142103949562,
+            0.12170335097471252
+          ],
+          "trajectories_per_second": 525.8688399902637,
+          "speedup": 1.1131692259420094
+        }
+      ]
+    },
+    {
+      "model": "exponential",
+      "rows": [
+        {
+          "executor": "sequential",
+          "workers": 1,
+          "wall_seconds": 1.032774414983578,
+          "min_seconds": 1.0240985499694943,
+          "max_seconds": 1.0428374860202894,
+          "repetitions_seconds": [
+            1.0428374860202894,
+            1.0240985499694943,
+            1.032774414983578
+          ],
+          "trajectories_per_second": 61.96900220559555,
+          "speedup": 1.0
+        },
+        {
+          "executor": "threads",
+          "workers": 1,
+          "wall_seconds": 1.0187156269676052,
+          "min_seconds": 1.0128081199945882,
+          "max_seconds": 1.0260554400156252,
+          "repetitions_seconds": [
+            1.0128081199945882,
+            1.0260554400156252,
+            1.0187156269676052
+          ],
+          "trajectories_per_second": 62.82420560339081,
+          "speedup": 1.0138005029507806
+        },
+        {
+          "executor": "threads",
+          "workers": 4,
+          "wall_seconds": 2.5982341499766335,
+          "min_seconds": 2.590245697996579,
+          "max_seconds": 2.6717963609844446,
+          "repetitions_seconds": [
+            2.590245697996579,
+            2.5982341499766335,
+            2.6717963609844446
+          ],
+          "trajectories_per_second": 24.632114084319756,
+          "speedup": 0.3974908939569076
+        },
+        {
+          "executor": "threads",
+          "workers": 8,
+          "wall_seconds": 2.765047009976115,
+          "min_seconds": 2.7525825240300037,
+          "max_seconds": 2.778984361968469,
+          "repetitions_seconds": [
+            2.765047009976115,
+            2.7525825240300037,
+            2.778984361968469
+          ],
+          "trajectories_per_second": 23.146080254365312,
+          "speedup": 0.3735106170916419
+        },
+        {
+          "executor": "processes",
+          "workers": 1,
+          "wall_seconds": 1.0271373010473326,
+          "min_seconds": 1.0079981230082922,
+          "max_seconds": 1.0275901349959895,
+          "repetitions_seconds": [
+            1.0275901349959895,
+            1.0079981230082922,
+            1.0271373010473326
+          ],
+          "trajectories_per_second": 62.309099216571774,
+          "speedup": 1.0054881795554476
+        },
+        {
+          "executor": "processes",
+          "workers": 4,
+          "wall_seconds": 0.3518910529674031,
+          "min_seconds": 0.3490652189939283,
+          "max_seconds": 0.3821435460122302,
+          "repetitions_seconds": [
+            0.3518910529674031,
+            0.3490652189939283,
+            0.3821435460122302
+          ],
+          "trajectories_per_second": 181.87447353464978,
+          "speedup": 2.9349266094561592
+        },
+        {
+          "executor": "processes",
+          "workers": 8,
+          "wall_seconds": 0.272205229033716,
+          "min_seconds": 0.26175592304207385,
+          "max_seconds": 0.28396998200332746,
+          "repetitions_seconds": [
+            0.26175592304207385,
+            0.272205229033716,
+            0.28396998200332746
+          ],
+          "trajectories_per_second": 235.11671773238712,
+          "speedup": 3.794102040764456
+        }
+      ]
+    },
+    {
+      "model": "nrlmsise00",
+      "rows": [
+        {
+          "executor": "sequential",
+          "workers": 1,
+          "wall_seconds": 4.520608609018382,
+          "min_seconds": 4.494960339041427,
+          "max_seconds": 4.580006184987724,
+          "repetitions_seconds": [
+            4.520608609018382,
+            4.494960339041427,
+            4.580006184987724
+          ],
+          "trajectories_per_second": 14.157385771536003,
+          "speedup": 1.0
+        },
+        {
+          "executor": "threads",
+          "workers": 1,
+          "wall_seconds": 4.510243235039525,
+          "min_seconds": 4.506788995990064,
+          "max_seconds": 4.544417552999221,
+          "repetitions_seconds": [
+            4.506788995990064,
+            4.544417552999221,
+            4.510243235039525
+          ],
+          "trajectories_per_second": 14.18992206513207,
+          "speedup": 1.0022981851396238
+        },
+        {
+          "executor": "threads",
+          "workers": 4,
+          "wall_seconds": 13.265293586009648,
+          "min_seconds": 13.19664126902353,
+          "max_seconds": 13.357437070982996,
+          "repetitions_seconds": [
+            13.19664126902353,
+            13.357437070982996,
+            13.265293586009648
+          ],
+          "trajectories_per_second": 4.824619944144932,
+          "speedup": 0.3407846633553651
+        },
+        {
+          "executor": "threads",
+          "workers": 8,
+          "wall_seconds": 12.296733821043745,
+          "min_seconds": 12.254746025020722,
+          "max_seconds": 12.334845997975208,
+          "repetitions_seconds": [
+            12.254746025020722,
+            12.296733821043745,
+            12.334845997975208
+          ],
+          "trajectories_per_second": 5.204634086693412,
+          "speedup": 0.3676267759233869
+        },
+        {
+          "executor": "processes",
+          "workers": 1,
+          "wall_seconds": 4.556928317993879,
+          "min_seconds": 4.54477445804514,
+          "max_seconds": 4.557231711980421,
+          "repetitions_seconds": [
+            4.557231711980421,
+            4.556928317993879,
+            4.54477445804514
+          ],
+          "trajectories_per_second": 14.044548330348777,
+          "speedup": 0.9920297826867097
+        },
+        {
+          "executor": "processes",
+          "workers": 4,
+          "wall_seconds": 1.3943782490096055,
+          "min_seconds": 1.380917139002122,
+          "max_seconds": 1.4171546350116841,
+          "repetitions_seconds": [
+            1.380917139002122,
+            1.3943782490096055,
+            1.4171546350116841
+          ],
+          "trajectories_per_second": 45.89859318693311,
+          "speedup": 3.2420246172294105
+        },
+        {
+          "executor": "processes",
+          "workers": 8,
+          "wall_seconds": 0.8942632100079209,
+          "min_seconds": 0.8907426699879579,
+          "max_seconds": 0.9422531069722027,
+          "repetitions_seconds": [
+            0.9422531069722027,
+            0.8907426699879579,
+            0.8942632100079209
+          ],
+          "trajectories_per_second": 71.56729616488765,
+          "speedup": 5.055120861986865
+        }
+      ]
+    },
+    {
+      "model": "jb2008",
+      "rows": [
+        {
+          "executor": "sequential",
+          "workers": 1,
+          "wall_seconds": 6.284811602032278,
+          "min_seconds": 6.278213007957675,
+          "max_seconds": 6.309180643991567,
+          "repetitions_seconds": [
+            6.284811602032278,
+            6.278213007957675,
+            6.309180643991567
+          ],
+          "trajectories_per_second": 10.183280590193785,
+          "speedup": 1.0
+        },
+        {
+          "executor": "threads",
+          "workers": 1,
+          "wall_seconds": 6.305073108000215,
+          "min_seconds": 6.248796380008571,
+          "max_seconds": 6.3157028629793786,
+          "repetitions_seconds": [
+            6.248796380008571,
+            6.305073108000215,
+            6.3157028629793786
+          ],
+          "trajectories_per_second": 10.150556370043255,
+          "speedup": 0.9967864756489138
+        },
+        {
+          "executor": "threads",
+          "workers": 4,
+          "wall_seconds": 13.031744520005304,
+          "min_seconds": 13.027851177030243,
+          "max_seconds": 13.053062544029672,
+          "repetitions_seconds": [
+            13.031744520005304,
+            13.027851177030243,
+            13.053062544029672
+          ],
+          "trajectories_per_second": 4.911084613556708,
+          "speedup": 0.4822693993413032
+        },
+        {
+          "executor": "threads",
+          "workers": 8,
+          "wall_seconds": 13.10363959200913,
+          "min_seconds": 12.925862260977738,
+          "max_seconds": 13.105764298001304,
+          "repetitions_seconds": [
+            13.10363959200913,
+            13.105764298001304,
+            12.925862260977738
+          ],
+          "trajectories_per_second": 4.884139215720533,
+          "speedup": 0.47962335638908177
+        },
+        {
+          "executor": "processes",
+          "workers": 1,
+          "wall_seconds": 6.259946280973963,
+          "min_seconds": 6.239222470961977,
+          "max_seconds": 6.263370081025641,
+          "repetitions_seconds": [
+            6.263370081025641,
+            6.259946280973963,
+            6.239222470961977
+          ],
+          "trajectories_per_second": 10.22372990556118,
+          "speedup": 1.003972130101801
+        },
+        {
+          "executor": "processes",
+          "workers": 4,
+          "wall_seconds": 1.8506712839589454,
+          "min_seconds": 1.836753471987322,
+          "max_seconds": 1.8959409189992584,
+          "repetitions_seconds": [
+            1.836753471987322,
+            1.8959409189992584,
+            1.8506712839589454
+          ],
+          "trajectories_per_second": 34.58204628489808,
+          "speedup": 3.3959632142710103
+        },
+        {
+          "executor": "processes",
+          "workers": 8,
+          "wall_seconds": 1.180390607973095,
+          "min_seconds": 1.1359961769776419,
+          "max_seconds": 1.1946247239829972,
+          "repetitions_seconds": [
+            1.1946247239829972,
+            1.1359961769776419,
+            1.180390607973095
+          ],
+          "trajectories_per_second": 54.219340248646546,
+          "speedup": 5.3243490413942105
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-# MT-001 parameters
+# Batch parameters and historical MT-001 settings
 
 Engineering selections, not measured optimal settings. Full executed commands, source/build/dependency hashes and actual execution order are retained in the evidence manifest and raw documents.
 
@@ -7,8 +7,7 @@ Engineering selections, not measured optimal settings. Full executed commands, s
 | Setting | Value | Meaning |
 |---|---|---|
 | API default workers | 1 | Inline, zero created threads |
-| API default policy | `static_partition` | Balanced contiguous trajectories |
-| Alternative policy | `dynamic` | Relaxed atomic task index, once per trajectory |
+| Internal scheduling | Dynamic relaxed atomic index | One strategy, no policy selector/configuration object |
 | Parallel worker bound | `min(configured_workers, trajectories)` | Caller participates only for configured worker count 1 |
 | Pool lifetime | One batch call | Created and joined before return; no persistent worker service |
 | Factory | Borrowed forwarding reference | Concurrent-call-safe; constructed RHS confined to its trajectory |
@@ -49,7 +48,7 @@ Workloads: pure point-mass two-body; point-mass + J2; full CASE dynamics with ex
 
 Production reuse switches all **on**: UTC civil-day exact reuse, compatible Sun sharing, orientation exact reuse. UTC capacity 32 FIFO civil dates; orientation 64 × 4 exact-epoch entries. No density caching/interpolation. Default NRLMSISE switches are recorded as all 24 values in correctness evidence; daily Ap is the main matched configuration, with history-mode correctness comparisons explicitly separate.
 
-## Correctness protocol
+## Historical MT-001 correctness protocol
 
 Identical initial-state batch size 4; configured workers 1,2,4,8,16; both policies; two repeated runs per configuration. Perturbed batches use SplitMix64, seed `0x5DEECE66D0F1A7C3`, deterministic position scale 50 m, velocity 0.02 m/s and angular-rate 1e-4 rad/s. The driver records the generation algorithm, parameters and actual resulting inputs/checksums. Quaternion perturbation is not introduced.
 
@@ -72,7 +71,21 @@ Kernel list: `naif0012.tls`, `de432s.bsp`, `earth_000101_270105_261009.bpc`. Wea
 
 Release C/C++ flags `-O3 -DNDEBUG`, C++20, GNU C/C++13; GNU Fortran13 `-O3`, official fixed-format JB2008 with existing `-std=legacy`. No fast-math, LTO, architecture-specific flags or scientific-parameter tuning. Regression build also retains `-Wall -Wextra -Wpedantic`. Actual versions, cache and compilation-database hashes are recorded by `manifest.py`.
 
-## Benchmark protocol
+## MT-002 compact protocol
+
+CASE-A, perturbed batch 64, duration 1800 s, cadence 30 s, seed `20261012`.
+Sequential reference plus threads/processes with 1/4/8 workers; one warm-up and
+three repetitions per configuration. All routes include process startup, their
+own kernel/weather loading, binary output and merge. Scientific settings and
+perturbation half-widths remain those above. No performance sweep or tuned default.
+
+Targeted correctness: eight trajectories for 21600 s; threads with four workers
+and processes with four/eight, two repeats against an explicit sequential reference.
+Empty/single/oversized and independent process configuration checks are separate.
+Current evidence and commands: [MT002.md](MT002.md) and
+[mt002-evidence/manifest.json](mt002-evidence/manifest.json).
+
+## Historical MT-001 benchmark protocol
 
 | Experiment | Cases | Duration | Sizes | Configured workers | Policies / variants | Measured repetitions |
 |---|---|---:|---|---|---|---:|

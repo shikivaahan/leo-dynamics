@@ -229,17 +229,19 @@ Sample times must be nonempty, finite, start exactly at zero and strictly increa
 
 Optional independent-trajectory concurrency: include `leo/integration/batch.hpp`
 and call `leo::propagate_batch(factory, initials, epoch, sample_times, options,
-leo::BatchOptions{workers, scheduling})`. The factory receives `(index, initial)`
+workers)`. The factory receives `(index, initial)`
 and creates a trajectory-owned RHS on its worker; concurrent factory calls must
 be safe. One shared epoch/options/schedule, original input ordering, independent
 solver/output state. Default one worker runs inline; parallel calls create and
-join a bounded C++20 worker pool. Static partitioning is the default; dynamic
-atomic-index scheduling is explicit. Existing `propagate()` is unchanged.
+join bounded C++20 workers using dynamic atomic-index assignment internally.
+There is no selectable scheduling policy. Existing `propagate()` is unchanged.
 All trajectories continue after a trajectory failure; after joining,
 `BatchPropagationError` reports the lowest failing input index and original
 exception pointer. Borrowed environmental resources must outlive the call;
 keep one stable SPICE configuration and retain native-model locks. See
-[MT-001 design, validation, scaling and reproduction](docs/multithreading/README.md).
+[batch design and scaling evidence](docs/multithreading/README.md).
+For SPICE-heavy application workloads, [MT-002](docs/multithreading/MT002.md)
+compares independently launched processes without extending the generic C++ API.
 
 The adapter uses Boost.Odeint Dormand–Prince 5(4) and explicitly owns current/trial derivative buffers, including rejection and quaternion projection. Maximum component error is scaled by `atol_field + rtol*max(abs(current),abs(trial))`. Defaults:
 

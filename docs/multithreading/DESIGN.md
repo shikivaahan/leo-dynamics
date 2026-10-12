@@ -1,4 +1,4 @@
-# MT-001 execution design
+# Batch execution design (MT-002)
 
 ## Starting architecture
 
@@ -11,12 +11,11 @@ Inspection started on `main` at `cfcf105da91d385e9748e87b69c1820c73f111f5`. The 
 ```cpp
 #include "leo/integration/batch.hpp"
 
-leo::BatchOptions execution{4, leo::BatchScheduling::static_partition};
 auto trajectories = leo::propagate_batch(
     [&](std::size_t index, const leo::State& initial) {
         // Return an independently configured RHS value for this trajectory.
         return make_rhs(index, initial);
-    }, initials, epoch, sample_times, integration_options, execution);
+    }, initials, epoch, sample_times, integration_options, 4);
 ```
 
 `make_rhs` above is application code, not a library symbol. The factory is borrowed through a forwarding reference, invoked once per trajectory on its owning worker, and must tolerate concurrent calls. Returned RHS values may be move-only; binding their result does not copy or move them. An RHS must satisfy the existing `propagate(const Rhs&, ...)` callable contract. Mutable RHS state belongs to that trajectory alone. Returning shared mutable objects or mutating factory captures without synchronization violates the caller contract.
@@ -25,11 +24,10 @@ All initial states share one epoch, schedule and `IntegrationOptions`. States, s
 
 ## Execution and ownership
 
-- Default: one explicitly configured worker, static partitioning. No hardware-dependent implicit worker selection.
+- Default: one explicitly configured worker. No hardware-dependent implicit worker selection.
 - One-worker calls execute inline without thread creation.
 - Other calls create and join `min(workers, input_count)` standard C++20 `std::jthread`s. The pool lasts exactly one batch call; no background service or general task framework.
-- Static policy: balanced contiguous input ranges, no shared task index.
-- Dynamic policy: relaxed atomic next-index assignment once per trajectory, never once per RHS evaluation.
+- One strategy: relaxed atomic next-index assignment once per trajectory, never once per RHS evaluation. No public scheduling enum or scheduler configuration object.
 - Result slots are allocated before workers start. Each slot has a single writer. Each propagation owns its stepper, adaptive state and output sample buffer.
 - Per-worker failure slots need no locks: only their owner writes them; the caller reads them after join.
 - No threading-related allocation, thread/task creation or shared integration state occurs inside an RHS evaluation. Ordinary force-model computation is unchanged.
@@ -44,11 +42,27 @@ CSPICE calls, managed kernel lifecycle and exact-reuse hits retain the existing 
 
 ## Failures
 
-`workers == 0` and invalid scheduling enum values are `std::invalid_argument`, even for an empty batch. A valid empty batch returns empty without invoking the factory or validating unused scientific inputs.
+`workers == 0` is `std::invalid_argument`, even for an empty batch. A valid empty batch returns empty without invoking the factory or validating unused scientific inputs.
 
 Factory, RHS and integration exceptions are captured per trajectory. Other trajectories continue, including tasks not yet started. After synchronization, `BatchPropagationError` reports the **lowest failing input index** via `trajectory_index()` and its original `std::exception_ptr` via `cause()`. Rethrow with `std::rethrow_exception(error.cause())` to recover the original type/payload. Higher-index failures are not aggregated. No missing output is replaced with a successful-looking placeholder.
 
 Thread-launch/resource failures are infrastructure errors: started workers are signalled to stop between trajectories, joined, and the original exception is rethrown. In-flight propagation completes before cleanup. There is no fail-fast interruption of scientific integration.
+
+## Concrete process isolation
+
+The generic library API always uses in-process workers; arbitrary C++ factories
+and captures are never serialized. `process_batch.py` independently launches
+`mt_isolation` for concrete CASE/atmosphere workloads. Each executable constructs
+its own stable SPICE provider, weather dataset and native reference-library state.
+The Python parent never initializes CSPICE. Every child retains the existing locks.
+
+Process inputs are explicit: CASE, kernels, weather, epoch, model, numerical
+options, perturbation seed and global input range. Balanced contiguous ranges
+reuse the existing benchmark's scientific RHS; the parent merges complete
+binary64 results in ascending input order. Failures prevent result publication,
+and started children are terminated/reaped on failure. This is application-level
+orchestration, not another library API or a general process pool. See
+[MT002.md](MT002.md) for measured selection and limitations.
 
 ## Measurement isolation
 

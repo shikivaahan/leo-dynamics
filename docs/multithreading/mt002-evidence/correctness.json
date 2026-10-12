@@ -1,0 +1,367 @@
+{
+  "kind": "MT-002 targeted correctness",
+  "case": "CASE-A",
+  "duration_seconds": 21600,
+  "seed": 20261012,
+  "six_hour_comparisons": 24,
+  "edge_comparisons": 6,
+  "independent_configuration_comparisons": 2,
+  "mismatching_values": 0,
+  "rows": [
+    {
+      "model": "two_body_j2",
+      "executor": "threads",
+      "workers": 4,
+      "repeat": 0,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "0e8916ce45fee28a0049349241261bfa56889bb62ae7d08667bb1dd4ba34379a"
+    },
+    {
+      "model": "two_body_j2",
+      "executor": "threads",
+      "workers": 4,
+      "repeat": 1,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "0e8916ce45fee28a0049349241261bfa56889bb62ae7d08667bb1dd4ba34379a"
+    },
+    {
+      "model": "two_body_j2",
+      "executor": "processes",
+      "workers": 4,
+      "repeat": 0,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "0e8916ce45fee28a0049349241261bfa56889bb62ae7d08667bb1dd4ba34379a"
+    },
+    {
+      "model": "two_body_j2",
+      "executor": "processes",
+      "workers": 4,
+      "repeat": 1,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "0e8916ce45fee28a0049349241261bfa56889bb62ae7d08667bb1dd4ba34379a"
+    },
+    {
+      "model": "two_body_j2",
+      "executor": "processes",
+      "workers": 8,
+      "repeat": 0,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "0e8916ce45fee28a0049349241261bfa56889bb62ae7d08667bb1dd4ba34379a"
+    },
+    {
+      "model": "two_body_j2",
+      "executor": "processes",
+      "workers": 8,
+      "repeat": 1,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "0e8916ce45fee28a0049349241261bfa56889bb62ae7d08667bb1dd4ba34379a"
+    },
+    {
+      "model": "exponential",
+      "executor": "threads",
+      "workers": 4,
+      "repeat": 0,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "3b5ab42e11d112d7461984868890abdaaff2affbf6b6bff10b8c42f903983fa4"
+    },
+    {
+      "model": "exponential",
+      "executor": "threads",
+      "workers": 4,
+      "repeat": 1,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "3b5ab42e11d112d7461984868890abdaaff2affbf6b6bff10b8c42f903983fa4"
+    },
+    {
+      "model": "exponential",
+      "executor": "processes",
+      "workers": 4,
+      "repeat": 0,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "3b5ab42e11d112d7461984868890abdaaff2affbf6b6bff10b8c42f903983fa4"
+    },
+    {
+      "model": "exponential",
+      "executor": "processes",
+      "workers": 4,
+      "repeat": 1,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "3b5ab42e11d112d7461984868890abdaaff2affbf6b6bff10b8c42f903983fa4"
+    },
+    {
+      "model": "exponential",
+      "executor": "processes",
+      "workers": 8,
+      "repeat": 0,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "3b5ab42e11d112d7461984868890abdaaff2affbf6b6bff10b8c42f903983fa4"
+    },
+    {
+      "model": "exponential",
+      "executor": "processes",
+      "workers": 8,
+      "repeat": 1,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "3b5ab42e11d112d7461984868890abdaaff2affbf6b6bff10b8c42f903983fa4"
+    },
+    {
+      "model": "nrlmsise00",
+      "executor": "threads",
+      "workers": 4,
+      "repeat": 0,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "8ad5eee2e8bed0c704bda70a069c94952513f82f0513db36dd8fc6723a719a75"
+    },
+    {
+      "model": "nrlmsise00",
+      "executor": "threads",
+      "workers": 4,
+      "repeat": 1,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "8ad5eee2e8bed0c704bda70a069c94952513f82f0513db36dd8fc6723a719a75"
+    },
+    {
+      "model": "nrlmsise00",
+      "executor": "processes",
+      "workers": 4,
+      "repeat": 0,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "8ad5eee2e8bed0c704bda70a069c94952513f82f0513db36dd8fc6723a719a75"
+    },
+    {
+      "model": "nrlmsise00",
+      "executor": "processes",
+      "workers": 4,
+      "repeat": 1,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "8ad5eee2e8bed0c704bda70a069c94952513f82f0513db36dd8fc6723a719a75"
+    },
+    {
+      "model": "nrlmsise00",
+      "executor": "processes",
+      "workers": 8,
+      "repeat": 0,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "8ad5eee2e8bed0c704bda70a069c94952513f82f0513db36dd8fc6723a719a75"
+    },
+    {
+      "model": "nrlmsise00",
+      "executor": "processes",
+      "workers": 8,
+      "repeat": 1,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "8ad5eee2e8bed0c704bda70a069c94952513f82f0513db36dd8fc6723a719a75"
+    },
+    {
+      "model": "jb2008",
+      "executor": "threads",
+      "workers": 4,
+      "repeat": 0,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "2e57514df85af1aa327eb227dd02fded7d17259c361d6065ce16a8eeeea798dd"
+    },
+    {
+      "model": "jb2008",
+      "executor": "threads",
+      "workers": 4,
+      "repeat": 1,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "2e57514df85af1aa327eb227dd02fded7d17259c361d6065ce16a8eeeea798dd"
+    },
+    {
+      "model": "jb2008",
+      "executor": "processes",
+      "workers": 4,
+      "repeat": 0,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "2e57514df85af1aa327eb227dd02fded7d17259c361d6065ce16a8eeeea798dd"
+    },
+    {
+      "model": "jb2008",
+      "executor": "processes",
+      "workers": 4,
+      "repeat": 1,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "2e57514df85af1aa327eb227dd02fded7d17259c361d6065ce16a8eeeea798dd"
+    },
+    {
+      "model": "jb2008",
+      "executor": "processes",
+      "workers": 8,
+      "repeat": 0,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "2e57514df85af1aa327eb227dd02fded7d17259c361d6065ce16a8eeeea798dd"
+    },
+    {
+      "model": "jb2008",
+      "executor": "processes",
+      "workers": 8,
+      "repeat": 1,
+      "trajectories": 8,
+      "samples": 721,
+      "binary64_values": 75706,
+      "complete_binary_equality": true,
+      "sha256": "2e57514df85af1aa327eb227dd02fded7d17259c361d6065ce16a8eeeea798dd"
+    },
+    {
+      "group": "edges",
+      "model": "nrlmsise00",
+      "executor": "threads",
+      "workers": 16,
+      "trajectories": 0,
+      "samples": 4,
+      "complete_binary_equality": true
+    },
+    {
+      "group": "edges",
+      "model": "nrlmsise00",
+      "executor": "processes",
+      "workers": 16,
+      "trajectories": 0,
+      "samples": 4,
+      "complete_binary_equality": true
+    },
+    {
+      "group": "edges",
+      "model": "nrlmsise00",
+      "executor": "threads",
+      "workers": 16,
+      "trajectories": 1,
+      "samples": 4,
+      "complete_binary_equality": true
+    },
+    {
+      "group": "edges",
+      "model": "nrlmsise00",
+      "executor": "processes",
+      "workers": 16,
+      "trajectories": 1,
+      "samples": 4,
+      "complete_binary_equality": true
+    },
+    {
+      "group": "edges",
+      "model": "nrlmsise00",
+      "executor": "threads",
+      "workers": 16,
+      "trajectories": 3,
+      "samples": 4,
+      "complete_binary_equality": true
+    },
+    {
+      "group": "edges",
+      "model": "nrlmsise00",
+      "executor": "processes",
+      "workers": 16,
+      "trajectories": 3,
+      "samples": 4,
+      "complete_binary_equality": true
+    },
+    {
+      "group": "independent_configuration",
+      "different_child_pids": [
+        1279377,
+        1279378
+      ],
+      "models": [
+        "full_nrlmsise00",
+        "full_jb2008"
+      ],
+      "epochs": [
+        120830464.18249857,
+        120744064.18248665
+      ],
+      "complete_binary_equality_to_separate_references": true
+    }
+  ],
+  "migrated_scientific_driver_smoke": {
+    "comparisons": 10,
+    "passed": 10,
+    "failed": 0,
+    "mismatching_values": 0,
+    "bitwise_equal_everywhere": true,
+    "final_state_format": "trajectory elapsed_s, then r.x r.y r.z v.x v.y v.z q.w q.x q.y q.z omega.x omega.y omega.z at the last requested output"
+  },
+  "regressions": {
+    "existing_suite": {
+      "passed": 184,
+      "failed": 0,
+      "executions": 1
+    },
+    "registered_process_contract_test": {
+      "ctest_passed": 1,
+      "python_cases_passed": 7,
+      "failed": 0
+    }
+  },
+  "batch_surface_smoke": "3 ordered trajectories, all 117 state doubles equal, worker-count 1 executes inline"
+}

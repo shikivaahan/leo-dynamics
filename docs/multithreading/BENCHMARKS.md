@@ -1,6 +1,13 @@
-# MT-001 benchmark protocol and reproduction
+# Benchmark protocol and historical MT-001 evidence
 
 Production and diagnostic timing are separate. The benchmark uses actual `propagate()`/`propagate_batch()` calls and frozen CASE physics, never a synthetic RHS throughput proxy. The only synthetic measurement is the explicitly labelled thread-startup probe.
+
+The measured matrices below are frozen MT-001 results. Current sources have one
+internal dynamic scheduler; the commands below are adapted to that API and do
+not reproduce the removed static-policy dimension. Reproduce the exact historical
+matrix from revision `8a806534987d8e04a8f6d27b24ab5ee8150bab20`.
+For current decisions use the compact [MT-002 protocol](MT002.md), not another
+complete matrix.
 
 ## Timing boundaries
 
@@ -23,7 +30,7 @@ Raw evidence retains wall/CPU times, trajectories/s, process peak RSS, per-traje
 
 Speedup is matched sequential **median** batch wall time / parallel median wall time; sequential is an explicit loop over `propagate()`, not the batch inline path. Parallel efficiency divides by configured workers; requests greater than batch size are still reported as requested, with active-bound efficiency separately available. Five repetitions with one warm-up per configuration; median, min, max and coefficient of variation retained. No single timing difference is conclusive; min/max are observed spread, not confidence intervals.
 
-Static and dynamic configurations use the same thread counts, epoch, physics, input states and output schedule. Configuration order is seeded-shuffled and recorded; repetitions for each configuration are contiguous, so thermal/time-order effects remain a limitation. Deterministic perturbations use a recorded SplitMix64 seed and uniform half-widths. Atmospheric results are never cached.
+Historical static and dynamic configurations used the same thread counts, epoch, physics, input states and output schedule. Configuration order was seeded-shuffled and recorded; repetitions for each configuration were contiguous, so thermal/time-order effects remain a limitation. Deterministic perturbations use a recorded SplitMix64 seed and uniform half-widths. Atmospheric results are never cached.
 
 Diagnostics retain existing SPICE counters: UTC/orientation hits/misses/evictions, Sun acquisition, kernel invalidation and mutex acquisition/contended/acquisition-time. Private native adapter copies record acquisitions, contention, acquisition elapsed and held elapsed per model. Acquisition intervals include clock/try-lock overhead, not pure blocked time; held intervals include measurement bookkeeping. Aggregate thread wait time may exceed wall time. These counters support bottleneck ranking, not uninstrumented absolute cost claims.
 
@@ -93,17 +100,17 @@ affinity=0,2,4,6,8,10,12,14
   --benchmark-out "$ev/benchmarks.json" "${common[@]}" --case "$A" \
   --benchmark-duration 300 --repetitions 5 --seed 20261012 \
   --benchmark-sizes 1,2,4,8,16,32,64 --benchmark-workers 1,2,4,8 \
-  --benchmark-policies static,dynamic --benchmark-variants identical,perturbed
+  --benchmark-variants identical,perturbed
 "${rec[@]}" --label confirmation -- taskset -c "$affinity" "$build/mt_benchmark" \
   --benchmark-out "$ev/confirmation.json" "${common[@]}" --case "$A" --case "$B" \
   --benchmark-duration 21600 --repetitions 5 --seed 20261012 \
   --benchmark-sizes 8 --benchmark-workers 1,2,4,8 \
-  --benchmark-policies static,dynamic --benchmark-variants identical,perturbed
+  --benchmark-variants identical,perturbed
 "${rec[@]}" --label diagnostics -- taskset -c "$affinity" "$build/mt_benchmark_diagnostics" \
   --benchmark-out "$ev/diagnostics.json" "${common[@]}" --case "$A" \
   --benchmark-duration 300 --repetitions 3 --seed 20261012 \
   --benchmark-sizes 8,32 --benchmark-workers 1,2,4,8 \
-  --benchmark-policies static,dynamic --benchmark-variants identical,perturbed
+  --benchmark-variants identical,perturbed
 "${rec[@]}" --label startup -- taskset -c "$affinity" "$build/mt_startup" "$ev/startup.json"
 "${rec[@]}" --label analyse -- python3 docs/multithreading/analyse.py \
   --matrix "$ev/benchmarks.json" --confirmation "$ev/confirmation.json" \

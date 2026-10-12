@@ -24,14 +24,14 @@ without a summary; it is explicitly excluded from acceptance and recorded in
 
 CASE-A/B are the primary physically representative analytical spacecraft configs; CASE-C is explicitly labelled `numerical_stress`. No new convergence criterion is imposed on CASE-C. Exponential, direct NRLMSISE-00 and direct official JB2008 run without fallbacks. Daily-Ap and native history-Ap groups remain distinct.
 
-## Permanent regressions
+## Permanent regressions (current API)
 
 `tests/batch_tests.cpp` adds 11 consumer-visible cases, without introducing SPICE/native fixtures into the normal integration test executable:
 
 - Complete state/time/epoch binary64 equality and original ordering.
-- Different worker counts and both scheduling policies.
+- Different worker counts with the single internal dynamic strategy.
 - Empty, single-element and oversized-worker batches.
-- Invalid worker/policy rejection, including empty input.
+- Zero-worker rejection, including empty input.
 - Factory and RHS exception type/payload preservation.
 - Deterministic lowest failing input index when several trajectories fail.
 - Continue-on-failure completion and no surviving worker activity after return.
@@ -40,9 +40,15 @@ CASE-A/B are the primary physically representative analytical spacecraft configs
 
 Comparison helpers retain actual bit streams, not a hash-only equality assertion. Exception assertions use `trajectory_index()` and the original cause; wrapper-message wording is not pinned.
 
+MT-002 removes the redundant per-policy repetitions and policy-validation section.
+`tests/process_batch_tests.py` additionally covers range ownership, complete binary
+merge ordering, invalid/mismatched payloads, atomic publication and actual OS-child
+cleanup on execution or partial-launch failure. Scientific equality is exercised
+with the real executable, not synthetic atmosphere results.
+
 Observed regression result: **184/184 CTest cases passed**, with actual pinned SPICE/native/weather fixture environment, including all existing scientific regression tests. Exact command and output: `evidence/regressions-command.json`.
 
-## Six-hour scientific run
+## Historical MT-001 six-hour scientific run
 
 `evidence/validation-long/correctness.json`: **624/624 comparisons passed; zero
 mismatching values**. All CASE-A/B/C and five workloads, identical/perturbed inputs,
@@ -61,7 +67,7 @@ Across the two accepted protocols: **924/924 scientific comparisons passed**.
 | Full NRLMSISE-00 | 180 | 0 |
 | Full JB2008 | 180 | 0 |
 
-## High-concurrency scientific run
+## Historical MT-001 high-concurrency scientific run
 
 `evidence/validation-wide/correctness.json`: **300/300 comparisons passed; zero mismatching values**. CASE-A/B/C × all five workloads × both policies × workers 1,2,4,8,16 × two repetitions; batch size 16, duration 300 s, output cadence 30 s. This exercises actual 8- and 16-worker atmospheric execution, rather than merely configuring a count that is clamped to a size-4 batch. Of these, 60 comparisons use 16 actual workers.
 
@@ -80,3 +86,15 @@ approximate ephemeris is introduced.
 No ThreadSanitizer or injected OS thread-creation failure result is claimed. Partial-launch cleanup is implemented with cancellation and RAII joins and reviewed in source; runtime exception tests cover trajectory construction/evaluation failures. Generic user factories/custom borrowed resources remain the caller's thread-safety responsibility. No concurrent external CSPICE calls or kernel mutation are supported during a batch.
 
 Validation timings include deliberately expensive trace and diagnostic work and are **not** throughput benchmarks. Production and contention benchmarks are separate processes with trace capture disabled.
+
+## MT-002 targeted acceptance
+
+The current API passed the existing 184-case regression suite once. The new
+registered process-contract CTest passed separately (seven Python cases). The
+migrated scientific validation driver passed ten short comparisons.
+The real concrete runner passed 24 six-hour complete binary64 comparisons,
+six empty/single/oversized comparisons and two simultaneous, independently
+configured process comparisons. No scientific mismatches.
+See [MT002.md](MT002.md) and [current correctness evidence](mt002-evidence/correctness.json).
+The unchanged MT-001 stage/native-input evidence remains authoritative for
+unchanged physics and model preprocessing; it was not regenerated.

@@ -1,6 +1,19 @@
-# MT-001 results
+# MT-001 results and MT-002 cutover
 
-## Verdict
+The figures below are historical MT-001 measurements, not reruns of the simplified
+API. Current thread/process measurements and recommendations are in
+[MT002.md](MT002.md). The historical evidence directory is unchanged.
+
+## MT-002 decision
+
+Keep the generic batch API in-process and dynamic-only. Use threads for large
+gravity-only ensembles and the concrete application process route for large
+environmental batches. Processes materially outperform the measured shared-memory
+environmental workers while every required lock remains intact. Short/small
+workloads retain the explicit one-worker default; there is no automatic routing.
+The compact comparison and complete six-hour correctness evidence are linked above.
+
+## Historical MT-001 verdict
 
 **Correct and deterministic; beneficial for gravity-only ensembles, not for the measured full-dynamics workloads.** Keep one worker for full dynamics on this host with the current CSPICE/native backends. The optional batch API is useful without claiming that every workload scales.
 
@@ -63,7 +76,7 @@ Twelve matched six-hour pairs per workload: CASE-A/B × identical/perturbed × 2
 | Full NRLMSISE-00 | 0.999 | 0.918 | 1.007 |
 | Full JB2008 | 1.000 | 0.995 | 1.010 |
 
-No universal dynamic-scheduling win. Dynamic wins the largest short perturbed J2 batch; static wins the six-hour perturbed gravity configurations. Full-model policy differences are small compared with their parallel slowdown. Static remains the conservative default; policy and worker count remain explicit.
+No universal dynamic-scheduling win was established. Dynamic won the largest short perturbed J2 batch; static won the six-hour perturbed gravity configurations. Full-model policy differences were small compared with their parallel slowdown. MT-001 retained static by default; MT-002 removes the policy dimension and uses dynamic assignment internally for one maintainable API, not as a claim of universally optimal performance.
 
 ### Intrinsic work variation versus wall-time imbalance
 
@@ -141,12 +154,12 @@ Some short guest-thread measurements report process CPU/wall below one despite o
 
 No ThreadSanitizer or injected OS thread-launch failure result is claimed. Trajectory factory/RHS failures, deterministic failure ordering and synchronized cleanup are exercised by permanent tests. Intermediate six-hour RHS traces are not part of acceptance; full output diagnostics and separate exhaustive short-stage validation are.
 
-## MT-002 experiments, not implemented here
+## Experiments proposed by MT-001
 
-1. **Process-level independent propagation** with one stable kernel owner/weather dataset per process. Compare 1/2/4/8 processes to threads while preserving existing model locks; measure IPC/startup/memory and require bitwise outputs. This tests isolation of process-global reference-library state without pretending those libraries are reentrant.
+1. **Process-level independent propagation**: now tested and implemented by [MT-002](MT002.md) for concrete application workloads; numerical locks remain unchanged.
 2. **Exact shared time-key preprocessing** for Sun/UTC/orientation acquisition across trajectories. Measure lock-call reduction, key locality and generation/lifetime safety, especially perturbed batches. No density caching/interpolation, approximate transforms or hidden fallback.
 3. **Native state-context feasibility** only after identifying every mutable upstream C/Fortran global. Validate identical native inputs/results before considering independent contexts; retain the current mutex until proven safe. SPICE may remain the limiting path even if native calls become independent.
 4. **Persistent bounded batch workers** for repeated short gravity ensembles. Separate constructor/startup from warm execution and end-to-end lifetime costs; preserve error/ownership/order contracts. Do not infer that a persistent pool fixes SPICE contention.
 5. **Scheduling/affinity and realistic heterogeneity sweeps**, plus longer CPU-accounting probes. Vary only explicit worker policies/placement and physically motivated perturbations, not tolerances or force equations. Use profiler/hardware evidence before padding buffers or blaming false sharing.
 
-All experiments must keep the MT-001 golden numerical acceptance, frozen evidence and explicit kernel/weather/model configurations. No MT-002 optimization or scientific cutover is hidden in this implementation.
+Remaining proposals are future work, not implemented optimizations. They must preserve frozen numerical acceptance and explicit kernel/weather/model configurations. Density caching remains deferred.

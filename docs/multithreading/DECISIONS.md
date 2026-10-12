@@ -2,6 +2,11 @@
 
 Engineering defaults below are conservative choices, not claimed measured optima. Performance conclusions and experiment-specific choices are in [RESULTS.md](RESULTS.md) and [PARAMETERS.md](PARAMETERS.md).
 
+This is the historical MT-001 decision record. MT-002 supersedes selectable
+scheduling with one internal dynamic atomic index and retains batch-local
+in-process workers. Concrete process isolation is application-level; its measured
+selection and rejected alternatives are in [MT002.md](MT002.md).
+
 | Decision | Alternatives | Selection and rationale | Consequence / limitation | Evidence | Status |
 |---|---|---|---|---|---|
 | Numerical execution | Reimplement integrator; distribute RHS stages; call existing solver | One unchanged `propagate()` per trajectory | Exact single-trajectory numerical path; no within-trajectory parallelism | `batch.hpp` invokes `propagate.hpp`; scientific bit comparisons in correctness evidence | Final for MT-001 |
