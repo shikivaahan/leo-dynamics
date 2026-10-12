@@ -44,7 +44,7 @@
 //   reported separately.
 // The zero-duration control repeats the identical matrix with an output schedule
 // of {0}, where propagate() returns before any RHS evaluation, so it isolates
-// thread launch, dispatch and join cost for both scheduling policies.
+// thread launch, dispatch and join cost.
 //
 // The sequential baseline is an explicit loop over propagate(), not a batch with
 // one worker; batch runs with requested_workers == 1 are the library's inline path
@@ -265,7 +265,7 @@ struct Perturbation {
 
 // One perturbed initial state per case and trajectory index, derived from the
 // recorded master seed and that index alone, so the same trajectory is perturbed
-// identically regardless of batch size, worker count, policy or execution order.
+// identically regardless of batch size, worker count or execution order.
 std::vector<State> bm_perturb_states(const std::vector<State>& base, std::uint64_t seed,
                                      const Perturbation& perturbation) {
     std::vector<State> perturbed = base;
@@ -423,10 +423,6 @@ std::string bm_executor_name(Executor executor) {
     return "unknown";
 }
 
-std::string bm_scheduling_name(BatchScheduling scheduling) {
-    return scheduling == BatchScheduling::dynamic ? "dynamic" : "static_partition";
-}
-
 struct ExecutorResult {
     double wall_seconds = 0, cpu_seconds = 0, cpu_utilization = 0;
     double dispatch_seconds = 0, active_envelope_seconds = 0, join_return_seconds = 0;
@@ -500,7 +496,7 @@ ExecutorResult bm_run_sequential(const std::vector<State>& initials, const Workl
 ExecutorResult bm_run_batch(const std::vector<State>& initials, const Workload& work,
                             const experiment::Case& spec, const Environment& env, const Config& config,
                             leo::Epoch epoch, std::span<const double> labels,
-                            const IntegrationOptions& options, BatchOptions batch, ThreadSlots& slots,
+                            const IntegrationOptions& options, std::size_t workers, ThreadSlots& slots,
                             std::vector<Instrument>& instruments) {
     instruments.assign(initials.size(), Instrument{});
     ExecutorResult result;
@@ -520,7 +516,7 @@ ExecutorResult bm_run_batch(const std::vector<State>& initials, const Workload& 
         return BmRhs(work, spec, env, config, epoch, &instrument);
     };
     std::vector<leo::Trajectory> trajectories =
-        propagate_batch(factory, std::span<const State>(initials), epoch, labels, options, batch);
+        propagate_batch(factory, std::span<const State>(initials), epoch, labels, options, workers);
     const auto exit = Clock::now();
     result.wall_seconds = bm_seconds_between(entry, exit);
     result.cpu_seconds = bm_process_cpu_seconds() - cpu_before;
@@ -665,7 +661,6 @@ struct BenchmarkOptions {
     Perturbation perturbation;                                    // --benchmark-*-sigma
     std::vector<std::size_t> sizes{1, 2, 4, 8, 16, 32, 64};       // --benchmark-sizes
     std::vector<std::size_t> workers{1, 2, 4, 8};                 // --benchmark-workers
-    std::vector<BatchScheduling> policies{BatchScheduling::static_partition, BatchScheduling::dynamic};
     std::vector<std::string> models;                              // --benchmark-models
     std::vector<std::string> variants{"identical", "perturbed"}; // --benchmark-variants
     std::vector<std::string> case_ids;                            // --benchmark-cases
@@ -719,7 +714,6 @@ void bm_print_help() {
         "  --benchmark-order seeded|sequential  seeded shuffle of the execution order (default seeded)\n"
         "  --benchmark-sizes LIST            batch sizes (default 1,2,4,8,16,32,64)\n"
         "  --benchmark-workers LIST          worker counts (default 1,2,4,8)\n"
-        "  --benchmark-policies LIST         static,dynamic (default both)\n"
         "  --benchmark-models LIST           two_body_j2,exponential,nrlmsise00,jb2008\n"
         "                                     (default two_body_j2 plus every compiled-in backend)\n"
         "  --benchmark-variants LIST         identical,perturbed (default both)\n"
@@ -769,17 +763,6 @@ std::vector<std::string> bm_split_arguments(int argc, char** argv, BenchmarkOpti
         if (key == "--benchmark-ap-history") { benchmark.ap_history = bm_parse_switch(value_of(index, key), "--benchmark-ap-history"); continue; }
         if (key == "--benchmark-sizes") { benchmark.sizes = bm_parse_counts(value_of(index, key), "--benchmark-sizes"); continue; }
         if (key == "--benchmark-workers") { benchmark.workers = bm_parse_counts(value_of(index, key), "--benchmark-workers"); continue; }
-        if (key == "--benchmark-policies") {
-            benchmark.policies.clear();
-            for (const std::string& name : bm_split_strings(value_of(index, key), "--benchmark-policies")) {
-                if (name == "static" || name == "static_partition")
-                    benchmark.policies.push_back(BatchScheduling::static_partition);
-                else if (name == "dynamic")
-                    benchmark.policies.push_back(BatchScheduling::dynamic);
-                else throw std::invalid_argument("unknown --benchmark-policies entry: " + name);
-            }
-            continue;
-        }
         if (key == "--benchmark-models") { benchmark.models = bm_split_strings(value_of(index, key), "--benchmark-models"); continue; }
         if (key == "--benchmark-variants") { benchmark.variants = bm_split_strings(value_of(index, key), "--benchmark-variants"); continue; }
         if (key == "--benchmark-cases") { benchmark.case_ids = bm_split_strings(value_of(index, key), "--benchmark-cases"); continue; }
@@ -800,9 +783,8 @@ std::vector<std::string> bm_split_arguments(int argc, char** argv, BenchmarkOpti
     if (benchmark.repetitions == 0) throw std::invalid_argument("--repetitions must be at least one");
     if (benchmark.control_repetitions == 0)
         throw std::invalid_argument("--benchmark-control-repetitions must be at least one");
-    if (benchmark.sizes.empty() || benchmark.workers.empty() || benchmark.policies.empty() ||
-        benchmark.variants.empty())
-        throw std::invalid_argument("sizes, workers, policies and variants must each name at least one value");
+    if (benchmark.sizes.empty() || benchmark.workers.empty() || benchmark.variants.empty())
+        throw std::invalid_argument("sizes, workers and variants must each name at least one value");
     for (const std::size_t size : benchmark.sizes)
         if (size == 0) throw std::invalid_argument("--benchmark-sizes entries must be at least one");
     for (const std::size_t workers : benchmark.workers)
@@ -866,14 +848,12 @@ struct Job {
     const Workload* work = nullptr;
     std::string variant, case_id;
     std::size_t batch_size = 1, workers = 1, repetition = 0;
-    BatchScheduling scheduling = BatchScheduling::static_partition;
     bool ap_history = false;
     std::string configuration_id;
 };
 
 Job bm_make_job(Executor executor, std::size_t case_index, const Workload& work, const std::string& variant,
-                const std::string& case_id, std::size_t batch_size, std::size_t workers,
-                BatchScheduling scheduling, bool ap_history) {
+                const std::string& case_id, std::size_t batch_size, std::size_t workers, bool ap_history) {
     Job job;
     job.executor = executor;
     job.case_index = case_index;
@@ -882,12 +862,10 @@ Job bm_make_job(Executor executor, std::size_t case_index, const Workload& work,
     job.case_id = case_id;
     job.batch_size = batch_size;
     job.workers = workers;
-    job.scheduling = scheduling;
     job.ap_history = ap_history;
     std::ostringstream id;
     id << bm_executor_name(executor) << '|' << case_id << '|' << work.name << '|' << variant
        << "|size=" << batch_size << "|workers=" << workers;
-    if (executor != Executor::sequential) id << '|' << bm_scheduling_name(scheduling);
     if (ap_history) id << "|ap_history";
     job.configuration_id = id.str();
     return job;
@@ -997,7 +975,7 @@ BmRunRecord bm_measure(const Job& job, const std::vector<experiment::Case>& spec
     else
         result = bm_run_batch(selected, *job.work, spec, env, scoped, epoch,
                               job.executor == Executor::control ? control_labels : labels, options,
-                              BatchOptions{job.workers, job.scheduling}, slots, instruments);
+                              job.workers, slots, instruments);
 
     if (record.has_spice) record.spice_after = leo::SpiceEphemerisProvider::reuse_statistics();
     if (record.has_native) {
@@ -1045,6 +1023,10 @@ BmRunRecord bm_measure(const Job& job, const std::vector<experiment::Case>& spec
 
 }  // namespace
 
+// A process-isolation runner includes this translation unit to reuse the frozen
+// CASE loader, environment construction, BmRhs and the workload helpers, and
+// defines MT_BENCHMARK_NO_MAIN to suppress this driver entry point.
+#ifndef MT_BENCHMARK_NO_MAIN
 int main(int argc, char** argv) {
     try {
         BenchmarkOptions benchmark;
@@ -1118,31 +1100,28 @@ int main(int argc, char** argv) {
                     if (benchmark.sequential)
                         for (const std::size_t size : benchmark.sizes)
                             jobs.push_back(bm_make_job(Executor::sequential, case_index, work, variant, case_id,
-                                                       size, 1, BatchScheduling::static_partition,
-                                                       benchmark.ap_history));
+                                                       size, 1, benchmark.ap_history));
                     for (const std::size_t size : benchmark.sizes)
-                        for (const std::size_t workers : benchmark.workers)
-                            for (const BatchScheduling policy : benchmark.policies) {
-                                const Job job = bm_make_job(Executor::batch, case_index, work, variant, case_id,
-                                                            size, workers, policy, benchmark.ap_history);
-                                if (workers > worker_limit) {
-                                    skipped.push_back(skip_reason(job));
-                                    continue;
-                                }
-                                jobs.push_back(job);
+                        for (const std::size_t workers : benchmark.workers) {
+                            const Job job = bm_make_job(Executor::batch, case_index, work, variant, case_id,
+                                                        size, workers, benchmark.ap_history);
+                            if (workers > worker_limit) {
+                                skipped.push_back(skip_reason(job));
+                                continue;
                             }
+                            jobs.push_back(job);
+                        }
                     if (!benchmark.controls) continue;
                     for (const std::size_t size : benchmark.sizes)
-                        for (const std::size_t workers : benchmark.workers)
-                            for (const BatchScheduling policy : benchmark.policies) {
-                                const Job job = bm_make_job(Executor::control, case_index, work, variant, case_id,
-                                                            size, workers, policy, benchmark.ap_history);
-                                if (workers > worker_limit) {
-                                    skipped.push_back(skip_reason(job));
-                                    continue;
-                                }
-                                jobs.push_back(job);
+                        for (const std::size_t workers : benchmark.workers) {
+                            const Job job = bm_make_job(Executor::control, case_index, work, variant, case_id,
+                                                        size, workers, benchmark.ap_history);
+                            if (workers > worker_limit) {
+                                skipped.push_back(skip_reason(job));
+                                continue;
                             }
+                            jobs.push_back(job);
+                        }
                 }
         }
 
@@ -1164,7 +1143,6 @@ int main(int argc, char** argv) {
             std::cerr << '[' << (position + 1) << '/' << jobs.size() << "] " << phase << ' ' << job.case_id << ' '
                       << job.work->name << ' ' << job.variant << " size=" << job.batch_size
                       << " workers=" << job.workers
-                      << (job.executor == Executor::batch ? " " + bm_scheduling_name(job.scheduling) : "")
                       << ' ' << bm_executor_name(job.executor) << ' ' << step << '/' << steps << ' '
                       << std::fixed << std::setprecision(6) << seconds << "s\n";
         };
@@ -1264,7 +1242,7 @@ int main(int argc, char** argv) {
         document.text("control_definition",
                       "executor \"control_no_rhs\" repeats the matrix with an output schedule of {0}, where "
                       "propagate() returns before evaluating the RHS at all, so it isolates thread launch, "
-                      "dispatch and join for both scheduling policies.");
+                      "dispatch and join cost.");
         document.text("speedup_and_efficiency",
                       "Not computed here. Each batch run carries sequential_reference, the index of a sequential "
                       "run of the same case, workload, variant, batch size and ap-history switch, so speedup is "
@@ -1332,8 +1310,6 @@ int main(int argc, char** argv) {
         build.boolean("native_mutex_diagnostics_compiled_in", bm_native_diagnostics_available());
         document.raw("build", build.str());
 
-        std::vector<std::string> policy_names;
-        for (const BatchScheduling policy : benchmark.policies) policy_names.push_back(bm_scheduling_name(policy));
         std::vector<std::string> workload_names;
         for (const Workload& work : workloads) workload_names.push_back(work.name);
         std::vector<std::string> model_names;
@@ -1342,7 +1318,7 @@ int main(int argc, char** argv) {
 
         document.raw("batch_sizes", bm_json_sizes(benchmark.sizes));
         document.raw("worker_counts", bm_json_sizes(benchmark.workers));
-        document.raw("scheduling_policies", bm_json_strings(policy_names));
+        document.raw("scheduling_policies", bm_json_strings({"dynamic"}));
         document.raw("workloads", bm_json_strings(workload_names));
         document.raw("atmosphere_models", bm_json_strings(model_names));
         document.raw("variants", bm_json_strings(benchmark.variants));
@@ -1429,7 +1405,7 @@ int main(int argc, char** argv) {
             json.integer("requested_workers", record.job.workers);
             json.integer("worker_threads_used", record.worker_count);
             if (record.job.executor != Executor::sequential)
-                json.text("scheduling", bm_scheduling_name(record.job.scheduling));
+                json.text("scheduling", "dynamic");
             json.integer("repetition", record.job.repetition);
             json.integer("sequential_reference", record.sequential_reference);
             json.number("wall_seconds", record.wall_seconds);
@@ -1499,3 +1475,4 @@ int main(int argc, char** argv) {
         return 2;
     }
 }
+#endif  // MT_BENCHMARK_NO_MAIN

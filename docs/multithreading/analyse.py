@@ -27,7 +27,7 @@ def summarize(path):
     for key, runs in grouped.items():
         first = runs[0]
         row = {field: first[field] for field in ('executor', 'case_id', 'workload', 'variant', 'batch_size', 'requested_workers')}
-        row['scheduling'] = first.get('scheduling', key.rsplit('|', 1)[-1] if first['executor'] == 'control_no_rhs' else 'sequential')
+        row['scheduling'] = first.get('scheduling', 'sequential')
         row['configuration_id'] = key
         row['duration_s'] = raw['duration_s']
         row['source_file'] = str(path)
@@ -72,8 +72,7 @@ def observations(documents, startup_path):
     contention = []
     for row in diagnostic:
         if (row['executor'] != 'batch' or row['workload'] == 'two_body_j2'
-                or row['batch_size'] != 32 or row['requested_workers'] != 8
-                or row['scheduling'] != 'static_partition'):
+                or row['batch_size'] != 32 or row['requested_workers'] != 8):
             continue
         spice = row['spice_reuse_delta']
         native = row['native_mutex_delta']
@@ -103,16 +102,17 @@ def observations(documents, startup_path):
         startup_rows.append({'threads_created': count, **{
             key: distribution([run[key] for run in selected])
             for key in ('creation_ready_s', 'release_join_s', 'total_s')}})
-    policy_ratios = {}
+    confirmation_scaling = {}
     for model in sorted({row['workload'] for row in documents['confirmation']['rows']}):
-        grouped = collections.defaultdict(dict)
-        for row in documents['confirmation']['rows']:
-            if row['executor'] == 'batch' and row['workload'] == model and row['requested_workers'] > 1:
-                grouped[(row['case_id'], row['variant'], row['requested_workers'])][row['scheduling']] = row['wall_s']['median']
-        policy_ratios[model] = distribution([pair['static_partition'] / pair['dynamic'] for pair in grouped.values()])
-    return {'diagnostic_selection': 'CASE-A, batch 32, workers 8, static; medians over 3 repetitions; acquisition time includes instrumentation/lock overhead and aggregate waits may exceed wall time',
+        selected = [row for row in documents['confirmation']['rows']
+                    if row['executor'] == 'batch' and row['workload'] == model]
+        confirmation_scaling[model] = {
+            str(workers): distribution([row['speedup_ratio_of_medians'] for row in selected
+                                        if row['requested_workers'] == workers])
+            for workers in sorted({row['requested_workers'] for row in selected})}
+    return {'diagnostic_selection': 'CASE-A, batch 32, workers 8; medians over 3 repetitions; acquisition time includes instrumentation/lock overhead and aggregate waits may exceed wall time',
             'contention': contention, 'startup_source': str(startup_path), 'startup': startup_rows,
-            'confirmation_static_over_dynamic_wall_ratios': policy_ratios,
+            'confirmation_speedup_by_requested_workers': confirmation_scaling,
             'cpu_accounting_limit': 'Short guest-thread runs sometimes report process CPU/wall below 1 despite observed wall-speedup; cause not isolated. Retain raw CPU clocks but use six-hour runs rather than short-run CPU utilization as concurrency evidence.'}
 
 

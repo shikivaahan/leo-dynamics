@@ -48,3 +48,10 @@ target_link_libraries(mt_benchmark_diagnostics PRIVATE leo::integration leo::ana
 add_executable(mt_startup startup.cpp)
 target_compile_features(mt_startup PRIVATE cxx_std_20)
 target_link_libraries(mt_startup PRIVATE Threads::Threads)
+# MT-002 process-isolation driver: benchmark.cpp is textually included with its
+# main suppressed, so the isolation run reuses the measured Environment, RHS and
+# perturbation instead of redefining the environmental scientific path.
+add_executable(mt_isolation isolation.cpp)
+target_include_directories(mt_isolation PRIVATE
+  "${LEO_SOURCE_DIR}/benchmarks/cases" "${LEO_SOURCE_DIR}/docs/numerical-audit")
+target_link_libraries(mt_isolation PRIVATE leo::integration leo::analysis leo::atmosphere Threads::Threads)

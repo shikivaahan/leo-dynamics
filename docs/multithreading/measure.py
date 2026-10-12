@@ -21,8 +21,8 @@ def main():
               '--weather', str(deps / 'SpaceWeather-All-v1.2_snapshot_20200224.txt'),
               '--solfsmy', str(deps / 'SOLFSMY.TXT'), '--dtcfile', str(deps / 'DTCFILE.TXT'),
               '--epoch-utc', '2003-10-30T00:00:00']
-    scheduling = ['--benchmark-workers', '1,2,4,8', '--benchmark-policies', 'static,dynamic',
-                  '--benchmark-variants', 'identical,perturbed', '--seed', '20261012']
+    matrix_flags = ['--benchmark-workers', '1,2,4,8',
+                    '--benchmark-variants', 'identical,perturbed', '--seed', '20261012']
     affinity = ['taskset', '-c', '0,2,4,6,8,10,12,14']
     def execute(label, command):
         recorder = [sys.executable, str(ROOT / 'docs/multithreading/run.py'),
@@ -38,7 +38,7 @@ def main():
         case_args = [item for case in cases for item in (
             '--case', str(ROOT / f'docs/numerical-audit/experiments/CASE-{case}-v1.cfg'))]
         execute(name, affinity + [str(args.build / binary), '--benchmark-out', str(args.evidence / output)]
-                + common + case_args + scheduling
+                + common + case_args + matrix_flags
                 + ['--benchmark-duration', duration, '--benchmark-sizes', sizes, '--repetitions', repetitions])
     if args.phase in ('all', 'startup'):
         execute('startup', affinity + [str(args.build / 'mt_startup'), str(args.evidence / 'startup.json')])

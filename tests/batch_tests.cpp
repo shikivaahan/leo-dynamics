@@ -149,11 +149,10 @@ std::vector<Trajectory> sequential_reference(const std::vector<State>& initials,
 }
 
 std::vector<Trajectory> run_batch(const std::vector<State>& initials, const std::vector<double>& labels,
-                                  const IntegrationOptions& options, std::size_t workers,
-                                  BatchScheduling scheduling) {
+                                  const IntegrationOptions& options, std::size_t workers) {
     const auto factory = [](std::size_t index, const State&) { return Rotor(index); };
     return propagate_batch(factory, std::span<const State>(initials), kEpoch,
-                           std::span<const double>(labels), options, BatchOptions{workers, scheduling});
+                           std::span<const double>(labels), options, workers);
 }
 
 std::uint64_t bits(double value) {
@@ -200,10 +199,6 @@ std::string describe_difference(const Trajectory& expected, const Trajectory& ac
     return {};
 }
 
-const std::vector<BatchScheduling> all_schedulings() {
-    return {BatchScheduling::static_partition, BatchScheduling::dynamic};
-}
-
 }  // namespace
 
 TEST_CASE("Batch output is bitwise identical to sequential propagation", "[batch][ordering]") {
@@ -213,20 +208,18 @@ TEST_CASE("Batch output is bitwise identical to sequential propagation", "[batch
     const std::vector<Trajectory> reference = sequential_reference(initials, labels, options);
     REQUIRE(reference.size() == 7);
 
-    for (const BatchScheduling scheduling : all_schedulings()) {
-        const std::vector<Trajectory> batch = run_batch(initials, labels, options, 4, scheduling);
-        CAPTURE(static_cast<int>(scheduling));
-        REQUIRE(batch.size() == initials.size());
-        for (std::size_t index = 0; index < initials.size(); ++index) {
-            CAPTURE(index);
-            REQUIRE(batch[index].samples.size() == reference[index].samples.size());
-            for (std::size_t sample = 0; sample < reference[index].samples.size(); ++sample) {
-                CAPTURE(sample);
-                REQUIRE(bits(batch[index].samples[sample].state) == bits(reference[index].samples[sample].state));
-            }
-            INFO(describe_difference(reference[index], batch[index]));
-            REQUIRE(describe_difference(reference[index], batch[index]).empty());
+    const std::vector<Trajectory> batch = run_batch(initials, labels, options, 4);
+
+    REQUIRE(batch.size() == initials.size());
+    for (std::size_t index = 0; index < initials.size(); ++index) {
+        CAPTURE(index);
+        REQUIRE(batch[index].samples.size() == reference[index].samples.size());
+        for (std::size_t sample = 0; sample < reference[index].samples.size(); ++sample) {
+            CAPTURE(sample);
+            REQUIRE(bits(batch[index].samples[sample].state) == bits(reference[index].samples[sample].state));
         }
+        INFO(describe_difference(reference[index], batch[index]));
+        REQUIRE(describe_difference(reference[index], batch[index]).empty());
     }
 }
 
@@ -235,7 +228,7 @@ TEST_CASE("Batch results are ordered by input index, not by worker", "[batch][or
     const IntegrationOptions options = test_options();
     const std::vector<State> initials = initial_states(5);
     const std::vector<Trajectory> reference = sequential_reference(initials, labels, options);
-    const std::vector<Trajectory> batch = run_batch(initials, labels, options, 4, BatchScheduling::dynamic);
+    const std::vector<Trajectory> batch = run_batch(initials, labels, options, 4);
 
     REQUIRE(batch.size() == initials.size());
     for (std::size_t index = 0; index < initials.size(); ++index) {
@@ -245,7 +238,7 @@ TEST_CASE("Batch results are ordered by input index, not by worker", "[batch][or
     }
 }
 
-TEST_CASE("Results do not depend on the worker count or the scheduling policy", "[batch][workers]") {
+TEST_CASE("Results do not depend on the worker count", "[batch][workers]") {
     const std::vector<double> labels = output_labels();
     const IntegrationOptions options = test_options();
     const std::vector<State> initials = initial_states(6);
@@ -253,13 +246,11 @@ TEST_CASE("Results do not depend on the worker count or the scheduling policy", 
 
     for (const std::size_t workers : {std::size_t{1}, std::size_t{2}, std::size_t{3}, std::size_t{5},
                                       std::size_t{6}, std::size_t{8}}) {
-        for (const BatchScheduling scheduling : all_schedulings()) {
-            const std::vector<Trajectory> batch = run_batch(initials, labels, options, workers, scheduling);
-            CAPTURE(workers, static_cast<int>(scheduling));
-            REQUIRE(batch.size() == reference.size());
-            for (std::size_t index = 0; index < reference.size(); ++index)
-                REQUIRE(bits(batch[index]) == bits(reference[index]));
-        }
+        const std::vector<Trajectory> batch = run_batch(initials, labels, options, workers);
+        CAPTURE(workers);
+        REQUIRE(batch.size() == reference.size());
+        for (std::size_t index = 0; index < reference.size(); ++index)
+            REQUIRE(bits(batch[index]) == bits(reference[index]));
     }
 }
 
@@ -268,16 +259,13 @@ TEST_CASE("Empty, single-element and oversized worker batches behave", "[batch][
     const IntegrationOptions options = test_options();
 
     SECTION("empty batch returns no trajectories") {
-        for (const BatchScheduling scheduling : all_schedulings()) {
-            for (const std::size_t workers : {std::size_t{1}, std::size_t{4}}) {
-                const auto factory = [](std::size_t index, const State&) { return Rotor(index); };
-                const std::vector<Trajectory> batch =
-                    propagate_batch(factory, std::span<const State>{}, kEpoch,
-                                    std::span<const double>(labels), options,
-                                    BatchOptions{workers, scheduling});
-                CAPTURE(workers, static_cast<int>(scheduling));
-                REQUIRE(batch.empty());
-            }
+        for (const std::size_t workers : {std::size_t{1}, std::size_t{4}}) {
+            const auto factory = [](std::size_t index, const State&) { return Rotor(index); };
+            const std::vector<Trajectory> batch =
+                propagate_batch(factory, std::span<const State>{}, kEpoch,
+                                std::span<const double>(labels), options, workers);
+            CAPTURE(workers);
+            REQUIRE(batch.empty());
         }
     }
 
@@ -285,8 +273,7 @@ TEST_CASE("Empty, single-element and oversized worker batches behave", "[batch][
         const std::vector<State> initials = initial_states(1);
         const std::vector<Trajectory> reference = sequential_reference(initials, labels, options);
         for (const std::size_t workers : {std::size_t{1}, std::size_t{2}, std::size_t{9}}) {
-            const std::vector<Trajectory> batch =
-                run_batch(initials, labels, options, workers, BatchScheduling::static_partition);
+            const std::vector<Trajectory> batch = run_batch(initials, labels, options, workers);
             CAPTURE(workers);
             REQUIRE(batch.size() == 1);
             REQUIRE(bits(batch.front()) == bits(reference.front()));
@@ -296,42 +283,25 @@ TEST_CASE("Empty, single-element and oversized worker batches behave", "[batch][
     SECTION("worker count greater than the trajectory count") {
         const std::vector<State> initials = initial_states(3);
         const std::vector<Trajectory> reference = sequential_reference(initials, labels, options);
-        for (const BatchScheduling scheduling : all_schedulings()) {
-            const std::vector<Trajectory> batch = run_batch(initials, labels, options, 16, scheduling);
-            CAPTURE(static_cast<int>(scheduling));
-            REQUIRE(batch.size() == 3);
-            for (std::size_t index = 0; index < 3; ++index)
-                REQUIRE(bits(batch[index]) == bits(reference[index]));
-        }
+        const std::vector<Trajectory> batch = run_batch(initials, labels, options, 16);
+        REQUIRE(batch.size() == 3);
+        for (std::size_t index = 0; index < 3; ++index)
+            REQUIRE(bits(batch[index]) == bits(reference[index]));
     }
 }
 
-TEST_CASE("Invalid batch configuration is rejected before any work", "[batch][validation]") {
+TEST_CASE("A zero worker count is rejected before any work", "[batch][validation]") {
     const std::vector<double> labels = output_labels();
     const IntegrationOptions options = test_options();
     const auto factory = [](std::size_t index, const State&) { return Rotor(index); };
     const std::vector<State> initials = initial_states(3);
 
-    SECTION("zero workers") {
-        REQUIRE_THROWS_AS(propagate_batch(factory, std::span<const State>(initials), kEpoch,
-                                          std::span<const double>(labels), options, BatchOptions{0, {}}),
-                          std::invalid_argument);
-        REQUIRE_THROWS_AS(propagate_batch(factory, std::span<const State>{}, kEpoch,
-                                          std::span<const double>(labels), options, BatchOptions{0, {}}),
-                          std::invalid_argument);
-    }
-
-    SECTION("out-of-range scheduling policy") {
-        const auto invalid = static_cast<BatchScheduling>(7);
-        REQUIRE_THROWS_AS(propagate_batch(factory, std::span<const State>(initials), kEpoch,
-                                          std::span<const double>(labels), options,
-                                          BatchOptions{2, invalid}),
-                          std::invalid_argument);
-        REQUIRE_THROWS_AS(propagate_batch(factory, std::span<const State>{}, kEpoch,
-                                          std::span<const double>(labels), options,
-                                          BatchOptions{2, invalid}),
-                          std::invalid_argument);
-    }
+    REQUIRE_THROWS_AS(propagate_batch(factory, std::span<const State>(initials), kEpoch,
+                                      std::span<const double>(labels), options, 0),
+                      std::invalid_argument);
+    REQUIRE_THROWS_AS(propagate_batch(factory, std::span<const State>{}, kEpoch,
+                                      std::span<const double>(labels), options, 0),
+                      std::invalid_argument);
 }
 
 TEST_CASE("A factory failure identifies its trajectory and preserves the cause", "[batch][errors]") {
@@ -343,23 +313,19 @@ TEST_CASE("A factory failure identifies its trajectory and preserves the cause",
         return Rotor(index);
     };
 
-    for (const BatchScheduling scheduling : all_schedulings()) {
+    try {
+        const auto batch = propagate_batch(factory, std::span<const State>(initials), kEpoch,
+                                           std::span<const double>(labels), options, 4);
+        FAIL("expected BatchPropagationError, got " << batch.size() << " trajectories");
+    } catch (const BatchPropagationError& error) {
+        REQUIRE(error.trajectory_index() == 2);
+        REQUIRE(error.cause() != nullptr);
+        REQUIRE_THROWS_AS(std::rethrow_exception(error.cause()), std::runtime_error);
         try {
-            const auto batch = propagate_batch(factory, std::span<const State>(initials), kEpoch,
-                                               std::span<const double>(labels), options,
-                                               BatchOptions{4, scheduling});
-            FAIL("expected BatchPropagationError, got " << batch.size() << " trajectories");
-        } catch (const BatchPropagationError& error) {
-            CAPTURE(static_cast<int>(scheduling));
-            REQUIRE(error.trajectory_index() == 2);
-            REQUIRE(error.cause() != nullptr);
-            REQUIRE_THROWS_AS(std::rethrow_exception(error.cause()), std::runtime_error);
-            try {
-                std::rethrow_exception(error.cause());
-                FAIL("cause did not rethrow");
-            } catch (const std::runtime_error& cause) {
-                REQUIRE(std::string(cause.what()) == "factory refused trajectory 2");
-            }
+            std::rethrow_exception(error.cause());
+            FAIL("cause did not rethrow");
+        } catch (const std::runtime_error& cause) {
+            REQUIRE(std::string(cause.what()) == "factory refused trajectory 2");
         }
     }
 }
@@ -370,21 +336,18 @@ TEST_CASE("An RHS failure identifies its trajectory and preserves the cause", "[
     const std::vector<State> initials = initial_states(5);
     const auto factory = [](std::size_t index, const State&) { return FailingRotor(index); };
 
-    for (const BatchScheduling scheduling : all_schedulings()) {
+    try {
+        propagate_batch(factory, std::span<const State>(initials), kEpoch,
+                        std::span<const double>(labels), options, 4);
+        FAIL("expected BatchPropagationError");
+    } catch (const BatchPropagationError& error) {
+        REQUIRE(error.trajectory_index() == 3);
+        REQUIRE_THROWS_AS(std::rethrow_exception(error.cause()), std::overflow_error);
         try {
-            propagate_batch(factory, std::span<const State>(initials), kEpoch,
-                            std::span<const double>(labels), options, BatchOptions{4, scheduling});
-            FAIL("expected BatchPropagationError");
-        } catch (const BatchPropagationError& error) {
-            CAPTURE(static_cast<int>(scheduling));
-            REQUIRE(error.trajectory_index() == 3);
-            REQUIRE_THROWS_AS(std::rethrow_exception(error.cause()), std::overflow_error);
-            try {
-                std::rethrow_exception(error.cause());
-                FAIL("cause did not rethrow");
-            } catch (const std::overflow_error& cause) {
-                REQUIRE(std::string(cause.what()) == "rhs overflow");
-            }
+            std::rethrow_exception(error.cause());
+            FAIL("cause did not rethrow");
+        } catch (const std::overflow_error& cause) {
+            REQUIRE(std::string(cause.what()) == "rhs overflow");
         }
     }
 }
@@ -400,20 +363,18 @@ TEST_CASE("Several failures report the lowest failing input index", "[batch][err
     };
 
     for (const std::size_t workers : {std::size_t{1}, std::size_t{3}, std::size_t{8}}) {
-        for (const BatchScheduling scheduling : all_schedulings()) {
+        try {
+            propagate_batch(factory, std::span<const State>(initials), kEpoch,
+                            std::span<const double>(labels), options, workers);
+            FAIL("expected BatchPropagationError");
+        } catch (const BatchPropagationError& error) {
+            CAPTURE(workers);
+            REQUIRE(error.trajectory_index() == 1);
             try {
-                propagate_batch(factory, std::span<const State>(initials), kEpoch,
-                                std::span<const double>(labels), options, BatchOptions{workers, scheduling});
-                FAIL("expected BatchPropagationError");
-            } catch (const BatchPropagationError& error) {
-                CAPTURE(workers, static_cast<int>(scheduling));
-                REQUIRE(error.trajectory_index() == 1);
-                try {
-                    std::rethrow_exception(error.cause());
-                    FAIL("cause did not rethrow");
-                } catch (const std::runtime_error& cause) {
-                    REQUIRE(std::string(cause.what()) == "factory refused 1");
-                }
+                std::rethrow_exception(error.cause());
+                FAIL("cause did not rethrow");
+            } catch (const std::runtime_error& cause) {
+                REQUIRE(std::string(cause.what()) == "factory refused 1");
             }
         }
     }
@@ -451,7 +412,7 @@ TEST_CASE("Every other trajectory runs to completion when one fails",
 
     try {
         propagate_batch(factory, std::span<const State>(initials), kEpoch,
-                        std::span<const double>(labels), options, BatchOptions{4, BatchScheduling::dynamic});
+                        std::span<const double>(labels), options, 4);
         FAIL("expected BatchPropagationError");
     } catch (const BatchPropagationError& error) {
         REQUIRE(error.trajectory_index() == 2);
@@ -489,7 +450,7 @@ TEST_CASE("Invalid shared integration options surface as the lowest failing traj
 
     try {
         propagate_batch(factory, std::span<const State>(initials), kEpoch,
-                        std::span<const double>(labels), options, BatchOptions{2, BatchScheduling::dynamic});
+                        std::span<const double>(labels), options, 2);
         FAIL("expected BatchPropagationError");
     } catch (const BatchPropagationError& error) {
         REQUIRE(error.trajectory_index() == 0);
@@ -514,8 +475,7 @@ TEST_CASE("Each trajectory gets independent move-only mutable RHS state", "[batc
     };
     const std::vector<Trajectory> batch =
         propagate_batch(factory, std::span<const State>(initials), kEpoch,
-                        std::span<const double>(labels), options,
-                        BatchOptions{4, BatchScheduling::static_partition});
+                        std::span<const double>(labels), options, 4);
 
     std::vector<Trajectory> reference;
     reference.reserve(initials.size());

@@ -2,8 +2,8 @@
 //
 // It answers one question with evidence: does leo::propagate_batch
 // reproduce, bit for bit, what the unchanged single-trajectory propagate()
-// produces for the same work, and does it do so for every worker count and both
-// scheduling policies, for the frozen CASE-A/B/C fixtures, for every compiled-in
+// produces for the same work, and does it do so for every worker count, for the
+// frozen CASE-A/B/C fixtures, for every compiled-in
 // atmospheric backend?
 //
 // Scientific configuration comes from the unchanged atmosphere experiment
@@ -53,8 +53,8 @@
 //                              independent trajectories in flight at once
 //   ap_history_enabled         the ap-history native switch on (skipped when the
 //                              whole run already uses --ap-history)
-// Both scheduling policies run for every configuration, so the matrix is
-// (case x workload x group x worker count x policy x repeat).
+// One scheduling strategy runs for every configuration, so the matrix is
+// (case x workload x group x worker count x repeat).
 //
 // Exit status is nonzero if any comparison fails or any configuration is
 // invalid. Failed comparisons are printed in full and also recorded in the
@@ -232,18 +232,6 @@ bool parse_switch(const std::string& text, const char* key) {
     if (text == "on" || text == "true" || text == "1") return true;
     if (text == "off" || text == "false" || text == "0") return false;
     throw std::invalid_argument(std::string(key) + " expects on or off, got: " + text);
-}
-
-const char* scheduling_name(BatchScheduling scheduling) {
-    switch (scheduling) {
-    case BatchScheduling::static_partition: return "static_partition";
-    case BatchScheduling::dynamic: return "dynamic";
-    }
-    return "unknown";
-}
-
-const std::vector<BatchScheduling> all_schedulings() {
-    return {BatchScheduling::static_partition, BatchScheduling::dynamic};
 }
 
 // Every --validation-* option is consumed here; everything else is forwarded
@@ -933,7 +921,7 @@ RunOutcome run_sequential(const Group& group, const WorkloadSpec& work, const ex
 RunOutcome run_concurrent(const Group& group, const WorkloadSpec& work, const experiment::Case& spec,
                           const Environment& env, const Config& config, leo::Epoch epoch,
                           const std::vector<double>& labels, const IntegrationOptions& options,
-                          std::size_t workers, BatchScheduling scheduling) {
+                          std::size_t workers) {
     RunOutcome outcome;
     outcome.records.resize(group.initials.size());
     for (auto& record : outcome.records) {
@@ -950,7 +938,7 @@ RunOutcome run_concurrent(const Group& group, const WorkloadSpec& work, const ex
     try {
         std::vector<leo::Trajectory> trajectories =
             propagate_batch(factory, std::span<const State>(group.initials), epoch,
-                            std::span<const double>(labels), options, BatchOptions{workers, scheduling});
+                            std::span<const double>(labels), options, workers);
         for (std::size_t index = 0; index < trajectories.size() && index < outcome.records.size(); ++index)
             outcome.records[index].trajectory = std::move(trajectories[index]);
     } catch (const leo::BatchPropagationError& failure) {
@@ -1286,91 +1274,86 @@ int run(int argc, char** argv) {
                     continue;
                 }
                 for (const std::size_t workers : group.workers) {
-                    for (const BatchScheduling scheduling : all_schedulings()) {
-                        std::uint64_t first_run_checksum = 0;
-                        for (std::size_t repeat = 0; repeat < validation.repeats; ++repeat) {
-                            const auto batch = run_concurrent(group, work, spec, env, group_config, epoch, labels,
-                                                             options, workers, scheduling);
-                            Comparison comparison;
-                            comparison.phase = group.name;
-                            comparison.case_id = spec.id;
-                            comparison.case_role = role;
-                            comparison.case_file = spec.file;
-                            comparison.workload = work.name;
-                            comparison.atmosphere_model = work.atmospheric ? model_name(work.model) : "none";
-                            comparison.batch = group.batch;
-                            comparison.requested_workers = workers;
-                            comparison.effective_workers = std::min(workers, group.batch);
-                            comparison.repeat = repeat;
-                            comparison.ap_history = group.ap_history;
-                            comparison.scheduling = scheduling_name(scheduling);
-                            comparison.batch_wall_seconds = batch.wall_seconds;
-                            comparison.sequential_wall_seconds = sequential.wall_seconds;
-                            comparison.traces_compared = group.core_traces;
-                            comparison.input_traces_compared = group.core_traces && group.input_traces;
-                            if (batch.failed) {
-                                comparison.status = "error";
-                                comparison.error = batch.error;
-                                ++failed;
-                                std::cerr << "ERROR " << group.name << ' ' << spec.id << ' ' << work.name
-                                          << " workers=" << workers << " scheduling=" << comparison.scheduling
-                                          << ": " << batch.error << '\n';
-                                comparisons.push_back(comparison);
-                                continue;
-                            }
-                            MismatchSink sink;
-                            sink.limit = validation.mismatch_limit;
-                            for (std::size_t index = 0; index < sequential.records.size(); ++index)
-                                compare_records(sequential.records[index], batch.records[index], index, sink);
-                            const std::uint64_t trajectory_checksum =
-                                combined_checksum(batch.records, &trajectory_checksum_of);
-                            const std::uint64_t trace_checksum = combined_checksum(batch.records, &trace_checksum_of);
-                            const std::uint64_t diagnostics_checksum =
-                                combined_checksum(batch.records, &diagnostics_checksum_of);
-                            if (repeat == 0) {
-                                first_run_checksum = trajectory_checksum;
-                            } else if (trajectory_checksum != first_run_checksum) {
-                                comparison.repeat_identical = false;
-                                sink.add("repeated identical batch differs from its first run: trajectory checksum " +
-                                         std::to_string(first_run_checksum) + " vs " +
-                                         std::to_string(trajectory_checksum));
-                            }
-                            comparison.trajectory_checksum = trajectory_checksum;
-                            comparison.trace_checksum = trace_checksum;
-                            comparison.diagnostics_checksum = diagnostics_checksum;
-                            comparison.repeat_reference_checksum =
-                                combined_checksum(sequential.records, &trajectory_checksum_of);
-                            for (const auto& record : batch.records) {
-                                comparison.rhs_calls += record.rhs_calls;
-                                comparison.atmosphere_calls += record.atmosphere_calls;
-                                comparison.rhs_stage_rows += record.trace.size();
-                            }
-                            comparison.mismatches = sink.total;
-                            comparison.details = sink.details;
-                            comparison.final_state = final_state_json(batch.records.front());
-                            comparison.status = sink.empty() ? "pass" : "fail";
-                            if (sink.empty()) {
-                                ++passed;
-                                std::cout << "pass " << group.name << ' ' << spec.id << ' ' << work.name
-                                          << " workers=" << workers << " effective=" << comparison.effective_workers
-                                          << " scheduling=" << comparison.scheduling << " repeat=" << repeat
-                                          << " batch=" << group.batch << " wall=" << batch.wall_seconds
-                                          << "s sequential=" << sequential.wall_seconds << "s rhs="
-                                          << comparison.rhs_calls << '\n';
-                            } else {
-                                ++failed;
-                                mismatches += sink.total;
-                                std::cerr << "FAIL " << group.name << ' ' << spec.id << ' ' << work.name
-                                          << " workers=" << workers << " scheduling=" << comparison.scheduling
-                                          << " repeat=" << repeat << ": " << sink.total
-                                          << " mismatching values\n";
-                                for (const auto& detail : sink.details) std::cerr << "  " << detail << '\n';
-                                if (sink.total > sink.details.size())
-                                    std::cerr << "  ... " << (sink.total - sink.details.size())
-                                              << " further mismatches suppressed by --validation-mismatch-limit\n";
-                            }
+                    std::uint64_t first_run_checksum = 0;
+                    for (std::size_t repeat = 0; repeat < validation.repeats; ++repeat) {
+                        const auto batch = run_concurrent(group, work, spec, env, group_config, epoch, labels,
+                                                         options, workers);
+                        Comparison comparison;
+                        comparison.phase = group.name;
+                        comparison.case_id = spec.id;
+                        comparison.case_role = role;
+                        comparison.case_file = spec.file;
+                        comparison.workload = work.name;
+                        comparison.atmosphere_model = work.atmospheric ? model_name(work.model) : "none";
+                        comparison.batch = group.batch;
+                        comparison.requested_workers = workers;
+                        comparison.effective_workers = std::min(workers, group.batch);
+                        comparison.repeat = repeat;
+                        comparison.ap_history = group.ap_history;
+                        comparison.scheduling = "dynamic";
+                        comparison.batch_wall_seconds = batch.wall_seconds;
+                        comparison.sequential_wall_seconds = sequential.wall_seconds;
+                        comparison.traces_compared = group.core_traces;
+                        comparison.input_traces_compared = group.core_traces && group.input_traces;
+                        if (batch.failed) {
+                            comparison.status = "error";
+                            comparison.error = batch.error;
+                            ++failed;
+                            std::cerr << "ERROR " << group.name << ' ' << spec.id << ' ' << work.name
+                                      << " workers=" << workers << ": " << batch.error << '\n';
                             comparisons.push_back(comparison);
+                            continue;
                         }
+                        MismatchSink sink;
+                        sink.limit = validation.mismatch_limit;
+                        for (std::size_t index = 0; index < sequential.records.size(); ++index)
+                            compare_records(sequential.records[index], batch.records[index], index, sink);
+                        const std::uint64_t trajectory_checksum =
+                            combined_checksum(batch.records, &trajectory_checksum_of);
+                        const std::uint64_t trace_checksum = combined_checksum(batch.records, &trace_checksum_of);
+                        const std::uint64_t diagnostics_checksum =
+                            combined_checksum(batch.records, &diagnostics_checksum_of);
+                        if (repeat == 0) {
+                            first_run_checksum = trajectory_checksum;
+                        } else if (trajectory_checksum != first_run_checksum) {
+                            comparison.repeat_identical = false;
+                            sink.add("repeated identical batch differs from its first run: trajectory checksum " +
+                                     std::to_string(first_run_checksum) + " vs " +
+                                     std::to_string(trajectory_checksum));
+                        }
+                        comparison.trajectory_checksum = trajectory_checksum;
+                        comparison.trace_checksum = trace_checksum;
+                        comparison.diagnostics_checksum = diagnostics_checksum;
+                        comparison.repeat_reference_checksum =
+                            combined_checksum(sequential.records, &trajectory_checksum_of);
+                        for (const auto& record : batch.records) {
+                            comparison.rhs_calls += record.rhs_calls;
+                            comparison.atmosphere_calls += record.atmosphere_calls;
+                            comparison.rhs_stage_rows += record.trace.size();
+                        }
+                        comparison.mismatches = sink.total;
+                        comparison.details = sink.details;
+                        comparison.final_state = final_state_json(batch.records.front());
+                        comparison.status = sink.empty() ? "pass" : "fail";
+                        if (sink.empty()) {
+                            ++passed;
+                            std::cout << "pass " << group.name << ' ' << spec.id << ' ' << work.name
+                                      << " workers=" << workers << " effective=" << comparison.effective_workers
+                                      << " repeat=" << repeat << " batch=" << group.batch
+                                      << " wall=" << batch.wall_seconds << "s sequential=" << sequential.wall_seconds
+                                      << "s rhs=" << comparison.rhs_calls << '\n';
+                        } else {
+                            ++failed;
+                            mismatches += sink.total;
+                            std::cerr << "FAIL " << group.name << ' ' << spec.id << ' ' << work.name
+                                      << " workers=" << workers << " repeat=" << repeat << ": " << sink.total
+                                      << " mismatching values\n";
+                            for (const auto& detail : sink.details) std::cerr << "  " << detail << '\n';
+                            if (sink.total > sink.details.size())
+                                std::cerr << "  ... " << (sink.total - sink.details.size())
+                                          << " further mismatches suppressed by --validation-mismatch-limit\n";
+                        }
+                        comparisons.push_back(comparison);
                     }
                 }
             }
