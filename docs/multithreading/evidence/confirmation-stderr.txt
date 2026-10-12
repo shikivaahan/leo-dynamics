@@ -1,0 +1,1377 @@
+[1/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=1 sequential 1/1 1.561216s
+[1/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 sequential 1/5 1.495192s
+[1/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 sequential 2/5 1.493529s
+[1/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 sequential 3/5 1.507831s
+[1/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 sequential 4/5 1.511950s
+[1/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 sequential 5/5 1.501332s
+[2/272] warmup CASE-B two_body_j2 perturbed size=8 workers=1 control_no_rhs 1/1 0.000004s
+[2/272] run CASE-B two_body_j2 perturbed size=8 workers=1 control_no_rhs 1/3 0.000003s
+[2/272] run CASE-B two_body_j2 perturbed size=8 workers=1 control_no_rhs 2/3 0.000002s
+[2/272] run CASE-B two_body_j2 perturbed size=8 workers=1 control_no_rhs 3/3 0.000003s
+[3/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=1 sequential 1/1 1.452717s
+[3/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 sequential 1/5 1.450184s
+[3/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 sequential 2/5 1.455894s
+[3/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 sequential 3/5 1.443988s
+[3/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 sequential 4/5 1.453872s
+[3/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 sequential 5/5 1.443769s
+[4/272] warmup CASE-B full_exponential identical size=8 workers=1 control_no_rhs 1/1 0.000006s
+[4/272] run CASE-B full_exponential identical size=8 workers=1 control_no_rhs 1/3 0.000003s
+[4/272] run CASE-B full_exponential identical size=8 workers=1 control_no_rhs 2/3 0.000004s
+[4/272] run CASE-B full_exponential identical size=8 workers=1 control_no_rhs 3/3 0.000004s
+[5/272] warmup CASE-A full_jb2008 identical size=8 workers=2 control_no_rhs 1/1 0.000318s
+[5/272] run CASE-A full_jb2008 identical size=8 workers=2 control_no_rhs 1/3 0.000238s
+[5/272] run CASE-A full_jb2008 identical size=8 workers=2 control_no_rhs 2/3 0.000228s
+[5/272] run CASE-A full_jb2008 identical size=8 workers=2 control_no_rhs 3/3 0.000222s
+[6/272] warmup CASE-A two_body_j2 identical size=8 workers=1 dynamic batch 1/1 0.084952s
+[6/272] run CASE-A two_body_j2 identical size=8 workers=1 dynamic batch 1/5 0.084451s
+[6/272] run CASE-A two_body_j2 identical size=8 workers=1 dynamic batch 2/5 0.083705s
+[6/272] run CASE-A two_body_j2 identical size=8 workers=1 dynamic batch 3/5 0.084859s
+[6/272] run CASE-A two_body_j2 identical size=8 workers=1 dynamic batch 4/5 0.084900s
+[6/272] run CASE-A two_body_j2 identical size=8 workers=1 dynamic batch 5/5 0.084953s
+[7/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=8 control_no_rhs 1/1 0.000709s
+[7/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 control_no_rhs 1/3 0.000708s
+[7/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 control_no_rhs 2/3 0.000678s
+[7/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 control_no_rhs 3/3 0.000656s
+[8/272] warmup CASE-A full_exponential identical size=8 workers=1 control_no_rhs 1/1 0.000006s
+[8/272] run CASE-A full_exponential identical size=8 workers=1 control_no_rhs 1/3 0.000005s
+[8/272] run CASE-A full_exponential identical size=8 workers=1 control_no_rhs 2/3 0.000005s
+[8/272] run CASE-A full_exponential identical size=8 workers=1 control_no_rhs 3/3 0.000005s
+[9/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 1/1 0.000185s
+[9/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 1/3 0.000171s
+[9/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 2/3 0.000170s
+[9/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 3/3 0.000167s
+[10/272] warmup CASE-A two_body_j2 identical size=8 workers=8 dynamic batch 1/1 0.014848s
+[10/272] run CASE-A two_body_j2 identical size=8 workers=8 dynamic batch 1/5 0.014597s
+[10/272] run CASE-A two_body_j2 identical size=8 workers=8 dynamic batch 2/5 0.015181s
+[10/272] run CASE-A two_body_j2 identical size=8 workers=8 dynamic batch 3/5 0.015687s
+[10/272] run CASE-A two_body_j2 identical size=8 workers=8 dynamic batch 4/5 0.015872s
+[10/272] run CASE-A two_body_j2 identical size=8 workers=8 dynamic batch 5/5 0.015478s
+[11/272] warmup CASE-B full_jb2008 perturbed size=8 workers=4 control_no_rhs 1/1 0.000342s
+[11/272] run CASE-B full_jb2008 perturbed size=8 workers=4 control_no_rhs 1/3 0.000321s
+[11/272] run CASE-B full_jb2008 perturbed size=8 workers=4 control_no_rhs 2/3 0.000311s
+[11/272] run CASE-B full_jb2008 perturbed size=8 workers=4 control_no_rhs 3/3 0.000309s
+[12/272] warmup CASE-B two_body_j2 identical size=8 workers=2 static_partition batch 1/1 0.007198s
+[12/272] run CASE-B two_body_j2 identical size=8 workers=2 static_partition batch 1/5 0.006776s
+[12/272] run CASE-B two_body_j2 identical size=8 workers=2 static_partition batch 2/5 0.006510s
+[12/272] run CASE-B two_body_j2 identical size=8 workers=2 static_partition batch 3/5 0.006702s
+[12/272] run CASE-B two_body_j2 identical size=8 workers=2 static_partition batch 4/5 0.006446s
+[12/272] run CASE-B two_body_j2 identical size=8 workers=2 static_partition batch 5/5 0.007445s
+[13/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=1 control_no_rhs 1/1 0.000007s
+[13/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 control_no_rhs 1/3 0.000005s
+[13/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 control_no_rhs 2/3 0.000005s
+[13/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 control_no_rhs 3/3 0.000004s
+[14/272] warmup CASE-B two_body_j2 identical size=8 workers=4 control_no_rhs 1/1 0.000301s
+[14/272] run CASE-B two_body_j2 identical size=8 workers=4 control_no_rhs 1/3 0.000320s
+[14/272] run CASE-B two_body_j2 identical size=8 workers=4 control_no_rhs 2/3 0.000272s
+[14/272] run CASE-B two_body_j2 identical size=8 workers=4 control_no_rhs 3/3 0.000271s
+[15/272] warmup CASE-A full_jb2008 perturbed size=8 workers=4 control_no_rhs 1/1 0.000283s
+[15/272] run CASE-A full_jb2008 perturbed size=8 workers=4 control_no_rhs 1/3 0.000264s
+[15/272] run CASE-A full_jb2008 perturbed size=8 workers=4 control_no_rhs 2/3 0.000279s
+[15/272] run CASE-A full_jb2008 perturbed size=8 workers=4 control_no_rhs 3/3 0.000265s
+[16/272] warmup CASE-A full_exponential perturbed size=8 workers=1 dynamic batch 1/1 1.629102s
+[16/272] run CASE-A full_exponential perturbed size=8 workers=1 dynamic batch 1/5 1.646344s
+[16/272] run CASE-A full_exponential perturbed size=8 workers=1 dynamic batch 2/5 1.634640s
+[16/272] run CASE-A full_exponential perturbed size=8 workers=1 dynamic batch 3/5 1.649625s
+[16/272] run CASE-A full_exponential perturbed size=8 workers=1 dynamic batch 4/5 1.645675s
+[16/272] run CASE-A full_exponential perturbed size=8 workers=1 dynamic batch 5/5 1.653922s
+[17/272] warmup CASE-A two_body_j2 perturbed size=8 workers=8 dynamic batch 1/1 0.020067s
+[17/272] run CASE-A two_body_j2 perturbed size=8 workers=8 dynamic batch 1/5 0.022295s
+[17/272] run CASE-A two_body_j2 perturbed size=8 workers=8 dynamic batch 2/5 0.020181s
+[17/272] run CASE-A two_body_j2 perturbed size=8 workers=8 dynamic batch 3/5 0.018239s
+[17/272] run CASE-A two_body_j2 perturbed size=8 workers=8 dynamic batch 4/5 0.015209s
+[17/272] run CASE-A two_body_j2 perturbed size=8 workers=8 dynamic batch 5/5 0.015736s
+[18/272] warmup CASE-B full_exponential perturbed size=8 workers=1 control_no_rhs 1/1 0.000008s
+[18/272] run CASE-B full_exponential perturbed size=8 workers=1 control_no_rhs 1/3 0.000005s
+[18/272] run CASE-B full_exponential perturbed size=8 workers=1 control_no_rhs 2/3 0.000004s
+[18/272] run CASE-B full_exponential perturbed size=8 workers=1 control_no_rhs 3/3 0.000005s
+[19/272] warmup CASE-A full_jb2008 perturbed size=8 workers=1 sequential 1/1 9.872514s
+[19/272] run CASE-A full_jb2008 perturbed size=8 workers=1 sequential 1/5 9.812217s
+[19/272] run CASE-A full_jb2008 perturbed size=8 workers=1 sequential 2/5 9.844449s
+[19/272] run CASE-A full_jb2008 perturbed size=8 workers=1 sequential 3/5 9.842806s
+[19/272] run CASE-A full_jb2008 perturbed size=8 workers=1 sequential 4/5 9.824271s
+[19/272] run CASE-A full_jb2008 perturbed size=8 workers=1 sequential 5/5 9.834437s
+[20/272] warmup CASE-A full_exponential perturbed size=8 workers=4 static_partition batch 1/1 4.439790s
+[20/272] run CASE-A full_exponential perturbed size=8 workers=4 static_partition batch 1/5 4.603817s
+[20/272] run CASE-A full_exponential perturbed size=8 workers=4 static_partition batch 2/5 4.657720s
+[20/272] run CASE-A full_exponential perturbed size=8 workers=4 static_partition batch 3/5 4.783472s
+[20/272] run CASE-A full_exponential perturbed size=8 workers=4 static_partition batch 4/5 4.751596s
+[20/272] run CASE-A full_exponential perturbed size=8 workers=4 static_partition batch 5/5 4.759096s
+[21/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 1/1 0.000367s
+[21/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 1/3 0.000329s
+[21/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 2/3 0.000324s
+[21/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 3/3 0.000270s
+[22/272] warmup CASE-B two_body_j2 perturbed size=8 workers=4 control_no_rhs 1/1 0.000266s
+[22/272] run CASE-B two_body_j2 perturbed size=8 workers=4 control_no_rhs 1/3 0.000266s
+[22/272] run CASE-B two_body_j2 perturbed size=8 workers=4 control_no_rhs 2/3 0.000298s
+[22/272] run CASE-B two_body_j2 perturbed size=8 workers=4 control_no_rhs 3/3 0.000265s
+[23/272] warmup CASE-A full_jb2008 perturbed size=8 workers=1 dynamic batch 1/1 9.860103s
+[23/272] run CASE-A full_jb2008 perturbed size=8 workers=1 dynamic batch 1/5 9.879417s
+[23/272] run CASE-A full_jb2008 perturbed size=8 workers=1 dynamic batch 2/5 9.876551s
+[23/272] run CASE-A full_jb2008 perturbed size=8 workers=1 dynamic batch 3/5 9.824954s
+[23/272] run CASE-A full_jb2008 perturbed size=8 workers=1 dynamic batch 4/5 9.875285s
+[23/272] run CASE-A full_jb2008 perturbed size=8 workers=1 dynamic batch 5/5 9.887456s
+[24/272] warmup CASE-B two_body_j2 identical size=8 workers=2 dynamic batch 1/1 0.006680s
+[24/272] run CASE-B two_body_j2 identical size=8 workers=2 dynamic batch 1/5 0.006967s
+[24/272] run CASE-B two_body_j2 identical size=8 workers=2 dynamic batch 2/5 0.006534s
+[24/272] run CASE-B two_body_j2 identical size=8 workers=2 dynamic batch 3/5 0.006878s
+[24/272] run CASE-B two_body_j2 identical size=8 workers=2 dynamic batch 4/5 0.006633s
+[24/272] run CASE-B two_body_j2 identical size=8 workers=2 dynamic batch 5/5 0.006792s
+[25/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=1 static_partition batch 1/1 7.439230s
+[25/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 static_partition batch 1/5 7.425625s
+[25/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 static_partition batch 2/5 7.404070s
+[25/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 static_partition batch 3/5 7.391046s
+[25/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 static_partition batch 4/5 7.389587s
+[25/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 static_partition batch 5/5 7.408674s
+[26/272] warmup CASE-A full_exponential perturbed size=8 workers=1 static_partition batch 1/1 1.627262s
+[26/272] run CASE-A full_exponential perturbed size=8 workers=1 static_partition batch 1/5 1.622019s
+[26/272] run CASE-A full_exponential perturbed size=8 workers=1 static_partition batch 2/5 1.623262s
+[26/272] run CASE-A full_exponential perturbed size=8 workers=1 static_partition batch 3/5 1.639798s
+[26/272] run CASE-A full_exponential perturbed size=8 workers=1 static_partition batch 4/5 1.625439s
+[26/272] run CASE-A full_exponential perturbed size=8 workers=1 static_partition batch 5/5 1.623801s
+[27/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=2 static_partition batch 1/1 23.938926s
+[27/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 static_partition batch 1/5 23.994316s
+[27/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 static_partition batch 2/5 24.002375s
+[27/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 static_partition batch 3/5 23.880919s
+[27/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 static_partition batch 4/5 23.895645s
+[27/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 static_partition batch 5/5 24.365807s
+[28/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=1 sequential 1/1 7.373847s
+[28/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 sequential 1/5 7.374252s
+[28/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 sequential 2/5 7.415637s
+[28/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 sequential 3/5 7.387913s
+[28/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 sequential 4/5 7.433151s
+[28/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 sequential 5/5 7.422812s
+[29/272] warmup CASE-B full_exponential identical size=8 workers=8 control_no_rhs 1/1 0.000612s
+[29/272] run CASE-B full_exponential identical size=8 workers=8 control_no_rhs 1/3 0.000567s
+[29/272] run CASE-B full_exponential identical size=8 workers=8 control_no_rhs 2/3 0.000585s
+[29/272] run CASE-B full_exponential identical size=8 workers=8 control_no_rhs 3/3 0.000554s
+[30/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=1 sequential 1/1 7.422462s
+[30/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 sequential 1/5 7.439789s
+[30/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 sequential 2/5 7.423286s
+[30/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 sequential 3/5 7.401307s
+[30/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 sequential 4/5 7.402844s
+[30/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 sequential 5/5 7.435827s
+[31/272] warmup CASE-B two_body_j2 perturbed size=8 workers=1 dynamic batch 1/1 0.014241s
+[31/272] run CASE-B two_body_j2 perturbed size=8 workers=1 dynamic batch 1/5 0.014192s
+[31/272] run CASE-B two_body_j2 perturbed size=8 workers=1 dynamic batch 2/5 0.014353s
+[31/272] run CASE-B two_body_j2 perturbed size=8 workers=1 dynamic batch 3/5 0.014011s
+[31/272] run CASE-B two_body_j2 perturbed size=8 workers=1 dynamic batch 4/5 0.013943s
+[31/272] run CASE-B two_body_j2 perturbed size=8 workers=1 dynamic batch 5/5 0.014003s
+[32/272] warmup CASE-B two_body_j2 perturbed size=8 workers=8 control_no_rhs 1/1 0.000579s
+[32/272] run CASE-B two_body_j2 perturbed size=8 workers=8 control_no_rhs 1/3 0.000588s
+[32/272] run CASE-B two_body_j2 perturbed size=8 workers=8 control_no_rhs 2/3 0.000573s
+[32/272] run CASE-B two_body_j2 perturbed size=8 workers=8 control_no_rhs 3/3 0.000614s
+[33/272] warmup CASE-A full_jb2008 perturbed size=8 workers=2 control_no_rhs 1/1 0.000167s
+[33/272] run CASE-A full_jb2008 perturbed size=8 workers=2 control_no_rhs 1/3 0.000157s
+[33/272] run CASE-A full_jb2008 perturbed size=8 workers=2 control_no_rhs 2/3 0.000175s
+[33/272] run CASE-A full_jb2008 perturbed size=8 workers=2 control_no_rhs 3/3 0.000177s
+[34/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=4 static_partition batch 1/1 22.107176s
+[34/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 static_partition batch 1/5 22.421539s
+[34/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 static_partition batch 2/5 22.581872s
+[34/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 static_partition batch 3/5 22.392589s
+[34/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 static_partition batch 4/5 22.847370s
+[34/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 static_partition batch 5/5 22.627954s
+[35/272] warmup CASE-A full_exponential identical size=8 workers=8 dynamic batch 1/1 5.263316s
+[35/272] run CASE-A full_exponential identical size=8 workers=8 dynamic batch 1/5 5.264804s
+[35/272] run CASE-A full_exponential identical size=8 workers=8 dynamic batch 2/5 5.242389s
+[35/272] run CASE-A full_exponential identical size=8 workers=8 dynamic batch 3/5 5.285728s
+[35/272] run CASE-A full_exponential identical size=8 workers=8 dynamic batch 4/5 5.246289s
+[35/272] run CASE-A full_exponential identical size=8 workers=8 dynamic batch 5/5 5.321513s
+[36/272] warmup CASE-A full_jb2008 identical size=8 workers=8 control_no_rhs 1/1 0.000758s
+[36/272] run CASE-A full_jb2008 identical size=8 workers=8 control_no_rhs 1/3 0.000682s
+[36/272] run CASE-A full_jb2008 identical size=8 workers=8 control_no_rhs 2/3 0.000681s
+[36/272] run CASE-A full_jb2008 identical size=8 workers=8 control_no_rhs 3/3 0.000683s
+[37/272] warmup CASE-A full_exponential identical size=8 workers=8 control_no_rhs 1/1 0.000705s
+[37/272] run CASE-A full_exponential identical size=8 workers=8 control_no_rhs 1/3 0.000719s
+[37/272] run CASE-A full_exponential identical size=8 workers=8 control_no_rhs 2/3 0.000670s
+[37/272] run CASE-A full_exponential identical size=8 workers=8 control_no_rhs 3/3 0.000725s
+[38/272] warmup CASE-A full_jb2008 identical size=8 workers=4 control_no_rhs 1/1 0.000341s
+[38/272] run CASE-A full_jb2008 identical size=8 workers=4 control_no_rhs 1/3 0.000383s
+[38/272] run CASE-A full_jb2008 identical size=8 workers=4 control_no_rhs 2/3 0.000333s
+[38/272] run CASE-A full_jb2008 identical size=8 workers=4 control_no_rhs 3/3 0.000335s
+[39/272] warmup CASE-A full_jb2008 identical size=8 workers=4 static_partition batch 1/1 21.138488s
+[39/272] run CASE-A full_jb2008 identical size=8 workers=4 static_partition batch 1/5 20.272191s
+[39/272] run CASE-A full_jb2008 identical size=8 workers=4 static_partition batch 2/5 20.531344s
+[39/272] run CASE-A full_jb2008 identical size=8 workers=4 static_partition batch 3/5 20.086648s
+[39/272] run CASE-A full_jb2008 identical size=8 workers=4 static_partition batch 4/5 21.189060s
+[39/272] run CASE-A full_jb2008 identical size=8 workers=4 static_partition batch 5/5 19.661550s
+[40/272] warmup CASE-B full_jb2008 perturbed size=8 workers=8 control_no_rhs 1/1 0.000810s
+[40/272] run CASE-B full_jb2008 perturbed size=8 workers=8 control_no_rhs 1/3 0.000706s
+[40/272] run CASE-B full_jb2008 perturbed size=8 workers=8 control_no_rhs 2/3 0.000672s
+[40/272] run CASE-B full_jb2008 perturbed size=8 workers=8 control_no_rhs 3/3 0.000625s
+[41/272] warmup CASE-A two_body_j2 perturbed size=8 workers=2 dynamic batch 1/1 0.044415s
+[41/272] run CASE-A two_body_j2 perturbed size=8 workers=2 dynamic batch 1/5 0.045577s
+[41/272] run CASE-A two_body_j2 perturbed size=8 workers=2 dynamic batch 2/5 0.045382s
+[41/272] run CASE-A two_body_j2 perturbed size=8 workers=2 dynamic batch 3/5 0.044935s
+[41/272] run CASE-A two_body_j2 perturbed size=8 workers=2 dynamic batch 4/5 0.044659s
+[41/272] run CASE-A two_body_j2 perturbed size=8 workers=2 dynamic batch 5/5 0.043120s
+[42/272] warmup CASE-A two_body_j2 identical size=8 workers=4 dynamic batch 1/1 0.022664s
+[42/272] run CASE-A two_body_j2 identical size=8 workers=4 dynamic batch 1/5 0.025551s
+[42/272] run CASE-A two_body_j2 identical size=8 workers=4 dynamic batch 2/5 0.025536s
+[42/272] run CASE-A two_body_j2 identical size=8 workers=4 dynamic batch 3/5 0.025470s
+[42/272] run CASE-A two_body_j2 identical size=8 workers=4 dynamic batch 4/5 0.026684s
+[42/272] run CASE-A two_body_j2 identical size=8 workers=4 dynamic batch 5/5 0.025744s
+[43/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=8 dynamic batch 1/1 4.001393s
+[43/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 dynamic batch 1/5 4.129184s
+[43/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 dynamic batch 2/5 4.035793s
+[43/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 dynamic batch 3/5 3.990803s
+[43/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 dynamic batch 4/5 4.312597s
+[43/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 dynamic batch 5/5 4.414865s
+[44/272] warmup CASE-B two_body_j2 identical size=8 workers=2 control_no_rhs 1/1 0.000236s
+[44/272] run CASE-B two_body_j2 identical size=8 workers=2 control_no_rhs 1/3 0.000183s
+[44/272] run CASE-B two_body_j2 identical size=8 workers=2 control_no_rhs 2/3 0.000195s
+[44/272] run CASE-B two_body_j2 identical size=8 workers=2 control_no_rhs 3/3 0.000184s
+[45/272] warmup CASE-A full_exponential perturbed size=8 workers=1 control_no_rhs 1/1 0.000046s
+[45/272] run CASE-A full_exponential perturbed size=8 workers=1 control_no_rhs 1/3 0.000004s
+[45/272] run CASE-A full_exponential perturbed size=8 workers=1 control_no_rhs 2/3 0.000004s
+[45/272] run CASE-A full_exponential perturbed size=8 workers=1 control_no_rhs 3/3 0.000004s
+[46/272] warmup CASE-A full_exponential identical size=8 workers=1 control_no_rhs 1/1 0.000004s
+[46/272] run CASE-A full_exponential identical size=8 workers=1 control_no_rhs 1/3 0.000004s
+[46/272] run CASE-A full_exponential identical size=8 workers=1 control_no_rhs 2/3 0.000004s
+[46/272] run CASE-A full_exponential identical size=8 workers=1 control_no_rhs 3/3 0.000004s
+[47/272] warmup CASE-A full_jb2008 identical size=8 workers=2 control_no_rhs 1/1 0.000184s
+[47/272] run CASE-A full_jb2008 identical size=8 workers=2 control_no_rhs 1/3 0.000185s
+[47/272] run CASE-A full_jb2008 identical size=8 workers=2 control_no_rhs 2/3 0.000223s
+[47/272] run CASE-A full_jb2008 identical size=8 workers=2 control_no_rhs 3/3 0.000183s
+[48/272] warmup CASE-B full_exponential identical size=8 workers=1 sequential 1/1 0.307722s
+[48/272] run CASE-B full_exponential identical size=8 workers=1 sequential 1/5 0.302187s
+[48/272] run CASE-B full_exponential identical size=8 workers=1 sequential 2/5 0.320171s
+[48/272] run CASE-B full_exponential identical size=8 workers=1 sequential 3/5 0.303146s
+[48/272] run CASE-B full_exponential identical size=8 workers=1 sequential 4/5 0.312187s
+[48/272] run CASE-B full_exponential identical size=8 workers=1 sequential 5/5 0.318269s
+[49/272] warmup CASE-A two_body_j2 identical size=8 workers=4 static_partition batch 1/1 0.022765s
+[49/272] run CASE-A two_body_j2 identical size=8 workers=4 static_partition batch 1/5 0.022857s
+[49/272] run CASE-A two_body_j2 identical size=8 workers=4 static_partition batch 2/5 0.024696s
+[49/272] run CASE-A two_body_j2 identical size=8 workers=4 static_partition batch 3/5 0.023484s
+[49/272] run CASE-A two_body_j2 identical size=8 workers=4 static_partition batch 4/5 0.024271s
+[49/272] run CASE-A two_body_j2 identical size=8 workers=4 static_partition batch 5/5 0.025437s
+[50/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 1/1 0.000008s
+[50/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 1/3 0.000005s
+[50/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 2/3 0.000005s
+[50/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 3/3 0.000005s
+[51/272] warmup CASE-A two_body_j2 identical size=8 workers=2 dynamic batch 1/1 0.045807s
+[51/272] run CASE-A two_body_j2 identical size=8 workers=2 dynamic batch 1/5 0.046151s
+[51/272] run CASE-A two_body_j2 identical size=8 workers=2 dynamic batch 2/5 0.042724s
+[51/272] run CASE-A two_body_j2 identical size=8 workers=2 dynamic batch 3/5 0.043829s
+[51/272] run CASE-A two_body_j2 identical size=8 workers=2 dynamic batch 4/5 0.043140s
+[51/272] run CASE-A two_body_j2 identical size=8 workers=2 dynamic batch 5/5 0.043036s
+[52/272] warmup CASE-B full_jb2008 identical size=8 workers=8 static_partition batch 1/1 14.374245s
+[52/272] run CASE-B full_jb2008 identical size=8 workers=8 static_partition batch 1/5 14.173934s
+[52/272] run CASE-B full_jb2008 identical size=8 workers=8 static_partition batch 2/5 14.062214s
+[52/272] run CASE-B full_jb2008 identical size=8 workers=8 static_partition batch 3/5 14.032932s
+[52/272] run CASE-B full_jb2008 identical size=8 workers=8 static_partition batch 4/5 13.861127s
+[52/272] run CASE-B full_jb2008 identical size=8 workers=8 static_partition batch 5/5 13.955491s
+[53/272] warmup CASE-A two_body_j2 perturbed size=8 workers=4 dynamic batch 1/1 0.029246s
+[53/272] run CASE-A two_body_j2 perturbed size=8 workers=4 dynamic batch 1/5 0.025501s
+[53/272] run CASE-A two_body_j2 perturbed size=8 workers=4 dynamic batch 2/5 0.032626s
+[53/272] run CASE-A two_body_j2 perturbed size=8 workers=4 dynamic batch 3/5 0.027946s
+[53/272] run CASE-A two_body_j2 perturbed size=8 workers=4 dynamic batch 4/5 0.026238s
+[53/272] run CASE-A two_body_j2 perturbed size=8 workers=4 dynamic batch 5/5 0.030002s
+[54/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 1/1 0.000393s
+[54/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 1/3 0.000345s
+[54/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 2/3 0.000306s
+[54/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 3/3 0.000300s
+[55/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=4 control_no_rhs 1/1 0.000312s
+[55/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 control_no_rhs 1/3 0.000321s
+[55/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 control_no_rhs 2/3 0.000305s
+[55/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 control_no_rhs 3/3 0.000301s
+[56/272] warmup CASE-A full_exponential identical size=8 workers=8 control_no_rhs 1/1 0.000651s
+[56/272] run CASE-A full_exponential identical size=8 workers=8 control_no_rhs 1/3 0.000616s
+[56/272] run CASE-A full_exponential identical size=8 workers=8 control_no_rhs 2/3 0.000607s
+[56/272] run CASE-A full_exponential identical size=8 workers=8 control_no_rhs 3/3 0.000605s
+[57/272] warmup CASE-A two_body_j2 identical size=8 workers=1 control_no_rhs 1/1 0.000048s
+[57/272] run CASE-A two_body_j2 identical size=8 workers=1 control_no_rhs 1/3 0.000004s
+[57/272] run CASE-A two_body_j2 identical size=8 workers=1 control_no_rhs 2/3 0.000004s
+[57/272] run CASE-A two_body_j2 identical size=8 workers=1 control_no_rhs 3/3 0.000004s
+[58/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 1/1 0.000312s
+[58/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 1/3 0.000283s
+[58/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 2/3 0.000303s
+[58/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 3/3 0.000330s
+[59/272] warmup CASE-B two_body_j2 perturbed size=8 workers=4 dynamic batch 1/1 0.004261s
+[59/272] run CASE-B two_body_j2 perturbed size=8 workers=4 dynamic batch 1/5 0.004484s
+[59/272] run CASE-B two_body_j2 perturbed size=8 workers=4 dynamic batch 2/5 0.004653s
+[59/272] run CASE-B two_body_j2 perturbed size=8 workers=4 dynamic batch 3/5 0.004252s
+[59/272] run CASE-B two_body_j2 perturbed size=8 workers=4 dynamic batch 4/5 0.004256s
+[59/272] run CASE-B two_body_j2 perturbed size=8 workers=4 dynamic batch 5/5 0.004321s
+[60/272] warmup CASE-B two_body_j2 perturbed size=8 workers=1 control_no_rhs 1/1 0.000005s
+[60/272] run CASE-B two_body_j2 perturbed size=8 workers=1 control_no_rhs 1/3 0.000004s
+[60/272] run CASE-B two_body_j2 perturbed size=8 workers=1 control_no_rhs 2/3 0.000003s
+[60/272] run CASE-B two_body_j2 perturbed size=8 workers=1 control_no_rhs 3/3 0.000003s
+[61/272] warmup CASE-B two_body_j2 identical size=8 workers=1 sequential 1/1 0.013808s
+[61/272] run CASE-B two_body_j2 identical size=8 workers=1 sequential 1/5 0.014496s
+[61/272] run CASE-B two_body_j2 identical size=8 workers=1 sequential 2/5 0.013471s
+[61/272] run CASE-B two_body_j2 identical size=8 workers=1 sequential 3/5 0.013226s
+[61/272] run CASE-B two_body_j2 identical size=8 workers=1 sequential 4/5 0.012982s
+[61/272] run CASE-B two_body_j2 identical size=8 workers=1 sequential 5/5 0.013301s
+[62/272] warmup CASE-B full_jb2008 identical size=8 workers=1 sequential 1/1 6.394991s
+[62/272] run CASE-B full_jb2008 identical size=8 workers=1 sequential 1/5 6.395335s
+[62/272] run CASE-B full_jb2008 identical size=8 workers=1 sequential 2/5 6.404012s
+[62/272] run CASE-B full_jb2008 identical size=8 workers=1 sequential 3/5 6.409540s
+[62/272] run CASE-B full_jb2008 identical size=8 workers=1 sequential 4/5 6.433327s
+[62/272] run CASE-B full_jb2008 identical size=8 workers=1 sequential 5/5 6.426081s
+[63/272] warmup CASE-B full_exponential identical size=8 workers=4 static_partition batch 1/1 0.804633s
+[63/272] run CASE-B full_exponential identical size=8 workers=4 static_partition batch 1/5 0.813966s
+[63/272] run CASE-B full_exponential identical size=8 workers=4 static_partition batch 2/5 0.843410s
+[63/272] run CASE-B full_exponential identical size=8 workers=4 static_partition batch 3/5 0.841264s
+[63/272] run CASE-B full_exponential identical size=8 workers=4 static_partition batch 4/5 0.856222s
+[63/272] run CASE-B full_exponential identical size=8 workers=4 static_partition batch 5/5 0.852790s
+[64/272] warmup CASE-A full_jb2008 perturbed size=8 workers=2 static_partition batch 1/1 25.142572s
+[64/272] run CASE-A full_jb2008 perturbed size=8 workers=2 static_partition batch 1/5 25.235058s
+[64/272] run CASE-A full_jb2008 perturbed size=8 workers=2 static_partition batch 2/5 25.230569s
+[64/272] run CASE-A full_jb2008 perturbed size=8 workers=2 static_partition batch 3/5 25.315259s
+[64/272] run CASE-A full_jb2008 perturbed size=8 workers=2 static_partition batch 4/5 25.577192s
+[64/272] run CASE-A full_jb2008 perturbed size=8 workers=2 static_partition batch 5/5 25.556772s
+[65/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=8 dynamic batch 1/1 21.249357s
+[65/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 dynamic batch 1/5 20.867929s
+[65/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 dynamic batch 2/5 20.436957s
+[65/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 dynamic batch 3/5 20.889809s
+[65/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 dynamic batch 4/5 20.094137s
+[65/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 dynamic batch 5/5 21.476781s
+[66/272] warmup CASE-A two_body_j2 perturbed size=8 workers=4 control_no_rhs 1/1 0.000368s
+[66/272] run CASE-A two_body_j2 perturbed size=8 workers=4 control_no_rhs 1/3 0.000344s
+[66/272] run CASE-A two_body_j2 perturbed size=8 workers=4 control_no_rhs 2/3 0.000304s
+[66/272] run CASE-A two_body_j2 perturbed size=8 workers=4 control_no_rhs 3/3 0.000322s
+[67/272] warmup CASE-B two_body_j2 perturbed size=8 workers=1 sequential 1/1 0.014468s
+[67/272] run CASE-B two_body_j2 perturbed size=8 workers=1 sequential 1/5 0.014245s
+[67/272] run CASE-B two_body_j2 perturbed size=8 workers=1 sequential 2/5 0.014010s
+[67/272] run CASE-B two_body_j2 perturbed size=8 workers=1 sequential 3/5 0.014147s
+[67/272] run CASE-B two_body_j2 perturbed size=8 workers=1 sequential 4/5 0.014428s
+[67/272] run CASE-B two_body_j2 perturbed size=8 workers=1 sequential 5/5 0.013981s
+[68/272] warmup CASE-B full_jb2008 identical size=8 workers=4 static_partition batch 1/1 12.777317s
+[68/272] run CASE-B full_jb2008 identical size=8 workers=4 static_partition batch 1/5 12.689625s
+[68/272] run CASE-B full_jb2008 identical size=8 workers=4 static_partition batch 2/5 12.858572s
+[68/272] run CASE-B full_jb2008 identical size=8 workers=4 static_partition batch 3/5 13.417132s
+[68/272] run CASE-B full_jb2008 identical size=8 workers=4 static_partition batch 4/5 13.010231s
+[68/272] run CASE-B full_jb2008 identical size=8 workers=4 static_partition batch 5/5 12.902716s
+[69/272] warmup CASE-B two_body_j2 perturbed size=8 workers=2 static_partition batch 1/1 0.007807s
+[69/272] run CASE-B two_body_j2 perturbed size=8 workers=2 static_partition batch 1/5 0.007559s
+[69/272] run CASE-B two_body_j2 perturbed size=8 workers=2 static_partition batch 2/5 0.007564s
+[69/272] run CASE-B two_body_j2 perturbed size=8 workers=2 static_partition batch 3/5 0.007418s
+[69/272] run CASE-B two_body_j2 perturbed size=8 workers=2 static_partition batch 4/5 0.007890s
+[69/272] run CASE-B two_body_j2 perturbed size=8 workers=2 static_partition batch 5/5 0.007096s
+[70/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=8 static_partition batch 1/1 22.967036s
+[70/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 static_partition batch 1/5 22.939177s
+[70/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 static_partition batch 2/5 22.849695s
+[70/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 static_partition batch 3/5 22.937156s
+[70/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 static_partition batch 4/5 23.135386s
+[70/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 static_partition batch 5/5 22.877389s
+[71/272] warmup CASE-A two_body_j2 perturbed size=8 workers=1 dynamic batch 1/1 0.086405s
+[71/272] run CASE-A two_body_j2 perturbed size=8 workers=1 dynamic batch 1/5 0.084947s
+[71/272] run CASE-A two_body_j2 perturbed size=8 workers=1 dynamic batch 2/5 0.087392s
+[71/272] run CASE-A two_body_j2 perturbed size=8 workers=1 dynamic batch 3/5 0.089682s
+[71/272] run CASE-A two_body_j2 perturbed size=8 workers=1 dynamic batch 4/5 0.090658s
+[71/272] run CASE-A two_body_j2 perturbed size=8 workers=1 dynamic batch 5/5 0.084961s
+[72/272] warmup CASE-B full_jb2008 identical size=8 workers=2 control_no_rhs 1/1 0.000212s
+[72/272] run CASE-B full_jb2008 identical size=8 workers=2 control_no_rhs 1/3 0.000184s
+[72/272] run CASE-B full_jb2008 identical size=8 workers=2 control_no_rhs 2/3 0.000199s
+[72/272] run CASE-B full_jb2008 identical size=8 workers=2 control_no_rhs 3/3 0.000198s
+[73/272] warmup CASE-B full_jb2008 perturbed size=8 workers=8 static_partition batch 1/1 15.810819s
+[73/272] run CASE-B full_jb2008 perturbed size=8 workers=8 static_partition batch 1/5 16.306158s
+[73/272] run CASE-B full_jb2008 perturbed size=8 workers=8 static_partition batch 2/5 15.797961s
+[73/272] run CASE-B full_jb2008 perturbed size=8 workers=8 static_partition batch 3/5 15.749694s
+[73/272] run CASE-B full_jb2008 perturbed size=8 workers=8 static_partition batch 4/5 15.712603s
+[73/272] run CASE-B full_jb2008 perturbed size=8 workers=8 static_partition batch 5/5 15.731162s
+[74/272] warmup CASE-B full_jb2008 perturbed size=8 workers=2 static_partition batch 1/1 16.106616s
+[74/272] run CASE-B full_jb2008 perturbed size=8 workers=2 static_partition batch 1/5 16.021749s
+[74/272] run CASE-B full_jb2008 perturbed size=8 workers=2 static_partition batch 2/5 16.146061s
+[74/272] run CASE-B full_jb2008 perturbed size=8 workers=2 static_partition batch 3/5 16.112357s
+[74/272] run CASE-B full_jb2008 perturbed size=8 workers=2 static_partition batch 4/5 16.105610s
+[74/272] run CASE-B full_jb2008 perturbed size=8 workers=2 static_partition batch 5/5 16.055069s
+[75/272] warmup CASE-B two_body_j2 identical size=8 workers=8 control_no_rhs 1/1 0.000709s
+[75/272] run CASE-B two_body_j2 identical size=8 workers=8 control_no_rhs 1/3 0.000564s
+[75/272] run CASE-B two_body_j2 identical size=8 workers=8 control_no_rhs 2/3 0.000802s
+[75/272] run CASE-B two_body_j2 identical size=8 workers=8 control_no_rhs 3/3 0.000614s
+[76/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=2 dynamic batch 1/1 24.373434s
+[76/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 dynamic batch 1/5 24.653369s
+[76/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 dynamic batch 2/5 24.388805s
+[76/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 dynamic batch 3/5 24.132660s
+[76/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 dynamic batch 4/5 23.809588s
+[76/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 dynamic batch 5/5 23.935788s
+[77/272] warmup CASE-B two_body_j2 identical size=8 workers=8 control_no_rhs 1/1 0.000768s
+[77/272] run CASE-B two_body_j2 identical size=8 workers=8 control_no_rhs 1/3 0.000565s
+[77/272] run CASE-B two_body_j2 identical size=8 workers=8 control_no_rhs 2/3 0.000585s
+[77/272] run CASE-B two_body_j2 identical size=8 workers=8 control_no_rhs 3/3 0.000528s
+[78/272] warmup CASE-B full_jb2008 perturbed size=8 workers=4 control_no_rhs 1/1 0.000291s
+[78/272] run CASE-B full_jb2008 perturbed size=8 workers=4 control_no_rhs 1/3 0.000280s
+[78/272] run CASE-B full_jb2008 perturbed size=8 workers=4 control_no_rhs 2/3 0.000303s
+[78/272] run CASE-B full_jb2008 perturbed size=8 workers=4 control_no_rhs 3/3 0.000267s
+[79/272] warmup CASE-B full_exponential perturbed size=8 workers=4 control_no_rhs 1/1 0.000268s
+[79/272] run CASE-B full_exponential perturbed size=8 workers=4 control_no_rhs 1/3 0.000262s
+[79/272] run CASE-B full_exponential perturbed size=8 workers=4 control_no_rhs 2/3 0.000265s
+[79/272] run CASE-B full_exponential perturbed size=8 workers=4 control_no_rhs 3/3 0.000289s
+[80/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 1/1 0.000645s
+[80/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 1/3 0.000602s
+[80/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 2/3 0.000584s
+[80/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 3/3 0.000540s
+[81/272] warmup CASE-A full_exponential identical size=8 workers=4 control_no_rhs 1/1 0.000267s
+[81/272] run CASE-A full_exponential identical size=8 workers=4 control_no_rhs 1/3 0.000257s
+[81/272] run CASE-A full_exponential identical size=8 workers=4 control_no_rhs 2/3 0.000270s
+[81/272] run CASE-A full_exponential identical size=8 workers=4 control_no_rhs 3/3 0.000266s
+[82/272] warmup CASE-A full_exponential perturbed size=8 workers=4 dynamic batch 1/1 4.744739s
+[82/272] run CASE-A full_exponential perturbed size=8 workers=4 dynamic batch 1/5 4.711695s
+[82/272] run CASE-A full_exponential perturbed size=8 workers=4 dynamic batch 2/5 4.782497s
+[82/272] run CASE-A full_exponential perturbed size=8 workers=4 dynamic batch 3/5 4.716061s
+[82/272] run CASE-A full_exponential perturbed size=8 workers=4 dynamic batch 4/5 4.725078s
+[82/272] run CASE-A full_exponential perturbed size=8 workers=4 dynamic batch 5/5 4.765343s
+[83/272] warmup CASE-B full_exponential identical size=8 workers=1 static_partition batch 1/1 0.300924s
+[83/272] run CASE-B full_exponential identical size=8 workers=1 static_partition batch 1/5 0.312865s
+[83/272] run CASE-B full_exponential identical size=8 workers=1 static_partition batch 2/5 0.312338s
+[83/272] run CASE-B full_exponential identical size=8 workers=1 static_partition batch 3/5 0.334036s
+[83/272] run CASE-B full_exponential identical size=8 workers=1 static_partition batch 4/5 0.316973s
+[83/272] run CASE-B full_exponential identical size=8 workers=1 static_partition batch 5/5 0.305797s
+[84/272] warmup CASE-B two_body_j2 identical size=8 workers=8 dynamic batch 1/1 0.003532s
+[84/272] run CASE-B two_body_j2 identical size=8 workers=8 dynamic batch 1/5 0.003558s
+[84/272] run CASE-B two_body_j2 identical size=8 workers=8 dynamic batch 2/5 0.003729s
+[84/272] run CASE-B two_body_j2 identical size=8 workers=8 dynamic batch 3/5 0.003647s
+[84/272] run CASE-B two_body_j2 identical size=8 workers=8 dynamic batch 4/5 0.003864s
+[84/272] run CASE-B two_body_j2 identical size=8 workers=8 dynamic batch 5/5 0.003694s
+[85/272] warmup CASE-B full_exponential identical size=8 workers=2 dynamic batch 1/1 0.990351s
+[85/272] run CASE-B full_exponential identical size=8 workers=2 dynamic batch 1/5 0.969161s
+[85/272] run CASE-B full_exponential identical size=8 workers=2 dynamic batch 2/5 0.913239s
+[85/272] run CASE-B full_exponential identical size=8 workers=2 dynamic batch 3/5 0.930275s
+[85/272] run CASE-B full_exponential identical size=8 workers=2 dynamic batch 4/5 0.914131s
+[85/272] run CASE-B full_exponential identical size=8 workers=2 dynamic batch 5/5 0.879553s
+[86/272] warmup CASE-A full_exponential identical size=8 workers=1 dynamic batch 1/1 1.648969s
+[86/272] run CASE-A full_exponential identical size=8 workers=1 dynamic batch 1/5 1.626970s
+[86/272] run CASE-A full_exponential identical size=8 workers=1 dynamic batch 2/5 1.661597s
+[86/272] run CASE-A full_exponential identical size=8 workers=1 dynamic batch 3/5 1.630571s
+[86/272] run CASE-A full_exponential identical size=8 workers=1 dynamic batch 4/5 1.661379s
+[86/272] run CASE-A full_exponential identical size=8 workers=1 dynamic batch 5/5 1.635058s
+[87/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=4 static_partition batch 1/1 4.368405s
+[87/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 static_partition batch 1/5 4.418658s
+[87/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 static_partition batch 2/5 4.473040s
+[87/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 static_partition batch 3/5 4.411511s
+[87/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 static_partition batch 4/5 4.513029s
+[87/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 static_partition batch 5/5 4.454567s
+[88/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=8 dynamic batch 1/1 22.888391s
+[88/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 dynamic batch 1/5 22.816379s
+[88/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 dynamic batch 2/5 22.868481s
+[88/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 dynamic batch 3/5 22.874140s
+[88/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 dynamic batch 4/5 22.742262s
+[88/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 dynamic batch 5/5 22.969044s
+[89/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=4 static_partition batch 1/1 22.710357s
+[89/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 static_partition batch 1/5 22.745034s
+[89/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 static_partition batch 2/5 22.783031s
+[89/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 static_partition batch 3/5 22.679376s
+[89/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 static_partition batch 4/5 22.722750s
+[89/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 static_partition batch 5/5 22.711322s
+[90/272] warmup CASE-B full_jb2008 identical size=8 workers=8 control_no_rhs 1/1 0.000649s
+[90/272] run CASE-B full_jb2008 identical size=8 workers=8 control_no_rhs 1/3 0.000641s
+[90/272] run CASE-B full_jb2008 identical size=8 workers=8 control_no_rhs 2/3 0.000614s
+[90/272] run CASE-B full_jb2008 identical size=8 workers=8 control_no_rhs 3/3 0.000594s
+[91/272] warmup CASE-B full_jb2008 perturbed size=8 workers=8 control_no_rhs 1/1 0.000658s
+[91/272] run CASE-B full_jb2008 perturbed size=8 workers=8 control_no_rhs 1/3 0.000601s
+[91/272] run CASE-B full_jb2008 perturbed size=8 workers=8 control_no_rhs 2/3 0.000646s
+[91/272] run CASE-B full_jb2008 perturbed size=8 workers=8 control_no_rhs 3/3 0.000578s
+[92/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=2 static_partition batch 1/1 24.227804s
+[92/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 static_partition batch 1/5 23.881389s
+[92/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 static_partition batch 2/5 24.165341s
+[92/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 static_partition batch 3/5 24.191649s
+[92/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 static_partition batch 4/5 24.319527s
+[92/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 static_partition batch 5/5 24.280547s
+[93/272] warmup CASE-B full_exponential perturbed size=8 workers=1 static_partition batch 1/1 0.293613s
+[93/272] run CASE-B full_exponential perturbed size=8 workers=1 static_partition batch 1/5 0.293616s
+[93/272] run CASE-B full_exponential perturbed size=8 workers=1 static_partition batch 2/5 0.286871s
+[93/272] run CASE-B full_exponential perturbed size=8 workers=1 static_partition batch 3/5 0.287974s
+[93/272] run CASE-B full_exponential perturbed size=8 workers=1 static_partition batch 4/5 0.288850s
+[93/272] run CASE-B full_exponential perturbed size=8 workers=1 static_partition batch 5/5 0.293130s
+[94/272] warmup CASE-B two_body_j2 identical size=8 workers=1 static_partition batch 1/1 0.012760s
+[94/272] run CASE-B two_body_j2 identical size=8 workers=1 static_partition batch 1/5 0.012325s
+[94/272] run CASE-B two_body_j2 identical size=8 workers=1 static_partition batch 2/5 0.012415s
+[94/272] run CASE-B two_body_j2 identical size=8 workers=1 static_partition batch 3/5 0.012502s
+[94/272] run CASE-B two_body_j2 identical size=8 workers=1 static_partition batch 4/5 0.013491s
+[94/272] run CASE-B two_body_j2 identical size=8 workers=1 static_partition batch 5/5 0.012474s
+[95/272] warmup CASE-A full_jb2008 identical size=8 workers=1 sequential 1/1 9.929254s
+[95/272] run CASE-A full_jb2008 identical size=8 workers=1 sequential 1/5 9.899809s
+[95/272] run CASE-A full_jb2008 identical size=8 workers=1 sequential 2/5 9.954449s
+[95/272] run CASE-A full_jb2008 identical size=8 workers=1 sequential 3/5 9.953187s
+[95/272] run CASE-A full_jb2008 identical size=8 workers=1 sequential 4/5 9.946597s
+[95/272] run CASE-A full_jb2008 identical size=8 workers=1 sequential 5/5 9.967210s
+[96/272] warmup CASE-A full_exponential identical size=8 workers=4 dynamic batch 1/1 4.463868s
+[96/272] run CASE-A full_exponential identical size=8 workers=4 dynamic batch 1/5 4.641577s
+[96/272] run CASE-A full_exponential identical size=8 workers=4 dynamic batch 2/5 4.736116s
+[96/272] run CASE-A full_exponential identical size=8 workers=4 dynamic batch 3/5 4.764191s
+[96/272] run CASE-A full_exponential identical size=8 workers=4 dynamic batch 4/5 4.846012s
+[96/272] run CASE-A full_exponential identical size=8 workers=4 dynamic batch 5/5 4.769124s
+[97/272] warmup CASE-A full_exponential perturbed size=8 workers=1 sequential 1/1 1.653354s
+[97/272] run CASE-A full_exponential perturbed size=8 workers=1 sequential 1/5 1.630246s
+[97/272] run CASE-A full_exponential perturbed size=8 workers=1 sequential 2/5 1.626287s
+[97/272] run CASE-A full_exponential perturbed size=8 workers=1 sequential 3/5 1.660990s
+[97/272] run CASE-A full_exponential perturbed size=8 workers=1 sequential 4/5 1.627882s
+[97/272] run CASE-A full_exponential perturbed size=8 workers=1 sequential 5/5 1.629962s
+[98/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=1 dynamic batch 1/1 7.453682s
+[98/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 dynamic batch 1/5 7.491624s
+[98/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 dynamic batch 2/5 7.441390s
+[98/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 dynamic batch 3/5 7.477540s
+[98/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 dynamic batch 4/5 7.495082s
+[98/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 dynamic batch 5/5 7.544434s
+[99/272] warmup CASE-A two_body_j2 perturbed size=8 workers=8 control_no_rhs 1/1 0.000613s
+[99/272] run CASE-A two_body_j2 perturbed size=8 workers=8 control_no_rhs 1/3 0.000520s
+[99/272] run CASE-A two_body_j2 perturbed size=8 workers=8 control_no_rhs 2/3 0.000677s
+[99/272] run CASE-A two_body_j2 perturbed size=8 workers=8 control_no_rhs 3/3 0.000531s
+[100/272] warmup CASE-A full_jb2008 identical size=8 workers=8 control_no_rhs 1/1 0.000554s
+[100/272] run CASE-A full_jb2008 identical size=8 workers=8 control_no_rhs 1/3 0.000602s
+[100/272] run CASE-A full_jb2008 identical size=8 workers=8 control_no_rhs 2/3 0.000607s
+[100/272] run CASE-A full_jb2008 identical size=8 workers=8 control_no_rhs 3/3 0.000538s
+[101/272] warmup CASE-A full_jb2008 perturbed size=8 workers=1 static_partition batch 1/1 9.920774s
+[101/272] run CASE-A full_jb2008 perturbed size=8 workers=1 static_partition batch 1/5 10.144824s
+[101/272] run CASE-A full_jb2008 perturbed size=8 workers=1 static_partition batch 2/5 10.546842s
+[101/272] run CASE-A full_jb2008 perturbed size=8 workers=1 static_partition batch 3/5 10.569042s
+[101/272] run CASE-A full_jb2008 perturbed size=8 workers=1 static_partition batch 4/5 10.462533s
+[101/272] run CASE-A full_jb2008 perturbed size=8 workers=1 static_partition batch 5/5 10.421233s
+[102/272] warmup CASE-B two_body_j2 perturbed size=8 workers=2 control_no_rhs 1/1 0.000246s
+[102/272] run CASE-B two_body_j2 perturbed size=8 workers=2 control_no_rhs 1/3 0.000242s
+[102/272] run CASE-B two_body_j2 perturbed size=8 workers=2 control_no_rhs 2/3 0.000228s
+[102/272] run CASE-B two_body_j2 perturbed size=8 workers=2 control_no_rhs 3/3 0.000179s
+[103/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=2 static_partition batch 1/1 4.967141s
+[103/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 static_partition batch 1/5 4.963941s
+[103/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 static_partition batch 2/5 4.859165s
+[103/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 static_partition batch 3/5 4.886874s
+[103/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 static_partition batch 4/5 5.010959s
+[103/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 static_partition batch 5/5 4.925086s
+[104/272] warmup CASE-A full_exponential perturbed size=8 workers=8 dynamic batch 1/1 5.304820s
+[104/272] run CASE-A full_exponential perturbed size=8 workers=8 dynamic batch 1/5 5.270922s
+[104/272] run CASE-A full_exponential perturbed size=8 workers=8 dynamic batch 2/5 5.243615s
+[104/272] run CASE-A full_exponential perturbed size=8 workers=8 dynamic batch 3/5 5.260039s
+[104/272] run CASE-A full_exponential perturbed size=8 workers=8 dynamic batch 4/5 5.239910s
+[104/272] run CASE-A full_exponential perturbed size=8 workers=8 dynamic batch 5/5 5.277637s
+[105/272] warmup CASE-A full_exponential perturbed size=8 workers=8 control_no_rhs 1/1 0.000678s
+[105/272] run CASE-A full_exponential perturbed size=8 workers=8 control_no_rhs 1/3 0.000617s
+[105/272] run CASE-A full_exponential perturbed size=8 workers=8 control_no_rhs 2/3 0.000610s
+[105/272] run CASE-A full_exponential perturbed size=8 workers=8 control_no_rhs 3/3 0.000612s
+[106/272] warmup CASE-A full_exponential perturbed size=8 workers=8 static_partition batch 1/1 5.221228s
+[106/272] run CASE-A full_exponential perturbed size=8 workers=8 static_partition batch 1/5 5.239132s
+[106/272] run CASE-A full_exponential perturbed size=8 workers=8 static_partition batch 2/5 5.212198s
+[106/272] run CASE-A full_exponential perturbed size=8 workers=8 static_partition batch 3/5 5.267825s
+[106/272] run CASE-A full_exponential perturbed size=8 workers=8 static_partition batch 4/5 5.229950s
+[106/272] run CASE-A full_exponential perturbed size=8 workers=8 static_partition batch 5/5 5.240189s
+[107/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 1/1 0.000717s
+[107/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 1/3 0.000594s
+[107/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 2/3 0.000574s
+[107/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 3/3 0.000558s
+[108/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=1 dynamic batch 1/1 1.459667s
+[108/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 dynamic batch 1/5 1.459211s
+[108/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 dynamic batch 2/5 1.462051s
+[108/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 dynamic batch 3/5 1.467268s
+[108/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 dynamic batch 4/5 1.476368s
+[108/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 dynamic batch 5/5 1.460522s
+[109/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 1/1 0.000209s
+[109/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 1/3 0.000204s
+[109/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 2/3 0.000192s
+[109/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 3/3 0.000166s
+[110/272] warmup CASE-A two_body_j2 perturbed size=8 workers=4 control_no_rhs 1/1 0.000284s
+[110/272] run CASE-A two_body_j2 perturbed size=8 workers=4 control_no_rhs 1/3 0.000278s
+[110/272] run CASE-A two_body_j2 perturbed size=8 workers=4 control_no_rhs 2/3 0.000256s
+[110/272] run CASE-A two_body_j2 perturbed size=8 workers=4 control_no_rhs 3/3 0.000274s
+[111/272] warmup CASE-A full_jb2008 identical size=8 workers=4 control_no_rhs 1/1 0.000277s
+[111/272] run CASE-A full_jb2008 identical size=8 workers=4 control_no_rhs 1/3 0.000272s
+[111/272] run CASE-A full_jb2008 identical size=8 workers=4 control_no_rhs 2/3 0.000268s
+[111/272] run CASE-A full_jb2008 identical size=8 workers=4 control_no_rhs 3/3 0.000270s
+[112/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=8 control_no_rhs 1/1 0.000547s
+[112/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 control_no_rhs 1/3 0.000542s
+[112/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 control_no_rhs 2/3 0.000616s
+[112/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 control_no_rhs 3/3 0.000554s
+[113/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 1/1 0.000547s
+[113/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 1/3 0.000535s
+[113/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 2/3 0.000538s
+[113/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 3/3 0.000615s
+[114/272] warmup CASE-A two_body_j2 perturbed size=8 workers=2 control_no_rhs 1/1 0.000160s
+[114/272] run CASE-A two_body_j2 perturbed size=8 workers=2 control_no_rhs 1/3 0.000171s
+[114/272] run CASE-A two_body_j2 perturbed size=8 workers=2 control_no_rhs 2/3 0.000160s
+[114/272] run CASE-A two_body_j2 perturbed size=8 workers=2 control_no_rhs 3/3 0.000158s
+[115/272] warmup CASE-B full_jb2008 perturbed size=8 workers=1 static_partition batch 1/1 6.242913s
+[115/272] run CASE-B full_jb2008 perturbed size=8 workers=1 static_partition batch 1/5 6.255749s
+[115/272] run CASE-B full_jb2008 perturbed size=8 workers=1 static_partition batch 2/5 6.271380s
+[115/272] run CASE-B full_jb2008 perturbed size=8 workers=1 static_partition batch 3/5 6.228355s
+[115/272] run CASE-B full_jb2008 perturbed size=8 workers=1 static_partition batch 4/5 6.225781s
+[115/272] run CASE-B full_jb2008 perturbed size=8 workers=1 static_partition batch 5/5 6.233559s
+[116/272] warmup CASE-B full_exponential perturbed size=8 workers=2 static_partition batch 1/1 0.888338s
+[116/272] run CASE-B full_exponential perturbed size=8 workers=2 static_partition batch 1/5 0.887327s
+[116/272] run CASE-B full_exponential perturbed size=8 workers=2 static_partition batch 2/5 0.876052s
+[116/272] run CASE-B full_exponential perturbed size=8 workers=2 static_partition batch 3/5 0.884401s
+[116/272] run CASE-B full_exponential perturbed size=8 workers=2 static_partition batch 4/5 0.878139s
+[116/272] run CASE-B full_exponential perturbed size=8 workers=2 static_partition batch 5/5 0.878004s
+[117/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=8 control_no_rhs 1/1 0.000732s
+[117/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 control_no_rhs 1/3 0.000589s
+[117/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 control_no_rhs 2/3 0.000575s
+[117/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 control_no_rhs 3/3 0.000545s
+[118/272] warmup CASE-B full_exponential identical size=8 workers=2 static_partition batch 1/1 0.903326s
+[118/272] run CASE-B full_exponential identical size=8 workers=2 static_partition batch 1/5 0.881497s
+[118/272] run CASE-B full_exponential identical size=8 workers=2 static_partition batch 2/5 0.894601s
+[118/272] run CASE-B full_exponential identical size=8 workers=2 static_partition batch 3/5 0.860051s
+[118/272] run CASE-B full_exponential identical size=8 workers=2 static_partition batch 4/5 0.908629s
+[118/272] run CASE-B full_exponential identical size=8 workers=2 static_partition batch 5/5 0.920362s
+[119/272] warmup CASE-B full_exponential perturbed size=8 workers=8 static_partition batch 1/1 0.933621s
+[119/272] run CASE-B full_exponential perturbed size=8 workers=8 static_partition batch 1/5 0.938920s
+[119/272] run CASE-B full_exponential perturbed size=8 workers=8 static_partition batch 2/5 0.932277s
+[119/272] run CASE-B full_exponential perturbed size=8 workers=8 static_partition batch 3/5 0.959198s
+[119/272] run CASE-B full_exponential perturbed size=8 workers=8 static_partition batch 4/5 0.935859s
+[119/272] run CASE-B full_exponential perturbed size=8 workers=8 static_partition batch 5/5 0.932779s
+[120/272] warmup CASE-B two_body_j2 identical size=8 workers=1 dynamic batch 1/1 0.014496s
+[120/272] run CASE-B two_body_j2 identical size=8 workers=1 dynamic batch 1/5 0.013389s
+[120/272] run CASE-B two_body_j2 identical size=8 workers=1 dynamic batch 2/5 0.013110s
+[120/272] run CASE-B two_body_j2 identical size=8 workers=1 dynamic batch 3/5 0.012492s
+[120/272] run CASE-B two_body_j2 identical size=8 workers=1 dynamic batch 4/5 0.012447s
+[120/272] run CASE-B two_body_j2 identical size=8 workers=1 dynamic batch 5/5 0.012453s
+[121/272] warmup CASE-A two_body_j2 perturbed size=8 workers=1 sequential 1/1 0.087570s
+[121/272] run CASE-A two_body_j2 perturbed size=8 workers=1 sequential 1/5 0.088976s
+[121/272] run CASE-A two_body_j2 perturbed size=8 workers=1 sequential 2/5 0.086674s
+[121/272] run CASE-A two_body_j2 perturbed size=8 workers=1 sequential 3/5 0.085534s
+[121/272] run CASE-A two_body_j2 perturbed size=8 workers=1 sequential 4/5 0.084382s
+[121/272] run CASE-A two_body_j2 perturbed size=8 workers=1 sequential 5/5 0.084397s
+[122/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=2 dynamic batch 1/1 4.964975s
+[122/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 dynamic batch 1/5 5.017711s
+[122/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 dynamic batch 2/5 4.902407s
+[122/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 dynamic batch 3/5 4.890799s
+[122/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 dynamic batch 4/5 4.846220s
+[122/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 dynamic batch 5/5 4.867261s
+[123/272] warmup CASE-A full_jb2008 perturbed size=8 workers=2 control_no_rhs 1/1 0.000216s
+[123/272] run CASE-A full_jb2008 perturbed size=8 workers=2 control_no_rhs 1/3 0.000164s
+[123/272] run CASE-A full_jb2008 perturbed size=8 workers=2 control_no_rhs 2/3 0.000186s
+[123/272] run CASE-A full_jb2008 perturbed size=8 workers=2 control_no_rhs 3/3 0.000184s
+[124/272] warmup CASE-A full_exponential identical size=8 workers=4 static_partition batch 1/1 4.731940s
+[124/272] run CASE-A full_exponential identical size=8 workers=4 static_partition batch 1/5 4.734273s
+[124/272] run CASE-A full_exponential identical size=8 workers=4 static_partition batch 2/5 4.758475s
+[124/272] run CASE-A full_exponential identical size=8 workers=4 static_partition batch 3/5 4.777001s
+[124/272] run CASE-A full_exponential identical size=8 workers=4 static_partition batch 4/5 4.797508s
+[124/272] run CASE-A full_exponential identical size=8 workers=4 static_partition batch 5/5 4.742037s
+[125/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=4 static_partition batch 1/1 4.281124s
+[125/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 static_partition batch 1/5 4.357873s
+[125/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 static_partition batch 2/5 4.335063s
+[125/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 static_partition batch 3/5 4.282784s
+[125/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 static_partition batch 4/5 4.316670s
+[125/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 static_partition batch 5/5 4.386355s
+[126/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=1 control_no_rhs 1/1 0.000035s
+[126/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 control_no_rhs 1/3 0.000005s
+[126/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 control_no_rhs 2/3 0.000005s
+[126/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 control_no_rhs 3/3 0.000004s
+[127/272] warmup CASE-A full_jb2008 identical size=8 workers=8 dynamic batch 1/1 21.641269s
+[127/272] run CASE-A full_jb2008 identical size=8 workers=8 dynamic batch 1/5 22.230722s
+[127/272] run CASE-A full_jb2008 identical size=8 workers=8 dynamic batch 2/5 22.189236s
+[127/272] run CASE-A full_jb2008 identical size=8 workers=8 dynamic batch 3/5 23.308817s
+[127/272] run CASE-A full_jb2008 identical size=8 workers=8 dynamic batch 4/5 22.264030s
+[127/272] run CASE-A full_jb2008 identical size=8 workers=8 dynamic batch 5/5 21.780646s
+[128/272] warmup CASE-A full_exponential perturbed size=8 workers=4 control_no_rhs 1/1 0.000368s
+[128/272] run CASE-A full_exponential perturbed size=8 workers=4 control_no_rhs 1/3 0.000346s
+[128/272] run CASE-A full_exponential perturbed size=8 workers=4 control_no_rhs 2/3 0.000307s
+[128/272] run CASE-A full_exponential perturbed size=8 workers=4 control_no_rhs 3/3 0.000284s
+[129/272] warmup CASE-A full_exponential perturbed size=8 workers=2 control_no_rhs 1/1 0.000171s
+[129/272] run CASE-A full_exponential perturbed size=8 workers=2 control_no_rhs 1/3 0.000168s
+[129/272] run CASE-A full_exponential perturbed size=8 workers=2 control_no_rhs 2/3 0.000171s
+[129/272] run CASE-A full_exponential perturbed size=8 workers=2 control_no_rhs 3/3 0.000170s
+[130/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=1 static_partition batch 1/1 1.494254s
+[130/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 static_partition batch 1/5 1.452630s
+[130/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 static_partition batch 2/5 1.493916s
+[130/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 static_partition batch 3/5 1.551414s
+[130/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 static_partition batch 4/5 1.579557s
+[130/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 static_partition batch 5/5 1.556655s
+[131/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=8 control_no_rhs 1/1 0.000644s
+[131/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 control_no_rhs 1/3 0.000564s
+[131/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 control_no_rhs 2/3 0.000628s
+[131/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 control_no_rhs 3/3 0.000618s
+[132/272] warmup CASE-A two_body_j2 identical size=8 workers=4 control_no_rhs 1/1 0.000338s
+[132/272] run CASE-A two_body_j2 identical size=8 workers=4 control_no_rhs 1/3 0.000303s
+[132/272] run CASE-A two_body_j2 identical size=8 workers=4 control_no_rhs 2/3 0.000289s
+[132/272] run CASE-A two_body_j2 identical size=8 workers=4 control_no_rhs 3/3 0.000289s
+[133/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=4 control_no_rhs 1/1 0.000282s
+[133/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 control_no_rhs 1/3 0.000277s
+[133/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 control_no_rhs 2/3 0.000278s
+[133/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 control_no_rhs 3/3 0.000302s
+[134/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=2 dynamic batch 1/1 5.231779s
+[134/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 dynamic batch 1/5 5.158766s
+[134/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 dynamic batch 2/5 5.139091s
+[134/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 dynamic batch 3/5 5.153592s
+[134/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 dynamic batch 4/5 4.966307s
+[134/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 dynamic batch 5/5 4.730464s
+[135/272] warmup CASE-B full_jb2008 perturbed size=8 workers=8 dynamic batch 1/1 15.820519s
+[135/272] run CASE-B full_jb2008 perturbed size=8 workers=8 dynamic batch 1/5 15.730996s
+[135/272] run CASE-B full_jb2008 perturbed size=8 workers=8 dynamic batch 2/5 15.795671s
+[135/272] run CASE-B full_jb2008 perturbed size=8 workers=8 dynamic batch 3/5 15.755225s
+[135/272] run CASE-B full_jb2008 perturbed size=8 workers=8 dynamic batch 4/5 15.827192s
+[135/272] run CASE-B full_jb2008 perturbed size=8 workers=8 dynamic batch 5/5 15.773395s
+[136/272] warmup CASE-A full_jb2008 perturbed size=8 workers=4 static_partition batch 1/1 22.992201s
+[136/272] run CASE-A full_jb2008 perturbed size=8 workers=4 static_partition batch 1/5 22.869295s
+[136/272] run CASE-A full_jb2008 perturbed size=8 workers=4 static_partition batch 2/5 22.687682s
+[136/272] run CASE-A full_jb2008 perturbed size=8 workers=4 static_partition batch 3/5 22.858727s
+[136/272] run CASE-A full_jb2008 perturbed size=8 workers=4 static_partition batch 4/5 22.700045s
+[136/272] run CASE-A full_jb2008 perturbed size=8 workers=4 static_partition batch 5/5 22.784641s
+[137/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=8 dynamic batch 1/1 4.222121s
+[137/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 dynamic batch 1/5 4.301822s
+[137/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 dynamic batch 2/5 4.243255s
+[137/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 dynamic batch 3/5 4.394299s
+[137/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 dynamic batch 4/5 4.275852s
+[137/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 dynamic batch 5/5 4.267081s
+[138/272] warmup CASE-B full_exponential identical size=8 workers=8 dynamic batch 1/1 0.967307s
+[138/272] run CASE-B full_exponential identical size=8 workers=8 dynamic batch 1/5 0.955769s
+[138/272] run CASE-B full_exponential identical size=8 workers=8 dynamic batch 2/5 0.982248s
+[138/272] run CASE-B full_exponential identical size=8 workers=8 dynamic batch 3/5 0.958163s
+[138/272] run CASE-B full_exponential identical size=8 workers=8 dynamic batch 4/5 1.015765s
+[138/272] run CASE-B full_exponential identical size=8 workers=8 dynamic batch 5/5 0.968336s
+[139/272] warmup CASE-B full_exponential identical size=8 workers=8 control_no_rhs 1/1 0.000644s
+[139/272] run CASE-B full_exponential identical size=8 workers=8 control_no_rhs 1/3 0.000646s
+[139/272] run CASE-B full_exponential identical size=8 workers=8 control_no_rhs 2/3 0.000611s
+[139/272] run CASE-B full_exponential identical size=8 workers=8 control_no_rhs 3/3 0.000694s
+[140/272] warmup CASE-B full_jb2008 perturbed size=8 workers=1 control_no_rhs 1/1 0.000055s
+[140/272] run CASE-B full_jb2008 perturbed size=8 workers=1 control_no_rhs 1/3 0.000005s
+[140/272] run CASE-B full_jb2008 perturbed size=8 workers=1 control_no_rhs 2/3 0.000004s
+[140/272] run CASE-B full_jb2008 perturbed size=8 workers=1 control_no_rhs 3/3 0.000005s
+[141/272] warmup CASE-B two_body_j2 perturbed size=8 workers=4 static_partition batch 1/1 0.004601s
+[141/272] run CASE-B two_body_j2 perturbed size=8 workers=4 static_partition batch 1/5 0.004542s
+[141/272] run CASE-B two_body_j2 perturbed size=8 workers=4 static_partition batch 2/5 0.004418s
+[141/272] run CASE-B two_body_j2 perturbed size=8 workers=4 static_partition batch 3/5 0.004390s
+[141/272] run CASE-B two_body_j2 perturbed size=8 workers=4 static_partition batch 4/5 0.004584s
+[141/272] run CASE-B two_body_j2 perturbed size=8 workers=4 static_partition batch 5/5 0.005376s
+[142/272] warmup CASE-A two_body_j2 perturbed size=8 workers=8 static_partition batch 1/1 0.016076s
+[142/272] run CASE-A two_body_j2 perturbed size=8 workers=8 static_partition batch 1/5 0.017043s
+[142/272] run CASE-A two_body_j2 perturbed size=8 workers=8 static_partition batch 2/5 0.016977s
+[142/272] run CASE-A two_body_j2 perturbed size=8 workers=8 static_partition batch 3/5 0.018692s
+[142/272] run CASE-A two_body_j2 perturbed size=8 workers=8 static_partition batch 4/5 0.018028s
+[142/272] run CASE-A two_body_j2 perturbed size=8 workers=8 static_partition batch 5/5 0.017974s
+[143/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 1/1 0.000315s
+[143/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 1/3 0.000346s
+[143/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 2/3 0.000341s
+[143/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 control_no_rhs 3/3 0.000334s
+[144/272] warmup CASE-A two_body_j2 identical size=8 workers=8 static_partition batch 1/1 0.016976s
+[144/272] run CASE-A two_body_j2 identical size=8 workers=8 static_partition batch 1/5 0.018207s
+[144/272] run CASE-A two_body_j2 identical size=8 workers=8 static_partition batch 2/5 0.017723s
+[144/272] run CASE-A two_body_j2 identical size=8 workers=8 static_partition batch 3/5 0.018224s
+[144/272] run CASE-A two_body_j2 identical size=8 workers=8 static_partition batch 4/5 0.016315s
+[144/272] run CASE-A two_body_j2 identical size=8 workers=8 static_partition batch 5/5 0.018560s
+[145/272] warmup CASE-B full_jb2008 identical size=8 workers=1 static_partition batch 1/1 6.430936s
+[145/272] run CASE-B full_jb2008 identical size=8 workers=1 static_partition batch 1/5 6.421511s
+[145/272] run CASE-B full_jb2008 identical size=8 workers=1 static_partition batch 2/5 6.401274s
+[145/272] run CASE-B full_jb2008 identical size=8 workers=1 static_partition batch 3/5 6.432944s
+[145/272] run CASE-B full_jb2008 identical size=8 workers=1 static_partition batch 4/5 6.424795s
+[145/272] run CASE-B full_jb2008 identical size=8 workers=1 static_partition batch 5/5 6.408314s
+[146/272] warmup CASE-A full_jb2008 perturbed size=8 workers=8 static_partition batch 1/1 24.643489s
+[146/272] run CASE-A full_jb2008 perturbed size=8 workers=8 static_partition batch 1/5 25.075170s
+[146/272] run CASE-A full_jb2008 perturbed size=8 workers=8 static_partition batch 2/5 24.909166s
+[146/272] run CASE-A full_jb2008 perturbed size=8 workers=8 static_partition batch 3/5 24.868970s
+[146/272] run CASE-A full_jb2008 perturbed size=8 workers=8 static_partition batch 4/5 24.992891s
+[146/272] run CASE-A full_jb2008 perturbed size=8 workers=8 static_partition batch 5/5 24.897054s
+[147/272] warmup CASE-B full_jb2008 identical size=8 workers=1 dynamic batch 1/1 6.434778s
+[147/272] run CASE-B full_jb2008 identical size=8 workers=1 dynamic batch 1/5 6.383063s
+[147/272] run CASE-B full_jb2008 identical size=8 workers=1 dynamic batch 2/5 6.388258s
+[147/272] run CASE-B full_jb2008 identical size=8 workers=1 dynamic batch 3/5 6.437174s
+[147/272] run CASE-B full_jb2008 identical size=8 workers=1 dynamic batch 4/5 6.425859s
+[147/272] run CASE-B full_jb2008 identical size=8 workers=1 dynamic batch 5/5 6.440262s
+[148/272] warmup CASE-B full_exponential identical size=8 workers=1 dynamic batch 1/1 0.297585s
+[148/272] run CASE-B full_exponential identical size=8 workers=1 dynamic batch 1/5 0.305016s
+[148/272] run CASE-B full_exponential identical size=8 workers=1 dynamic batch 2/5 0.306827s
+[148/272] run CASE-B full_exponential identical size=8 workers=1 dynamic batch 3/5 0.298364s
+[148/272] run CASE-B full_exponential identical size=8 workers=1 dynamic batch 4/5 0.295537s
+[148/272] run CASE-B full_exponential identical size=8 workers=1 dynamic batch 5/5 0.296371s
+[149/272] warmup CASE-A full_exponential perturbed size=8 workers=2 control_no_rhs 1/1 0.000202s
+[149/272] run CASE-A full_exponential perturbed size=8 workers=2 control_no_rhs 1/3 0.000206s
+[149/272] run CASE-A full_exponential perturbed size=8 workers=2 control_no_rhs 2/3 0.000180s
+[149/272] run CASE-A full_exponential perturbed size=8 workers=2 control_no_rhs 3/3 0.000186s
+[150/272] warmup CASE-B full_jb2008 perturbed size=8 workers=1 sequential 1/1 6.218182s
+[150/272] run CASE-B full_jb2008 perturbed size=8 workers=1 sequential 1/5 6.217035s
+[150/272] run CASE-B full_jb2008 perturbed size=8 workers=1 sequential 2/5 6.237888s
+[150/272] run CASE-B full_jb2008 perturbed size=8 workers=1 sequential 3/5 6.226192s
+[150/272] run CASE-B full_jb2008 perturbed size=8 workers=1 sequential 4/5 6.222869s
+[150/272] run CASE-B full_jb2008 perturbed size=8 workers=1 sequential 5/5 6.238435s
+[151/272] warmup CASE-B full_jb2008 identical size=8 workers=2 static_partition batch 1/1 15.000114s
+[151/272] run CASE-B full_jb2008 identical size=8 workers=2 static_partition batch 1/5 14.858077s
+[151/272] run CASE-B full_jb2008 identical size=8 workers=2 static_partition batch 2/5 15.772831s
+[151/272] run CASE-B full_jb2008 identical size=8 workers=2 static_partition batch 3/5 16.337844s
+[151/272] run CASE-B full_jb2008 identical size=8 workers=2 static_partition batch 4/5 14.869244s
+[151/272] run CASE-B full_jb2008 identical size=8 workers=2 static_partition batch 5/5 14.880731s
+[152/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=4 dynamic batch 1/1 4.410870s
+[152/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 dynamic batch 1/5 4.390540s
+[152/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 dynamic batch 2/5 4.357794s
+[152/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 dynamic batch 3/5 4.367445s
+[152/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 dynamic batch 4/5 4.301095s
+[152/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=4 dynamic batch 5/5 4.300710s
+[153/272] warmup CASE-B full_exponential identical size=8 workers=4 dynamic batch 1/1 0.876033s
+[153/272] run CASE-B full_exponential identical size=8 workers=4 dynamic batch 1/5 0.883528s
+[153/272] run CASE-B full_exponential identical size=8 workers=4 dynamic batch 2/5 0.868684s
+[153/272] run CASE-B full_exponential identical size=8 workers=4 dynamic batch 3/5 0.864946s
+[153/272] run CASE-B full_exponential identical size=8 workers=4 dynamic batch 4/5 0.874738s
+[153/272] run CASE-B full_exponential identical size=8 workers=4 dynamic batch 5/5 0.864980s
+[154/272] warmup CASE-B two_body_j2 perturbed size=8 workers=8 dynamic batch 1/1 0.004733s
+[154/272] run CASE-B two_body_j2 perturbed size=8 workers=8 dynamic batch 1/5 0.003783s
+[154/272] run CASE-B two_body_j2 perturbed size=8 workers=8 dynamic batch 2/5 0.003869s
+[154/272] run CASE-B two_body_j2 perturbed size=8 workers=8 dynamic batch 3/5 0.003927s
+[154/272] run CASE-B two_body_j2 perturbed size=8 workers=8 dynamic batch 4/5 0.003954s
+[154/272] run CASE-B two_body_j2 perturbed size=8 workers=8 dynamic batch 5/5 0.004087s
+[155/272] warmup CASE-B full_exponential perturbed size=8 workers=1 dynamic batch 1/1 0.302524s
+[155/272] run CASE-B full_exponential perturbed size=8 workers=1 dynamic batch 1/5 0.314727s
+[155/272] run CASE-B full_exponential perturbed size=8 workers=1 dynamic batch 2/5 0.296495s
+[155/272] run CASE-B full_exponential perturbed size=8 workers=1 dynamic batch 3/5 0.289550s
+[155/272] run CASE-B full_exponential perturbed size=8 workers=1 dynamic batch 4/5 0.289040s
+[155/272] run CASE-B full_exponential perturbed size=8 workers=1 dynamic batch 5/5 0.287135s
+[156/272] warmup CASE-A two_body_j2 identical size=8 workers=1 control_no_rhs 1/1 0.000043s
+[156/272] run CASE-A two_body_j2 identical size=8 workers=1 control_no_rhs 1/3 0.000003s
+[156/272] run CASE-A two_body_j2 identical size=8 workers=1 control_no_rhs 2/3 0.000003s
+[156/272] run CASE-A two_body_j2 identical size=8 workers=1 control_no_rhs 3/3 0.000003s
+[157/272] warmup CASE-B full_exponential perturbed size=8 workers=2 control_no_rhs 1/1 0.000226s
+[157/272] run CASE-B full_exponential perturbed size=8 workers=2 control_no_rhs 1/3 0.000225s
+[157/272] run CASE-B full_exponential perturbed size=8 workers=2 control_no_rhs 2/3 0.000204s
+[157/272] run CASE-B full_exponential perturbed size=8 workers=2 control_no_rhs 3/3 0.000192s
+[158/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 1/1 0.000602s
+[158/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 1/3 0.000531s
+[158/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 2/3 0.000551s
+[158/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 control_no_rhs 3/3 0.000606s
+[159/272] warmup CASE-B full_jb2008 perturbed size=8 workers=4 static_partition batch 1/1 14.515625s
+[159/272] run CASE-B full_jb2008 perturbed size=8 workers=4 static_partition batch 1/5 14.589646s
+[159/272] run CASE-B full_jb2008 perturbed size=8 workers=4 static_partition batch 2/5 14.548174s
+[159/272] run CASE-B full_jb2008 perturbed size=8 workers=4 static_partition batch 3/5 14.562418s
+[159/272] run CASE-B full_jb2008 perturbed size=8 workers=4 static_partition batch 4/5 14.502157s
+[159/272] run CASE-B full_jb2008 perturbed size=8 workers=4 static_partition batch 5/5 14.718260s
+[160/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 1/1 0.000217s
+[160/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 1/3 0.000173s
+[160/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 2/3 0.000178s
+[160/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 3/3 0.000157s
+[161/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=2 dynamic batch 1/1 24.460121s
+[161/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 dynamic batch 1/5 24.449251s
+[161/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 dynamic batch 2/5 24.400565s
+[161/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 dynamic batch 3/5 24.403762s
+[161/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 dynamic batch 4/5 24.454486s
+[161/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 dynamic batch 5/5 24.325229s
+[162/272] warmup CASE-A two_body_j2 identical size=8 workers=2 static_partition batch 1/1 0.045400s
+[162/272] run CASE-A two_body_j2 identical size=8 workers=2 static_partition batch 1/5 0.043194s
+[162/272] run CASE-A two_body_j2 identical size=8 workers=2 static_partition batch 2/5 0.044032s
+[162/272] run CASE-A two_body_j2 identical size=8 workers=2 static_partition batch 3/5 0.044503s
+[162/272] run CASE-A two_body_j2 identical size=8 workers=2 static_partition batch 4/5 0.045096s
+[162/272] run CASE-A two_body_j2 identical size=8 workers=2 static_partition batch 5/5 0.043945s
+[163/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=8 static_partition batch 1/1 4.266382s
+[163/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 static_partition batch 1/5 4.270897s
+[163/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 static_partition batch 2/5 4.312899s
+[163/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 static_partition batch 3/5 4.261534s
+[163/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 static_partition batch 4/5 4.267961s
+[163/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=8 static_partition batch 5/5 4.311047s
+[164/272] warmup CASE-A full_jb2008 perturbed size=8 workers=8 control_no_rhs 1/1 0.000670s
+[164/272] run CASE-A full_jb2008 perturbed size=8 workers=8 control_no_rhs 1/3 0.000628s
+[164/272] run CASE-A full_jb2008 perturbed size=8 workers=8 control_no_rhs 2/3 0.000585s
+[164/272] run CASE-A full_jb2008 perturbed size=8 workers=8 control_no_rhs 3/3 0.000594s
+[165/272] warmup CASE-A two_body_j2 identical size=8 workers=4 control_no_rhs 1/1 0.000332s
+[165/272] run CASE-A two_body_j2 identical size=8 workers=4 control_no_rhs 1/3 0.000303s
+[165/272] run CASE-A two_body_j2 identical size=8 workers=4 control_no_rhs 2/3 0.000308s
+[165/272] run CASE-A two_body_j2 identical size=8 workers=4 control_no_rhs 3/3 0.000319s
+[166/272] warmup CASE-B full_exponential identical size=8 workers=2 control_no_rhs 1/1 0.000176s
+[166/272] run CASE-B full_exponential identical size=8 workers=2 control_no_rhs 1/3 0.000175s
+[166/272] run CASE-B full_exponential identical size=8 workers=2 control_no_rhs 2/3 0.000175s
+[166/272] run CASE-B full_exponential identical size=8 workers=2 control_no_rhs 3/3 0.000175s
+[167/272] warmup CASE-A two_body_j2 perturbed size=8 workers=4 static_partition batch 1/1 0.024518s
+[167/272] run CASE-A two_body_j2 perturbed size=8 workers=4 static_partition batch 1/5 0.025111s
+[167/272] run CASE-A two_body_j2 perturbed size=8 workers=4 static_partition batch 2/5 0.024919s
+[167/272] run CASE-A two_body_j2 perturbed size=8 workers=4 static_partition batch 3/5 0.027338s
+[167/272] run CASE-A two_body_j2 perturbed size=8 workers=4 static_partition batch 4/5 0.024313s
+[167/272] run CASE-A two_body_j2 perturbed size=8 workers=4 static_partition batch 5/5 0.023410s
+[168/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=4 control_no_rhs 1/1 0.000386s
+[168/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 control_no_rhs 1/3 0.000311s
+[168/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 control_no_rhs 2/3 0.000300s
+[168/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 control_no_rhs 3/3 0.000330s
+[169/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 1/1 0.000047s
+[169/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 1/3 0.000004s
+[169/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 2/3 0.000004s
+[169/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 3/3 0.000004s
+[170/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=1 static_partition batch 1/1 7.462353s
+[170/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 static_partition batch 1/5 7.436885s
+[170/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 static_partition batch 2/5 7.450757s
+[170/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 static_partition batch 3/5 7.409733s
+[170/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 static_partition batch 4/5 7.383737s
+[170/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 static_partition batch 5/5 7.443671s
+[171/272] warmup CASE-A full_exponential identical size=8 workers=8 static_partition batch 1/1 4.911612s
+[171/272] run CASE-A full_exponential identical size=8 workers=8 static_partition batch 1/5 5.177513s
+[171/272] run CASE-A full_exponential identical size=8 workers=8 static_partition batch 2/5 5.219506s
+[171/272] run CASE-A full_exponential identical size=8 workers=8 static_partition batch 3/5 5.238832s
+[171/272] run CASE-A full_exponential identical size=8 workers=8 static_partition batch 4/5 5.275823s
+[171/272] run CASE-A full_exponential identical size=8 workers=8 static_partition batch 5/5 5.266557s
+[172/272] warmup CASE-B full_exponential perturbed size=8 workers=8 dynamic batch 1/1 0.935266s
+[172/272] run CASE-B full_exponential perturbed size=8 workers=8 dynamic batch 1/5 0.945629s
+[172/272] run CASE-B full_exponential perturbed size=8 workers=8 dynamic batch 2/5 0.979097s
+[172/272] run CASE-B full_exponential perturbed size=8 workers=8 dynamic batch 3/5 0.967186s
+[172/272] run CASE-B full_exponential perturbed size=8 workers=8 dynamic batch 4/5 0.946958s
+[172/272] run CASE-B full_exponential perturbed size=8 workers=8 dynamic batch 5/5 0.946032s
+[173/272] warmup CASE-B full_jb2008 perturbed size=8 workers=2 control_no_rhs 1/1 0.000204s
+[173/272] run CASE-B full_jb2008 perturbed size=8 workers=2 control_no_rhs 1/3 0.000240s
+[173/272] run CASE-B full_jb2008 perturbed size=8 workers=2 control_no_rhs 2/3 0.000193s
+[173/272] run CASE-B full_jb2008 perturbed size=8 workers=2 control_no_rhs 3/3 0.000192s
+[174/272] warmup CASE-B full_jb2008 identical size=8 workers=2 dynamic batch 1/1 14.854532s
+[174/272] run CASE-B full_jb2008 identical size=8 workers=2 dynamic batch 1/5 15.613244s
+[174/272] run CASE-B full_jb2008 identical size=8 workers=2 dynamic batch 2/5 15.424866s
+[174/272] run CASE-B full_jb2008 identical size=8 workers=2 dynamic batch 3/5 14.887796s
+[174/272] run CASE-B full_jb2008 identical size=8 workers=2 dynamic batch 4/5 14.915262s
+[174/272] run CASE-B full_jb2008 identical size=8 workers=2 dynamic batch 5/5 14.834154s
+[175/272] warmup CASE-B two_body_j2 identical size=8 workers=4 control_no_rhs 1/1 0.000320s
+[175/272] run CASE-B two_body_j2 identical size=8 workers=4 control_no_rhs 1/3 0.000349s
+[175/272] run CASE-B two_body_j2 identical size=8 workers=4 control_no_rhs 2/3 0.000276s
+[175/272] run CASE-B two_body_j2 identical size=8 workers=4 control_no_rhs 3/3 0.000274s
+[176/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=8 static_partition batch 1/1 4.037695s
+[176/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 static_partition batch 1/5 4.015013s
+[176/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 static_partition batch 2/5 4.026730s
+[176/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 static_partition batch 3/5 4.032865s
+[176/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 static_partition batch 4/5 3.968894s
+[176/272] run CASE-B full_nrlmsise00 identical size=8 workers=8 static_partition batch 5/5 4.002128s
+[177/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=2 control_no_rhs 1/1 0.000301s
+[177/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 control_no_rhs 1/3 0.000229s
+[177/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 control_no_rhs 2/3 0.000192s
+[177/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 control_no_rhs 3/3 0.000198s
+[178/272] warmup CASE-A full_exponential perturbed size=8 workers=2 static_partition batch 1/1 5.081012s
+[178/272] run CASE-A full_exponential perturbed size=8 workers=2 static_partition batch 1/5 4.963819s
+[178/272] run CASE-A full_exponential perturbed size=8 workers=2 static_partition batch 2/5 4.910322s
+[178/272] run CASE-A full_exponential perturbed size=8 workers=2 static_partition batch 3/5 4.890734s
+[178/272] run CASE-A full_exponential perturbed size=8 workers=2 static_partition batch 4/5 4.967970s
+[178/272] run CASE-A full_exponential perturbed size=8 workers=2 static_partition batch 5/5 4.935445s
+[179/272] warmup CASE-A two_body_j2 identical size=8 workers=1 sequential 1/1 0.085763s
+[179/272] run CASE-A two_body_j2 identical size=8 workers=1 sequential 1/5 0.085427s
+[179/272] run CASE-A two_body_j2 identical size=8 workers=1 sequential 2/5 0.085453s
+[179/272] run CASE-A two_body_j2 identical size=8 workers=1 sequential 3/5 0.086839s
+[179/272] run CASE-A two_body_j2 identical size=8 workers=1 sequential 4/5 0.083943s
+[179/272] run CASE-A two_body_j2 identical size=8 workers=1 sequential 5/5 0.085351s
+[180/272] warmup CASE-A full_exponential identical size=8 workers=2 control_no_rhs 1/1 0.000292s
+[180/272] run CASE-A full_exponential identical size=8 workers=2 control_no_rhs 1/3 0.000309s
+[180/272] run CASE-A full_exponential identical size=8 workers=2 control_no_rhs 2/3 0.000224s
+[180/272] run CASE-A full_exponential identical size=8 workers=2 control_no_rhs 3/3 0.000226s
+[181/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 1/1 0.000006s
+[181/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 1/3 0.000003s
+[181/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 2/3 0.000003s
+[181/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 3/3 0.000003s
+[182/272] warmup CASE-B full_jb2008 perturbed size=8 workers=2 dynamic batch 1/1 16.200054s
+[182/272] run CASE-B full_jb2008 perturbed size=8 workers=2 dynamic batch 1/5 16.036420s
+[182/272] run CASE-B full_jb2008 perturbed size=8 workers=2 dynamic batch 2/5 16.018271s
+[182/272] run CASE-B full_jb2008 perturbed size=8 workers=2 dynamic batch 3/5 15.969969s
+[182/272] run CASE-B full_jb2008 perturbed size=8 workers=2 dynamic batch 4/5 16.303762s
+[182/272] run CASE-B full_jb2008 perturbed size=8 workers=2 dynamic batch 5/5 16.032743s
+[183/272] warmup CASE-B full_jb2008 identical size=8 workers=1 control_no_rhs 1/1 0.000008s
+[183/272] run CASE-B full_jb2008 identical size=8 workers=1 control_no_rhs 1/3 0.000005s
+[183/272] run CASE-B full_jb2008 identical size=8 workers=1 control_no_rhs 2/3 0.000005s
+[183/272] run CASE-B full_jb2008 identical size=8 workers=1 control_no_rhs 3/3 0.000005s
+[184/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=1 control_no_rhs 1/1 0.000005s
+[184/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 control_no_rhs 1/3 0.000005s
+[184/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 control_no_rhs 2/3 0.000004s
+[184/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 control_no_rhs 3/3 0.000004s
+[185/272] warmup CASE-A full_exponential identical size=8 workers=4 control_no_rhs 1/1 0.000313s
+[185/272] run CASE-A full_exponential identical size=8 workers=4 control_no_rhs 1/3 0.000288s
+[185/272] run CASE-A full_exponential identical size=8 workers=4 control_no_rhs 2/3 0.000269s
+[185/272] run CASE-A full_exponential identical size=8 workers=4 control_no_rhs 3/3 0.000274s
+[186/272] warmup CASE-B two_body_j2 identical size=8 workers=1 control_no_rhs 1/1 0.000004s
+[186/272] run CASE-B two_body_j2 identical size=8 workers=1 control_no_rhs 1/3 0.000003s
+[186/272] run CASE-B two_body_j2 identical size=8 workers=1 control_no_rhs 2/3 0.000003s
+[186/272] run CASE-B two_body_j2 identical size=8 workers=1 control_no_rhs 3/3 0.000003s
+[187/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=4 dynamic batch 1/1 22.750796s
+[187/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 dynamic batch 1/5 22.641627s
+[187/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 dynamic batch 2/5 22.720246s
+[187/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 dynamic batch 3/5 22.647982s
+[187/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 dynamic batch 4/5 23.007887s
+[187/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=4 dynamic batch 5/5 22.593019s
+[188/272] warmup CASE-B two_body_j2 perturbed size=8 workers=2 dynamic batch 1/1 0.007461s
+[188/272] run CASE-B two_body_j2 perturbed size=8 workers=2 dynamic batch 1/5 0.007226s
+[188/272] run CASE-B two_body_j2 perturbed size=8 workers=2 dynamic batch 2/5 0.007301s
+[188/272] run CASE-B two_body_j2 perturbed size=8 workers=2 dynamic batch 3/5 0.007910s
+[188/272] run CASE-B two_body_j2 perturbed size=8 workers=2 dynamic batch 4/5 0.007154s
+[188/272] run CASE-B two_body_j2 perturbed size=8 workers=2 dynamic batch 5/5 0.007323s
+[189/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=2 control_no_rhs 1/1 0.000280s
+[189/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 control_no_rhs 1/3 0.000224s
+[189/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 control_no_rhs 2/3 0.000173s
+[189/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 control_no_rhs 3/3 0.000221s
+[190/272] warmup CASE-A two_body_j2 perturbed size=8 workers=2 control_no_rhs 1/1 0.000191s
+[190/272] run CASE-A two_body_j2 perturbed size=8 workers=2 control_no_rhs 1/3 0.000172s
+[190/272] run CASE-A two_body_j2 perturbed size=8 workers=2 control_no_rhs 2/3 0.000170s
+[190/272] run CASE-A two_body_j2 perturbed size=8 workers=2 control_no_rhs 3/3 0.000171s
+[191/272] warmup CASE-A full_exponential identical size=8 workers=1 sequential 1/1 1.671099s
+[191/272] run CASE-A full_exponential identical size=8 workers=1 sequential 1/5 1.640906s
+[191/272] run CASE-A full_exponential identical size=8 workers=1 sequential 2/5 1.628617s
+[191/272] run CASE-A full_exponential identical size=8 workers=1 sequential 3/5 1.660009s
+[191/272] run CASE-A full_exponential identical size=8 workers=1 sequential 4/5 1.628819s
+[191/272] run CASE-A full_exponential identical size=8 workers=1 sequential 5/5 1.651350s
+[192/272] warmup CASE-A full_jb2008 identical size=8 workers=1 dynamic batch 1/1 9.916164s
+[192/272] run CASE-A full_jb2008 identical size=8 workers=1 dynamic batch 1/5 9.964395s
+[192/272] run CASE-A full_jb2008 identical size=8 workers=1 dynamic batch 2/5 9.995396s
+[192/272] run CASE-A full_jb2008 identical size=8 workers=1 dynamic batch 3/5 9.929839s
+[192/272] run CASE-A full_jb2008 identical size=8 workers=1 dynamic batch 4/5 9.962214s
+[192/272] run CASE-A full_jb2008 identical size=8 workers=1 dynamic batch 5/5 9.953601s
+[193/272] warmup CASE-A full_exponential identical size=8 workers=1 static_partition batch 1/1 1.663395s
+[193/272] run CASE-A full_exponential identical size=8 workers=1 static_partition batch 1/5 1.635934s
+[193/272] run CASE-A full_exponential identical size=8 workers=1 static_partition batch 2/5 1.649095s
+[193/272] run CASE-A full_exponential identical size=8 workers=1 static_partition batch 3/5 1.629972s
+[193/272] run CASE-A full_exponential identical size=8 workers=1 static_partition batch 4/5 1.646149s
+[193/272] run CASE-A full_exponential identical size=8 workers=1 static_partition batch 5/5 1.649000s
+[194/272] warmup CASE-B two_body_j2 identical size=8 workers=4 dynamic batch 1/1 0.003538s
+[194/272] run CASE-B two_body_j2 identical size=8 workers=4 dynamic batch 1/5 0.003572s
+[194/272] run CASE-B two_body_j2 identical size=8 workers=4 dynamic batch 2/5 0.003404s
+[194/272] run CASE-B two_body_j2 identical size=8 workers=4 dynamic batch 3/5 0.003416s
+[194/272] run CASE-B two_body_j2 identical size=8 workers=4 dynamic batch 4/5 0.003659s
+[194/272] run CASE-B two_body_j2 identical size=8 workers=4 dynamic batch 5/5 0.003583s
+[195/272] warmup CASE-B full_exponential identical size=8 workers=4 control_no_rhs 1/1 0.000344s
+[195/272] run CASE-B full_exponential identical size=8 workers=4 control_no_rhs 1/3 0.000345s
+[195/272] run CASE-B full_exponential identical size=8 workers=4 control_no_rhs 2/3 0.000321s
+[195/272] run CASE-B full_exponential identical size=8 workers=4 control_no_rhs 3/3 0.000275s
+[196/272] warmup CASE-A full_exponential perturbed size=8 workers=2 dynamic batch 1/1 4.803197s
+[196/272] run CASE-A full_exponential perturbed size=8 workers=2 dynamic batch 1/5 4.749239s
+[196/272] run CASE-A full_exponential perturbed size=8 workers=2 dynamic batch 2/5 5.001610s
+[196/272] run CASE-A full_exponential perturbed size=8 workers=2 dynamic batch 3/5 4.829150s
+[196/272] run CASE-A full_exponential perturbed size=8 workers=2 dynamic batch 4/5 4.892680s
+[196/272] run CASE-A full_exponential perturbed size=8 workers=2 dynamic batch 5/5 5.063555s
+[197/272] warmup CASE-B full_jb2008 identical size=8 workers=1 control_no_rhs 1/1 0.000008s
+[197/272] run CASE-B full_jb2008 identical size=8 workers=1 control_no_rhs 1/3 0.000005s
+[197/272] run CASE-B full_jb2008 identical size=8 workers=1 control_no_rhs 2/3 0.000004s
+[197/272] run CASE-B full_jb2008 identical size=8 workers=1 control_no_rhs 3/3 0.000003s
+[198/272] warmup CASE-A full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 1/1 0.000005s
+[198/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 1/3 0.000003s
+[198/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 2/3 0.000003s
+[198/272] run CASE-A full_nrlmsise00 perturbed size=8 workers=1 control_no_rhs 3/3 0.000003s
+[199/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=2 static_partition batch 1/1 4.814395s
+[199/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 static_partition batch 1/5 4.718524s
+[199/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 static_partition batch 2/5 4.817886s
+[199/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 static_partition batch 3/5 4.630678s
+[199/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 static_partition batch 4/5 4.786013s
+[199/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 static_partition batch 5/5 4.707271s
+[200/272] warmup CASE-A full_jb2008 perturbed size=8 workers=2 dynamic batch 1/1 25.429698s
+[200/272] run CASE-A full_jb2008 perturbed size=8 workers=2 dynamic batch 1/5 25.419797s
+[200/272] run CASE-A full_jb2008 perturbed size=8 workers=2 dynamic batch 2/5 25.398253s
+[200/272] run CASE-A full_jb2008 perturbed size=8 workers=2 dynamic batch 3/5 25.420672s
+[200/272] run CASE-A full_jb2008 perturbed size=8 workers=2 dynamic batch 4/5 25.280402s
+[200/272] run CASE-A full_jb2008 perturbed size=8 workers=2 dynamic batch 5/5 25.655900s
+[201/272] warmup CASE-A full_jb2008 perturbed size=8 workers=1 control_no_rhs 1/1 0.000007s
+[201/272] run CASE-A full_jb2008 perturbed size=8 workers=1 control_no_rhs 1/3 0.000005s
+[201/272] run CASE-A full_jb2008 perturbed size=8 workers=1 control_no_rhs 2/3 0.000004s
+[201/272] run CASE-A full_jb2008 perturbed size=8 workers=1 control_no_rhs 3/3 0.000003s
+[202/272] warmup CASE-B full_jb2008 identical size=8 workers=4 control_no_rhs 1/1 0.000325s
+[202/272] run CASE-B full_jb2008 identical size=8 workers=4 control_no_rhs 1/3 0.000300s
+[202/272] run CASE-B full_jb2008 identical size=8 workers=4 control_no_rhs 2/3 0.000259s
+[202/272] run CASE-B full_jb2008 identical size=8 workers=4 control_no_rhs 3/3 0.000287s
+[203/272] warmup CASE-B full_exponential identical size=8 workers=1 control_no_rhs 1/1 0.000005s
+[203/272] run CASE-B full_exponential identical size=8 workers=1 control_no_rhs 1/3 0.000004s
+[203/272] run CASE-B full_exponential identical size=8 workers=1 control_no_rhs 2/3 0.000004s
+[203/272] run CASE-B full_exponential identical size=8 workers=1 control_no_rhs 3/3 0.000004s
+[204/272] warmup CASE-B full_exponential perturbed size=8 workers=2 control_no_rhs 1/1 0.000160s
+[204/272] run CASE-B full_exponential perturbed size=8 workers=2 control_no_rhs 1/3 0.000155s
+[204/272] run CASE-B full_exponential perturbed size=8 workers=2 control_no_rhs 2/3 0.000190s
+[204/272] run CASE-B full_exponential perturbed size=8 workers=2 control_no_rhs 3/3 0.000188s
+[205/272] warmup CASE-B two_body_j2 perturbed size=8 workers=1 static_partition batch 1/1 0.014108s
+[205/272] run CASE-B two_body_j2 perturbed size=8 workers=1 static_partition batch 1/5 0.013923s
+[205/272] run CASE-B two_body_j2 perturbed size=8 workers=1 static_partition batch 2/5 0.014332s
+[205/272] run CASE-B two_body_j2 perturbed size=8 workers=1 static_partition batch 3/5 0.013804s
+[205/272] run CASE-B two_body_j2 perturbed size=8 workers=1 static_partition batch 4/5 0.013560s
+[205/272] run CASE-B two_body_j2 perturbed size=8 workers=1 static_partition batch 5/5 0.013516s
+[206/272] warmup CASE-A full_jb2008 perturbed size=8 workers=1 control_no_rhs 1/1 0.000007s
+[206/272] run CASE-A full_jb2008 perturbed size=8 workers=1 control_no_rhs 1/3 0.000004s
+[206/272] run CASE-A full_jb2008 perturbed size=8 workers=1 control_no_rhs 2/3 0.000004s
+[206/272] run CASE-A full_jb2008 perturbed size=8 workers=1 control_no_rhs 3/3 0.000004s
+[207/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=1 dynamic batch 1/1 1.516509s
+[207/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 dynamic batch 1/5 1.521501s
+[207/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 dynamic batch 2/5 1.519121s
+[207/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 dynamic batch 3/5 1.527727s
+[207/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 dynamic batch 4/5 1.511902s
+[207/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 dynamic batch 5/5 1.533835s
+[208/272] warmup CASE-B full_exponential identical size=8 workers=4 control_no_rhs 1/1 0.000377s
+[208/272] run CASE-B full_exponential identical size=8 workers=4 control_no_rhs 1/3 0.000328s
+[208/272] run CASE-B full_exponential identical size=8 workers=4 control_no_rhs 2/3 0.000280s
+[208/272] run CASE-B full_exponential identical size=8 workers=4 control_no_rhs 3/3 0.000327s
+[209/272] warmup CASE-A two_body_j2 identical size=8 workers=8 control_no_rhs 1/1 0.000690s
+[209/272] run CASE-A two_body_j2 identical size=8 workers=8 control_no_rhs 1/3 0.000676s
+[209/272] run CASE-A two_body_j2 identical size=8 workers=8 control_no_rhs 2/3 0.000574s
+[209/272] run CASE-A two_body_j2 identical size=8 workers=8 control_no_rhs 3/3 0.000596s
+[210/272] warmup CASE-A two_body_j2 identical size=8 workers=1 static_partition batch 1/1 0.084820s
+[210/272] run CASE-A two_body_j2 identical size=8 workers=1 static_partition batch 1/5 0.083877s
+[210/272] run CASE-A two_body_j2 identical size=8 workers=1 static_partition batch 2/5 0.084112s
+[210/272] run CASE-A two_body_j2 identical size=8 workers=1 static_partition batch 3/5 0.086222s
+[210/272] run CASE-A two_body_j2 identical size=8 workers=1 static_partition batch 4/5 0.085399s
+[210/272] run CASE-A two_body_j2 identical size=8 workers=1 static_partition batch 5/5 0.084519s
+[211/272] warmup CASE-A full_jb2008 perturbed size=8 workers=8 dynamic batch 1/1 24.647205s
+[211/272] run CASE-A full_jb2008 perturbed size=8 workers=8 dynamic batch 1/5 24.899848s
+[211/272] run CASE-A full_jb2008 perturbed size=8 workers=8 dynamic batch 2/5 24.818488s
+[211/272] run CASE-A full_jb2008 perturbed size=8 workers=8 dynamic batch 3/5 25.002436s
+[211/272] run CASE-A full_jb2008 perturbed size=8 workers=8 dynamic batch 4/5 25.011158s
+[211/272] run CASE-A full_jb2008 perturbed size=8 workers=8 dynamic batch 5/5 24.831844s
+[212/272] warmup CASE-A full_jb2008 identical size=8 workers=2 static_partition batch 1/1 22.881111s
+[212/272] run CASE-A full_jb2008 identical size=8 workers=2 static_partition batch 1/5 22.907680s
+[212/272] run CASE-A full_jb2008 identical size=8 workers=2 static_partition batch 2/5 23.255509s
+[212/272] run CASE-A full_jb2008 identical size=8 workers=2 static_partition batch 3/5 23.005613s
+[212/272] run CASE-A full_jb2008 identical size=8 workers=2 static_partition batch 4/5 23.038717s
+[212/272] run CASE-A full_jb2008 identical size=8 workers=2 static_partition batch 5/5 25.433944s
+[213/272] warmup CASE-B full_jb2008 identical size=8 workers=8 control_no_rhs 1/1 0.000730s
+[213/272] run CASE-B full_jb2008 identical size=8 workers=8 control_no_rhs 1/3 0.000674s
+[213/272] run CASE-B full_jb2008 identical size=8 workers=8 control_no_rhs 2/3 0.000564s
+[213/272] run CASE-B full_jb2008 identical size=8 workers=8 control_no_rhs 3/3 0.000544s
+[214/272] warmup CASE-A two_body_j2 perturbed size=8 workers=8 control_no_rhs 1/1 0.000580s
+[214/272] run CASE-A two_body_j2 perturbed size=8 workers=8 control_no_rhs 1/3 0.000551s
+[214/272] run CASE-A two_body_j2 perturbed size=8 workers=8 control_no_rhs 2/3 0.000564s
+[214/272] run CASE-A two_body_j2 perturbed size=8 workers=8 control_no_rhs 3/3 0.000570s
+[215/272] warmup CASE-B full_exponential identical size=8 workers=8 static_partition batch 1/1 0.937598s
+[215/272] run CASE-B full_exponential identical size=8 workers=8 static_partition batch 1/5 0.979808s
+[215/272] run CASE-B full_exponential identical size=8 workers=8 static_partition batch 2/5 0.956075s
+[215/272] run CASE-B full_exponential identical size=8 workers=8 static_partition batch 3/5 0.990386s
+[215/272] run CASE-B full_exponential identical size=8 workers=8 static_partition batch 4/5 0.956685s
+[215/272] run CASE-B full_exponential identical size=8 workers=8 static_partition batch 5/5 0.941855s
+[216/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=1 control_no_rhs 1/1 0.000008s
+[216/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 control_no_rhs 1/3 0.000005s
+[216/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 control_no_rhs 2/3 0.000005s
+[216/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 control_no_rhs 3/3 0.000006s
+[217/272] warmup CASE-B two_body_j2 perturbed size=8 workers=8 control_no_rhs 1/1 0.000713s
+[217/272] run CASE-B two_body_j2 perturbed size=8 workers=8 control_no_rhs 1/3 0.000623s
+[217/272] run CASE-B two_body_j2 perturbed size=8 workers=8 control_no_rhs 2/3 0.000725s
+[217/272] run CASE-B two_body_j2 perturbed size=8 workers=8 control_no_rhs 3/3 0.000703s
+[218/272] warmup CASE-A full_jb2008 identical size=8 workers=2 dynamic batch 1/1 22.951404s
+[218/272] run CASE-A full_jb2008 identical size=8 workers=2 dynamic batch 1/5 22.807499s
+[218/272] run CASE-A full_jb2008 identical size=8 workers=2 dynamic batch 2/5 24.925351s
+[218/272] run CASE-A full_jb2008 identical size=8 workers=2 dynamic batch 3/5 22.727426s
+[218/272] run CASE-A full_jb2008 identical size=8 workers=2 dynamic batch 4/5 22.736149s
+[218/272] run CASE-A full_jb2008 identical size=8 workers=2 dynamic batch 5/5 22.982391s
+[219/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=2 control_no_rhs 1/1 0.000202s
+[219/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 control_no_rhs 1/3 0.000216s
+[219/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 control_no_rhs 2/3 0.000174s
+[219/272] run CASE-A full_nrlmsise00 identical size=8 workers=2 control_no_rhs 3/3 0.000176s
+[220/272] warmup CASE-B full_jb2008 identical size=8 workers=4 control_no_rhs 1/1 0.000292s
+[220/272] run CASE-B full_jb2008 identical size=8 workers=4 control_no_rhs 1/3 0.000285s
+[220/272] run CASE-B full_jb2008 identical size=8 workers=4 control_no_rhs 2/3 0.000285s
+[220/272] run CASE-B full_jb2008 identical size=8 workers=4 control_no_rhs 3/3 0.000287s
+[221/272] warmup CASE-B two_body_j2 identical size=8 workers=4 static_partition batch 1/1 0.004622s
+[221/272] run CASE-B two_body_j2 identical size=8 workers=4 static_partition batch 1/5 0.003802s
+[221/272] run CASE-B two_body_j2 identical size=8 workers=4 static_partition batch 2/5 0.003774s
+[221/272] run CASE-B two_body_j2 identical size=8 workers=4 static_partition batch 3/5 0.004921s
+[221/272] run CASE-B two_body_j2 identical size=8 workers=4 static_partition batch 4/5 0.004107s
+[221/272] run CASE-B two_body_j2 identical size=8 workers=4 static_partition batch 5/5 0.003948s
+[222/272] warmup CASE-B full_exponential identical size=8 workers=2 control_no_rhs 1/1 0.000245s
+[222/272] run CASE-B full_exponential identical size=8 workers=2 control_no_rhs 1/3 0.000226s
+[222/272] run CASE-B full_exponential identical size=8 workers=2 control_no_rhs 2/3 0.000236s
+[222/272] run CASE-B full_exponential identical size=8 workers=2 control_no_rhs 3/3 0.000188s
+[223/272] warmup CASE-B full_exponential perturbed size=8 workers=1 sequential 1/1 0.307806s
+[223/272] run CASE-B full_exponential perturbed size=8 workers=1 sequential 1/5 0.291023s
+[223/272] run CASE-B full_exponential perturbed size=8 workers=1 sequential 2/5 0.289748s
+[223/272] run CASE-B full_exponential perturbed size=8 workers=1 sequential 3/5 0.288189s
+[223/272] run CASE-B full_exponential perturbed size=8 workers=1 sequential 4/5 0.292489s
+[223/272] run CASE-B full_exponential perturbed size=8 workers=1 sequential 5/5 0.286990s
+[224/272] warmup CASE-B full_jb2008 identical size=8 workers=4 dynamic batch 1/1 12.977498s
+[224/272] run CASE-B full_jb2008 identical size=8 workers=4 dynamic batch 1/5 12.971620s
+[224/272] run CASE-B full_jb2008 identical size=8 workers=4 dynamic batch 2/5 12.717361s
+[224/272] run CASE-B full_jb2008 identical size=8 workers=4 dynamic batch 3/5 13.084087s
+[224/272] run CASE-B full_jb2008 identical size=8 workers=4 dynamic batch 4/5 12.645666s
+[224/272] run CASE-B full_jb2008 identical size=8 workers=4 dynamic batch 5/5 13.023126s
+[225/272] warmup CASE-A full_jb2008 perturbed size=8 workers=4 dynamic batch 1/1 22.790236s
+[225/272] run CASE-A full_jb2008 perturbed size=8 workers=4 dynamic batch 1/5 22.705521s
+[225/272] run CASE-A full_jb2008 perturbed size=8 workers=4 dynamic batch 2/5 22.852690s
+[225/272] run CASE-A full_jb2008 perturbed size=8 workers=4 dynamic batch 3/5 22.798964s
+[225/272] run CASE-A full_jb2008 perturbed size=8 workers=4 dynamic batch 4/5 22.710500s
+[225/272] run CASE-A full_jb2008 perturbed size=8 workers=4 dynamic batch 5/5 22.868132s
+[226/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=1 dynamic batch 1/1 7.468541s
+[226/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 dynamic batch 1/5 7.439724s
+[226/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 dynamic batch 2/5 7.444378s
+[226/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 dynamic batch 3/5 7.471443s
+[226/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 dynamic batch 4/5 7.435167s
+[226/272] run CASE-A full_nrlmsise00 identical size=8 workers=1 dynamic batch 5/5 7.445027s
+[227/272] warmup CASE-B full_jb2008 perturbed size=8 workers=4 dynamic batch 1/1 14.161496s
+[227/272] run CASE-B full_jb2008 perturbed size=8 workers=4 dynamic batch 1/5 14.499634s
+[227/272] run CASE-B full_jb2008 perturbed size=8 workers=4 dynamic batch 2/5 14.544138s
+[227/272] run CASE-B full_jb2008 perturbed size=8 workers=4 dynamic batch 3/5 14.574955s
+[227/272] run CASE-B full_jb2008 perturbed size=8 workers=4 dynamic batch 4/5 14.483999s
+[227/272] run CASE-B full_jb2008 perturbed size=8 workers=4 dynamic batch 5/5 14.556940s
+[228/272] warmup CASE-B two_body_j2 identical size=8 workers=8 static_partition batch 1/1 0.003024s
+[228/272] run CASE-B two_body_j2 identical size=8 workers=8 static_partition batch 1/5 0.002769s
+[228/272] run CASE-B two_body_j2 identical size=8 workers=8 static_partition batch 2/5 0.002899s
+[228/272] run CASE-B two_body_j2 identical size=8 workers=8 static_partition batch 3/5 0.002755s
+[228/272] run CASE-B two_body_j2 identical size=8 workers=8 static_partition batch 4/5 0.002875s
+[228/272] run CASE-B two_body_j2 identical size=8 workers=8 static_partition batch 5/5 0.002691s
+[229/272] warmup CASE-A full_exponential identical size=8 workers=2 static_partition batch 1/1 5.064602s
+[229/272] run CASE-A full_exponential identical size=8 workers=2 static_partition batch 1/5 4.987858s
+[229/272] run CASE-A full_exponential identical size=8 workers=2 static_partition batch 2/5 4.945955s
+[229/272] run CASE-A full_exponential identical size=8 workers=2 static_partition batch 3/5 5.099294s
+[229/272] run CASE-A full_exponential identical size=8 workers=2 static_partition batch 4/5 4.995048s
+[229/272] run CASE-A full_exponential identical size=8 workers=2 static_partition batch 5/5 4.718160s
+[230/272] warmup CASE-B two_body_j2 perturbed size=8 workers=8 static_partition batch 1/1 0.003032s
+[230/272] run CASE-B two_body_j2 perturbed size=8 workers=8 static_partition batch 1/5 0.002938s
+[230/272] run CASE-B two_body_j2 perturbed size=8 workers=8 static_partition batch 2/5 0.002689s
+[230/272] run CASE-B two_body_j2 perturbed size=8 workers=8 static_partition batch 3/5 0.002329s
+[230/272] run CASE-B two_body_j2 perturbed size=8 workers=8 static_partition batch 4/5 0.002666s
+[230/272] run CASE-B two_body_j2 perturbed size=8 workers=8 static_partition batch 5/5 0.002355s
+[231/272] warmup CASE-A full_exponential perturbed size=8 workers=4 control_no_rhs 1/1 0.000273s
+[231/272] run CASE-A full_exponential perturbed size=8 workers=4 control_no_rhs 1/3 0.000276s
+[231/272] run CASE-A full_exponential perturbed size=8 workers=4 control_no_rhs 2/3 0.000266s
+[231/272] run CASE-A full_exponential perturbed size=8 workers=4 control_no_rhs 3/3 0.000288s
+[232/272] warmup CASE-A full_exponential perturbed size=8 workers=1 control_no_rhs 1/1 0.000005s
+[232/272] run CASE-A full_exponential perturbed size=8 workers=1 control_no_rhs 1/3 0.000004s
+[232/272] run CASE-A full_exponential perturbed size=8 workers=1 control_no_rhs 2/3 0.000004s
+[232/272] run CASE-A full_exponential perturbed size=8 workers=1 control_no_rhs 3/3 0.000004s
+[233/272] warmup CASE-A full_jb2008 perturbed size=8 workers=8 control_no_rhs 1/1 0.000538s
+[233/272] run CASE-A full_jb2008 perturbed size=8 workers=8 control_no_rhs 1/3 0.000568s
+[233/272] run CASE-A full_jb2008 perturbed size=8 workers=8 control_no_rhs 2/3 0.000547s
+[233/272] run CASE-A full_jb2008 perturbed size=8 workers=8 control_no_rhs 3/3 0.000581s
+[234/272] warmup CASE-A full_jb2008 identical size=8 workers=8 static_partition batch 1/1 22.247173s
+[234/272] run CASE-A full_jb2008 identical size=8 workers=8 static_partition batch 1/5 22.516410s
+[234/272] run CASE-A full_jb2008 identical size=8 workers=8 static_partition batch 2/5 22.214291s
+[234/272] run CASE-A full_jb2008 identical size=8 workers=8 static_partition batch 3/5 22.183740s
+[234/272] run CASE-A full_jb2008 identical size=8 workers=8 static_partition batch 4/5 21.374343s
+[234/272] run CASE-A full_jb2008 identical size=8 workers=8 static_partition batch 5/5 22.763084s
+[235/272] warmup CASE-B two_body_j2 identical size=8 workers=2 control_no_rhs 1/1 0.000247s
+[235/272] run CASE-B two_body_j2 identical size=8 workers=2 control_no_rhs 1/3 0.000218s
+[235/272] run CASE-B two_body_j2 identical size=8 workers=2 control_no_rhs 2/3 0.000226s
+[235/272] run CASE-B two_body_j2 identical size=8 workers=2 control_no_rhs 3/3 0.000167s
+[236/272] warmup CASE-A two_body_j2 identical size=8 workers=2 control_no_rhs 1/1 0.000172s
+[236/272] run CASE-A two_body_j2 identical size=8 workers=2 control_no_rhs 1/3 0.000163s
+[236/272] run CASE-A two_body_j2 identical size=8 workers=2 control_no_rhs 2/3 0.000164s
+[236/272] run CASE-A two_body_j2 identical size=8 workers=2 control_no_rhs 3/3 0.000172s
+[237/272] warmup CASE-B full_exponential perturbed size=8 workers=2 dynamic batch 1/1 0.884422s
+[237/272] run CASE-B full_exponential perturbed size=8 workers=2 dynamic batch 1/5 0.855812s
+[237/272] run CASE-B full_exponential perturbed size=8 workers=2 dynamic batch 2/5 0.889773s
+[237/272] run CASE-B full_exponential perturbed size=8 workers=2 dynamic batch 3/5 0.860191s
+[237/272] run CASE-B full_exponential perturbed size=8 workers=2 dynamic batch 4/5 0.906007s
+[237/272] run CASE-B full_exponential perturbed size=8 workers=2 dynamic batch 5/5 0.892092s
+[238/272] warmup CASE-B two_body_j2 perturbed size=8 workers=2 control_no_rhs 1/1 0.000220s
+[238/272] run CASE-B two_body_j2 perturbed size=8 workers=2 control_no_rhs 1/3 0.000169s
+[238/272] run CASE-B two_body_j2 perturbed size=8 workers=2 control_no_rhs 2/3 0.000171s
+[238/272] run CASE-B two_body_j2 perturbed size=8 workers=2 control_no_rhs 3/3 0.000168s
+[239/272] warmup CASE-A full_jb2008 identical size=8 workers=1 control_no_rhs 1/1 0.000006s
+[239/272] run CASE-A full_jb2008 identical size=8 workers=1 control_no_rhs 1/3 0.000004s
+[239/272] run CASE-A full_jb2008 identical size=8 workers=1 control_no_rhs 2/3 0.000004s
+[239/272] run CASE-A full_jb2008 identical size=8 workers=1 control_no_rhs 3/3 0.000004s
+[240/272] warmup CASE-B full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 1/1 0.000158s
+[240/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 1/3 0.000164s
+[240/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 2/3 0.000169s
+[240/272] run CASE-B full_nrlmsise00 perturbed size=8 workers=2 control_no_rhs 3/3 0.000169s
+[241/272] warmup CASE-B full_jb2008 perturbed size=8 workers=1 dynamic batch 1/1 6.259431s
+[241/272] run CASE-B full_jb2008 perturbed size=8 workers=1 dynamic batch 1/5 6.285694s
+[241/272] run CASE-B full_jb2008 perturbed size=8 workers=1 dynamic batch 2/5 6.235595s
+[241/272] run CASE-B full_jb2008 perturbed size=8 workers=1 dynamic batch 3/5 6.229914s
+[241/272] run CASE-B full_jb2008 perturbed size=8 workers=1 dynamic batch 4/5 6.281351s
+[241/272] run CASE-B full_jb2008 perturbed size=8 workers=1 dynamic batch 5/5 6.221428s
+[242/272] warmup CASE-B full_jb2008 identical size=8 workers=8 dynamic batch 1/1 13.419423s
+[242/272] run CASE-B full_jb2008 identical size=8 workers=8 dynamic batch 1/5 14.389962s
+[242/272] run CASE-B full_jb2008 identical size=8 workers=8 dynamic batch 2/5 13.949155s
+[242/272] run CASE-B full_jb2008 identical size=8 workers=8 dynamic batch 3/5 13.744706s
+[242/272] run CASE-B full_jb2008 identical size=8 workers=8 dynamic batch 4/5 14.013651s
+[242/272] run CASE-B full_jb2008 identical size=8 workers=8 dynamic batch 5/5 13.871255s
+[243/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=1 static_partition batch 1/1 1.544056s
+[243/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 static_partition batch 1/5 1.550628s
+[243/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 static_partition batch 2/5 1.500598s
+[243/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 static_partition batch 3/5 1.511604s
+[243/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 static_partition batch 4/5 1.561712s
+[243/272] run CASE-B full_nrlmsise00 identical size=8 workers=1 static_partition batch 5/5 1.509929s
+[244/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=4 control_no_rhs 1/1 0.000351s
+[244/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 control_no_rhs 1/3 0.000349s
+[244/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 control_no_rhs 2/3 0.000325s
+[244/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 control_no_rhs 3/3 0.000270s
+[245/272] warmup CASE-B full_exponential perturbed size=8 workers=8 control_no_rhs 1/1 0.000647s
+[245/272] run CASE-B full_exponential perturbed size=8 workers=8 control_no_rhs 1/3 0.000539s
+[245/272] run CASE-B full_exponential perturbed size=8 workers=8 control_no_rhs 2/3 0.000632s
+[245/272] run CASE-B full_exponential perturbed size=8 workers=8 control_no_rhs 3/3 0.000560s
+[246/272] warmup CASE-B full_jb2008 perturbed size=8 workers=2 control_no_rhs 1/1 0.000167s
+[246/272] run CASE-B full_jb2008 perturbed size=8 workers=2 control_no_rhs 1/3 0.000167s
+[246/272] run CASE-B full_jb2008 perturbed size=8 workers=2 control_no_rhs 2/3 0.000175s
+[246/272] run CASE-B full_jb2008 perturbed size=8 workers=2 control_no_rhs 3/3 0.000160s
+[247/272] warmup CASE-B full_jb2008 identical size=8 workers=2 control_no_rhs 1/1 0.000153s
+[247/272] run CASE-B full_jb2008 identical size=8 workers=2 control_no_rhs 1/3 0.000152s
+[247/272] run CASE-B full_jb2008 identical size=8 workers=2 control_no_rhs 2/3 0.000153s
+[247/272] run CASE-B full_jb2008 identical size=8 workers=2 control_no_rhs 3/3 0.000155s
+[248/272] warmup CASE-A two_body_j2 identical size=8 workers=8 control_no_rhs 1/1 0.000527s
+[248/272] run CASE-A two_body_j2 identical size=8 workers=8 control_no_rhs 1/3 0.000575s
+[248/272] run CASE-A two_body_j2 identical size=8 workers=8 control_no_rhs 2/3 0.000598s
+[248/272] run CASE-A two_body_j2 identical size=8 workers=8 control_no_rhs 3/3 0.000646s
+[249/272] warmup CASE-A two_body_j2 perturbed size=8 workers=1 control_no_rhs 1/1 0.000005s
+[249/272] run CASE-A two_body_j2 perturbed size=8 workers=1 control_no_rhs 1/3 0.000003s
+[249/272] run CASE-A two_body_j2 perturbed size=8 workers=1 control_no_rhs 2/3 0.000003s
+[249/272] run CASE-A two_body_j2 perturbed size=8 workers=1 control_no_rhs 3/3 0.000003s
+[250/272] warmup CASE-B full_exponential perturbed size=8 workers=1 control_no_rhs 1/1 0.000004s
+[250/272] run CASE-B full_exponential perturbed size=8 workers=1 control_no_rhs 1/3 0.000004s
+[250/272] run CASE-B full_exponential perturbed size=8 workers=1 control_no_rhs 2/3 0.000004s
+[250/272] run CASE-B full_exponential perturbed size=8 workers=1 control_no_rhs 3/3 0.000004s
+[251/272] warmup CASE-B full_exponential perturbed size=8 workers=8 control_no_rhs 1/1 0.000537s
+[251/272] run CASE-B full_exponential perturbed size=8 workers=8 control_no_rhs 1/3 0.000587s
+[251/272] run CASE-B full_exponential perturbed size=8 workers=8 control_no_rhs 2/3 0.000578s
+[251/272] run CASE-B full_exponential perturbed size=8 workers=8 control_no_rhs 3/3 0.000542s
+[252/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=2 control_no_rhs 1/1 0.000168s
+[252/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 control_no_rhs 1/3 0.000159s
+[252/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 control_no_rhs 2/3 0.000164s
+[252/272] run CASE-B full_nrlmsise00 identical size=8 workers=2 control_no_rhs 3/3 0.000158s
+[253/272] warmup CASE-A full_exponential identical size=8 workers=2 dynamic batch 1/1 4.916934s
+[253/272] run CASE-A full_exponential identical size=8 workers=2 dynamic batch 1/5 4.905300s
+[253/272] run CASE-A full_exponential identical size=8 workers=2 dynamic batch 2/5 4.892679s
+[253/272] run CASE-A full_exponential identical size=8 workers=2 dynamic batch 3/5 4.746896s
+[253/272] run CASE-A full_exponential identical size=8 workers=2 dynamic batch 4/5 4.822244s
+[253/272] run CASE-A full_exponential identical size=8 workers=2 dynamic batch 5/5 4.986358s
+[254/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=4 dynamic batch 1/1 22.453210s
+[254/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 dynamic batch 1/5 22.683725s
+[254/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 dynamic batch 2/5 22.576713s
+[254/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 dynamic batch 3/5 22.602020s
+[254/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 dynamic batch 4/5 22.536684s
+[254/272] run CASE-A full_nrlmsise00 identical size=8 workers=4 dynamic batch 5/5 22.606481s
+[255/272] warmup CASE-A full_nrlmsise00 identical size=8 workers=8 static_partition batch 1/1 20.660865s
+[255/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 static_partition batch 1/5 20.899110s
+[255/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 static_partition batch 2/5 21.344915s
+[255/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 static_partition batch 3/5 20.912026s
+[255/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 static_partition batch 4/5 20.954127s
+[255/272] run CASE-A full_nrlmsise00 identical size=8 workers=8 static_partition batch 5/5 20.627432s
+[256/272] warmup CASE-B full_exponential perturbed size=8 workers=4 control_no_rhs 1/1 0.000405s
+[256/272] run CASE-B full_exponential perturbed size=8 workers=4 control_no_rhs 1/3 0.000318s
+[256/272] run CASE-B full_exponential perturbed size=8 workers=4 control_no_rhs 2/3 0.000339s
+[256/272] run CASE-B full_exponential perturbed size=8 workers=4 control_no_rhs 3/3 0.000328s
+[257/272] warmup CASE-A full_exponential perturbed size=8 workers=8 control_no_rhs 1/1 0.000721s
+[257/272] run CASE-A full_exponential perturbed size=8 workers=8 control_no_rhs 1/3 0.000675s
+[257/272] run CASE-A full_exponential perturbed size=8 workers=8 control_no_rhs 2/3 0.000679s
+[257/272] run CASE-A full_exponential perturbed size=8 workers=8 control_no_rhs 3/3 0.000610s
+[258/272] warmup CASE-B full_jb2008 perturbed size=8 workers=1 control_no_rhs 1/1 0.000006s
+[258/272] run CASE-B full_jb2008 perturbed size=8 workers=1 control_no_rhs 1/3 0.000004s
+[258/272] run CASE-B full_jb2008 perturbed size=8 workers=1 control_no_rhs 2/3 0.000004s
+[258/272] run CASE-B full_jb2008 perturbed size=8 workers=1 control_no_rhs 3/3 0.000004s
+[259/272] warmup CASE-B full_nrlmsise00 identical size=8 workers=4 dynamic batch 1/1 4.470511s
+[259/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 dynamic batch 1/5 4.468791s
+[259/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 dynamic batch 2/5 4.456722s
+[259/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 dynamic batch 3/5 4.499800s
+[259/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 dynamic batch 4/5 4.539977s
+[259/272] run CASE-B full_nrlmsise00 identical size=8 workers=4 dynamic batch 5/5 4.401043s
+[260/272] warmup CASE-A two_body_j2 identical size=8 workers=2 control_no_rhs 1/1 0.000216s
+[260/272] run CASE-A two_body_j2 identical size=8 workers=2 control_no_rhs 1/3 0.000195s
+[260/272] run CASE-A two_body_j2 identical size=8 workers=2 control_no_rhs 2/3 0.000199s
+[260/272] run CASE-A two_body_j2 identical size=8 workers=2 control_no_rhs 3/3 0.000192s
+[261/272] warmup CASE-A full_jb2008 identical size=8 workers=1 control_no_rhs 1/1 0.000006s
+[261/272] run CASE-A full_jb2008 identical size=8 workers=1 control_no_rhs 1/3 0.000005s
+[261/272] run CASE-A full_jb2008 identical size=8 workers=1 control_no_rhs 2/3 0.000004s
+[261/272] run CASE-A full_jb2008 identical size=8 workers=1 control_no_rhs 3/3 0.000004s
+[262/272] warmup CASE-B full_exponential perturbed size=8 workers=4 dynamic batch 1/1 0.881750s
+[262/272] run CASE-B full_exponential perturbed size=8 workers=4 dynamic batch 1/5 0.873032s
+[262/272] run CASE-B full_exponential perturbed size=8 workers=4 dynamic batch 2/5 0.842154s
+[262/272] run CASE-B full_exponential perturbed size=8 workers=4 dynamic batch 3/5 0.853139s
+[262/272] run CASE-B full_exponential perturbed size=8 workers=4 dynamic batch 4/5 0.853026s
+[262/272] run CASE-B full_exponential perturbed size=8 workers=4 dynamic batch 5/5 0.845419s
+[263/272] warmup CASE-A full_jb2008 identical size=8 workers=4 dynamic batch 1/1 20.549462s
+[263/272] run CASE-A full_jb2008 identical size=8 workers=4 dynamic batch 1/5 19.695096s
+[263/272] run CASE-A full_jb2008 identical size=8 workers=4 dynamic batch 2/5 20.135388s
+[263/272] run CASE-A full_jb2008 identical size=8 workers=4 dynamic batch 3/5 20.957072s
+[263/272] run CASE-A full_jb2008 identical size=8 workers=4 dynamic batch 4/5 20.099891s
+[263/272] run CASE-A full_jb2008 identical size=8 workers=4 dynamic batch 5/5 20.466400s
+[264/272] warmup CASE-A two_body_j2 perturbed size=8 workers=1 static_partition batch 1/1 0.083851s
+[264/272] run CASE-A two_body_j2 perturbed size=8 workers=1 static_partition batch 1/5 0.083950s
+[264/272] run CASE-A two_body_j2 perturbed size=8 workers=1 static_partition batch 2/5 0.083802s
+[264/272] run CASE-A two_body_j2 perturbed size=8 workers=1 static_partition batch 3/5 0.083654s
+[264/272] run CASE-A two_body_j2 perturbed size=8 workers=1 static_partition batch 4/5 0.083488s
+[264/272] run CASE-A two_body_j2 perturbed size=8 workers=1 static_partition batch 5/5 0.088682s
+[265/272] warmup CASE-B two_body_j2 identical size=8 workers=1 control_no_rhs 1/1 0.000006s
+[265/272] run CASE-B two_body_j2 identical size=8 workers=1 control_no_rhs 1/3 0.000003s
+[265/272] run CASE-B two_body_j2 identical size=8 workers=1 control_no_rhs 2/3 0.000002s
+[265/272] run CASE-B two_body_j2 identical size=8 workers=1 control_no_rhs 3/3 0.000003s
+[266/272] warmup CASE-A full_jb2008 perturbed size=8 workers=4 control_no_rhs 1/1 0.000307s
+[266/272] run CASE-A full_jb2008 perturbed size=8 workers=4 control_no_rhs 1/3 0.000277s
+[266/272] run CASE-A full_jb2008 perturbed size=8 workers=4 control_no_rhs 2/3 0.000281s
+[266/272] run CASE-A full_jb2008 perturbed size=8 workers=4 control_no_rhs 3/3 0.000443s
+[267/272] warmup CASE-B full_exponential perturbed size=8 workers=4 static_partition batch 1/1 0.852562s
+[267/272] run CASE-B full_exponential perturbed size=8 workers=4 static_partition batch 1/5 0.848069s
+[267/272] run CASE-B full_exponential perturbed size=8 workers=4 static_partition batch 2/5 0.846865s
+[267/272] run CASE-B full_exponential perturbed size=8 workers=4 static_partition batch 3/5 0.839129s
+[267/272] run CASE-B full_exponential perturbed size=8 workers=4 static_partition batch 4/5 0.866036s
+[267/272] run CASE-B full_exponential perturbed size=8 workers=4 static_partition batch 5/5 0.839634s
+[268/272] warmup CASE-A full_exponential identical size=8 workers=2 control_no_rhs 1/1 0.000180s
+[268/272] run CASE-A full_exponential identical size=8 workers=2 control_no_rhs 1/3 0.000190s
+[268/272] run CASE-A full_exponential identical size=8 workers=2 control_no_rhs 2/3 0.000183s
+[268/272] run CASE-A full_exponential identical size=8 workers=2 control_no_rhs 3/3 0.000160s
+[269/272] warmup CASE-B two_body_j2 perturbed size=8 workers=4 control_no_rhs 1/1 0.000276s
+[269/272] run CASE-B two_body_j2 perturbed size=8 workers=4 control_no_rhs 1/3 0.000271s
+[269/272] run CASE-B two_body_j2 perturbed size=8 workers=4 control_no_rhs 2/3 0.000474s
+[269/272] run CASE-B two_body_j2 perturbed size=8 workers=4 control_no_rhs 3/3 0.000279s
+[270/272] warmup CASE-A full_jb2008 identical size=8 workers=1 static_partition batch 1/1 9.932407s
+[270/272] run CASE-A full_jb2008 identical size=8 workers=1 static_partition batch 1/5 9.902881s
+[270/272] run CASE-A full_jb2008 identical size=8 workers=1 static_partition batch 2/5 9.919233s
+[270/272] run CASE-A full_jb2008 identical size=8 workers=1 static_partition batch 3/5 9.864571s
+[270/272] run CASE-A full_jb2008 identical size=8 workers=1 static_partition batch 4/5 9.882369s
+[270/272] run CASE-A full_jb2008 identical size=8 workers=1 static_partition batch 5/5 9.917072s
+[271/272] warmup CASE-A two_body_j2 perturbed size=8 workers=1 control_no_rhs 1/1 0.000005s
+[271/272] run CASE-A two_body_j2 perturbed size=8 workers=1 control_no_rhs 1/3 0.000003s
+[271/272] run CASE-A two_body_j2 perturbed size=8 workers=1 control_no_rhs 2/3 0.000003s
+[271/272] run CASE-A two_body_j2 perturbed size=8 workers=1 control_no_rhs 3/3 0.000006s
+[272/272] warmup CASE-A two_body_j2 perturbed size=8 workers=2 static_partition batch 1/1 0.042689s
+[272/272] run CASE-A two_body_j2 perturbed size=8 workers=2 static_partition batch 1/5 0.043202s
+[272/272] run CASE-A two_body_j2 perturbed size=8 workers=2 static_partition batch 2/5 0.042479s
+[272/272] run CASE-A two_body_j2 perturbed size=8 workers=2 static_partition batch 3/5 0.043464s
+[272/272] run CASE-A two_body_j2 perturbed size=8 workers=2 static_partition batch 4/5 0.042176s
+[272/272] run CASE-A two_body_j2 perturbed size=8 workers=2 static_partition batch 5/5 0.043389s
+wrote 1104 measured runs, 0 skipped, 0 failed to docs/multithreading/evidence/confirmation.json

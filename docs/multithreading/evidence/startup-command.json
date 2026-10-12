@@ -1,0 +1,36 @@
+{
+  "command": [
+    "taskset",
+    "-c",
+    "0,2,4,6,8,10,12,14",
+    "build-multithreading/mt_startup",
+    "docs/multithreading/evidence/startup.json"
+  ],
+  "cwd": "/home/user/leo-dynamics",
+  "environment_overrides": {},
+  "started_utc": "2026-10-12T04:29:04.929720+00:00",
+  "source_sha": "64b48bf65e352ed0559ed78cdd6dc8464273e036",
+  "affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "status": "completed",
+  "wall_s": 0.43285940802888945,
+  "returncode": 0,
+  "stdout": "wrote 1000 startup samples to \"docs/multithreading/evidence/startup.json\"\n",
+  "stderr": ""
+}
