@@ -125,7 +125,7 @@ if(BUILD_TESTING)
   if(LEO_BUILD_INTEGRATION)
     add_executable(leo_integration_tests
       tests/integration_tests.cpp tests/two_body_tests.cpp tests/j2_tests.cpp
-      tests/environment_integration_tests.cpp tests/numerical_integration_tests.cpp)
+      tests/environment_integration_tests.cpp tests/numerical_integration_tests.cpp tests/batch_tests.cpp)
     target_link_libraries(leo_integration_tests PRIVATE leo::integration Catch2::Catch2WithMain)
     catch_discover_tests(leo_integration_tests)
   endif()

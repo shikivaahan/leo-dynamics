@@ -1,0 +1,155 @@
+{
+  "kind": "MT-001 correctness index",
+  "summary": {
+    "comparisons": 924,
+    "passed": 924,
+    "failed": 0,
+    "mismatching_values": 0,
+    "bitwise_equal_everywhere": true
+  },
+  "by_workload": {
+    "two_body": 192,
+    "j2": 192,
+    "full_exponential": 180,
+    "full_nrlmsise00": 180,
+    "full_jb2008": 180
+  },
+  "scientific_documents": [
+    {
+      "file": "validation-long/correctness.json",
+      "sha256": "e13f2097a7ae3dad6e96716f9ec31d1e8a7a04cf3c2de49bf5ac8b33f2089bb9",
+      "summary": {
+        "comparisons": 624,
+        "passed": 624,
+        "failed": 0,
+        "mismatching_values": 0,
+        "bitwise_equal_everywhere": true,
+        "final_state_format": "trajectory elapsed_s, then r.x r.y r.z v.x v.y v.z q.w q.x q.y q.z omega.x omega.y omega.z at the last requested output"
+      },
+      "duration_s": 21600,
+      "integration_options": {
+        "rtol": 1e-10,
+        "position_atol_m": 0.001,
+        "velocity_atol_m_s": 1e-06,
+        "quaternion_atol": 1e-12,
+        "omega_atol_rad_s": 1e-12,
+        "initial_step_s": 1,
+        "max_step_s": 15,
+        "max_attempts": 1000000
+      },
+      "validation_settings": {
+        "batch_size": 4,
+        "repeats": 2,
+        "workers": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "perturbed_workers": [
+          4,
+          16
+        ],
+        "oversized_workers": [
+          16
+        ],
+        "ap_history_workers": [
+          1,
+          4
+        ],
+        "oversized_batch_size": 2,
+        "wide_batch_size": 16,
+        "perturbed_group": true,
+        "oversized_group": true,
+        "wide_group": true,
+        "wide_group_workloads": [
+          "two_body",
+          "j2"
+        ],
+        "ap_history_group": true,
+        "rhs_stage_traces": false,
+        "native_input_traces": false,
+        "perturbation_seed": "0x5deece66d0f1a7c3",
+        "position_perturbation_half_width_m": 50,
+        "velocity_perturbation_half_width_m_s": 0.02,
+        "body_rate_perturbation_half_width_rad_s": 0.0001,
+        "perturbation_generator": "splitmix64, uniform in [-sigma, sigma], stream seeded with seed + 0x9E3779B97F4A7C15 * (trajectory index + 1)",
+        "mismatch_limit_per_comparison": 25
+      }
+    },
+    {
+      "file": "validation-wide/correctness.json",
+      "sha256": "3de2191fe5a40f1e58a62cab8cedebb42638e06bd00ffb69cc2c113914b0a7a4",
+      "summary": {
+        "comparisons": 300,
+        "passed": 300,
+        "failed": 0,
+        "mismatching_values": 0,
+        "bitwise_equal_everywhere": true,
+        "final_state_format": "trajectory elapsed_s, then r.x r.y r.z v.x v.y v.z q.w q.x q.y q.z omega.x omega.y omega.z at the last requested output"
+      },
+      "duration_s": 300,
+      "integration_options": {
+        "rtol": 1e-10,
+        "position_atol_m": 0.001,
+        "velocity_atol_m_s": 1e-06,
+        "quaternion_atol": 1e-12,
+        "omega_atol_rad_s": 1e-12,
+        "initial_step_s": 1,
+        "max_step_s": 15,
+        "max_attempts": 1000000
+      },
+      "validation_settings": {
+        "batch_size": 16,
+        "repeats": 2,
+        "workers": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "perturbed_workers": [
+          4,
+          16
+        ],
+        "oversized_workers": [
+          16
+        ],
+        "ap_history_workers": [
+          1,
+          4
+        ],
+        "oversized_batch_size": 2,
+        "wide_batch_size": 16,
+        "perturbed_group": false,
+        "oversized_group": false,
+        "wide_group": false,
+        "wide_group_workloads": [
+          "two_body",
+          "j2"
+        ],
+        "ap_history_group": false,
+        "rhs_stage_traces": true,
+        "native_input_traces": true,
+        "perturbation_seed": "0x5deece66d0f1a7c3",
+        "position_perturbation_half_width_m": 50,
+        "velocity_perturbation_half_width_m_s": 0.02,
+        "body_rate_perturbation_half_width_rad_s": 0.0001,
+        "perturbation_generator": "splitmix64, uniform in [-sigma, sigma], stream seeded with seed + 0x9E3779B97F4A7C15 * (trajectory index + 1)",
+        "mismatch_limit_per_comparison": 25
+      }
+    }
+  ],
+  "regressions": {
+    "test_count": 184,
+    "passed": 184,
+    "command_file": "regressions-command.json"
+  },
+  "limits": [
+    "Six-hour comparisons use complete output trajectories/load/density diagnostics and evaluation counts; exhaustive intermediate RHS/input bit comparisons are the separate 300-second 16-trajectory/16-worker-capable matrix.",
+    "The fully traced timed-out attempt is retained but excluded from acceptance.",
+    "ThreadSanitizer and injected thread-launch failure were not exercised."
+  ]
+}
