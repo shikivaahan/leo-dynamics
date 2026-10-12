@@ -1,0 +1,14 @@
+{
+  "starting_sha": "cfcf105da91d385e9748e87b69c1820c73f111f5",
+  "branch": "main",
+  "user_owned_untracked": [
+    "outputs/"
+  ],
+  "architecture": "Local Dopri5 per propagate call; no production batch framework; read-only weather and value-owned dynamics; shared globally locked SPICE/exact caches and independently locked native models",
+  "smoke": {
+    "command": "c++ -std=c++20 -O3 -pthread -Iinclude -I/tmp/leo-deps/usr/include -I/tmp/leo-deps/usr/include/eigen3 /tmp/mt001-smoke.cpp build-atmosphere-gcc/libleo_integration.a build-atmosphere-gcc/libleo_kernel.a -o /tmp/mt001-smoke && /tmp/mt001-smoke",
+    "exit_code": 0,
+    "stdout": "ordered 4-worker propagation matches serial; trajectory 2: original cause\n"
+  },
+  "prior_evidence_files": 1608
+}

@@ -1,0 +1,41 @@
+{
+  "command": [
+    "python3",
+    "docs/multithreading/analyse.py",
+    "--matrix",
+    "docs/multithreading/evidence/benchmarks.json",
+    "--confirmation",
+    "docs/multithreading/evidence/confirmation.json",
+    "--diagnostics",
+    "docs/multithreading/evidence/diagnostics.json",
+    "--out",
+    "docs/multithreading/evidence/scaling.json"
+  ],
+  "cwd": "/home/user/leo-dynamics",
+  "environment_overrides": {},
+  "started_utc": "2026-10-12T04:29:16.347540+00:00",
+  "source_sha": "64b48bf65e352ed0559ed78cdd6dc8464273e036",
+  "affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "status": "completed",
+  "wall_s": 1.7793052570195869,
+  "returncode": 0,
+  "stdout": "Reduced 1496 configurations to docs/multithreading/evidence/scaling.json\n",
+  "stderr": ""
+}

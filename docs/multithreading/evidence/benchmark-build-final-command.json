@@ -1,0 +1,38 @@
+{
+  "command": [
+    "cmake",
+    "--build",
+    "build-multithreading",
+    "--target",
+    "mt_benchmark",
+    "mt_benchmark_diagnostics",
+    "--parallel",
+    "4"
+  ],
+  "cwd": "/home/user/leo-dynamics",
+  "environment_overrides": {},
+  "started_utc": "2026-10-12T00:50:06.340609+00:00",
+  "wall_s": 22.532004008011427,
+  "source_sha": "42ec6089ebab29bd605fde406e83639634e64d54",
+  "affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "returncode": 0,
+  "stdout": "[1/8] Generating Fortran dyndep file leo/CMakeFiles/leo_jb2008_reference.dir/Fortran.dd\n[2/8] Building CXX object CMakeFiles/mt_atmosphere_diagnostics.dir/native-diagnostics/jb2008.cpp.o\n[3/8] Building CXX object CMakeFiles/mt_atmosphere_diagnostics.dir/native-diagnostics/nrlmsise00.cpp.o\n[4/8] Linking CXX static library libmt_atmosphere_diagnostics.a\n[5/8] Building CXX object CMakeFiles/mt_benchmark.dir/benchmark.cpp.o\n[6/8] Building CXX object CMakeFiles/mt_benchmark_diagnostics.dir/benchmark.cpp.o\n[7/8] Linking CXX executable mt_benchmark\n[8/8] Linking CXX executable mt_benchmark_diagnostics\n",
+  "stderr": ""
+}

@@ -1,0 +1,37 @@
+{
+  "command": [
+    "cmake",
+    "--build",
+    "build-multithreading",
+    "--target",
+    "mt_validation",
+    "--parallel",
+    "4"
+  ],
+  "cwd": "/home/user/leo-dynamics",
+  "environment_overrides": {},
+  "started_utc": "2026-10-12T00:42:30.957408+00:00",
+  "wall_s": 16.092560718010645,
+  "source_sha": "42ec6089ebab29bd605fde406e83639634e64d54",
+  "affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "returncode": 0,
+  "stdout": "[1/2] Building CXX object CMakeFiles/mt_validation.dir/validation.cpp.o\n[2/2] Linking CXX executable mt_validation\n",
+  "stderr": ""
+}

@@ -1,0 +1,1 @@
+{"command":["perf","stat","-e","cycles,instructions,cache-misses","/tmp/mt001-smoke"],"returncode":null,"launch_error":"FileNotFoundError: [Errno 2] No such file or directory: 'perf'","note":"Observed command launch failure; no perf process ran. Hardware counters and false-sharing evidence unavailable. The recorder was subsequently updated to retain launch errors."}

@@ -1,0 +1,37 @@
+{
+  "command": [
+    "cmake",
+    "--build",
+    "build-multithreading",
+    "--target",
+    "mt_validation",
+    "--parallel",
+    "4"
+  ],
+  "cwd": "/home/user/leo-dynamics",
+  "environment_overrides": {},
+  "started_utc": "2026-10-12T00:41:42.898972+00:00",
+  "wall_s": 13.313848735997453,
+  "source_sha": "42ec6089ebab29bd605fde406e83639634e64d54",
+  "affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "returncode": 1,
+  "stdout": "[1/34] Building Fortran preprocessed leo/CMakeFiles/leo_jb2008_reference.dir/src/atmosphere/jb2008_bridge.f90-pp.f90\n[2/34] Building Fortran preprocessed leo/CMakeFiles/leo_jb2008_reference.dir/tmp/leo-atmosphere-deps/JB2008.f-pp.f\n[3/34] Building CXX object leo/CMakeFiles/leo_kernel.dir/src/kernel/state.cpp.o\n[4/34] Building CXX object leo/CMakeFiles/leo_kernel.dir/src/kernel/attitude.cpp.o\n[5/34] Building CXX object leo/CMakeFiles/leo_kernel.dir/src/kernel/gravity.cpp.o\n[6/34] Building CXX object leo/CMakeFiles/leo_kernel.dir/src/kernel/dynamics.cpp.o\n[7/34] Building CXX object leo/CMakeFiles/leo_kernel.dir/src/kernel/orbital.cpp.o\n[8/34] Generating Fortran dyndep file leo/CMakeFiles/leo_jb2008_reference.dir/Fortran.dd\n[9/34] Building CXX object leo/CMakeFiles/leo_kernel.dir/src/kernel/spacecraft.cpp.o\n[10/34] Building CXX object leo/CMakeFiles/leo_kernel.dir/src/kernel/radiation.cpp.o\n[11/34] Building C object leo/CMakeFiles/leo_nrlmsise00_reference.dir/tmp/leo-atmosphere-deps/nrlmsise-00_data.c.o\n[12/34] Building Fortran object leo/CMakeFiles/leo_jb2008_reference.dir/tmp/leo-atmosphere-deps/JB2008.f.o\n[13/34] Building Fortran object leo/CMakeFiles/leo_jb2008_reference.dir/src/atmosphere/jb2008_bridge.f90.o\n[14/34] Building C object leo/CMakeFiles/leo_nrlmsise00_reference.dir/tmp/leo-atmosphere-deps/nrlmsise-00.c.o\n[15/34] Building CXX object leo/CMakeFiles/leo_atmosphere.dir/src/atmosphere/nrlmsise00.cpp.o\n[16/34] Building CXX object leo/CMakeFiles/leo_atmosphere.dir/src/atmosphere/jb2008.cpp.o\n[17/34] Building CXX object leo/CMakeFiles/leo_kernel.dir/src/kernel/aerodynamics.cpp.o\n[18/34] Linking CXX static library leo/libleo_kernel.a\n[19/34] Building CXX object leo/CMakeFiles/leo_atmosphere.dir/src/atmosphere/coordinates.cpp.o\n[20/34] Linking C static library leo/libleo_nrlmsise00_reference.a\n[21/34] Linking Fortran static library leo/libleo_jb2008_reference.a\n[22/34] Building CXX object leo/CMakeFiles/leo_environment.dir/src/environment/spice.cpp.o\n[23/34] Linking CXX static library leo/libleo_environment.a\n[24/34] Building CXX object leo/CMakeFiles/leo_integration.dir/src/integration/error_control.cpp.o\n[25/34] Building CXX object leo/CMakeFiles/leo_atmosphere.dir/src/atmosphere/provider.cpp.o\n[26/34] Building CXX object leo/CMakeFiles/leo_atmosphere.dir/src/atmosphere/weather.cpp.o\n[27/34] Building CXX object leo/CMakeFiles/leo_analysis.dir/src/analysis/orbital.cpp.o\n[28/34] Linking CXX static library leo/libleo_atmosphere.a\n[29/34] Linking CXX static library leo/libleo_integration.a\n[30/34] Building CXX object leo/CMakeFiles/leo_analysis.dir/src/analysis/export.cpp.o\n[31/34] Building CXX object leo/CMakeFiles/leo_analysis.dir/src/analysis/loads.cpp.o\n[32/34] Linking CXX static library leo/libleo_analysis.a\n[33/34] Building CXX object CMakeFiles/mt_validation.dir/validation.cpp.o\nFAILED: [code=1] CMakeFiles/mt_validation.dir/validation.cpp.o \n/usr/bin/c++ -DLEO_HAS_JB2008=1 -DLEO_HAS_NRLMSISE00=1 -I/home/user/leo-dynamics/benchmarks/cases -I/home/user/leo-dynamics/docs/numerical-audit -I/home/user/leo-dynamics/include -isystem /tmp/leo-deps/usr/include/eigen3 -isystem /tmp/leo-deps/usr/include -O3 -DNDEBUG -std=c++20 -MD -MT CMakeFiles/mt_validation.dir/validation.cpp.o -MF CMakeFiles/mt_validation.dir/validation.cpp.o.d -o CMakeFiles/mt_validation.dir/validation.cpp.o -c /home/user/leo-dynamics/docs/multithreading/validation.cpp\n/home/user/leo-dynamics/docs/multithreading/validation.cpp: In member function \u2018{anonymous}::InputRow {anonymous}::TrajectoryRhs::native_inputs(leo::Epoch, leo::InertialVector, leo::InertialVector) const\u2019:\n/home/user/leo-dynamics/docs/multithreading/validation.cpp:582:42: error: \u2018const class leo::atmosphere::WeatherDataset\u2019 has no member named \u2018jboss2008\u2019; did you mean \u2018jb2008\u2019?\n  582 |             const auto in = env_.weather.jboss2008(utc);\n      |                                          ^~~~~~~~~\n      |                                          jb2008\nninja: build stopped: subcommand failed.\n",
+  "stderr": ""
+}

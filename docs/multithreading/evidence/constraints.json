@@ -1,0 +1,216 @@
+{
+  "kind": "MT-001 constraints and preservation",
+  "starting_git_sha": "cfcf105da91d385e9748e87b69c1820c73f111f5",
+  "existing_core_source_files_checked": 49,
+  "existing_core_source_files_modified": [],
+  "core_source_hashes": {
+    "include/leo/analysis/export.hpp": {
+      "starting_sha256": "90aff0c4e2d7637edf48169f2303dc1c2288da4d73b32feb2d9f86e8ad96dd11",
+      "current_sha256": "90aff0c4e2d7637edf48169f2303dc1c2288da4d73b32feb2d9f86e8ad96dd11"
+    },
+    "include/leo/analysis/loads.hpp": {
+      "starting_sha256": "8699dbe812e4e87db9cd7ccd5631e00bd2bda2491c371a8e88f9641084a69825",
+      "current_sha256": "8699dbe812e4e87db9cd7ccd5631e00bd2bda2491c371a8e88f9641084a69825"
+    },
+    "include/leo/analysis/orbital.hpp": {
+      "starting_sha256": "f9a0fe78d0de9120656f51a20ceb45306b401805cdd073d789c60e55f7dbb591",
+      "current_sha256": "f9a0fe78d0de9120656f51a20ceb45306b401805cdd073d789c60e55f7dbb591"
+    },
+    "include/leo/atmosphere/coordinates.hpp": {
+      "starting_sha256": "b24efc2bbf38cd8d02745b639c92e4984de9bd59c499fcb9d7c2e0b60ddb9bde",
+      "current_sha256": "b24efc2bbf38cd8d02745b639c92e4984de9bd59c499fcb9d7c2e0b60ddb9bde"
+    },
+    "include/leo/atmosphere/jb2008.hpp": {
+      "starting_sha256": "4a28890bcf3a9f5e7b380e8755bed3bcb52e7a2352df5818bb5dd1883517443d",
+      "current_sha256": "4a28890bcf3a9f5e7b380e8755bed3bcb52e7a2352df5818bb5dd1883517443d"
+    },
+    "include/leo/atmosphere/nrlmsise00.hpp": {
+      "starting_sha256": "304cf49d2bcc41c0de23db6ae0201fa9a63e985558d3e96ba67fbcd10cc03c28",
+      "current_sha256": "304cf49d2bcc41c0de23db6ae0201fa9a63e985558d3e96ba67fbcd10cc03c28"
+    },
+    "include/leo/atmosphere/provider.hpp": {
+      "starting_sha256": "b11e58c9c71ddc14024c8495e9a04bb9430ac0b2b22a252906c941106d1da8a0",
+      "current_sha256": "b11e58c9c71ddc14024c8495e9a04bb9430ac0b2b22a252906c941106d1da8a0"
+    },
+    "include/leo/atmosphere/types.hpp": {
+      "starting_sha256": "11361be8b6dc0d0deac5dce50c26fd70e472808de1ba296bca8e3dae9920ca7d",
+      "current_sha256": "11361be8b6dc0d0deac5dce50c26fd70e472808de1ba296bca8e3dae9920ca7d"
+    },
+    "include/leo/atmosphere/weather.hpp": {
+      "starting_sha256": "e296f6317e379a208958bc4e55646f83b330b2ee0e81b0979e7568c55100b478",
+      "current_sha256": "e296f6317e379a208958bc4e55646f83b330b2ee0e81b0979e7568c55100b478"
+    },
+    "include/leo/environment/ephemeris.hpp": {
+      "starting_sha256": "c6ffb1d1127e4651a5ad6746f39ce40765326651cb0f73d22c390429cc5e9ec4",
+      "current_sha256": "c6ffb1d1127e4651a5ad6746f39ce40765326651cb0f73d22c390429cc5e9ec4"
+    },
+    "include/leo/environment/interpolated.hpp": {
+      "starting_sha256": "34e16a398beaa502b7debc50c76d9326925e33db21487d0e5585eac89a97a4de",
+      "current_sha256": "34e16a398beaa502b7debc50c76d9326925e33db21487d0e5585eac89a97a4de"
+    },
+    "include/leo/environment/source.hpp": {
+      "starting_sha256": "c672bcd754f38258210c7c6004643b1314bcc2ce1e38afafdf0b36fd473cb88d",
+      "current_sha256": "c672bcd754f38258210c7c6004643b1314bcc2ce1e38afafdf0b36fd473cb88d"
+    },
+    "include/leo/environment/spice.hpp": {
+      "starting_sha256": "c7b41de5340f0cc9c98bd8b77c30eb04035482e841f8e62cde579648de78d392",
+      "current_sha256": "c7b41de5340f0cc9c98bd8b77c30eb04035482e841f8e62cde579648de78d392"
+    },
+    "include/leo/integration/detail/error_control.hpp": {
+      "starting_sha256": "298af96cc5e301940c94b6afc6c02b3d18e905a46d7ecec6ac633034fb34c899",
+      "current_sha256": "298af96cc5e301940c94b6afc6c02b3d18e905a46d7ecec6ac633034fb34c899"
+    },
+    "include/leo/integration/detail/packed_state.hpp": {
+      "starting_sha256": "e508f1f4c9285a3b7b53e5edd1e4218778fa425f179a6548796ffa7eed1127a4",
+      "current_sha256": "e508f1f4c9285a3b7b53e5edd1e4218778fa425f179a6548796ffa7eed1127a4"
+    },
+    "include/leo/integration/options.hpp": {
+      "starting_sha256": "946f79a82f79037b122226e16ce27d76a0d2557773805d4b5f3bf2b8730cc0ed",
+      "current_sha256": "946f79a82f79037b122226e16ce27d76a0d2557773805d4b5f3bf2b8730cc0ed"
+    },
+    "include/leo/integration/propagate.hpp": {
+      "starting_sha256": "7f0dccc6a80e700a22dd605ff69905144ee3509fc7a9f4851001ed7ba93566e1",
+      "current_sha256": "7f0dccc6a80e700a22dd605ff69905144ee3509fc7a9f4851001ed7ba93566e1"
+    },
+    "include/leo/integration/trajectory.hpp": {
+      "starting_sha256": "ca252856a36c088e52d304b569b53165b702b3dde497f76cb1081bf40ff98d7a",
+      "current_sha256": "ca252856a36c088e52d304b569b53165b702b3dde497f76cb1081bf40ff98d7a"
+    },
+    "include/leo/kernel/aerodynamics.hpp": {
+      "starting_sha256": "907c7084734617f69ef23ce066fa18ba03ea1ea889f5398d9d51a98a08bb9960",
+      "current_sha256": "907c7084734617f69ef23ce066fa18ba03ea1ea889f5398d9d51a98a08bb9960"
+    },
+    "include/leo/kernel/attitude.hpp": {
+      "starting_sha256": "93e16be66fdfdd3dd80c8910180a1ca7de549bde401c4d3c2e59e384fa57251c",
+      "current_sha256": "93e16be66fdfdd3dd80c8910180a1ca7de549bde401c4d3c2e59e384fa57251c"
+    },
+    "include/leo/kernel/dynamics.hpp": {
+      "starting_sha256": "5624448b40b69a5361d2a18629c72e0cdcebda88f6458275d9ae20d4adc7614d",
+      "current_sha256": "5624448b40b69a5361d2a18629c72e0cdcebda88f6458275d9ae20d4adc7614d"
+    },
+    "include/leo/kernel/earth.hpp": {
+      "starting_sha256": "e68195fe55f7315462f2685b8509b5cc3d2e8a99b02f73e3803ed9c9e37bf663",
+      "current_sha256": "e68195fe55f7315462f2685b8509b5cc3d2e8a99b02f73e3803ed9c9e37bf663"
+    },
+    "include/leo/kernel/environment.hpp": {
+      "starting_sha256": "722bce0f44f788631af11d54e0008442d78cf79e1be1b2056aff61dc13f82039",
+      "current_sha256": "722bce0f44f788631af11d54e0008442d78cf79e1be1b2056aff61dc13f82039"
+    },
+    "include/leo/kernel/frames.hpp": {
+      "starting_sha256": "be09cbe2292702a44f2f8226e4ebd3b6dfd18e707a270dac0d47362998caea2f",
+      "current_sha256": "be09cbe2292702a44f2f8226e4ebd3b6dfd18e707a270dac0d47362998caea2f"
+    },
+    "include/leo/kernel/gravity.hpp": {
+      "starting_sha256": "cf19c9a34522e3e7ace0a8049f82637c71ed7f645c5d9131c3a974948c0c83da",
+      "current_sha256": "cf19c9a34522e3e7ace0a8049f82637c71ed7f645c5d9131c3a974948c0c83da"
+    },
+    "include/leo/kernel/orbital.hpp": {
+      "starting_sha256": "89584c10cc856dae7f9bc8e26698ee577e7cb9e58c6fead95dea9e60ce114cae",
+      "current_sha256": "89584c10cc856dae7f9bc8e26698ee577e7cb9e58c6fead95dea9e60ce114cae"
+    },
+    "include/leo/kernel/radiation.hpp": {
+      "starting_sha256": "5daf416b3138c72f4032b7ca3f01ec1fb0e81b2b1e859a64be5ecf593580abf1",
+      "current_sha256": "5daf416b3138c72f4032b7ca3f01ec1fb0e81b2b1e859a64be5ecf593580abf1"
+    },
+    "include/leo/kernel/spacecraft.hpp": {
+      "starting_sha256": "db0b28ac6caa1c4ceb9a1166ecacb8911d9f0ea01884fecd2909e2b52690a0ab",
+      "current_sha256": "db0b28ac6caa1c4ceb9a1166ecacb8911d9f0ea01884fecd2909e2b52690a0ab"
+    },
+    "include/leo/kernel/state.hpp": {
+      "starting_sha256": "de76c0492ae4fd9d7527ef43e08538c7f00095f2835e901ffe4ef2879d798a5a",
+      "current_sha256": "de76c0492ae4fd9d7527ef43e08538c7f00095f2835e901ffe4ef2879d798a5a"
+    },
+    "include/leo/kernel/time.hpp": {
+      "starting_sha256": "dcd66c78ec4d95b5b12c513a0faa5201e53fb6dd5711789f53ff5a64d0ad447e",
+      "current_sha256": "dcd66c78ec4d95b5b12c513a0faa5201e53fb6dd5711789f53ff5a64d0ad447e"
+    },
+    "src/analysis/export.cpp": {
+      "starting_sha256": "69dc70e569fe87c5ec5c59bf989ee3a15466e3a248b210c8097a5f86b6494091",
+      "current_sha256": "69dc70e569fe87c5ec5c59bf989ee3a15466e3a248b210c8097a5f86b6494091"
+    },
+    "src/analysis/loads.cpp": {
+      "starting_sha256": "a5c31327fb0af09672fb02ef589fc26cef05f8d9d8caf4d4773597c7ad010235",
+      "current_sha256": "a5c31327fb0af09672fb02ef589fc26cef05f8d9d8caf4d4773597c7ad010235"
+    },
+    "src/analysis/orbital.cpp": {
+      "starting_sha256": "d4f3bffa51172984f96e0b3b9cbfa216b6998e1229732435ae2eb953cdcc8add",
+      "current_sha256": "d4f3bffa51172984f96e0b3b9cbfa216b6998e1229732435ae2eb953cdcc8add"
+    },
+    "src/atmosphere/coordinates.cpp": {
+      "starting_sha256": "6dc3e1017cb37a5a03b48ab7cd7b431b8560c3f49ac9aad95cfb63b14cc0bb79",
+      "current_sha256": "6dc3e1017cb37a5a03b48ab7cd7b431b8560c3f49ac9aad95cfb63b14cc0bb79"
+    },
+    "src/atmosphere/jb2008.cpp": {
+      "starting_sha256": "907b22c9cfd27494e9866d94798308a9ebc298bf96e238d873b54b8daaec68c7",
+      "current_sha256": "907b22c9cfd27494e9866d94798308a9ebc298bf96e238d873b54b8daaec68c7"
+    },
+    "src/atmosphere/jb2008_bridge.f90": {
+      "starting_sha256": "e576d6ec6b3f91864204b5bcb432fe5b81ae95ffdc5411be3f8ccd7cb646fb8e",
+      "current_sha256": "e576d6ec6b3f91864204b5bcb432fe5b81ae95ffdc5411be3f8ccd7cb646fb8e"
+    },
+    "src/atmosphere/nrlmsise00.cpp": {
+      "starting_sha256": "39329f9289982afa0e1521d2aa717522b486c91b3128bfb04ae0263846be712d",
+      "current_sha256": "39329f9289982afa0e1521d2aa717522b486c91b3128bfb04ae0263846be712d"
+    },
+    "src/atmosphere/provider.cpp": {
+      "starting_sha256": "457ac267e8ab94623fa48ab675339b307bec4e610a46b0e27303c5588b8ac043",
+      "current_sha256": "457ac267e8ab94623fa48ab675339b307bec4e610a46b0e27303c5588b8ac043"
+    },
+    "src/atmosphere/weather.cpp": {
+      "starting_sha256": "384dafc5697ef7e46fe58b3e9037c34a8096ad60910e1ee82f2738ffb2163eaf",
+      "current_sha256": "384dafc5697ef7e46fe58b3e9037c34a8096ad60910e1ee82f2738ffb2163eaf"
+    },
+    "src/environment/spice.cpp": {
+      "starting_sha256": "760e0a94298d538ffe2069025e23606ae55280da9405b1c981ee5ff2cc4d627c",
+      "current_sha256": "760e0a94298d538ffe2069025e23606ae55280da9405b1c981ee5ff2cc4d627c"
+    },
+    "src/integration/error_control.cpp": {
+      "starting_sha256": "973f4ad985ce51a288375dbef845fc1c1008e225835c1f47ab46b66ec27f0480",
+      "current_sha256": "973f4ad985ce51a288375dbef845fc1c1008e225835c1f47ab46b66ec27f0480"
+    },
+    "src/kernel/aerodynamics.cpp": {
+      "starting_sha256": "cb1f73ce7e957bddd6720fea255c3620364c61caabb0918ca941c3455bc53a2f",
+      "current_sha256": "cb1f73ce7e957bddd6720fea255c3620364c61caabb0918ca941c3455bc53a2f"
+    },
+    "src/kernel/attitude.cpp": {
+      "starting_sha256": "d1acf094199a969719f2c5bb6269fa1c2e82daeabee8dd29893a457e7cb33165",
+      "current_sha256": "d1acf094199a969719f2c5bb6269fa1c2e82daeabee8dd29893a457e7cb33165"
+    },
+    "src/kernel/dynamics.cpp": {
+      "starting_sha256": "1ac761c9aff009b149d38657b0aace701195d53bc91e2c0bd23d5a92db50f012",
+      "current_sha256": "1ac761c9aff009b149d38657b0aace701195d53bc91e2c0bd23d5a92db50f012"
+    },
+    "src/kernel/gravity.cpp": {
+      "starting_sha256": "1a9640d7f19d21d6c3a962ee72132e53abb935a14dd4d588591c747fb1dfbfa7",
+      "current_sha256": "1a9640d7f19d21d6c3a962ee72132e53abb935a14dd4d588591c747fb1dfbfa7"
+    },
+    "src/kernel/orbital.cpp": {
+      "starting_sha256": "6187c59f6ac03131a4f677134ffa40b86dcd9a8ea180663e54765c503bf89025",
+      "current_sha256": "6187c59f6ac03131a4f677134ffa40b86dcd9a8ea180663e54765c503bf89025"
+    },
+    "src/kernel/radiation.cpp": {
+      "starting_sha256": "bd6bdd294305a982b49a2d44bb4940caffbd63b33ac40e4f00b4acdb275fffe0",
+      "current_sha256": "bd6bdd294305a982b49a2d44bb4940caffbd63b33ac40e4f00b4acdb275fffe0"
+    },
+    "src/kernel/spacecraft.cpp": {
+      "starting_sha256": "7e73572d9aa48d22bc91d6074613dfc7302732c4012c2e3907328b33a4171264",
+      "current_sha256": "7e73572d9aa48d22bc91d6074613dfc7302732c4012c2e3907328b33a4171264"
+    },
+    "src/kernel/state.cpp": {
+      "starting_sha256": "6945a5c9c14f028aea7bcf9d2ffbc9c8b357417db89cca2ee4ce370f1499d197",
+      "current_sha256": "6945a5c9c14f028aea7bcf9d2ffbc9c8b357417db89cca2ee4ce370f1499d197"
+    }
+  },
+  "historical_files_checked": 1608,
+  "historical_files_modified": [],
+  "historical_hash_index": "historical-hashes.json",
+  "new_production_source": "include/leo/integration/batch.hpp",
+  "new_source_scope": "Whole-trajectory scheduling, ownership and exception capture only; delegates unchanged propagate(). No RHS-stage tasks or allocation by the scheduler.",
+  "production_locks": "All existing CSPICE/native mutexes byte-for-byte unchanged. Private diagnostic source copies are separately linked and not used for production performance.",
+  "numeric_acceptance": "924 scientific comparisons passed with binary64 equality; unchanged integration settings and no tolerance relaxation.",
+  "resource_ownership": "One stable SPICE provider and immutable weather per experiment process; no per-trajectory providers or kernel changes.",
+  "unsupported_claims": [
+    "No hardware-counter proof of memory locality/false sharing",
+    "No injected OS launch-failure or ThreadSanitizer result"
+  ]
+}

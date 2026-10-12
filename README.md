@@ -16,7 +16,7 @@ ctest --test-dir build --output-on-failure
 
 The example propagates one day at 60 s output intervals (1441 samples). No arguments selects point-mass; only `--model point-mass|j2` is accepted. It prints model, sample count, final radius in metres and RAAN change in radians.
 
-`leo::kernel` links only Eigen. `leo::integration` adds Boost.Odeint. `leo::analysis` links only the kernel and consumes trajectories, spacecraft/model information and explicit environment snapshots; it adds orbital, attitude, per-orbit and work diagnostics plus CSV export. Integration/analysis default ON; tests/examples default OFF. The optional `leo::environment` component adds CSPICE Sun ephemerides; the kernel never links CSPICE or Python. Environment acquisition and the solver wrapper remain separate from individual force laws.
+`leo::kernel` links only Eigen. `leo::integration` adds Boost.Odeint and the platform thread support for optional C++20 batch execution. `leo::analysis` links only the kernel and consumes trajectories, spacecraft/model information and explicit environment snapshots; it adds orbital, attitude, per-orbit and work diagnostics plus CSV export. Integration/analysis default ON; tests/examples default OFF. The optional `leo::environment` component adds CSPICE Sun ephemerides; the kernel never links CSPICE or Python. Environment acquisition and the solver wrapper remain separate from individual force laws.
 
 Kernel-only build:
 ```sh
@@ -226,6 +226,20 @@ unchanged. See [audit scope and reproduction](docs/numerical-audit/README.md),
 `propagate(rhs,initial,epoch,sample_times_s,options)` returns `Trajectory {epoch,samples}`; each sample contains typed elapsed time and named State. The RHS may be any compatible callable, without virtual dispatch or `std::function`.
 
 Sample times must be nonempty, finite, start exactly at zero and strictly increase. A single zero returns the validated initial state. Forward propagation clips steps to exact requested samples; no interpolation or accepted-step history is returned. Output storage is reserved once; stepping uses fixed arrays.
+
+Optional independent-trajectory concurrency: include `leo/integration/batch.hpp`
+and call `leo::propagate_batch(factory, initials, epoch, sample_times, options,
+leo::BatchOptions{workers, scheduling})`. The factory receives `(index, initial)`
+and creates a trajectory-owned RHS on its worker; concurrent factory calls must
+be safe. One shared epoch/options/schedule, original input ordering, independent
+solver/output state. Default one worker runs inline; parallel calls create and
+join a bounded C++20 worker pool. Static partitioning is the default; dynamic
+atomic-index scheduling is explicit. Existing `propagate()` is unchanged.
+All trajectories continue after a trajectory failure; after joining,
+`BatchPropagationError` reports the lowest failing input index and original
+exception pointer. Borrowed environmental resources must outlive the call;
+keep one stable SPICE configuration and retain native-model locks. See
+[MT-001 design, validation, scaling and reproduction](docs/multithreading/README.md).
 
 The adapter uses Boost.Odeint Dormand–Prince 5(4) and explicitly owns current/trial derivative buffers, including rejection and quaternion projection. Maximum component error is scaled by `atol_field + rtol*max(abs(current),abs(trial))`. Defaults:
 
