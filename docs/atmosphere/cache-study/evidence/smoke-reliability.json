@@ -1,0 +1,10 @@
+{
+  "generated_utc": "2026-10-14T12:22:20.405626+00:00",
+  "note": "a completed task is trusted only while its published result exists and still matches the recorded SHA-256",
+  "resume_no_repeat": {
+    "passed": true,
+    "tasks": 71,
+    "would_reexecute": []
+  },
+  "verified_utc": "2026-10-14T12:22:20.405638+00:00"
+}

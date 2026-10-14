@@ -1,0 +1,130 @@
+{
+  "executed_tasks": 0,
+  "generated_utc": "2026-10-14T12:22:49.580330+00:00",
+  "input_verification": {
+    "blocked": true,
+    "inputs_without_a_pinned_hash": [],
+    "mismatched_inputs": [
+      {
+        "expected_sha256": "891a0767702d11c2cd8432b3b012d4350c4becbf86873c32073cff852155f9d7",
+        "input": "solfsmy",
+        "observed_sha256": "9bc734e66da7b5919ce6fd2b3475db82c28e500988dbb2f8d994d5ff3c074e35",
+        "path": "/home/user/leo-cache-study-deps/SOLFSMY-live.TXT"
+      }
+    ],
+    "missing_inputs": [
+      {
+        "expected_sha256": "14deb9ab9dd49482185cc49a9c29fe56ae65d50ab94caf3197db8694836b6f81",
+        "input": "pck",
+        "path": null
+      }
+    ],
+    "observed": {
+      "cases": {
+        "case-a": {
+          "bytes": 1180,
+          "path": "/home/user/leo-dynamics/docs/numerical-audit/experiments/CASE-A-v1.cfg",
+          "present": true,
+          "sha256": "076c19cc33a20e58427a805828afd2b58cb965897b201fe505bf18d499568d9a"
+        },
+        "case-b": {
+          "bytes": 1087,
+          "path": "/home/user/leo-dynamics/docs/numerical-audit/experiments/CASE-B-v1.cfg",
+          "present": true,
+          "sha256": "2d90c0fd1f0627bc69878a218a0a6f260260ce12f915b7b41ae31f351a95f29f"
+        },
+        "case-c": {
+          "bytes": 361,
+          "path": "/home/user/leo-dynamics/docs/numerical-audit/experiments/CASE-C-v1.cfg",
+          "present": true,
+          "sha256": "d1c8d8574e465eaca01e9977d87bebfbc25721b049a47aa9f86cbe57e9e2ee77"
+        }
+      },
+      "dtcfile": {
+        "bytes": 1191190,
+        "path": "/home/user/leo-cache-study-deps/DTCFILE-live.TXT",
+        "present": true,
+        "sha256": "f6485450c363e9be8e71c37e143ac768462deca77565b727ec2e96c025ab8d91"
+      },
+      "lsk": {
+        "bytes": 5257,
+        "path": "/home/user/leo-cache-study-deps/naif0012.tls",
+        "present": true,
+        "sha256": "678e32bdb5a744117a467cd9601cd6b373f0e9bc9bbde1371d5eee39600a039b"
+      },
+      "pck": {
+        "path": null,
+        "present": false,
+        "sha256": null
+      },
+      "solfsmy": {
+        "bytes": 835846,
+        "path": "/home/user/leo-cache-study-deps/SOLFSMY-live.TXT",
+        "present": true,
+        "sha256": "9bc734e66da7b5919ce6fd2b3475db82c28e500988dbb2f8d994d5ff3c074e35"
+      },
+      "spk": {
+        "bytes": 10895360,
+        "path": "/home/user/leo-cache-study-deps/de432s.bsp",
+        "present": true,
+        "sha256": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b"
+      },
+      "weather": {
+        "bytes": 3036482,
+        "path": "/home/user/leo-cache-study-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt",
+        "present": true,
+        "sha256": "f3eb9e676295bbf93566a054e95d1317de1aba2e410d209d4642dbedebf05ea2"
+      }
+    },
+    "outcome": "refused: a pinned input is missing or does not match its expected hash; every primary task is recorded blocked and pending, no input was replaced",
+    "pinned_hashes": {
+      "case-a": "076c19cc33a20e58427a805828afd2b58cb965897b201fe505bf18d499568d9a",
+      "case-b": "2d90c0fd1f0627bc69878a218a0a6f260260ce12f915b7b41ae31f351a95f29f",
+      "case-c": "d1c8d8574e465eaca01e9977d87bebfbc25721b049a47aa9f86cbe57e9e2ee77",
+      "dtcfile": "f6485450c363e9be8e71c37e143ac768462deca77565b727ec2e96c025ab8d91",
+      "lsk": "678e32bdb5a744117a467cd9601cd6b373f0e9bc9bbde1371d5eee39600a039b",
+      "pck": "14deb9ab9dd49482185cc49a9c29fe56ae65d50ab94caf3197db8694836b6f81",
+      "solfsmy": "891a0767702d11c2cd8432b3b012d4350c4becbf86873c32073cff852155f9d7",
+      "spk": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b",
+      "weather": "f3eb9e676295bbf93566a054e95d1317de1aba2e410d209d4642dbedebf05ea2"
+    },
+    "problems": [
+      "pck: no input file (not supplied)",
+      "solfsmy: expected 891a0767702d11c2cd8432b3b012d4350c4becbf86873c32073cff852155f9d7, found 9bc734e66da7b5919ce6fd2b3475db82c28e500988dbb2f8d994d5ff3c074e35 (/home/user/leo-cache-study-deps/SOLFSMY-live.TXT)"
+    ],
+    "verification_only": false
+  },
+  "kind": "atm-cache-study-blocked",
+  "mismatched_inputs": [
+    {
+      "expected_sha256": "891a0767702d11c2cd8432b3b012d4350c4becbf86873c32073cff852155f9d7",
+      "input": "solfsmy",
+      "observed_sha256": "9bc734e66da7b5919ce6fd2b3475db82c28e500988dbb2f8d994d5ff3c074e35",
+      "path": "/home/user/leo-cache-study-deps/SOLFSMY-live.TXT"
+    }
+  ],
+  "missing_inputs": [
+    {
+      "expected_sha256": "14deb9ab9dd49482185cc49a9c29fe56ae65d50ab94caf3197db8694836b6f81",
+      "input": "pck",
+      "path": null
+    }
+  ],
+  "note": "pinned inputs were not replaced and no alternate input was substituted; the study stays pending until the pinned files are available again. A --verification-only run may be used to check the pipeline, and its outputs are not scientific or performance evidence.",
+  "planned_tasks": 391,
+  "previously_completed_tasks": 0,
+  "problems": [
+    "pck: no input file (not supplied)",
+    "solfsmy: expected 891a0767702d11c2cd8432b3b012d4350c4becbf86873c32073cff852155f9d7, found 9bc734e66da7b5919ce6fd2b3475db82c28e500988dbb2f8d994d5ff3c074e35 (/home/user/leo-cache-study-deps/SOLFSMY-live.TXT)"
+  ],
+  "resume_command": "python3 /home/user/leo-dynamics/docs/atmosphere/cache-study/run.py --resume /home/user/leo-cache-study-evidence/primary-blocked --workers 8 --max-hours 8.0",
+  "state": "blocked: the full plan is recorded and every task is pending",
+  "unlocated_inputs": [
+    {
+      "input": "pck",
+      "path": null,
+      "reason": "not found in ['/home/user/leo-cache-study-evidence/primary-blocked', '/tmp/leo-atmosphere-deps', '/home/user/leo-cache-study-deps', '/home/user/leo-dynamics/docs/atmosphere/evidence']"
+    }
+  ],
+  "verification_command": "python3 /home/user/leo-dynamics/docs/atmosphere/cache-study/run.py --mode smoke --verification-only --out /home/user/leo-cache-study-evidence --workers 8"
+}

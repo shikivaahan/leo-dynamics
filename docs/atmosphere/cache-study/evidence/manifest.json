@@ -1,0 +1,211 @@
+{
+  "blocked": {
+    "executed": 0,
+    "primary_full_planned_tasks": 391,
+    "reason": "two pinned direct-v2 inputs are unavailable; the exact baseline was kept rather than substituted"
+  },
+  "commands": {
+    "native_slices": {
+      "ap-history": {
+        "argv": [
+          "build-atmosphere-cache-study-final/atm_cache_study",
+          "--study-native-geodetic",
+          "on",
+          "--study-kind",
+          "sensitivity",
+          "--study-model",
+          "nrlmsise00",
+          "--study-seed",
+          "20261014",
+          "--lsk",
+          "/home/user/leo-cache-study-deps/naif0012.tls",
+          "--weather",
+          "/home/user/leo-cache-study-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt",
+          "--epoch-utc",
+          "2003-10-30T00:00:00",
+          "--out",
+          "/home/user/leo-cache-study-evidence/native-geodetic-pinned/ap-history",
+          "--fixture",
+          "quiet_june=2008-07-01T00:00:00",
+          "--fixture",
+          "quiet_december=2008-12-15T00:00:00",
+          "--fixture",
+          "moderate_march=2001-03-20T00:00:00",
+          "--fixture",
+          "active_october=2003-10-28T00:00:00",
+          "--fixture",
+          "storm_october=2003-10-30T00:00:00",
+          "--fixture",
+          "leap_new_year=2016-12-31T23:59:00",
+          "--fixture",
+          "three_hourly_bin=2003-10-30T02:59:00",
+          "--fixture",
+          "midnight=2003-10-29T23:59:00",
+          "--ap-history"
+        ],
+        "returncode": 0
+      },
+      "daily-ap": {
+        "argv": [
+          "build-atmosphere-cache-study-final/atm_cache_study",
+          "--study-native-geodetic",
+          "on",
+          "--study-kind",
+          "sensitivity",
+          "--study-model",
+          "nrlmsise00",
+          "--study-seed",
+          "20261014",
+          "--lsk",
+          "/home/user/leo-cache-study-deps/naif0012.tls",
+          "--weather",
+          "/home/user/leo-cache-study-deps/SpaceWeather-All-v1.2_snapshot_20200224.txt",
+          "--epoch-utc",
+          "2003-10-30T00:00:00",
+          "--out",
+          "/home/user/leo-cache-study-evidence/native-geodetic-pinned/daily-ap",
+          "--fixture",
+          "quiet_june=2008-07-01T00:00:00",
+          "--fixture",
+          "quiet_december=2008-12-15T00:00:00",
+          "--fixture",
+          "moderate_march=2001-03-20T00:00:00",
+          "--fixture",
+          "active_october=2003-10-28T00:00:00",
+          "--fixture",
+          "storm_october=2003-10-30T00:00:00",
+          "--fixture",
+          "leap_new_year=2016-12-31T23:59:00",
+          "--fixture",
+          "three_hourly_bin=2003-10-30T02:59:00",
+          "--fixture",
+          "midnight=2003-10-29T23:59:00"
+        ],
+        "returncode": 0
+      }
+    },
+    "pipeline_verification": "docs/atmosphere/cache-study/run.py --mode smoke --workers 4 --max-hours 1 --verification-only (nonprimary inputs)",
+    "primary_blocked": [
+      "python3",
+      "docs/atmosphere/cache-study/run.py",
+      "--mode",
+      "full",
+      "--workers",
+      "8",
+      "--max-hours",
+      "8",
+      "--out",
+      "/home/user/leo-cache-study-evidence/primary-blocked",
+      "--binary",
+      "build-atmosphere-cache-study-final/atm_cache_study",
+      "--build-dir",
+      "build-atmosphere-cache-study-final",
+      "--deps-dir",
+      "/home/user/leo-cache-study-deps",
+      "--expect-sha256",
+      "pck=14deb9ab9dd49482185cc49a9c29fe56ae65d50ab94caf3197db8694836b6f81",
+      "--expect-sha256",
+      "solfsmy=891a0767702d11c2cd8432b3b012d4350c4becbf86873c32073cff852155f9d7"
+    ],
+    "regressions": "ctest --test-dir build-atmosphere-cache-study-regressions --output-on-failure --parallel 4 (185/185 passed)",
+    "runner_regressions": "python3 tests/cache_study_runner_tests.py (17/17 passed)"
+  },
+  "dirty_tree": "?? docs/atmosphere/cache-study/\n?? outputs/\n?? tests/cache_study_runner_tests.py\n",
+  "executed": {
+    "native_geodetic_sensitivity": 2,
+    "pipeline_verification_tasks": 71,
+    "project_regressions": 185,
+    "runner_regression_cases": 17
+  },
+  "external_artifacts": {
+    "native_geodetic": "/home/user/leo-cache-study-evidence/native-geodetic-pinned",
+    "pipeline_verification": "/home/user/leo-cache-study-evidence/smoke-final",
+    "primary_blocked": "/home/user/leo-cache-study-evidence/primary-blocked"
+  },
+  "generated_utc": "2026-10-14T12:25:30.314411+00:00",
+  "git_revision": "c68ccfa96ac18a7085dcca118b1287104a5d2fd3",
+  "host": {
+    "cpu": "AMD Ryzen 7 5800H",
+    "logical_cpus": 16,
+    "note": "WSL2, no frequency governor control, no physical-core isolation, no perf",
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+  },
+  "inputs": {
+    "missing_for_primary": {
+      "SOLFSMY.TXT": "891a0767702d11c2cd8432b3b012d4350c4becbf86873c32073cff852155f9d7",
+      "earth_000101_270105_261009.bpc": "14deb9ab9dd49482185cc49a9c29fe56ae65d50ab94caf3197db8694836b6f81"
+    },
+    "pinned_exact": {
+      "DTCFILE.TXT": "f6485450c363e9be8e71c37e143ac768462deca77565b727ec2e96c025ab8d91",
+      "SpaceWeather-All-v1.2_snapshot_20200224.txt": "f3eb9e676295bbf93566a054e95d1317de1aba2e410d209d4642dbedebf05ea2",
+      "de432s.bsp": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b",
+      "naif0012.tls": "678e32bdb5a744117a467cd9601cd6b373f0e9bc9bbde1371d5eee39600a039b"
+    },
+    "verification_only": {
+      "SOLFSMY-live.TXT": "9bc734e66da7b5919ce6fd2b3475db82c28e500988dbb2f8d994d5ff3c074e35",
+      "earth_000101_270109_261013.bpc": "cd1a020f0371deddbc3cca05e66e896f3ef62a5af54162cd26394987c7a9ffd4"
+    }
+  },
+  "kind": "atm-cache-study-manifest",
+  "not_measured": [
+    "JB2008 native-input sensitivity",
+    "full-provider candidate accuracy on pinned inputs",
+    "real CASE-A/B/C locality on pinned inputs",
+    "six-hour and 24-hour coupled propagation on pinned inputs",
+    "provider, native-model and preprocessing baseline costs",
+    "end-to-end speedups",
+    "process-isolated batch throughput"
+  ],
+  "outputs": {
+    "evidence/accuracy-summary.json": "19805059a8bf5b9a0f1727670b7c1fc9620b7c32c54b2e648f14b68dc98a6daf",
+    "evidence/locality-summary.json": "8265df3e93fc4cd710f1730ee0577e90f984227073b516a70d10bdc42b35ba94",
+    "evidence/native-sensitivity-summary.json": "f3e2eb7bdbf6a710dc068aa48cbff205310d5572a41b208c5de88019bd29e225",
+    "evidence/performance-summary.json": "8c16c11296b2a4e9d66db8d2a40d8c5588c60fd72ee17c1cc9801800c12c417b",
+    "evidence/primary-blocked.json": "4867f1a8985334d1e2effdbef8d42034b6ac259345d103078caa19f7df878a3e",
+    "evidence/propagation-summary.json": "948777a74f5af55e768bfca5faa9013085ff4e5f11aade69c6335ce7d46c4ada",
+    "evidence/sensitivity-ap-history.svg": "68703e543040e57ce714857b467fa49201cbc40ab6f7b5bea81ac3cf70d2b220",
+    "evidence/sensitivity-daily-ap.svg": "dec17a7bc95facd64899144e91246cc7e6046854292343f227a4f99d905399c6",
+    "evidence/smoke-reliability.json": "66ffc2426fcaf61045e9b1eb633ba8705b3ac4a472ebbe4446785717e2b51d8a",
+    "evidence/smoke-status.json": "0c15031a26bfd07cb5ca379a65741ed3ffeac34da2ca722e79f9ecdc5018372c"
+  },
+  "preservation": "all 301 tracked source, test and frozen-evidence files hash-verified unchanged; docs/atmosphere/cache-study/ and tests/cache_study_runner_tests.py are the only repository additions",
+  "primary_study_complete": false,
+  "schema_version": 1,
+  "seeds": {
+    "study_seed": 20261014
+  },
+  "sources": {
+    "docs/atmosphere/cache-study/ACCURACY.md": "f7e967b1ae050ec88ac66886dc05e189c981b634b52ae1b1d65df2440a83d777",
+    "docs/atmosphere/cache-study/CMakeLists.txt": "e5b5fbfcb0b396c23e304154d60a58aef2bb1488e3a0fa8f1b0804e0e0047349",
+    "docs/atmosphere/cache-study/DECISIONS.md": "740f7f724dbcaff2fa12b927f786f69c3d1d8e806507f87e647bb3d4320265b9",
+    "docs/atmosphere/cache-study/DESIGN.md": "824920672df0df44c076c54549852eb6bdde108628dc423aa99e9850320f18a5",
+    "docs/atmosphere/cache-study/PARAMETERS.md": "b5e0b0257254756e1d57be8116004dd955eec668dfd17649c08ac01efe2d45ed",
+    "docs/atmosphere/cache-study/PERFORMANCE.md": "1eb834e929b36f773d2b962d390c9a26e7ff2a7537183178867ce9d4de50df28",
+    "docs/atmosphere/cache-study/PROPAGATION.md": "824735e614f5b93d1f43d8229f1f8736d3bf619186fd053056e55f83f5b86f74",
+    "docs/atmosphere/cache-study/README.md": "90110d66d742f85902e4177c66d098bfd72a0019081999435d52737eda9af02c",
+    "docs/atmosphere/cache-study/RESULTS.md": "d18205445f9d657dfada55de6039892a47c26377d681e7cf5498f92dc14f2084",
+    "docs/atmosphere/cache-study/SENSITIVITY.md": "9d140a73224bfd526d53c2eb847c9bbc5a98e01ed48703a2b0f1ee5b87ee172e",
+    "docs/atmosphere/cache-study/accuracy.cpp": "cbd0ac9811db80d94d309f9792efa2f523494e734f11af76c1598b2c364e2749",
+    "docs/atmosphere/cache-study/analyse.py": "aac53be9010c694dc8c623af04cf78f08884f019962827fa19cb777b75860ee8",
+    "docs/atmosphere/cache-study/check.cpp": "02a97562a44631327ced6d996cf985cda81954f71ffcf17b6e1d63c1844529ab",
+    "docs/atmosphere/cache-study/native_sensitivity.cpp": "d829c9c01e8544b33e832b16be2bad33ee6db1d72e7ff0d574c05a05c4c42905",
+    "docs/atmosphere/cache-study/process_benchmark.hpp": "40e828127a8d1f4cafac1eb337910a4ac3f28c1e2ac91419dc1befc93e084613",
+    "docs/atmosphere/cache-study/propagation.hpp": "442a0e80c3ed9bfd29c1671dbbc042aeaa8d39f5298ed2ec75c6eb6b4698a7b6",
+    "docs/atmosphere/cache-study/run.py": "8126e2eda9b990a5ce01dabedd0ca328b513a7dd1a74454eacfb20115b4ba6f2",
+    "docs/atmosphere/cache-study/sensitivity.cpp": "9d164edbfeb9509bbef58cb58f6afaa11ed190645b78017dcf09703ff15709ec",
+    "docs/atmosphere/cache-study/study.cpp": "7028f5844190f25c2a54ecf20305dee08f23c4aebf979eab49d740ab7ac01293",
+    "docs/atmosphere/cache-study/study_common.hpp": "867426cd0170cb8c3f12f6e7b7c3bed32d8f81c7ad5b5de1858e2fcf5c846200",
+    "docs/atmosphere/cache-study/study_impl.hpp": "7c308eb0d37db94bf0083521ced482379cd87753d4f2d43f1729a97beeaa65f9",
+    "docs/atmosphere/cache-study/support.hpp": "f3c76df975a17ce6bb6e7ed7f04bc8c76e701676f0a3c72c76aeb15b441777f0"
+  },
+  "toolchain": {
+    "boost": "1.83.0",
+    "build_type": "Release -O3 -DNDEBUG",
+    "catch2": "3.4.0",
+    "compiler": "GCC 13.3.0",
+    "cxx_standard": "C++20",
+    "eigen": "3.4.0",
+    "fortran": "GNU Fortran 13.3.0",
+    "spice_toolkit": "CSPICE_N0067"
+  }
+}

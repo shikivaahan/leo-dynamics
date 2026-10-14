@@ -1,0 +1,269 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 606 546">
+<g font-family="sans-serif" font-size="13" fill="var(--fg, currentColor)">
+<text x="12" y="22">NRLMSISE-00 daily-ap: altitude sensitivity</text>
+<text x="12" y="43">Maximum |d ln ρ / dh| (km⁻¹); tested weather, latitude and probe scales</text>
+<text x="106" y="59">0 h</text>
+<text x="178" y="59">6 h</text>
+<text x="250" y="59">9 h</text>
+<text x="322" y="59">12 h</text>
+<text x="394" y="59">15 h</text>
+<text x="466" y="59">18 h</text>
+<text x="538" y="59">21 h</text>
+<text x="9" y="85">200 km</text>
+<rect x="82" y="68" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="85">—</text>
+<rect x="154" y="68" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="85">—</text>
+<rect x="226" y="68" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="85">—</text>
+<rect x="298" y="68" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="85">—</text>
+<rect x="370" y="68" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="85">—</text>
+<rect x="442" y="68" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="85">—</text>
+<rect x="514" y="68" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="85">—</text>
+<text x="9" y="109">250 km</text>
+<rect x="82" y="92" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2294" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="109">0.035</text>
+<rect x="154" y="92" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2293" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="109">0.035</text>
+<rect x="226" y="92" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2224" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="109">0.033</text>
+<rect x="298" y="92" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2208" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="109">0.033</text>
+<rect x="370" y="92" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2214" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="109">0.033</text>
+<rect x="442" y="92" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2239" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="109">0.034</text>
+<rect x="514" y="92" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2272" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="109">0.035</text>
+<text x="9" y="133">300 km</text>
+<rect x="82" y="116" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.7111" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="133">0.192</text>
+<rect x="154" y="116" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.6139" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="133">0.160</text>
+<rect x="226" y="116" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.6532" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="133">0.173</text>
+<rect x="298" y="116" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.6922" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="133">0.186</text>
+<rect x="370" y="116" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.7115" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="133">0.192</text>
+<rect x="442" y="116" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.7633" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="133">0.209</text>
+<rect x="514" y="116" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.7700" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="133">0.211</text>
+<text x="9" y="157">350 km</text>
+<rect x="82" y="140" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2071" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="157">0.028</text>
+<rect x="154" y="140" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2089" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="157">0.029</text>
+<rect x="226" y="140" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2013" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="157">0.026</text>
+<rect x="298" y="140" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2003" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="157">0.026</text>
+<rect x="370" y="140" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1995" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="157">0.026</text>
+<rect x="442" y="140" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2017" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="157">0.026</text>
+<rect x="514" y="140" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2046" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="157">0.027</text>
+<text x="9" y="181">400 km</text>
+<rect x="82" y="164" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1999" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="181">0.026</text>
+<rect x="154" y="164" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2023" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="181">0.027</text>
+<rect x="226" y="164" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1945" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="181">0.024</text>
+<rect x="298" y="164" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1915" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="181">0.023</text>
+<rect x="370" y="164" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1918" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="181">0.023</text>
+<rect x="442" y="164" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1922" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="181">0.023</text>
+<rect x="514" y="164" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1982" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="181">0.025</text>
+<text x="9" y="205">450 km</text>
+<rect x="82" y="188" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2356" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="205">0.037</text>
+<rect x="154" y="188" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2278" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="205">0.035</text>
+<rect x="226" y="188" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2340" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="205">0.037</text>
+<rect x="298" y="188" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2676" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="205">0.048</text>
+<rect x="370" y="188" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2455" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="205">0.041</text>
+<rect x="442" y="188" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2459" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="205">0.041</text>
+<rect x="514" y="188" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.2428" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="205">0.040</text>
+<text x="9" y="229">500 km</text>
+<rect x="82" y="212" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1887" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="229">0.022</text>
+<rect x="154" y="212" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1858" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="229">0.021</text>
+<rect x="226" y="212" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1843" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="229">0.021</text>
+<rect x="298" y="212" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1815" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="229">0.020</text>
+<rect x="370" y="212" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1793" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="229">0.019</text>
+<rect x="442" y="212" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1802" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="229">0.020</text>
+<rect x="514" y="212" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1854" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="229">0.021</text>
+<text x="9" y="253">550 km</text>
+<rect x="82" y="236" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1790" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="253">0.019</text>
+<rect x="154" y="236" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1767" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="253">0.018</text>
+<rect x="226" y="236" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1786" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="253">0.019</text>
+<rect x="298" y="236" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1778" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="253">0.019</text>
+<rect x="370" y="236" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1764" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="253">0.018</text>
+<rect x="442" y="236" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1763" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="253">0.018</text>
+<rect x="514" y="236" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1804" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="253">0.020</text>
+<text x="9" y="277">600 km</text>
+<rect x="82" y="260" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1719" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="277">0.017</text>
+<rect x="154" y="260" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1708" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="277">0.016</text>
+<rect x="226" y="260" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1709" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="277">0.017</text>
+<rect x="298" y="260" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1726" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="277">0.017</text>
+<rect x="370" y="260" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1726" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="277">0.017</text>
+<rect x="442" y="260" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1723" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="277">0.017</text>
+<rect x="514" y="260" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1732" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="277">0.017</text>
+<text x="9" y="301">650 km</text>
+<rect x="82" y="284" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1667" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="301">0.015</text>
+<rect x="154" y="284" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1658" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="301">0.015</text>
+<rect x="226" y="284" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1661" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="301">0.015</text>
+<rect x="298" y="284" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1672" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="301">0.015</text>
+<rect x="370" y="284" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1674" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="301">0.015</text>
+<rect x="442" y="284" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1671" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="301">0.015</text>
+<rect x="514" y="284" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1670" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="301">0.015</text>
+<text x="9" y="325">700 km</text>
+<rect x="82" y="308" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1606" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="325">0.013</text>
+<rect x="154" y="308" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1617" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="325">0.014</text>
+<rect x="226" y="308" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1621" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="325">0.014</text>
+<rect x="298" y="308" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1626" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="325">0.014</text>
+<rect x="370" y="308" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1625" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="325">0.014</text>
+<rect x="442" y="308" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1618" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="325">0.014</text>
+<rect x="514" y="308" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1610" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="325">0.013</text>
+<text x="9" y="349">750 km</text>
+<rect x="82" y="332" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1572" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="349">0.012</text>
+<rect x="154" y="332" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1565" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="349">0.012</text>
+<rect x="226" y="332" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1573" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="349">0.012</text>
+<rect x="298" y="332" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1574" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="349">0.012</text>
+<rect x="370" y="332" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1569" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="349">0.012</text>
+<rect x="442" y="332" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1556" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="349">0.012</text>
+<rect x="514" y="332" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1561" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="349">0.012</text>
+<text x="9" y="373">800 km</text>
+<rect x="82" y="356" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1543" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="373">0.011</text>
+<rect x="154" y="356" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1525" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="373">0.011</text>
+<rect x="226" y="356" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1526" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="373">0.011</text>
+<rect x="298" y="356" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1531" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="373">0.011</text>
+<rect x="370" y="356" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1534" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="373">0.011</text>
+<rect x="442" y="356" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1535" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="373">0.011</text>
+<rect x="514" y="356" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1542" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="373">0.011</text>
+<text x="9" y="397">850 km</text>
+<rect x="82" y="380" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1518" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="397">0.010</text>
+<rect x="154" y="380" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1511" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="397">0.010</text>
+<rect x="226" y="380" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1511" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="397">0.010</text>
+<rect x="298" y="380" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1514" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="397">0.010</text>
+<rect x="370" y="380" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1517" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="397">0.010</text>
+<rect x="442" y="380" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1518" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="397">0.010</text>
+<rect x="514" y="380" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1519" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="397">0.010</text>
+<text x="9" y="421">900 km</text>
+<rect x="82" y="404" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1497" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="421">0.010</text>
+<rect x="154" y="404" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1496" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="421">0.010</text>
+<rect x="226" y="404" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1497" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="421">0.010</text>
+<rect x="298" y="404" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1499" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="421">0.010</text>
+<rect x="370" y="404" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1499" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="421">0.010</text>
+<rect x="442" y="404" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1499" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="421">0.010</text>
+<rect x="514" y="404" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1498" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="421">0.010</text>
+<text x="9" y="445">950 km</text>
+<rect x="82" y="428" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1472" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="445">0.009</text>
+<rect x="154" y="428" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1477" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="445">0.009</text>
+<rect x="226" y="428" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1480" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="445">0.009</text>
+<rect x="298" y="428" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1481" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="445">0.009</text>
+<rect x="370" y="428" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1485" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="445">0.009</text>
+<rect x="442" y="428" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1484" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="445">0.009</text>
+<rect x="514" y="428" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.1479" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="445">0.009</text>
+<text x="9" y="469">1000 km</text>
+<rect x="82" y="452" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="95" y="469">—</text>
+<rect x="154" y="452" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="167" y="469">—</text>
+<rect x="226" y="452" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="239" y="469">—</text>
+<rect x="298" y="452" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="311" y="469">—</text>
+<rect x="370" y="452" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="383" y="469">—</text>
+<rect x="442" y="452" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="455" y="469">—</text>
+<rect x="514" y="452" width="71" height="23" fill="var(--accent, currentColor)" fill-opacity="0.0000" stroke="var(--border, currentColor)" stroke-opacity="0.2"/>
+<text x="527" y="469">—</text>
+<text x="12" y="510">— Central differences were not evaluated at the band endpoints.</text>
+<text x="12" y="531">Native-input slice only: no provider, cache-runtime or propagation claim.</text>
+</g></svg>

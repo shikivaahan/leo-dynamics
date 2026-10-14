@@ -1,0 +1,487 @@
+{
+  "configurations": [
+    {
+      "configuration": "authoritative_single",
+      "median_s": 0.001609742,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_cold",
+      "median_s": 0.003530702,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 0.4559268949914209,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_warm",
+      "median_s": 0.002211137,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 0.7280154960999702,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_fixed_state_rhs",
+      "median_s": 0.047444249,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_fixed_state_rhs",
+      "median_s": 0.053000181,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 0.8951714523390024,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_single",
+      "median_s": 0.001586209,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_cold",
+      "median_s": 0.002190984,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 0.7239710559273824,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_warm",
+      "median_s": 0.002048531,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 0.7743153508538557,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_fixed_state_rhs",
+      "median_s": 0.033032889,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_fixed_state_rhs",
+      "median_s": 0.04882716,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 0.6765269370571625,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_single",
+      "median_s": 0.001625352,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_cold",
+      "median_s": 0.002162107,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 0.7517444788810175,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_warm",
+      "median_s": 0.002124022,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 0.7652237123720941,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_fixed_state_rhs",
+      "median_s": 0.032995297,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_fixed_state_rhs",
+      "median_s": 0.044571623,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 0.7402758701427588,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_single",
+      "median_s": 0.001674782,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_cold",
+      "median_s": 0.002053628,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 0.8155235514903381,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_warm",
+      "median_s": 0.001350659,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1.2399739682628999,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_fixed_state_rhs",
+      "median_s": 0.040566866,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_fixed_state_rhs",
+      "median_s": 0.025647328,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1.5817190001235215,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_single",
+      "median_s": 0.001604038,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_cold",
+      "median_s": 0.002035644,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 0.7879756971258235,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_warm",
+      "median_s": 0.001256413,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1.2766805182690721,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_fixed_state_rhs",
+      "median_s": 0.033885618,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_fixed_state_rhs",
+      "median_s": 0.026586517,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1.2745414527220695,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_single",
+      "median_s": 0.001717122,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_cold",
+      "median_s": 0.002145644,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 0.8002828055353078,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_warm",
+      "median_s": 0.001363762,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1.259106794294019,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_fixed_state_rhs",
+      "median_s": 0.032526152,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_fixed_state_rhs",
+      "median_s": 0.026149605,
+      "model": "jb2008",
+      "repeats": 1,
+      "speedup": 1.2438486929343675,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_single",
+      "median_s": 0.001228389,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_cold",
+      "median_s": 0.002333983,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.5263058899743486,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_warm",
+      "median_s": 0.001662851,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.7387246361820753,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_fixed_state_rhs",
+      "median_s": 0.023189937,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_fixed_state_rhs",
+      "median_s": 0.032826947,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.7064299034570592,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_single",
+      "median_s": 0.00114444,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_cold",
+      "median_s": 0.001571534,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.728231142310634,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_warm",
+      "median_s": 0.002325868,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.4920485599354736,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_fixed_state_rhs",
+      "median_s": 0.023989481,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_fixed_state_rhs",
+      "median_s": 0.033651313,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.7128839519575357,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_single",
+      "median_s": 0.001145559,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_cold",
+      "median_s": 0.001776459,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.6448552992216539,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_warm",
+      "median_s": 0.001693486,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.676450233423837,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_fixed_state_rhs",
+      "median_s": 0.023022413,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_fixed_state_rhs",
+      "median_s": 0.032649142,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.7051460341591824,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_single",
+      "median_s": 0.001953185,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_cold",
+      "median_s": 0.001683034,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1.1605142855105721,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_warm",
+      "median_s": 0.001348665,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1.4482358480423234,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_fixed_state_rhs",
+      "median_s": 0.02313097,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_fixed_state_rhs",
+      "median_s": 0.025956149,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.8911556949376427,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_single",
+      "median_s": 0.001122468,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_cold",
+      "median_s": 0.001836022,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.6113586874231354,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_warm",
+      "median_s": 0.001615095,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.6949857438726514,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_fixed_state_rhs",
+      "median_s": 0.025564742,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_fixed_state_rhs",
+      "median_s": 0.026880179,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.9510629374901113,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_single",
+      "median_s": 0.001167336,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_cold",
+      "median_s": 0.001823769,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.6400679033364423,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_single_warm",
+      "median_s": 0.001278517,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.913039091384784,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "authoritative_fixed_state_rhs",
+      "median_s": 0.023747646,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 1,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    },
+    {
+      "configuration": "candidate_fixed_state_rhs",
+      "median_s": 0.026249151,
+      "model": "nrlmsise00",
+      "repeats": 1,
+      "speedup": 0.9047014892024509,
+      "task": "bench-jb2008-control-na-na-na-4096-none-linear-lru-standard-t0p05-ensemble"
+    }
+  ],
+  "evidence_class": "pipeline-verification-only",
+  "kind": "atm-cache-study-performance-verification",
+  "note": "30 s smoke propagation on nonprimary inputs; timings are pipeline proof only and must not be read as speedups"
+}

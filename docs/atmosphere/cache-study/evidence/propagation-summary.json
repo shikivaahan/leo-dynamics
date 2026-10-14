@@ -1,0 +1,13 @@
+{
+  "control_direct_series_bitwise": {
+    "jb2008/case-a": true,
+    "jb2008/case-b": true,
+    "jb2008/case-c": true,
+    "nrlmsise00/case-a": true,
+    "nrlmsise00/case-b": true,
+    "nrlmsise00/case-c": true
+  },
+  "evidence_class": "pipeline-verification-only",
+  "kind": "atm-cache-study-propagation-verification",
+  "note": "60 s CASE windows on nonprimary inputs; these are smoke numbers, not coupled-error science"
+}
