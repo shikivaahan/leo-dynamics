@@ -1271,6 +1271,8 @@ private:
     void emit_prepared(leo::Epoch epoch, const leo::InertialVector& position,
                        double density, std::uint32_t flags);
     double native_density(const QueryInputs& inputs, const leo::SunObservation* sun) const;
+    [[noreturn]] void rethrow_native_failure(
+        const QueryInputs& inputs, const std::exception& error) const;
 
     double serve_exact(const QueryInputs& inputs, const ExactKey& key);
     double serve_cell(const QueryInputs& inputs);

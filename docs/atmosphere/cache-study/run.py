@@ -2322,7 +2322,7 @@ class Scheduler:
                     self.ledger.record_failure(task.task_id, 0, logs / f"{task.task_id}.log",
                                                f"isolated binary merge failed: {error}")
                     return
-            traces = sorted((cfg.out / "traces").glob(f"{task.task_id}*")) if (
+            traces = sorted((cfg.out / "traces").glob(f"{task.task_id}.bin*")) if (
                 cfg.out / "traces").is_dir() else []
             if traces:
                 self.ledger.data["tasks"][task.task_id].setdefault("artifacts", []).extend(

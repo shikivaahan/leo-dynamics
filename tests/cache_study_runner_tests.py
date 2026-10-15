@@ -246,6 +246,22 @@ class RunnerHarness(unittest.TestCase):
         self.assertEqual(len(self.children()), executed,
                          "a corrupted completed result must not silently repeat scientific work")
 
+    def test_unrelated_prefixed_file_does_not_poison_resume_integrity(self):
+        traces = self.run_dir() / "traces"
+        traces.mkdir(parents=True)
+        unrelated = traces / "loc-seq-nrlmsise00-e1-s0-unrelated.txt"
+        unrelated.write_text("not a published trace\n")
+        self.run_runner("--mode", "smoke", "--kinds", "locality",
+                        "--models", "nrlmsise00", expect_code=runner.EXIT_OK)
+        executed = len(self.children())
+        unrelated.write_text("unrelated data changed\n")
+        resumed = subprocess.run(
+            [sys.executable, RUNNER, "--resume", str(self.run_dir())],
+            capture_output=True, text=True,
+            env=dict(os.environ, STUB_LOG=str(self.log)))
+        self.assertEqual(resumed.returncode, runner.EXIT_OK, resumed.stderr)
+        self.assertEqual(len(self.children()), executed)
+
     def test_changed_binary_refuses_resume(self):
         self.run_runner("--mode", "smoke", "--kinds", "sensitivity", "--models", "nrlmsise00",
                         expect_code=runner.EXIT_OK)

@@ -2514,6 +2514,7 @@ inline std::vector<ProviderComponent> measure_provider_components(
     // component below recomputes its own inputs inside its own loop, because a
     // precomputed value would measure a loop that does no work.
     const auto observation = env.ephemeris.observe_sun(epoch);
+    const auto calendar = leo::SpiceEphemerisProvider::utc_calendar(epoch, c.options.utc_reuse);
     const Eigen::Vector3d fixed =
         leo::SpiceEphemerisProvider::earth_fixed_rotation(epoch, c.frame, c.options.orientation_reuse) *
         state.r.as_eigen();
@@ -2540,7 +2541,8 @@ inline std::vector<ProviderComponent> measure_provider_components(
         sink += body();
         for (std::size_t repeat = 0; repeat < repeats; ++repeat) {
             const auto timer = Clock::now();
-            sink += body();
+            for (std::size_t operation = 0; operation < count; ++operation)
+                sink += body();
             component.nanoseconds.push_back(elapsed(timer) / double(count) * 1e9);
         }
         std::ostringstream described;
@@ -2555,7 +2557,7 @@ inline std::vector<ProviderComponent> measure_provider_components(
            "the epoch, the frame and the position vector; the returned matrix is discarded into "
            "the sink",
            [&] {
-               const auto value =
+               const Eigen::Vector3d value =
                    leo::SpiceEphemerisProvider::earth_fixed_rotation(epoch, c.frame,
                                                                      c.options.orientation_reuse) *
                    state.r.as_eigen();
@@ -2578,8 +2580,6 @@ inline std::vector<ProviderComponent> measure_provider_components(
                "env.weather.nrlmsise(utc, ap_history) for the selected backend only",
                "the epoch; the civil calendar conversion it consumes is outside this timer",
                [&] {
-                   const auto calendar =
-                       leo::SpiceEphemerisProvider::utc_calendar(epoch, c.options.utc_reuse);
                    const auto value = env.weather.nrlmsise(calendar, c.ap_history);
                    return value.f107 + value.ap;
                });
@@ -2588,8 +2588,6 @@ inline std::vector<ProviderComponent> measure_provider_components(
                "env.weather.jb2008(utc) for the selected backend only",
                "the epoch; the civil calendar conversion it consumes is outside this timer",
                [&] {
-                   const auto calendar =
-                       leo::SpiceEphemerisProvider::utc_calendar(epoch, c.options.utc_reuse);
                    const auto value = env.weather.jb2008(calendar);
                    return value.f10 + value.s10 + value.dstdtc_k;
                });

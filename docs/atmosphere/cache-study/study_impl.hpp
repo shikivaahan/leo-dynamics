@@ -392,10 +392,33 @@ inline QueryInputs DensityEvaluator::build_inputs(leo::Epoch epoch, const leo::I
     return inputs;
 }
 
+inline void DensityEvaluator::rethrow_native_failure(
+    const QueryInputs& inputs, const std::exception& error) const {
+    Json context;
+    context.add("model", model_name(model_));
+    context.add("epoch_et_seconds", inputs.epoch.et_seconds);
+    context.add("altitude_km", inputs.altitude_m / 1000.0);
+    context.add("latitude_deg", inputs.latitude_deg);
+    context.add("longitude_deg", inputs.longitude_deg);
+    if (model_ == leo::atmosphere::Model::nrlmsise00) {
+        context.add("year", static_cast<double>(inputs.nrlmsise.year));
+        context.add("day_of_year", static_cast<double>(inputs.nrlmsise.day_of_year));
+        context.add("utc_seconds", inputs.nrlmsise.utc_seconds);
+        context.add("f107", inputs.nrlmsise.f107);
+        context.add("f107_average", inputs.nrlmsise.f107_average);
+        context.add("ap", inputs.nrlmsise.ap);
+    }
+    throw std::runtime_error(std::string(error.what()) + "; exact_native_input=" + context.str());
+}
+
 inline double DensityEvaluator::native_density(const QueryInputs& inputs, const leo::SunObservation* sun) const {
     if (model_ == leo::atmosphere::Model::nrlmsise00) {
 #ifdef LEO_HAS_NRLMSISE00
-        return nrlmsise_.evaluate(inputs.nrlmsise).density_kg_m3;
+        try {
+            return nrlmsise_.evaluate(inputs.nrlmsise).density_kg_m3;
+        } catch (const std::invalid_argument& error) {
+            rethrow_native_failure(inputs, error);
+        }
 #else
         throw std::runtime_error("NRLMSISE backend not enabled at build time");
 #endif
@@ -412,14 +435,17 @@ inline double DensityEvaluator::native_density(const QueryInputs& inputs, const 
 
 inline double DensityEvaluator::direct(leo::Epoch epoch, leo::InertialVector position,
                                        const leo::SunObservation* sun) const {
-    ++authoritative_calls_;
-    return authoritative_.evaluate(epoch, position, sun).density_kg_m3;
+    return authoritative(epoch, position, sun).density_kg_m3;
 }
 
 inline leo::atmosphere::Result DensityEvaluator::authoritative(leo::Epoch epoch, leo::InertialVector position,
                                                                 const leo::SunObservation* sun) const {
     ++authoritative_calls_;
-    return authoritative_.evaluate(epoch, position, sun);
+    try {
+        return authoritative_.evaluate(epoch, position, sun);
+    } catch (const std::invalid_argument& error) {
+        rethrow_native_failure(build_inputs(epoch, position, sun), error);
+    }
 }
 
 inline double DensityEvaluator::native_call(const QueryInputs& inputs, const leo::SunObservation* sun) {
