@@ -1335,28 +1335,45 @@ struct QuerySample {
 // neighbourhood and a position neighbourhood, which is what an adaptive
 // integrator's stage sequence actually produces. A uniform random packet is
 // generated separately so a study can measure reuse under both regimes.
-inline std::vector<QuerySample> make_local_packets(leo::Epoch reference, const InertialVector& reference_position,
+inline std::vector<QuerySample> make_local_packets(leo::Epoch reference, const leo::InertialVector& reference_position,
                                                    std::size_t packets, std::size_t per_packet,
                                                    std::uint64_t seed, double altitude_spread_km,
                                                    double time_spread_s) {
     Rng rng(seed);
     std::vector<QuerySample> samples;
     samples.reserve(packets * per_packet);
+    // The epoch window and the spatial extent are both properties of the window
+    // the caller asked for, not of how many samples fill it. Scaling either by
+    // per_packet made a larger sample count silently change what was measured:
+    // the epoch reached a 42-day spread and the along-track offset, computed as
+    // a time span times 30 and used directly as metres, reached thousands of
+    // kilometres. Both pushed samples outside the models' own documented domain
+    // and made the sample count decide whether a run succeeded at all.
+    //
+    // A packet is a cluster: its samples stay within the requested altitude
+    // spread and the requested time window, so per_packet only decides how
+    // densely that cluster is filled.
     for (std::size_t packet = 0; packet < packets; ++packet) {
+        // Packet centres span the requested window, so an ensemble covers it and
+        // the sample count does not change its extent.
+        const double centre_fraction = (static_cast<double>(packet) + 0.5) /
+                                       static_cast<double>(packets);
         const double centre_time = reference.et_seconds +
-                                   rng.uniform(-0.5, 0.5) * time_spread_s * double(per_packet);
+                                   (centre_fraction - 0.5) * time_spread_s;
         for (std::size_t index = 0; index < per_packet; ++index) {
             // Perturb the radius by the altitude spread and the direction inside
             // the local tangent plane, so consecutive samples are genuinely close
-            // in every coordinate the models see.
+            // in every coordinate the models see. All three offsets are fractions
+            // of the requested altitude spread, in metres.
             const Eigen::Vector3d radial = reference_position.as_eigen().normalized();
             Eigen::Vector3d east = radial.cross(Eigen::Vector3d{0, 0, 1});
             if (east.norm() < 1e-9) east = Eigen::Vector3d{1, 0, 0};
             east.normalize();
             const Eigen::Vector3d north = radial.cross(east).normalized();
-            const double along = rng.uniform(-0.5, 0.5) * time_spread_s * double(per_packet) * 30.0;
-            const double across = rng.uniform(-1.0, 1.0) * altitude_spread_km * 1e3 * 0.25;
-            const double up = rng.uniform(-1.0, 1.0) * altitude_spread_km * 1e3 * 0.5;
+            const double spread_m = altitude_spread_km * 1e3;
+            const double along = rng.uniform(-1.0, 1.0) * spread_m;
+            const double across = rng.uniform(-1.0, 1.0) * spread_m * 0.25;
+            const double up = rng.uniform(-1.0, 1.0) * spread_m * 0.5;
             Eigen::Vector3d position = reference_position.as_eigen() + radial * up + east * along + north * across;
             const double radius = position.norm();
             if (radius < leo::atmosphere::wgs84_a_m) continue;  // never inside or on the Earth
