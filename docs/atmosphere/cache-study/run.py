@@ -395,6 +395,37 @@ class RunConfig:
     # the declared ladder is exhausted, so the tight budgets are answered by
     # measurement instead of by extrapolation.
     refine_to_budget_percent: float | None
+    # Measured per (model, case) availability produced by coverage.py, and the
+    # hash of the file it came from. It is part of the resume identity, because a
+    # different availability measurement would silently cover different work.
+    case_availability: tuple
+    case_availability_sha256: str | None
+
+    def available_cases(self, model: str) -> tuple:
+        """The scenarios this model can express, as measured, or all of them.
+
+        With no measured availability every requested scenario is attempted, so
+        the default behaviour is unchanged and nothing is skipped on an
+        assumption. With a measurement, an unavailable (model, case) pair is
+        reported as such rather than being executed into a native refusal.
+        """
+        if not self.case_availability:
+            return self.scenarios
+        measured = {pair.split("/", 1)[1] for pair in self.case_availability
+                    if pair.split("/", 1)[0] == model}
+        if not measured:
+            return self.scenarios
+        return tuple(case for case in self.scenarios if case in measured)
+
+    def availability_reason(self, model: str, case_name: str) -> str | None:
+        if not self.case_availability:
+            return None
+        if f"{model}/{case_name}" in self.case_availability:
+            return None
+        return (f"measured native-domain coverage reports {model} cannot express {case_name} "
+                "at this epoch and window: the case's own trajectory leaves the model's "
+                "documented native input range, and no scenario, epoch or tolerance is altered "
+                "to make it pass")
 
     def advance_threshold_percent(self) -> float:
         """The budget a family must meet before its ladder stops being refined."""
@@ -437,6 +468,8 @@ class RunConfig:
             "max_screening_fallback_fraction": self.max_screening_fallback_fraction,
             "adaptive_target_percent": self.adaptive_target_percent,
             "refine_to_budget_percent": self.refine_to_budget_percent,
+            "case_availability": list(self.case_availability),
+            "case_availability_sha256": self.case_availability_sha256,
             "epoch_utc": self.epoch_utc,
             "frame": self.frame,
             "extra_args": list(self.extra_args),
@@ -1082,10 +1115,16 @@ class Planner:
         ensembles, scales, thread_counts = locality_plan_sizes(cfg)
         tasks: list[Task] = []
         for model in cfg.models:
+            cases = cfg.available_cases(model)
+            if not cases:
+                raise SystemExit(
+                    f"measured native-domain coverage reports {model} can express none of the "
+                    f"requested scenarios {list(cfg.scenarios)}; the locality stage would "
+                    "measure nothing. Select a scenario the model's native range covers")
             for ensemble in ensembles:
                 for scale in scales:
                     task_id = self.unique(f"loc-seq-{model}-e{ensemble}-s{number_slug(scale)}")
-                    command = base_command(cfg, f"tasks/{task_id}", [], cfg.scenarios,
+                    command = base_command(cfg, f"tasks/{task_id}", [], cases,
                                            cfg.epoch_utc, cfg.duration_s, False)
                     params = {"kind": "locality", "model": model, "ensemble": ensemble,
                               "thread_workers": 1, "perturbation_scale": scale, "points": cfg.points,
@@ -1104,7 +1143,7 @@ class Planner:
                 for scale in scales:
                     task_id = self.unique(
                         f"loc-thr-{model}-e{ensemble}-t{threads}-s{number_slug(scale)}")
-                    command = base_command(cfg, f"tasks/{task_id}", [], cfg.scenarios,
+                    command = base_command(cfg, f"tasks/{task_id}", [], cases,
                                            cfg.epoch_utc, cfg.duration_s, False)
                     params = {"kind": "locality", "model": model, "ensemble": ensemble,
                               "thread_workers": threads, "perturbation_scale": scale,
@@ -1216,6 +1255,13 @@ class Planner:
             suffix = configuration_suffix(configuration)
             ap_history = bool(configuration.get("ap_history"))
             for case_name in cfg.scenarios:
+                unavailable = cfg.availability_reason(model, case_name)
+                if unavailable is not None:
+                    # The pair is measured as inexpressible, not skipped quietly:
+                    # it stays in the plan as a named blocked task with its reason.
+                    tasks.append(self.deferred_case_task(
+                        "coupled", "propagation", configuration, case_name, unavailable))
+                    continue
                 task_id = self.unique(f"prop-{model}-{candidate}-{suffix}-{case_name}-6h")
                 # The Ap history switch travels with the configuration that was
                 # screened: an NRLMSISE-00 configuration is never propagated under
@@ -1240,7 +1286,8 @@ class Planner:
                                   serial=False, commands=[command], params=params,
                                   out_dir=f"tasks/{task_id}", model=model,
                                   candidate=candidate, target="6h", label=case_name))
-            if "24h" in cfg.targets or cfg.mode == "full":
+            if ("24h" in cfg.targets or cfg.mode == "full") and \
+                    cfg.availability_reason(model, long_case) is None:
                 task_id = self.unique(f"prop-{model}-{candidate}-{suffix}-{long_case}-24h")
                 command = base_command(cfg, f"tasks/{task_id}", [], [long_case],
                                        cfg.epoch_utc, DAY, ap_history)
@@ -1288,7 +1335,18 @@ class Planner:
             model, candidate = configuration["model"], configuration["candidate"]
             suffix = configuration_suffix(configuration)
             ap_history = bool(configuration.get("ap_history"))
+            # Benchmarks use one scenario per task, and each configuration's own
+            # measured-available scenario, so a pair the model cannot express is
+            # a named blocked task rather than a silent substitution.
+            benchmark_cases = [case for case in cfg.available_cases(model)]
             for workload in workloads:
+                if not benchmark_cases:
+                    tasks.append(self.deferred_case_task(
+                        "coupled", "benchmark", configuration, cfg.scenarios[0],
+                        cfg.availability_reason(model, cfg.scenarios[0])
+                        or "no measured-available scenario for this model"))
+                    break
+                benchmark_case = benchmark_cases[0]
                 task_id = self.unique(f"bench-{model}-{candidate}-{suffix}-{workload}")
                 # The workload stays a runner label; --study-target carries the
                 # numeric relative-error target the reconstruction must meet.
@@ -1326,7 +1384,7 @@ class Planner:
                             group_commands = []
                             for part_index, (part_begin, part_count) in enumerate(parts):
                                 part_out = f"tasks/{group_id}/part{part_index}"
-                                part_command = base_command(cfg, part_out, [], cfg.scenarios[:1],
+                                part_command = base_command(cfg, part_out, [], [benchmark_case],
                                     cfg.epoch_utc, cfg.duration_s, ap_history)
                                 part_command += study_arguments(cfg, dict(group_params,
                                     begin=part_begin, count=part_count))
@@ -1342,7 +1400,7 @@ class Planner:
                     # the study executable and are reported by it, so the runner
                     # never multiplies a repetition count by the number of children.
                     out_dir = f"tasks/{task_id}"
-                    command = base_command(cfg, out_dir, [], cfg.scenarios[:1],
+                    command = base_command(cfg, out_dir, [], [benchmark_case],
                                            cfg.epoch_utc, cfg.duration_s, ap_history)
                     command += study_arguments(cfg, params)
                     command += list(cfg.extra_args)
@@ -1669,6 +1727,27 @@ class Planner:
                     tasks.append(self.deferred_configuration_task(
                         "coupled", "benchmark", entry, reason))
         return tasks, plan
+
+    def deferred_case_task(self, stage: str, kind: str, configuration: dict, case_name: str,
+                           reason: str) -> Task:
+        """One named blocked record for a (configuration, case) pair.
+
+        The pair stays visible in the plan, the ledger and the status with the
+        measured reason attached, so an inexpressible case is reported rather
+        than dropped or quietly replaced by another scenario.
+        """
+        suffix = configuration_suffix(configuration)
+        return Task(task_id=f"{stage}-blocked-{kind}-{configuration['model']}-"
+                            f"{configuration['candidate']}{suffix}-{case_name}",
+                    stage=stage, kind=kind, serial=True, commands=[],
+                    params={"kind": kind, "model": configuration["model"],
+                            "candidate": configuration["candidate"], "case": case_name,
+                            "blocked": True,
+                            **{key: configuration.get(key)
+                               for key in RESOLUTION_KEYS + POLICY_KEYS + ("target",)}},
+                    out_dir="", model=configuration["model"],
+                    candidate=configuration["candidate"], target="blocked",
+                    label=reason, deferred=reason)
 
     def deferred_configuration_task(self, stage: str, kind: str, configuration: dict,
                                     reason: str) -> Task:
@@ -2650,6 +2729,15 @@ def aggregate(cfg: RunConfig, ledger: Ledger, tasks: list[Task], plan: dict,
         "dependency_blockers": verification.get("problems", []),
         "missing_inputs": verification.get("missing_inputs", []),
         "mismatched_inputs": verification.get("mismatched_inputs", []),
+        "case_availability": read_json(cfg.out / "case-availability.json"),
+        "case_availability_gate": {
+            "measured_available_pairs": list(cfg.case_availability),
+            "source_sha256": cfg.case_availability_sha256,
+            "rule": ("a (model, case) pair the measurement reports inexpressible is recorded as a "
+                     "named blocked task with its reason; no scenario, epoch or tolerance is "
+                     "altered to make a pair available, and no other scenario is substituted "
+                     "for it"),
+        },
         "pending": pending,
         "failures": failures,
         "shortlist": plan.get("shortlist"),
@@ -3134,6 +3222,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--native-source-dir", type=Path, default=None,
                         help="directory holding nrlmsise-00.c/.h/_data.c and JB2008.f, hashed "
                              "for --reuse-native compatibility")
+    parser.add_argument("--case-availability", type=Path, default=None, metavar="FILE",
+                        help="a coverage.json from docs/atmosphere/cache-study/coverage.py, whose "
+                             "measured per-(model, case) native-domain coverage gates the coupled "
+                             "and locality stages. A pair measured inexpressible becomes a named "
+                             "blocked task with its reason, never a substituted scenario. Omitted, "
+                             "every requested scenario is attempted as before")
     parser.add_argument("--adaptive-target", type=float, default=None, metavar="PERCENT",
                         help="screen the adaptive candidate at this reconstruction target only, "
                              "instead of at every requested budget. The default is no narrowing: "
@@ -3207,6 +3301,33 @@ def find_dataset(root: Path, patterns) -> Path | None:
             if path.is_file():
                 return path
     return None
+
+
+def load_case_availability(path) -> tuple:
+    """Read measured per-(model, case) availability, or nothing at all.
+
+    The file is a coverage.py measurement, so it is validated rather than
+    trusted: a malformed or non-coverage document is a refusal, never a silently
+    empty gate that would let every pair be attempted as if it were available.
+    """
+    if path is None:
+        return (), None
+    path = Path(path)
+    if not path.is_file():
+        raise SystemExit(f"--case-availability file not found: {path}")
+    document = json.loads(path.read_text())
+    if document.get("kind") != "atm-cache-study-case-availability":
+        raise SystemExit(f"--case-availability {path} is not a coverage.json measurement")
+    rows = document.get("rows")
+    if not isinstance(rows, list) or not rows:
+        raise SystemExit(f"--case-availability {path} records no measured rows")
+    available = []
+    for row in rows:
+        if not isinstance(row, dict) or not {"model", "case", "inside_native_range"} <= set(row):
+            raise SystemExit(f"--case-availability {path} has a malformed row: {row!r}")
+        if row["inside_native_range"]:
+            available.append(f"{row['model']}/{row['case']}")
+    return tuple(sorted(available)), sha256_file(path)
 
 
 def resolve_inputs(args, out: Path, input_set=None) -> None:
@@ -3308,6 +3429,7 @@ def config_from_args(args) -> RunConfig:
                   for k in args.kinds.split(",") if k.strip())
     scenarios = tuple(resolve_case(item) for item in args.scenarios.split(",") if item.strip())
     extra = tuple(part for item in args.study_extra for part in shlex.split(item))
+    case_availability, case_availability_sha256 = load_case_availability(args.case_availability)
     cfg = RunConfig(
         mode=args.mode,
         out=Path(args.out).resolve(),
@@ -3369,6 +3491,8 @@ def config_from_args(args) -> RunConfig:
                                  if args.adaptive_target is not None else None),
         refine_to_budget_percent=(float(args.refine_to_budget)
                                   if args.refine_to_budget is not None else None),
+        case_availability=case_availability,
+        case_availability_sha256=case_availability_sha256,
     )
     unknown = [kind for kind in cfg.kinds if kind not in
                ("sensitivity", "locality", "accuracy", "check", "propagation", "benchmark")]
@@ -3459,6 +3583,17 @@ def resume_command(args, out: Path, recorded: dict, parser) -> RunConfig:
     args.capacity_policy = parameters["capacity_policy"]
     args.include_boundary_epochs = parameters.get("include_boundary_epochs", False)
     args.verification_only = parameters.get("verification_only", False)
+    # Availability was measured, so it is restored from the plan like any other
+    # recorded measurement and re-read from the same bytes, never re-guessed.
+    if parameters.get("case_availability"):
+        recorded_availability = out / "case-availability.json"
+        if not recorded_availability.is_file():
+            raise RunnerError(
+                "the ledger records measured case availability but the run directory has no "
+                "case-availability.json; a resume may not re-measure coverage silently")
+        if sha256_file(recorded_availability) != parameters.get("case_availability_sha256"):
+            raise RunnerError("the recorded case-availability.json no longer matches its hash")
+        args.case_availability = recorded_availability
     # A resumed run measures the same pinned bytes it started on. The selected
     # input set is restored from the plan, never re-chosen, so a resume can
     # never quietly slide onto a different set or back to direct-v2.
@@ -3565,6 +3700,14 @@ def main(argv=None) -> int:
     verification = verify_pinned_inputs(cfg)
     cfg.out.mkdir(parents=True, exist_ok=True)
     write_json_atomic(cfg.out / "input-verification.json", verification)
+    if cfg.case_availability and args.case_availability is not None \
+            and not resume and Path(args.case_availability).resolve() != \
+            (cfg.out / "case-availability.json").resolve():
+        # The measurement is copied verbatim into the run so the resume reads the
+        # same bytes this run measured with, rather than a file that could change
+        # underneath it.
+        (cfg.out / "case-availability.json").write_bytes(
+            Path(args.case_availability).read_bytes())
 
     if verification["blocked"]:
         # The primary study cannot start on these inputs. The complete plan is
