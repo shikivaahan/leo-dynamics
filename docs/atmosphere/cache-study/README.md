@@ -32,7 +32,17 @@ definition hash in the resume identity. Neither input set nor source version may
 Compatible native-only NRLMSISE sensitivity can be imported with its original provenance; it is
 never relabelled as provider, coupled, JB2008 or performance evidence.
 
-## Measured finding that is primary evidence
+## Status
+
+**Complete.** The full study ran to completion on the separately pinned experimental input set:
+550 tasks, 0 failures, 0 blocked, evidence class `scientific-experimental-pinned`.
+
+**Recommendation: do not implement a production atmospheric density cache, for either model.** No
+approximate configuration met the 0.1 % or 0.01 % density budget, and every configuration that did
+meet the 1 % screening threshold was *slower* than the current fully optimised direct provider on
+real trajectory work. See `RESULTS.md`.
+
+## Headline measurement
 
 NRLMSISE-00 density is steeply altitude-dependent. One-dimensional log-density interpolation between
 fresh native endpoints, on pinned inputs and independent holdout fractions:
@@ -46,10 +56,12 @@ fresh native endpoints, on pinned inputs and independent holdout fractions:
 | 50 km | 5.29e-02 | fail | fail | fail | fail |
 | 100 km | 1.74e-01 | fail | fail | fail | fail |
 
-Worst cases sit at 200–250 km and ±45° latitude, where log-density curvature is largest. Reaching
-0.1 % on altitude alone needs roughly 5 km cells; the 0.01 % budget is not met by any tested width.
-This bounds what any cache must reproduce, and it is the reason coarse altitude cells fail even when
-the time axis is refined.
+Worst cases sit at 200–250 km and ±45° latitude, where log-density curvature is largest. This bounds
+what any cache must reproduce, and it is the reason coarse altitude cells fail even when the time
+axis is refined.
+
+The full provider-path study extends this to both models and to every candidate family; the measured
+screening ladder is in `ACCURACY.md` and the measured speedups in `PERFORMANCE.md`.
 
 ## Layout
 
@@ -58,13 +70,14 @@ docs/atmosphere/cache-study/
 ├── README.md          this file: status, evidence classes, reproduction
 ├── DESIGN.md          how the harness isolates candidates and keeps native authority
 ├── PARAMETERS.md      every significant experiment choice and its rationale
-├── SENSITIVITY.md     measured density sensitivity (pinned inputs)
-├── ACCURACY.md        screening contract; what remains unmeasured
-├── PROPAGATION.md     coupled protocol and the disabled-cache equivalence proof
-├── PERFORMANCE.md     benchmark protocol; why no speedup is claimed
-├── RESULTS.md         measured results, blocked work, and the go/no-go answer
+├── SENSITIVITY.md     measured density sensitivity and provider cost structure
+├── ACCURACY.md        screening contract and measured reconstruction accuracy
+├── PROPAGATION.md     coupled protocol and measured propagation errors
+├── PERFORMANCE.md     benchmark protocol and measured speedups
+├── RESULTS.md         measured results and the production recommendation
 ├── DECISIONS.md       consequential decisions and rejected alternatives
 ├── run.py             deterministic, resumable driver (smoke/screen/full/resume)
+├── coverage.py        measured native-domain coverage per (model, case)
 ├── analyse.py         reducer for the pinned native slices
 └── evidence/          compact summaries, hashes and the manifest
 ```
@@ -91,18 +104,33 @@ python3 docs/atmosphere/cache-study/analyse.py \
   --native /path/to/ap-history/study-result.json \
   --out /path/to/evidence
 
-# 3. A NEW experimental run; never resume or relabel the historical blocked run.
-python3 docs/atmosphere/cache-study/run.py --mode full --workers 8 --max-hours 12 \
-  --out /home/user/leo-cache-study-evidence/atm-cache-001-exp-solfsmy-20261011/run \
+# 3. Measure native-domain coverage per (model, case) at the study's own tolerances.
+python3 docs/atmosphere/cache-study/coverage.py \
+  --binary build-atmosphere-cache-study-final/atm_cache_study \
+  --deps-dir /home/user/leo-cache-study-deps \
+  --input-set-id exp-solfsmy-20261011-original-pck \
+  --epoch-utc 2003-10-29T12:00:00 --duration 21600 \
+  --rtol 1e-10 --max-step 15 \
+  --out /home/user/leo-cache-study-evidence/atm-cache-001-exp-solfsmy-20261011/coverage/final
+
+# 4. The full study; never resume or relabel the historical blocked run.
+python3 docs/atmosphere/cache-study/run.py --mode full --workers 8 --max-hours 24 \
+  --out /home/user/leo-cache-study-evidence/atm-cache-001-exp-solfsmy-20261011/study-final \
   --binary build-atmosphere-cache-study-final/atm_cache_study \
   --build-dir build-atmosphere-cache-study-final \
   --deps-dir /home/user/leo-cache-study-deps \
   --input-set docs/atmosphere/cache-study/input-sets/exp-solfsmy-20261011-original-pck.json \
   --native-source-dir /home/user/leo-cache-study-deps \
   --reuse-native /home/user/leo-cache-study-evidence/native-geodetic-pinned \
-  --reuse-provenance /home/user/leo-cache-study-evidence/atm-cache-001-exp-solfsmy-20261011/native-reuse-provenance.json
+  --reuse-provenance /home/user/leo-cache-study-evidence/atm-cache-001-exp-solfsmy-20261011/native-reuse-provenance.json \
+  --case-availability /home/user/leo-cache-study-evidence/atm-cache-001-exp-solfsmy-20261011/coverage/final/coverage.json \
+  --refine-to-budget 0.1 --max-shortlist 0 --max-replans 128
 
-# 4. Resume the same experimental run with unchanged inputs, binary and study sources.
+# 5. Resume the same run with unchanged inputs, binary and study sources.
 python3 docs/atmosphere/cache-study/run.py \
-  --resume /home/user/leo-cache-study-evidence/atm-cache-001-exp-solfsmy-20261011/run --workers 8
+  --resume /home/user/leo-cache-study-evidence/atm-cache-001-exp-solfsmy-20261011/study-final --workers 8
 ```
+
+The run above completed: 550 tasks, 0 failed, 0 blocked, `evidence/status.json` reports
+`status: complete`. A resume with a changed binary, changed study source or changed inputs is
+refused, which is how superseded runs were kept separate rather than silently mixed.

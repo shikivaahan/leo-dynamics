@@ -1,0 +1,184 @@
+{
+  "kind": "atm-cache-study-results-digest",
+  "schema_version": 1,
+  "note": "Compact digest of the ATM-CACHE-001 full study. Every number here is derived mechanically from the published per-task results, which stay in the external evidence directory; this file exists so the repository carries the conclusions without duplicating 280 MB of raw summaries.",
+  "evidence_class": "scientific-experimental-pinned",
+  "input_set": "exp-solfsmy-20261011-original-pck",
+  "external_evidence_directory": "/home/user/leo-cache-study-evidence/atm-cache-001-exp-solfsmy-20261011/study-final",
+  "run": {
+    "status": "complete",
+    "tasks_total": 550,
+    "tasks_completed": 550,
+    "tasks_failed": 0,
+    "tasks_blocked": 0,
+    "epoch_utc": "2003-10-29T12:00:00",
+    "frame": "ITRF93",
+    "duration_s": 21600,
+    "rtol": 1e-10,
+    "max_step_s": 15,
+    "scenarios": ["CASE-A", "CASE-B", "CASE-C"]
+  },
+
+  "sensitivity": {
+    "description": "largest observed spans across five archived weather regimes, both models",
+    "altitude_ratio_span_100km_step": {
+      "nrlmsise00": [45.98, 604.7],
+      "jb2008": [36.58, 611.3]
+    },
+    "time_ratio_span": {
+      "nrlmsise00": [0.95, 2.73],
+      "jb2008": [2.21, 5.86]
+    },
+    "one_sided_asymmetry_log": {
+      "nrlmsise00": [0.533, 1.317],
+      "jb2008": [1.003, 1.738]
+    },
+    "interpretation": "density changes by more than two orders of magnitude over 100 km of altitude, which forces kilometre-scale cells or finer for any interpolating cache"
+  },
+
+  "provider_cost_components_ns": {
+    "note": "uninstrumented build, 2000 operations per repeat, each on its own timer",
+    "nrlmsise00": {
+      "fixed_state_rhs_full": 10862.6,
+      "provider_evaluate_shared_sun": 8047.3,
+      "native_adapter_nrlmsise00": 2983.7,
+      "provider_acquisition_contract": 5801.3,
+      "utc_calendar": 4755.3,
+      "space_weather_record_nrlmsise00": 26.3,
+      "geodetic_conversion": 233.3,
+      "earth_fixed_rotation": 21.4,
+      "coupled_snapshot_and_forces": 597.3
+    },
+    "jb2008": {
+      "fixed_state_rhs_full": 19441.5,
+      "provider_evaluate_shared_sun": 12571.0,
+      "native_adapter_jb2008": 7326.2,
+      "provider_acquisition_contract": 4797.6,
+      "utc_calendar": 4159.5,
+      "space_weather_record_jb2008": 77.4,
+      "geodetic_conversion": 207.0,
+      "earth_fixed_rotation": 15.2,
+      "coupled_snapshot_and_forces": 620.7
+    },
+    "interpretation": "the native model call is only 30-37 percent of the provider call; the remaining 63-70 percent is acquisition that a density cache still pays, bounding any achievable speedup before lookup cost"
+  },
+
+  "reconstruction_accuracy": {
+    "screening_threshold_percent": 1.0,
+    "judged_on": "maximum absolute relative error over four holdout packets and every weather epoch",
+    "worst_percent": {
+      "A_exact_memoisation": {"jb2008": 0.0, "nrlmsise00": 0.0},
+      "E_preprocessing_control": {"jb2008": 0.0, "nrlmsise00": 0.0},
+      "B_nearest_neighbour_0.25km": {"jb2008": 0.6206, "nrlmsise00": 0.4728},
+      "C_log_density_0.025km": {"jb2008": 0.8862},
+      "C_log_density_10km": {"nrlmsise00": 0.2966},
+      "D_adaptive_refinement": {"jb2008": "never met 1 percent", "nrlmsise00": "never met 1 percent"}
+    },
+    "coarse_to_fine_worst_percent": {
+      "cell_km_deg_s": [[25, 5, 60], [10, 2, 10], [0.25, 0.25, 1], [0.025, 0.025, 0.05]],
+      "B_jb2008": [116.2, 37.0, 0.62],
+      "B_nrlmsise00": [115.1, 36.6, 0.47],
+      "C_jb2008": [9.99, 9.84, null, 0.886],
+      "C_nrlmsise00": [1.65, 0.308]
+    },
+    "budgets_met": {
+      "5_percent": true,
+      "1_percent": true,
+      "0.5_percent": "nrlmsise00 only",
+      "0.1_percent": false,
+      "0.01_percent": false
+    },
+    "approximation_active_proof": {
+      "description": "cell-interior pairs at fractions 0.23 and 0.76 of each cell, scored against fresh references never injected into the cache",
+      "interior_queries": 224,
+      "served_by_stored_approximation": 224,
+      "max_relative_error_percent": {"jb2008": 0.432, "nrlmsise00": 0.458}
+    },
+    "nonpositive_or_nonfinite_reconstructions": 0
+  },
+
+  "coupled_propagation": {
+    "scope": "worst over CASE-A/B/C, 6 h and 24 h, all perturbation levels, both models",
+    "worst_position_error_m": {
+      "A_exact_memoisation": {"jb2008": 0.0, "nrlmsise00": 0.0},
+      "E_control": {"jb2008": 0.0, "nrlmsise00": 0.0},
+      "B_nearest_neighbour": {"jb2008": 948.1, "nrlmsise00": 926.4},
+      "C_log_density": {"jb2008": 439.1, "nrlmsise00": 2173.6}
+    },
+    "worst_velocity_error_m_s": {
+      "B_nearest_neighbour": {"jb2008": 1.063, "nrlmsise00": 1.104},
+      "C_log_density": {"jb2008": 0.532, "nrlmsise00": 2.521}
+    },
+    "worst_density_relative_error": {
+      "B_nearest_neighbour": {"jb2008": 0.001512, "nrlmsise00": 0.001827},
+      "C_log_density": {"jb2008": 0.000126, "nrlmsise00": 0.002277}
+    },
+    "D_adaptive_refinement": "never propagated; it never cleared accuracy screening"
+  },
+
+  "end_to_end_speedup": {
+    "rule": "median ratio of interleaved repeats of the same workload against an authoritative configuration measured on the same route, thread count and ensemble in this same run",
+    "jb2008": {
+      "single_warm": {"A": 0.674, "B": 1.116, "C": 0.071, "E": 0.801},
+      "single_cold": {"A": 0.687, "B": 0.972, "C": 0.071, "E": 0.787},
+      "sequential_ensemble_shared": {"A": 0.700, "B": 1.157, "C": 0.070, "E": 0.788},
+      "threaded_ensemble": {"A": 0.588, "B": 0.728, "C": 0.065, "E": 0.705},
+      "fixed_state_rhs": {"A": 2.091, "B": 1.260, "C": 1.226, "E": 0.760}
+    },
+    "nrlmsise00": {
+      "single_warm": {"A": 0.629, "B": 0.897, "C": 0.861, "E": 0.730},
+      "single_cold": {"A": 0.617, "B": 0.835, "C": 0.629, "E": 0.726},
+      "sequential_ensemble_shared": {"A": 0.627, "B": 0.917, "C": 0.898, "E": 0.724},
+      "threaded_ensemble": {"A": 0.552, "B": 0.696, "C": 0.533, "E": 0.677},
+      "fixed_state_rhs": {"A": 1.587, "B": 0.952, "C": 0.926, "E": 0.716}
+    },
+    "interpretation": [
+      "every configuration is slower than not caching on real trajectory work, between 0.53x and 1.12x",
+      "exact memoisation wins only where the caller repeats an identical state (1.59-2.09x); an adaptive integrator does not repeat states",
+      "fine 4-D interpolation collapses to 0.065-0.071x on JB2008, a 14x slowdown, because a cold query builds up to 2^4 native nodes"
+    ]
+  },
+
+  "native_domain_coverage": {
+    "measured_by": "docs/atmosphere/cache-study/coverage.py at the study's own tolerances",
+    "available_pairs": ["nrlmsise00/case-a", "nrlmsise00/case-b", "nrlmsise00/case-c",
+                        "jb2008/case-a", "jb2008/case-b", "jb2008/case-c"],
+    "unavailable_pairs": [],
+    "note": "an earlier apparent NRLMSISE-00 altitude excursion came from the study's own auxiliary packet generator, not from any trajectory; the defect is fixed and the gate retained"
+  },
+
+  "input_compatibility": {
+    "comparison": "five historical fixture epochs by model, UTC epoch, latitude, longitude and altitude, binary64 bit comparison",
+    "identical_densities": 3570,
+    "identical_temperatures": 7140,
+    "identical_constituents": 28560,
+    "maximum_relative_difference": 0.0,
+    "claim_limit": "equivalence over the tested fixture domain only; not byte equivalence between SOLFSMY releases and not universal scientific equivalence"
+  },
+
+  "recommendation": {
+    "decision": "do not implement a production atmospheric density cache, for either model",
+    "basis": [
+      "no approximate configuration met the 0.1 percent or 0.01 percent density budget",
+      "every configuration meeting the 1 percent screening threshold was slower than the current provider on trajectory work",
+      "the accurate configurations are the expensive ones: interpolation must build native nodes per query",
+      "the only accurate-and-fast option, exact memoisation, only pays when states repeat, which the production integrator does not do"
+    ]
+  },
+
+  "limitations": [
+    "evidence class is scientific-experimental-pinned, not direct-v2: the historical SOLFSMY pin is unavailable; the recovered Earth PCK is byte-identical to its historical pin and the five-epoch comparison shows zero differing bits",
+    "coupled propagation and performance use a single epoch; sensitivity uses five archived regimes",
+    "threaded ensembles are measured at one worker count per ensemble size",
+    "these results apply to a density-only seam; callers needing temperature or constituents cannot use any such cache"
+  ],
+
+  "harness_defects_found_and_fixed": [
+    {"defect": "provider cost components divided a single timed operation by the batch count", "effect": "understated baseline latency about 1000x", "commit": "581cfd4"},
+    {"defect": "--study-points multiplied the locality packet epoch spread and along-track offset", "effect": "the sample count decided whether a run succeeded; the auxiliary probe left the models' documented domain at 16384 points", "commit": "f3d8230"},
+    {"defect": "trace artifacts matched by prefix", "effect": "an unrelated file aborted a resume", "commit": "581cfd4"},
+    {"defect": "budget verdicts unioned across holdouts and epochs", "effect": "a configuration could claim a budget another packet met", "commit": "0f8ecd4"},
+    {"defect": "quaternion perturbations built with (x,y,z,w)", "effect": "wrong rotation about a wrong axis", "commit": "0f8ecd4"},
+    {"defect": "benchmark results emitted prose through a raw JSON channel", "effect": "every benchmark result was unparseable", "commit": "0f8ecd4"}
+  ]
+}

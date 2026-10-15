@@ -1,4 +1,4 @@
-# Measured density sensitivity — NRLMSISE-00
+# Measured density sensitivity
 
 All numbers here come from the pinned-input native slice
 (`evidence/native-sensitivity-summary.json`, raw results in the manifest's external artefact
@@ -88,6 +88,54 @@ Near-polar samples are served natively by construction.
 ## Limits of this evidence
 
 Single-point local sensitivities of one model at its own input contract. They bound what an
-interpolant must reproduce; they are not themselves an interpolation error estimate for a cache, and
-they say nothing about JB2008, whose native inputs (solar RA/Dec, eight lagged proxies, DSTDTC) were
-not available.
+interpolant must reproduce; they are not themselves an interpolation error estimate for a cache.
+
+The run that completed on the experimental pinned set measures **both** models through the full
+provider path, on all five archived regimes:
+
+| Model | Largest altitude ratio span (100 km step) | Largest time ratio span | Largest one-sided asymmetry (log) |
+|---|---:|---:|---:|
+| NRLMSISE-00 | 45.98 – 604.7 | 0.95 – 2.73 | 0.53 – 1.32 |
+| JB2008 | 36.58 – 611.3 | 2.21 – 5.86 | 1.00 – 1.74 |
+
+The JB2008 diurnal amplitude is markedly larger than NRLMSISE-00's: a 6-hour separation changes
+density by up to 5.9× on JB2008 against 2.7× on NRLMSISE-00, and the one-sided asymmetry across
+discrete weather transitions is up to 1.74 in log density. JB2008 is therefore the harder model to
+cache on the time axis, not the altitude axis.
+
+Finite differences now record, for each pair, both the first derivative and a second-order residual,
+so curvature is separable from gradient rather than inferred. Weather transitions are classified by
+comparing the complete discrete input vector on both sides: a span whose endpoints match that vector
+is a genuine provider-response measurement, and one whose endpoints differ is a transition and is
+reported as such rather than as a derivative.
+
+## Measured provider cost structure
+
+These components were measured on the uninstrumented build, each on its own timer, 2000 operations
+per repeat, and they explain the performance outcome directly.
+
+| Component | JB2008 | NRLMSISE-00 |
+|---|---:|---:|
+| Full coupled RHS, including density | 19 441 ns | 10 863 ns |
+| `DirectAtmosphere::evaluate`, shared Sun | 12 571 ns | 8 047 ns |
+| `DirectAtmosphere::evaluate`, own Sun lookup | 14 521 ns | 8 008 ns |
+| Native model adapter | 7 326 ns | 2 984 ns |
+| Provider acquisition contract | 4 798 ns | 5 801 ns |
+| UTC calendar conversion | 4 160 ns | 4 755 ns |
+| Space-weather record read | 77 ns | 26 ns |
+| Geodetic conversion | 207 ns | 233 ns |
+| Earth-fixed rotation (cached) | 15 ns | 21 ns |
+| Snapshot + forces, no density | 621 ns | 597 ns |
+
+Two things follow, and both are measured rather than assumed:
+
+1. **ATM-OPT-001 has already taken the cheap wins.** Earth-fixed rotation is 15–21 ns and the
+   space-weather record is 26–77 ns — both already cached or amortised. There is little left to
+   optimise in preprocessing.
+2. **The native model call is only 30–37 % of the provider call** (7 326 of 19 441 ns for JB2008;
+   2 984 of 10 863 for NRLMSISE-00). The remaining 63–70 % is acquisition: UTC calendar, geodetic
+   conversion, Sun geometry, frame handling. A density cache that reconstructs skips the native
+   call but still pays acquisition, so its *maximum* possible saving is bounded by that fraction —
+   before any lookup cost. For NRLMSISE-00 the ceiling is 0.37×, and for JB2008 it is 0.63×.
+
+This is the structural reason no configuration in `PERFORMANCE.md` exceeds 1.16×.
