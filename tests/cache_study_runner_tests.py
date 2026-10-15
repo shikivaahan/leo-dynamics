@@ -49,11 +49,14 @@ record = {"kind": kind, "study_result": True, "pid": os.getpid(), "start": time.
 error = float(os.environ.get("STUB_ERROR", "0.0005"))
 if kind == "accuracy":
     # The study's published accuracy schema: the requested rung of the
-    # resolution ladder with all three holdout packets.
+    # resolution ladder with all three holdout packets, with the measured cost
+    # and fallback share the runner reads when it ranks configurations.
     number = lambda name, default=None: (float(option(name)) if option(name) else default)
+    fallback = float(os.environ.get("STUB_FALLBACK", "0.0"))
     rung = {"requested_rung": True,
             "settings": {"capacity": int(number("--study-capacity", 1)),
                          "scale": number("--study-scale", 1.0),
+                         "input_set": option("--study-input-set", "direct-v2"),
                          "base_cells": {"altitude_km": number("--study-cell-km"),
                                         "latitude_deg": number("--study-cell-deg"),
                                         "longitude_deg": number("--study-cell-deg"),
@@ -61,11 +64,31 @@ if kind == "accuracy":
                          "interpolation_mode": option("--study-interpolation"),
                          "interpolation_axis": option("--study-interpolation-axis"),
                          "capacity_policy": option("--study-capacity-policy")},
+            "construction_native_calls": float(os.environ.get("STUB_NATIVE_CALLS", "100")),
+            "construction_seconds": float(os.environ.get("STUB_CONSTRUCTION_SECONDS", "1")),
             "nonpositive_or_nonfinite_reconstructions": 0}
+    # One scoring per configuration has to answer every budget: the runner
+    # recomputes each verdict from the measured maximum and refuses a screen
+    # that did not score one.
+    budgets = {"%g" % b: error <= b for b in (0.0001, 0.001, 0.005, 0.01, 0.05)}
     for packet in ("holdout_uniform-random", "holdout_local-query-packet",
-                   "holdout_broad-query-packet"):
-        rung[packet] = {"results": {"error_metrics": {"maximum_absolute_relative": error}}}
+                   "holdout_broad-query-packet",
+                   "holdout_stratified-physical-boundaries"):
+        rung[packet] = {"queries_on_this_holdout": 10,
+                        "native_calls_on_this_holdout": float(
+                            os.environ.get("STUB_NATIVE_CALLS", "100")),
+                        "fallback_fraction": fallback,
+                        "results": {"error_metrics": {"maximum_absolute_relative": error},
+                                    "threshold_pass_by_maximum": dict(
+                                        budgets,
+                                        decision_rule="maximum absolute relative error over "
+                                                      "every tested sample")}}
     payload = {"metadata": {"study_kind": kind}, "result": {"resolution_ladder": [rung]}}
+elif kind == "check":
+    # The correctness stage publishes a single verdict; the runner gates the
+    # coupled stages on it and never on the mere existence of the task.
+    payload = {"metadata": {"study_kind": kind},
+              "result": {"all_checks_passed": os.environ.get("STUB_CHECK_FAIL") != "1"}}
 else:
     payload = dict(record)
 payload["end"] = time.time()
@@ -83,6 +106,14 @@ if trace:
 
 
 class RunnerHarness(unittest.TestCase):
+    """A run directory, a stub study executable and every runner contract.
+
+    Each test drives the real runner as a subprocess against a stub study
+    executable, so the ledger, the atomic publication, the scheduler, the
+    progressive screening, the correctness gate and the pinned input sets are
+    exercised exactly as the study uses them, without the scientific binary.
+    """
+
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.root = Path(self.directory.name)
@@ -119,11 +150,13 @@ class RunnerHarness(unittest.TestCase):
             digests[key] = f"{key}={runner.sha256_file(self.data / name)}"
         return [part for value in digests.values() for part in ("--expect-sha256", value)]
 
-    def run_runner(self, *extra, env=None, expect_code=None):
+    def run_runner(self, *extra, env=None, expect_code=None, verification_only=None):
         environment = dict(os.environ)
         environment.update(env or {})
         environment.setdefault("STUB_LOG", str(self.log))
-        process = subprocess.run(self.argv(*extra), capture_output=True, text=True,
+        command = self.argv(*extra) if verification_only is None else \
+            self.argv(*extra, verification_only=verification_only)
+        process = subprocess.run(command, capture_output=True, text=True,
                                  env=environment)
         if expect_code is not None:
             self.assertEqual(process.returncode, expect_code,
@@ -429,6 +462,289 @@ class RunnerHarness(unittest.TestCase):
         for task in ledger["tasks"].values():
             if task["kind"] in ("propagation", "benchmark"):
                 self.assertEqual(task["status"], "blocked")
+
+
+    def manifest(self, solver=None):
+        document = {"schema_version": 1, "id": "exp-test-pins",
+                    "classification": "separately-pinned-experimental",
+                    "inputs": {}}
+        names = {"lsk": "tls.bsp", "spk": "de.bsp", "pck": "earth.bpc",
+                 "weather": "space-weather.txt", "solfsmy": "SOLFSMY.txt",
+                 "dtcfile": "DTCFILE.txt"}
+        for key, name in names.items():
+            document["inputs"][key] = {"filename": name,
+                                       "sha256": runner.sha256_file(self.data / name)}
+        path = self.root / "input-set.json"
+        path.write_text(json.dumps(document, indent=2))
+        return path
+
+    def test_default_input_set_is_direct_v2_and_is_never_relabelled(self):
+        self.run_runner("--mode", "smoke", "--kinds", "sensitivity",
+                        expect_code=runner.EXIT_OK)
+        manifest = json.loads((self.run_dir() / "evidence/manifest.json").read_text())
+        self.assertEqual(manifest["input_set"]["id"], "direct-v2")
+        self.assertFalse(manifest["input_set"]["explicitly_selected"])
+        for entry in manifest["commands"]:
+            self.assertNotIn("--study-input-set", entry["command"])
+        summary = json.loads((self.run_dir() / "evidence/sensitivity-summary.json").read_text())
+        self.assertEqual(summary["input_set"]["id"], "direct-v2")
+
+    def test_selected_input_set_is_recorded_and_forwarded_to_every_child(self):
+        path = self.manifest()
+        self.run_runner("--mode", "smoke", "--kinds", "sensitivity",
+                        "--input-set", str(path), verification_only=False,
+                        expect_code=runner.EXIT_OK)
+        run_dir = self.out
+        manifest = json.loads((run_dir / "evidence/manifest.json").read_text())
+        self.assertEqual(manifest["input_set"]["id"], "exp-test-pins")
+        self.assertEqual(manifest["input_set"]["manifest_sha256"], runner.sha256_file(path))
+        self.assertEqual(manifest["evidence_class"], "scientific-experimental-pinned")
+        self.assertFalse(manifest["verification_only"])
+        self.assertTrue(manifest["scientific_evidence"])
+        self.assertTrue(manifest["commands"])
+        for entry in manifest["commands"]:
+            command = entry["command"]
+            self.assertIn("--study-input-set", command)
+            self.assertEqual(command[command.index("--study-input-set") + 1], "exp-test-pins")
+        plan = json.loads((run_dir / "plan.json").read_text())
+        self.assertEqual(plan["parameters"]["input_set"]["id"], "exp-test-pins")
+
+    def test_selected_input_set_refuses_hash_overrides(self):
+        path = self.manifest()
+        process = self.run_runner("--mode", "smoke", "--kinds", "sensitivity",
+                                  "--input-set", str(path),
+                                  "--expect-sha256", "lsk=" + "0" * 64,
+                                  verification_only=False)
+        self.assertNotEqual(process.returncode, runner.EXIT_OK)
+        self.assertIn("--input-set is the pin for this run", process.stderr + process.stdout)
+        self.assertEqual(self.children(), [])
+
+    def test_selected_input_set_refuses_the_verification_only_label(self):
+        path = self.manifest()
+        process = self.run_runner("--mode", "smoke", "--kinds", "sensitivity",
+                                  "--input-set", str(path))
+        self.assertNotEqual(process.returncode, runner.EXIT_OK)
+        self.assertIn("scientifically pinned experiment",
+                      process.stderr + process.stdout)
+
+    def test_input_set_that_does_not_pin_every_input_is_refused(self):
+        path = self.root / "partial.json"
+        path.write_text(json.dumps({"id": "partial", "inputs": {"lsk": {
+            "filename": "tls.bsp", "sha256": runner.sha256_file(self.data / "tls.bsp")}}}))
+        process = self.run_runner("--mode", "smoke", "--input-set", str(path))
+        self.assertNotEqual(process.returncode, runner.EXIT_OK)
+        self.assertIn("does not pin", process.stderr + process.stdout)
+
+    def test_changed_input_set_manifest_refuses_resume(self):
+        path = self.manifest()
+        self.run_runner("--mode", "smoke", "--kinds", "sensitivity",
+                        "--input-set", str(path), verification_only=False,
+                        expect_code=runner.EXIT_OK)
+        executed = len(self.children())
+        document = json.loads(path.read_text())
+        document["inputs"]["solfsmy"]["sha256"] = "0" * 64
+        path.write_text(json.dumps(document, indent=2))
+        process = subprocess.run([sys.executable, RUNNER, "--resume", str(self.out)],
+                                 capture_output=True, text=True,
+                                 env=dict(os.environ, STUB_LOG=str(self.log)))
+        # The pin gate refuses first: a manifest whose hash no longer matches the
+        # bytes on disk blocks the run rather than re-pinning anything.
+        self.assertIn(process.returncode, (runner.EXIT_BLOCKED, runner.EXIT_USAGE), process.stderr)
+        self.assertIn("solfsmy", process.stdout + process.stderr)
+        self.assertEqual(len(self.children()), executed)
+    """The screening ladder, the correctness gate and the selection policy."""
+
+    def test_passing_rung_stops_the_family_from_being_refined(self):
+        # 0.05 % is inside the 1 % screening threshold, so the next rung of the
+        # family is never executed.
+        self.run_runner("--mode", "screen", "--kinds", "accuracy", "--models", "nrlmsise00",
+                        "--capacities", "4096,262144",
+                        env={"STUB_ERROR": "0.0005"}, expect_code=runner.EXIT_OK)
+        plan = json.loads((self.run_dir() / "plan.json").read_text())
+        widths = {task["params"].get("cell_km")
+                  for task in plan["tasks"] if task["kind"] == "accuracy"}
+        self.assertIn(25.0, widths)
+        self.assertNotIn(10.0, widths, "a family that already meets the threshold must not "
+                                      "be refined further")
+
+    def test_missing_rung_opens_the_next_one(self):
+        # 2 % misses the 1 % threshold, so the finer rung is screened as well.
+        self.run_runner("--mode", "screen", "--kinds", "accuracy", "--models", "nrlmsise00",
+                        env={"STUB_ERROR": "0.02"}, expect_code=runner.EXIT_OK)
+        plan = json.loads((self.run_dir() / "plan.json").read_text())
+        widths = {task["params"].get("cell_km")
+                  for task in plan["tasks"] if task["kind"] == "accuracy"}
+        self.assertIn(10.0, widths)
+
+    def test_failed_correctness_checks_block_the_coupled_stages(self):
+        self.run_runner("--mode", "smoke", env={"STUB_CHECK_FAIL": "1"},
+                        expect_code=runner.EXIT_INCOMPLETE)
+        ledger = json.loads((self.run_dir() / "ledger.json").read_text())
+        coupled = [task for task in ledger["tasks"].values()
+                   if task["kind"] in ("propagation", "benchmark")]
+        self.assertTrue(coupled)
+        for task in coupled:
+            self.assertEqual(task["status"], "blocked")
+            self.assertFalse(task.get("results"))
+        plan = json.loads((self.run_dir() / "plan.json").read_text())
+        self.assertIn("coupled", plan["blocked_stages"])
+
+    def test_error_budget_requires_every_independent_holdout_to_pass(self):
+        rung = {"requested_rung": True}
+        for index, packet in enumerate(runner.HOLDOUT_PACKETS):
+            maximum = 0.02 if index == 3 else 0.00005
+            rung[packet] = {
+                "fallback_fraction": 0.0,
+                "results": {
+                    "error_metrics": {"maximum_absolute_relative": maximum},
+                    "threshold_pass_by_maximum": {
+                        "%g" % (budget / 100.0): maximum * 100.0 <= budget
+                        for budget in runner.REPORTED_BUDGETS_PERCENT}}}
+        verdict = runner.screen_accuracy(
+            {"cell_km": None}, {"result": {"resolution_ladder": [rung]}})
+        self.assertEqual(verdict["problems"], [])
+        self.assertEqual(verdict["worst_relative_percent"], 2.0)
+        self.assertEqual(verdict["budgets_met_percent"], [5.0])
+
+    def test_fallback_only_accuracy_is_never_selected(self):
+        self.run_runner("--mode", "smoke", env={"STUB_ERROR": "0.0005",
+                                                "STUB_FALLBACK": "0.9"},
+                        expect_code=runner.EXIT_INCOMPLETE)
+        plan = json.loads((self.run_dir() / "plan.json").read_text())
+        policy = plan["shortlist"]
+        for entry in policy["eligible"]:
+            if entry["candidate"] != "control":
+                self.assertLessEqual(entry["max_fallback_fraction"],
+                                     policy["max_screening_fallback_fraction"])
+        ledger = json.loads((self.run_dir() / "ledger.json").read_text())
+        for task in ledger["tasks"].values():
+            if task["kind"] in ("propagation", "benchmark"):
+                self.assertEqual(task["status"], "blocked")
+
+    def test_every_candidate_keeps_a_representative_configuration(self):
+        self.run_runner("--mode", "smoke", "--kinds", "accuracy,check,propagation,benchmark",
+                        env={"STUB_ERROR": "0.0005"}, expect_code=runner.EXIT_OK)
+        plan = json.loads((self.run_dir() / "plan.json").read_text())
+        candidates = {entry["candidate"] for entry in plan["shortlist"]["eligible"]}
+        for name in ("exact", "cell", "cells", "interp", "adaptive", "control"):
+            self.assertIn(name, candidates)
+    """Validated import of existing evidence."""
+
+    def donor(self, compatible=True):
+        directory = self.root / "donor" / "daily-ap"
+        directory.mkdir(parents=True)
+        for name in ("nrlmsise-00.c", "nrlmsise-00.h", "nrlmsise-00_data.c", "JB2008.f"):
+            (self.data / name).write_text(name + " source\n")
+        sources = {name: runner.sha256_file(self.data / name)
+                   for name in ("nrlmsise-00.c", "nrlmsise-00.h", "nrlmsise-00_data.c",
+                                "JB2008.f")}
+        (self.root / "donor" / "manifest.json").write_text(json.dumps(
+            {"kind": "atm-cache-study-manifest", "sources": sources}))
+        metadata = {
+            "kind": "atm-cache-study-result", "study_kind": "sensitivity",
+            "measurement_mode": "native-geodetic-partial", "verification_only": False,
+            "input_set": "direct-v2", "model": "nrlmsise00", "master_seed": 20261014,
+            "frame": "ITRF93", "utc_reuse": True, "orientation_reuse": True,
+            "sun_sharing": True, "altitude_domain_km": [200, 1000],
+            "polar_fallback_deg": 89.999,
+            "fixture_epochs": [{"name": name, "utc": utc}
+                               for name, utc in runner.FIXTURE_EPOCHS],
+            "kernels": [{"path": str(self.data / "tls.bsp"),
+                         "sha256": runner.sha256_file(self.data / "tls.bsp")}],
+            "cssi_weather_archive": {"path": str(self.data / "space-weather.txt"),
+                                     "sha256": runner.sha256_file(self.data / "space-weather.txt")},
+        }
+        if not compatible:
+            metadata["cssi_weather_archive"]["sha256"] = "0" * 64
+        (directory / "study-result.json").write_text(json.dumps(
+            {"metadata": metadata, "result": {"weather_pool": []}}))
+        return self.root / "donor"
+
+    def test_compatible_evidence_is_imported_with_its_producer_hashes(self):
+        donor = self.donor()
+        self.run_runner("--mode", "smoke", "--kinds", "sensitivity",
+                        "--reuse-native", str(donor), "--native-source-dir", str(self.data),
+                        expect_code=runner.EXIT_OK)
+        index = json.loads((self.run_dir() / "reuse-index.json").read_text())
+        self.assertEqual(len(index["imported"]), 1)
+        entry = index["imported"][0]
+        self.assertTrue(Path(entry["published"]).is_file())
+        self.assertEqual(entry["donor_sha256"],
+                         runner.sha256_file(self.root / "donor/daily-ap/study-result.json"))
+        self.assertFalse(entry["completes_a_planned_task"])
+        self.assertIn("never a substitute", entry["allowed_use"])
+        manifest = json.loads((self.run_dir() / "evidence/manifest.json").read_text())
+        self.assertTrue(manifest["reused_evidence"]["imported"])
+        # An imported result is evidence, not a completed task: it never appears
+        # in the ledger or in the plan.
+        ledger = json.loads((self.run_dir() / "ledger.json").read_text())
+        self.assertNotIn(entry["name"], ledger["tasks"])
+        plan = json.loads((self.run_dir() / "plan.json").read_text())
+        self.assertNotIn(entry["name"], {task["task_id"] for task in plan["tasks"]})
+
+    def test_declared_provenance_supplies_the_producer_sources(self):
+        # A donor directory with no manifest of its own is still validated when
+        # the caller supplies the reuse-provenance record that names the
+        # authoritative native sources it was built from.
+        directory = self.root / "sourceless" / "daily-ap"
+        directory.mkdir(parents=True)
+        for name in ("nrlmsise-00.c", "nrlmsise-00.h", "nrlmsise-00_data.c", "JB2008.f"):
+            (self.data / name).write_text(name + " source\n")
+        sources = {name: runner.sha256_file(self.data / name)
+                   for name in ("nrlmsise-00.c", "nrlmsise-00.h", "nrlmsise-00_data.c",
+                                "JB2008.f")}
+        provenance = self.root / "native-reuse-provenance.json"
+        provenance.write_text(json.dumps(
+            {"entries": [{"mode": "daily-ap",
+                          "source_dependencies": {"native_C_and_data": sources}}]}))
+        # The study writes raw JSON arrays through string fields, so the grid the
+        # runner compares is parsed, not formatted.
+        metadata = {
+            "study_kind": "sensitivity", "measurement_mode": "native-geodetic-partial",
+            "verification_only": False, "input_set": "direct-v2", "model": "nrlmsise00",
+            "master_seed": 20261014, "frame": "ITRF93", "utc_reuse": True,
+            "orientation_reuse": True, "sun_sharing": True,
+            "altitude_domain_km": "[200,1000]", "polar_fallback_deg": 89.999,
+            "kernels": [{"path": str(self.data / "tls.bsp"),
+                         "sha256": runner.sha256_file(self.data / "tls.bsp")}],
+            "cssi_weather_archive": {"path": str(self.data / "space-weather.txt"),
+                                     "sha256": runner.sha256_file(self.data / "space-weather.txt")},
+        }
+        (directory / "study-result.json").write_text(json.dumps(
+            {"metadata": metadata, "result": {"weather_pool": []}}))
+        self.run_runner("--mode", "smoke", "--kinds", "sensitivity",
+                        "--reuse-native", str(self.root / "sourceless"),
+                        "--reuse-provenance", str(provenance),
+                        "--native-source-dir", str(self.data),
+                        expect_code=runner.EXIT_OK)
+        index = json.loads((self.run_dir() / "reuse-index.json").read_text())
+        self.assertEqual(len(index["imported"]), 1)
+        self.assertEqual(index["declared_provenance"], [str(provenance)])
+        self.assertTrue(all(check["passed"] for check in index["imported"][0]["checks"]))
+
+    def test_provenance_that_names_other_native_sources_is_refused(self):
+        donor = self.donor(compatible=False)
+        (self.root / "donor" / "manifest.json").unlink()
+        for name in ("nrlmsise-00.c", "nrlmsise-00.h", "nrlmsise-00_data.c", "JB2008.f"):
+            (self.data / name).write_text(name + " a different source\n")
+        self.run_runner("--mode", "smoke", "--kinds", "sensitivity",
+                        "--reuse-native", str(donor), "--native-source-dir", str(self.data),
+                        expect_code=runner.EXIT_OK)
+        index = json.loads((self.run_dir() / "reuse-index.json").read_text())
+        self.assertFalse(index["imported"])
+        self.assertTrue(any("native sources" in check
+                            for check in index["refused"][0]["failed_checks"]))
+
+    def test_incompatible_evidence_is_refused(self):
+        donor = self.donor(compatible=False)
+        self.run_runner("--mode", "smoke", "--kinds", "sensitivity",
+                        "--reuse-native", str(donor), "--native-source-dir", str(self.data),
+                        expect_code=runner.EXIT_OK)
+        index = json.loads((self.run_dir() / "reuse-index.json").read_text())
+        self.assertFalse(index["imported"])
+        self.assertEqual(len(index["refused"]), 1)
+        self.assertTrue(any("input bytes" in check
+                            for check in index["refused"][0]["failed_checks"]))
 
 
 if __name__ == "__main__":

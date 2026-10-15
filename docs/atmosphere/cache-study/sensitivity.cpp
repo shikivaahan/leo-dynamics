@@ -70,10 +70,6 @@ std::string sensitivity_study(const Config& c, Environment& env, const StudySett
             for (double latitude : section_latitudes) {
                 for (double local_solar : local_solar_time_grid_hours()) {
                     const double longitude = longitude_for_local_solar_time(weather.epoch, local_solar);
-                    const std::size_t column = static_cast<std::size_t>(
-                        std::find(local_solar_time_grid_hours().begin(),
-                                  local_solar_time_grid_hours().end(),
-                                  local_solar) - local_solar_time_grid_hours().begin());
                     std::vector<double> log_density, density;
                     for (double altitude : altitude_grid_km()) {
                         if (altitude < s.altitude_min_km || altitude > s.altitude_max_km) continue;
@@ -378,32 +374,36 @@ std::string sensitivity_study(const Config& c, Environment& env, const StudySett
         std::string worst_utc, worst_weather;
         double worst_asymmetry = 0;
         for (const auto& weather : selected)
+          for (double anchor_offset : {0.0, 48637.13}) {
+            const leo::Epoch centre_epoch{weather.epoch.et_seconds + anchor_offset};
+            const auto centre_identity = weather_identity(c, env, s.model_kind, centre_epoch);
             for (double local_solar : {0.0, 6.0, 12.0, 18.0}) {
-                const double longitude = longitude_for_local_solar_time(weather.epoch, local_solar);
-                const auto centre_day = leo::SpiceEphemerisProvider::utc_calendar(weather.epoch).days_since_1970;
+                const double longitude = longitude_for_local_solar_time(centre_epoch, local_solar);
+                const auto centre_day =
+                    leo::SpiceEphemerisProvider::utc_calendar(centre_epoch).days_since_1970;
                 for (double separation : time_separations_s()) {
                     const double centre_density =
-                        probe_density(probe, Probe{weather.epoch, 0.0, longitude, s.h_km});
+                        probe_density(probe, Probe{centre_epoch, 0.0, longitude, s.h_km});
                     const double centre = std::log(centre_density);
                     // One symmetric pair per separation. The forward and backward
                     // one-sided deltas are reported separately, because they are
                     // different quantities and a symmetric pair alone would hide
                     // the asymmetry that matters near a weather boundary.
                     const double forward_density =
-                        probe_density(probe, Probe{leo::Epoch{weather.epoch.et_seconds + separation},
+                        probe_density(probe, Probe{leo::Epoch{centre_epoch.et_seconds + separation},
                                                   0.0, longitude, s.h_km});
                     const double backward_density =
-                        probe_density(probe, Probe{leo::Epoch{weather.epoch.et_seconds - separation},
+                        probe_density(probe, Probe{leo::Epoch{centre_epoch.et_seconds - separation},
                                                   0.0, longitude, s.h_km});
                     const double forward = std::log(forward_density);
                     const double backward = std::log(backward_density);
                     const double span = std::abs(forward - backward);
                     const double asymmetry = std::abs(forward - centre) - std::abs(backward - centre);
                     const auto forward_day =
-                        leo::SpiceEphemerisProvider::utc_calendar(leo::Epoch{weather.epoch.et_seconds + separation})
+                        leo::SpiceEphemerisProvider::utc_calendar(leo::Epoch{centre_epoch.et_seconds + separation})
                             .days_since_1970;
                     const auto backward_day =
-                        leo::SpiceEphemerisProvider::utc_calendar(leo::Epoch{weather.epoch.et_seconds - separation})
+                        leo::SpiceEphemerisProvider::utc_calendar(leo::Epoch{centre_epoch.et_seconds - separation})
                             .days_since_1970;
                     histogram.add(span);
                     worst_asymmetry = std::max(worst_asymmetry, std::abs(asymmetry));
@@ -411,12 +411,23 @@ std::string sensitivity_study(const Config& c, Environment& env, const StudySett
                         worst_span = span;
                         worst_step = separation;
                         worst_lst = local_solar;
-                        worst_utc = weather.utc;
+                        worst_utc = utc_label(centre_epoch);
                         worst_weather = weather.name;
                     }
                     Json row;
                     row.add("weather", weather.name);
-                    row.add("utc", weather.utc);
+                    row.add("utc", utc_label(centre_epoch));
+                    row.add("anchor_scope", anchor_offset == 0.0 ? "midnight-boundary" : "civil-day-interior");
+                    const bool same_forward_inputs = centre_identity == weather_identity(
+                        c, env, s.model_kind, leo::Epoch{centre_epoch.et_seconds + separation});
+                    const bool same_backward_inputs = centre_identity == weather_identity(
+                        c, env, s.model_kind, leo::Epoch{centre_epoch.et_seconds - separation});
+                    row.add("forward_matches_discrete_inputs", same_forward_inputs);
+                    row.add("backward_matches_discrete_inputs", same_backward_inputs);
+                    row.add("finite_difference_scope",
+                            same_forward_inputs && same_backward_inputs
+                                ? "identical-discrete-inputs; continuous-provider-response"
+                                : "discrete-input-transition; not a smooth derivative");
                     row.add("separation_s", separation);
                     row.add("local_solar_time_hours", local_solar);
                     row.add("reference_density_kg_m3", centre_density);
@@ -440,6 +451,7 @@ std::string sensitivity_study(const Config& c, Environment& env, const StudySett
                     rows.push_back(row.str());
                 }
             }
+          }
         result.raw("time_difference", raw_array(rows));
         result.add("time_separations_s", numbers(time_separations_s()));
         result.raw("time_difference_histogram", histogram.json());
@@ -517,7 +529,20 @@ std::string sensitivity_study(const Config& c, Environment& env, const StudySett
                                 before_record.f107 != after_record.f107 ||
                                 before_record.f107_average != after_record.f107_average ||
                                 before_record.dstdtc_k != after_record.dstdtc_k ||
-                                before_record.ap_history != after_record.ap_history);
+                                before_record.ap_history != after_record.ap_history ||
+                                // JB2008's own drivers are the eight SOLFSMY lag
+                                // proxies. Comparing only the NRLMSISE indices
+                                // and DSTDTC would report "unchanged" across an
+                                // hourly solar transition that does change the
+                                // density.
+                                before_record.f10 != after_record.f10 ||
+                                before_record.f10_average != after_record.f10_average ||
+                                before_record.s10 != after_record.s10 ||
+                                before_record.s10_average != after_record.s10_average ||
+                                before_record.m10 != after_record.m10 ||
+                                before_record.m10_average != after_record.m10_average ||
+                                before_record.y10 != after_record.y10 ||
+                                before_record.y10_average != after_record.y10_average);
                     for (double altitude : {400.0, 600.0, 900.0}) {
                         const double a = probe_density(probe, Probe{before, 0.0,
                                                                      longitude_for_local_solar_time(before, 12.0),
@@ -567,8 +592,9 @@ std::string sensitivity_study(const Config& c, Environment& env, const StudySett
             boundaries.raw("observed_dstdtc_transitions", raw_array(dtc_rows));
             boundaries.add("dstdtc_note",
                             "DSTDTC is an integer after truncating an hourly interpolation, so it "
-                            "changes inside an hour and not only on the hour. It is hashed into every "
-                            "cache key, so no cell or interpolation can span one of these transitions");
+                            "changes inside an hour and not only on the hour. Its bit pattern is "
+                            "carried in every cache key, so no cell or interpolation can span one of "
+                            "these transitions");
         }
         // The leap-second transition the pinned kernels cover.
         {
@@ -602,7 +628,7 @@ std::string sensitivity_study(const Config& c, Environment& env, const StudySett
         boundaries.add("transitions_not_covered", uncovered);
         boundaries.add("guard_consequence",
                        "every one of these transitions changes the discrete space-weather vector or the "
-                       "civil day, both of which are hashed into every key. A candidate therefore "
+                       "civil day, both of which are carried bitwise in every key. A candidate therefore "
                        "cannot reuse or interpolate across any of them: a mismatch is a miss, never a "
                        "value");
         boundaries.add("uncovered_policy",

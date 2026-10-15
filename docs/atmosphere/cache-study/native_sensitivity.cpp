@@ -468,9 +468,18 @@ std::string native_geodetic_sensitivity_study(const Config& c, Environment& env,
                 for (double latitude : {-80.0, -45.0, 0.0, 45.0, 80.0})
                     for (double local_solar : {0.0, 6.0, 12.0, 18.0}) {
                         const double longitude = longitude_for_local_solar_time(weather.epoch, local_solar);
-                        for (double lower = 200.0; lower + width <= 1000.0; lower += width) {
+                        // The cell boundaries are integer multiples of the width
+                        // from a fixed origin. Repeatedly adding a floating-point
+                        // width to a running lower bound drifts, and a drifted
+                        // boundary would quietly compare two different cells
+                        // against each other.
+                        const std::size_t cells =
+                            static_cast<std::size_t>(std::floor((1000.0 - 200.0) / width));
+                        for (std::size_t cell = 0; cell < cells; ++cell) {
+                            const double lower = 200.0 + width * double(cell);
+                            const double upper = lower + width;
                             const double low = reference.density(weather.epoch, latitude, longitude, lower);
-                            const double high = reference.density(weather.epoch, latitude, longitude, lower + width);
+                            const double high = reference.density(weather.epoch, latitude, longitude, upper);
                             for (int holdout = 0; holdout < 3; ++holdout) {
                                 const double fraction = random.uniform(0.1, 0.9);
                                 const double altitude = lower + fraction * width;
@@ -511,7 +520,14 @@ std::string native_geodetic_sensitivity_study(const Config& c, Environment& env,
             row.raw("error_metrics", metrics.json());
             row.raw("threshold_pass_by_maximum", threshold_row(metrics, study_error_targets()));
             row.raw("weather_strata", raw_array(strata));
-            row.raw("worst_point", worst_point.str());
+            row.raw("worst_point", [&] {
+                if (worst != 0.0) return worst_point.str();
+                Json empty;
+                empty.add("none", true);
+                empty.add("reason", "no sampled holdout point produced a nonzero reconstruction "
+                                    "error at this cell width");
+                return empty.str();
+            }());
             rows.push_back(row.str());
         }
         result.raw("altitude_log_density_interpolation_holdouts", raw_array(rows));

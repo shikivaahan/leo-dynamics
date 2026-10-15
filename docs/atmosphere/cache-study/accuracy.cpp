@@ -14,6 +14,7 @@ namespace {
 struct Holdout {
     std::string name, description;
     std::vector<QuerySample> samples;
+    std::vector<std::string> physical_strata;
 };
 
 Holdout uniform_holdout(const StudyState& reference, std::size_t count, std::uint64_t seed,
@@ -42,17 +43,73 @@ Holdout local_holdout(const StudyState& reference, std::size_t packets, std::siz
     return holdout;
 }
 
+Holdout stratified_holdout(const Config& c, const StudySettings& s, const StudyState& anchor) {
+    Holdout result;
+    result.name = "stratified-physical-boundaries";
+    result.description =
+        "independent off-node physical points spanning both hemispheres, dawn/dusk/day/night, "
+        "200-1000 km, native altitude transitions, longitude wrap and near-polar fallback; "
+        "fresh references are never supplied to candidate caches";
+    const leo::Epoch at{anchor.epoch.et_seconds + 48637.13};
+    const auto add = [&](double altitude, double latitude, double longitude, double lst,
+                         leo::Epoch when, const char* role) {
+        result.samples.push_back({when, inertial_from_geodetic(
+            when, latitude * kRad, longitude * kRad, altitude * 1000.0, c.frame)});
+        Json stratum;
+        stratum.add("altitude_km", altitude);
+        stratum.add("latitude_deg", latitude);
+        stratum.add("longitude_deg", longitude);
+        stratum.add("local_solar_time_hours", lst);
+        stratum.add("epoch_et_seconds", when.et_seconds);
+        stratum.add("role", role);
+        result.physical_strata.push_back(stratum.str());
+    };
+    for (double altitude : {200.13, 249.73, 299.97, 300.03, 399.77, 600.37, 899.73, 999.87})
+        for (double latitude : {-89.9999, -80.37, -45.13, 0.37, 45.13, 80.37, 89.9999})
+            for (double lst : {0.13, 5.97, 12.13, 18.03}) {
+                const double longitude = longitude_for_local_solar_time(at, lst);
+                add(altitude, latitude, longitude, lst, at, "independent-physical-point");
+                // Explicit interior-cell pairs exercise approximate reuse even
+                // when a fine grid gives no hits on the broad random holdout.
+                // Their native references remain scoring-only, never cache training.
+                const double h0 = s.altitude_min_km +
+                    std::floor((altitude - s.altitude_min_km) / s.base_cells.altitude_km) *
+                        s.base_cells.altitude_km;
+                const double p0 = -90.0 + cell_index_latitude(latitude, s.base_cells) *
+                    s.base_cells.latitude_deg;
+                const double l0 = -180.0 + cell_index_longitude(longitude, s.base_cells) *
+                    s.base_cells.longitude_deg;
+                const double t0 = anchor.epoch.et_seconds +
+                    std::floor(48637.13 / s.base_cells.time_s) * s.base_cells.time_s;
+                for (double fraction : {0.23, 0.76}) {
+                    const double h = h0 + fraction * s.base_cells.altitude_km;
+                    if (h < s.altitude_min_km || h > s.altitude_max_km) continue;
+                    const double p = p0 + fraction * s.base_cells.latitude_deg;
+                    const double l = l0 + fraction * s.base_cells.longitude_deg;
+                    const leo::Epoch time{t0 + fraction * s.base_cells.time_s};
+                    add(h, p, l, -1.0, time,
+                        fraction < 0.5 ? "cell-interior-first" : "cell-interior-second");
+                }
+            }
+    for (double longitude : {-180.00001, -179.99999, 179.99999, 180.00001})
+        for (double latitude : {-80.1, 0.1, 80.1})
+            add(600.37, latitude, longitude, -1.0, at, "wrap-boundary");
+    return result;
+}
+
 struct HoldoutResult {
     ErrorMetrics metrics;
     std::size_t samples = 0;
     std::size_t nonpositive_or_nonfinite = 0;
     double minimum_density = 0, maximum_density = 0;
     std::vector<std::string> worst_samples;
+    std::vector<std::string> strata;
     std::string json() const;
 };
 
 HoldoutResult score(const std::vector<QuerySample>& samples, DensityEvaluator& candidate,
-                    const NativeProbe& probe, std::size_t worst_reported) {
+                    const NativeProbe& probe, std::size_t worst_reported,
+                    const std::vector<std::string>& physical_strata) {
     std::vector<double> signed_relative, log_error;
     std::vector<double> densities;
     HoldoutResult result;
@@ -63,6 +120,7 @@ HoldoutResult score(const std::vector<QuerySample>& samples, DensityEvaluator& c
         const double reference = probe.density(sample.position, sample.epoch);
         if (!std::isfinite(reference) || reference <= 0)
             throw std::runtime_error("holdout reference density is not finite and positive");
+        const DensityStatistics before = candidate.counts();
         const double got = candidate.evaluate(sample.epoch, sample.position);
         densities.push_back(got);
         if (!std::isfinite(got) || got <= 0)
@@ -71,6 +129,20 @@ HoldoutResult score(const std::vector<QuerySample>& samples, DensityEvaluator& c
         result.maximum_density = std::max(result.maximum_density, got);
         signed_relative.push_back((got - reference) / reference);
         log_error.push_back(std::log(got / reference));
+        if (!physical_strata.empty()) {
+            const DensityStatistics after = candidate.counts();
+            Json row;
+            row.raw("physical_point", physical_strata[result.strata.size()]);
+            row.add("signed_relative_error", signed_relative.back());
+            row.add("reference_density_kg_m3", reference);
+            row.add("reconstructed_density_kg_m3", got);
+            row.add("native_calls", after.native_calls - before.native_calls);
+            row.add("guard_fallbacks", after.guard_fallbacks - before.guard_fallbacks);
+            row.add("domain_fallbacks", after.domain_fallbacks - before.domain_fallbacks);
+            row.add("out_of_contract_nodes",
+                    after.out_of_contract_nodes - before.out_of_contract_nodes);
+            result.strata.push_back(row.str());
+        }
     }
     result.metrics = error_metrics(signed_relative, log_error);
     // The worst individual samples, so a large local error is always visible and
@@ -105,6 +177,7 @@ std::string HoldoutResult::json() const {
     j.raw("error_metrics", metrics.json());
     j.raw("threshold_pass_by_maximum", threshold_row(metrics, study_error_targets()));
     j.raw("worst_samples", raw_array(worst_samples));
+    j.raw("physical_strata", raw_array(strata));
     return j.str();
 }
 
@@ -143,6 +216,7 @@ std::string accuracy_study(const Config& c, Environment& env, const StudySetting
         uniform_holdout(anchor, s.points, Rng::derive(s.seed, 0x02), window_s, c.frame),
         local_holdout(anchor, construction_packets, per_packet, Rng::derive(s.seed, 0x03), 40.0, 300.0),
         std::move(broad),
+        stratified_holdout(c, s, anchor),
     };
 
     Json result;
@@ -212,24 +286,50 @@ std::string accuracy_study(const Config& c, Environment& env, const StudySetting
         row.add("construction_native_calls_avoided_during_build",
                 construction.size() ? 1.0 - double(construction_native_calls) / double(construction.size())
                                     : 0.0);
+        row.add("construction_native_calls_avoided_during_build_rule",
+                "construction_samples minus construction_native_calls, over construction_samples. "
+                "It is negative when the population phase performed more native evaluations than it "
+                "served queries, which is exactly what a four-dimensional interpolation does on a "
+                "cold region: it spends up to 2^N fresh node evaluations per query. It is reported "
+                "as a signed number rather than clamped, because clamping it would hide the one "
+                "result a reader most needs to see");
+        row.add("construction_native_calls_per_sample",
+                construction.size() ? double(construction_native_calls) / double(construction.size())
+                                    : 0.0);
+        row.add("construction_timer_note",
+                "the external timer here covers the whole population phase including the in-"
+                "evaluator section timers, which add two clock reads per query because this rung "
+                "runs instrumented for its screening diagnostics. It is an upper bound on the "
+                "uninstrumented cost; the benchmark study measures that separately on an "
+                "uninstrumented build");
 
         DensityStatistics before_holdouts = candidate.counts();
         for (const auto& holdout : holdouts) {
-            const HoldoutResult scored = score(holdout.samples, candidate, probe, 20);
+            const HoldoutResult scored = score(
+                holdout.samples, candidate, probe, 20, holdout.physical_strata);
             const DensityStatistics after = candidate.counts();
             Json holdout_row;
             holdout_row.add("name", holdout.name);
             holdout_row.add("samples", scored.samples);
             holdout_row.raw("results", scored.json());
-            holdout_row.add("queries_on_this_holdout",
-                            after.queries - before_holdouts.queries);
-            holdout_row.add("native_calls_on_this_holdout",
-                            after.native_calls - before_holdouts.native_calls);
+            const std::uint64_t holdout_queries = after.queries - before_holdouts.queries;
+            const std::uint64_t holdout_native = after.native_calls - before_holdouts.native_calls;
+            holdout_row.add("queries_on_this_holdout", holdout_queries);
+            holdout_row.add("native_calls_on_this_holdout", holdout_native);
+            holdout_row.add("native_calls_per_query_on_this_holdout",
+                            holdout_queries ? double(holdout_native) / double(holdout_queries) : 0.0);
+            holdout_row.add("native_calls_avoided_on_this_holdout",
+                            static_cast<double>(holdout_queries) - double(holdout_native));
             holdout_row.add("native_calls_avoided_fraction",
-                            after.queries > before_holdouts.queries
-                                ? 1.0 - double(after.native_calls - before_holdouts.native_calls) /
-                                            double(after.queries - before_holdouts.queries)
-                                : 0.0);
+                            holdout_queries ? 1.0 - double(holdout_native) / double(holdout_queries)
+                                            : 0.0);
+            holdout_row.add("native_calls_avoided_rule",
+                            "queries minus native_calls for this holdout alone. It is signed and is "
+                            "negative when the candidate performed more native evaluations than it "
+                            "served queries on this holdout, which is the honest outcome for an "
+                            "interpolation whose nodes are not yet stored. Every native call the "
+                            "holdout caused is counted, including the guard and domain fallbacks and "
+                            "the interpolation node builds: it is not one minus a fallback rate");
             holdout_row.add("guard_fallbacks_on_this_holdout",
                             after.guard_fallbacks + after.domain_fallbacks +
                                 after.out_of_contract_nodes + after.negative_time_fallbacks -
@@ -251,8 +351,30 @@ std::string accuracy_study(const Config& c, Environment& env, const StudySetting
         const DensityStatistics after_holdouts = candidate.counts();
 
         // ---- screening latency diagnostic: serial interleaved batches ----
+        // Measured on a second, uninstrumented evaluator. The scored evaluator
+        // runs with the in-evaluator section timers enabled, which add two clock
+        // reads to every query on the candidate path only, so timing it would
+        // charge the candidate for instrumentation the direct path does not pay.
         row.raw("screening_latency_diagnostic", [&] {
             const std::size_t batch = std::max<std::size_t>(1, std::min<std::size_t>(200, s.points));
+            if (holdouts[1].samples.empty()) {
+                Json timing;
+                timing.add("status", "diagnostic, not a headline performance number");
+                timing.add("skipped", true);
+                timing.add("reason", "the local-query-packet holdout is empty, so there is no "
+                                     "interleaved sequence to time");
+                return timing.str();
+            }
+            StudySettings uninstrumented = rung;
+            uninstrumented.measurement = false;
+            DensityEvaluator latency(c, env, s.model_kind, uninstrumented);
+            // One discarded execution of each path so first-touch effects are
+            // outside both measured batches.
+            {
+                const auto& sample = holdouts[1].samples.front();
+                latency.evaluate(sample.epoch, sample.position);
+                latency.direct(sample.epoch, sample.position);
+            }
             std::vector<double> direct_nanoseconds, candidate_nanoseconds;
             std::size_t cursor = 0;
             for (int repeat = 0; repeat < 9; ++repeat) {
@@ -260,8 +382,8 @@ std::string accuracy_study(const Config& c, Environment& env, const StudySetting
                 const auto timer = Clock::now();
                 for (std::size_t index = 0; index < batch; ++index) {
                     const auto& sample = holdouts[1].samples[(cursor + index) % holdouts[1].samples.size()];
-                    if (measure_candidate) candidate.evaluate(sample.epoch, sample.position);
-                    else candidate.direct(sample.epoch, sample.position);
+                    if (measure_candidate) latency.evaluate(sample.epoch, sample.position);
+                    else latency.direct(sample.epoch, sample.position);
                 }
                 const double per_call = elapsed(timer) / double(batch) * 1e9;
                 (measure_candidate ? candidate_nanoseconds : direct_nanoseconds).push_back(per_call);
@@ -273,8 +395,15 @@ std::string accuracy_study(const Config& c, Environment& env, const StudySetting
             timing.add("status", "diagnostic, not a headline performance number");
             timing.add("method",
                        "serial batches interleaved in time, so the two paths see the same machine "
-                       "state; this is a screening measurement, and the reported headline performance "
-                       "comes from the benchmark study on an uninstrumented build");
+                       "state. Both run on one uninstrumented evaluator, so neither pays for the "
+                       "in-evaluator section timers. This is a screening measurement; the reported "
+                       "headline performance comes from the benchmark study on an uninstrumented "
+                       "build");
+            timing.add("timed_unit",
+                       "nanoseconds per evaluate/direct call over a batch of interleaved "
+                       "holdout points at one epoch neighbourhood");
+            timing.add("caller", std::string("sun supplied: null, so the provider performs its "
+                                             "own Sun lookup on every call"));
             timing.add("batches_per_path", static_cast<double>(direct_nanoseconds.size()));
             timing.add("median_direct_ns_per_call",
                        direct_nanoseconds.empty() ? 0.0 : direct_nanoseconds[direct_nanoseconds.size() / 2]);

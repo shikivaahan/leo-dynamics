@@ -1,29 +1,36 @@
 # ATM-CACHE-001 — atmospheric density cache study
 
-Status: **partial.** The tooling, the pinned-input NRLMSISE-00 native sensitivity, and the
-end-to-end pipeline verification are complete. The primary direct-v2 study is **blocked** because
-two pinned inputs no longer exist upstream, and the exact baseline was kept rather than replaced.
+Historical `direct-v2` and its blocked cache-study run remain immutable. The original SOLFSMY
+bytes are unavailable; their pin has not changed. The original Earth PCK has been recovered and
+verified. New work uses the separately pinned experimental input set
+[`exp-solfsmy-20261011-original-pck`](input-sets/exp-solfsmy-20261011-original-pck.json).
 
-## What is measured, and what is not
+## Input compatibility and evidence scope
 
-| Item | State |
-|---|---|
-| NRLMSISE-00 native-input sensitivity, daily Ap and Ap-history | measured on pinned CSSI + LSK |
-| Both-model pipeline, screening, checks, propagation and benchmark execution | verified on explicitly nonprimary inputs; never scientific evidence |
-| Direct evaluation with caching disabled | bitwise identical to the current driver on CASE-A/B/C, both models |
-| Primary provider/candidate accuracy, real trajectory locality, coupled propagation error, speedups | not measured; blocked on two inputs |
+Only SOLFSMY is substituted: `SOLFSMY-live.TXT`, SHA-256
+`9bc734e66da7b5919ce6fd2b3475db82c28e500988dbb2f8d994d5ff3c074e35`.
+The recovered original PCK SHA-256 is
+`14deb9ab9dd49482185cc49a9c29fe56ae65d50ab94caf3197db8694836b6f81`.
+CSSI, DTCFILE, DE432s, NAIF0012 and the scientific configuration retain their original pins.
 
-Two pinned `direct-v2` inputs are unavailable:
+All five historical fixture epochs were compared by model, UTC epoch, latitude, longitude and
+altitude, using binary64 bit comparisons:
 
-| Input | Pinned SHA-256 | Status |
-|---|---|---|
-| `SOLFSMY.TXT` | `891a0767…` | live file is a different release (`9bc734e6…`) |
-| `earth_000101_270105_261009.bpc` | `14deb9ab…` | removed from NAIF; the rolling kernel moved to `earth_000101_270109_261013.bpc` |
+| Model | Identical densities | Identical temperatures | Identical constituents | Maximum relative difference |
+|---|---:|---:|---:|---:|
+| NRLMSISE-00 | 3,570 / 3,570 | 7,140 / 7,140 | 28,560 / 28,560 | 0 |
+| JB2008 | 3,570 / 3,570 | 7,140 / 7,140 | not returned by the model | 0 |
 
-Nothing was re-pinned. The runner records all 391 primary tasks as blocked and pending, prints a
-resume command, and refuses to substitute either file. Alternate files were used **only** for the
-`--verification-only` pipeline run, whose results are labelled
-`evidence_class: pipeline-verification-only` everywhere they appear.
+Epochs: quiet June/December 2008, active March 2001, active October 28 and storm October 30, 2003.
+The completed two-epoch smoke was reused; only the remaining three epochs were rerun.
+Evidence: `/home/user/leo-cache-study-evidence/atm-cache-001-exp-solfsmy-20261011/compatibility-all-five.json`.
+This proves equivalence **over the tested fixture domain**, not byte equivalence between SOLFSMY
+releases or universal scientific equivalence.
+
+The runner requires explicit `--input-set` selection, verifies every input hash and records the
+definition hash in the resume identity. Neither input set nor source version may change on resume.
+Compatible native-only NRLMSISE sensitivity can be imported with its original provenance; it is
+never relabelled as provider, coupled, JB2008 or performance evidence.
 
 ## Measured finding that is primary evidence
 
@@ -84,18 +91,18 @@ python3 docs/atmosphere/cache-study/analyse.py \
   --native /path/to/ap-history/study-result.json \
   --out /path/to/evidence
 
-# 3. Primary study: records the complete plan and stays blocked until the
-#    two pinned inputs are restored.
-python3 docs/atmosphere/cache-study/run.py --mode full --workers 8 --max-hours 8 \
-  --out /path/to/run --binary build-atmosphere-cache-study/atm_cache_study
+# 3. A NEW experimental run; never resume or relabel the historical blocked run.
+python3 docs/atmosphere/cache-study/run.py --mode full --workers 8 --max-hours 12 \
+  --out /home/user/leo-cache-study-evidence/atm-cache-001-exp-solfsmy-20261011/run \
+  --binary build-atmosphere-cache-study-final/atm_cache_study \
+  --build-dir build-atmosphere-cache-study-final \
+  --deps-dir /home/user/leo-cache-study-deps \
+  --input-set docs/atmosphere/cache-study/input-sets/exp-solfsmy-20261011-original-pck.json \
+  --native-source-dir /home/user/leo-cache-study-deps \
+  --reuse-native /home/user/leo-cache-study-evidence/native-geodetic-pinned \
+  --reuse-provenance /home/user/leo-cache-study-evidence/atm-cache-001-exp-solfsmy-20261011/native-reuse-provenance.json
 
-# 4. Resume after restoring the inputs; completed work is never recomputed.
-python3 docs/atmosphere/cache-study/run.py --resume /path/to/run --workers 8
-```
-
-The regression suites are unchanged by this study and were run against the pinned fixtures:
-
-```sh
-python3 tests/cache_study_runner_tests.py      # 17/17 runner lifecycle cases
-ctest --test-dir build-atmosphere-cache-study-regressions --output-on-failure  # 185/185
+# 4. Resume the same experimental run with unchanged inputs, binary and study sources.
+python3 docs/atmosphere/cache-study/run.py \
+  --resume /home/user/leo-cache-study-evidence/atm-cache-001-exp-solfsmy-20261011/run --workers 8
 ```

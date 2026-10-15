@@ -23,12 +23,42 @@ inline std::string CellScheme::json() const {
     j.add("latitude_cells", static_cast<double>(latitude_cells()));
     j.add("longitude_cells_periodic", static_cast<double>(longitude_cells()));
     j.add("altitude_cells", static_cast<double>(altitude_cells()));
+    // The widths the quantisation actually uses, stated as the geographic
+    // degrees they really are. The cell counts are whole numbers of cells across
+    // the sphere, so the realised width is the sphere extent divided by that
+    // count; it coincides with the requested width only when the requested width
+    // divides the extent evenly, and reporting the requested value alone would
+    // misstate the real cell geometry by up to half a cell.
+    j.add("realised_latitude_width_deg", 180.0 / double(latitude_cells()));
+    j.add("realised_longitude_width_deg", 360.0 / double(longitude_cells()));
+    j.add("realised_width_rule",
+          "180/latitude_cells and 360/longitude_cells: the exact degree width of one cell, which "
+          "is what cell_index_latitude and cell_index_longitude divide by. These are geographic "
+          "degrees of latitude and of longitude on the WGS84 ellipsoid, not great-circle degrees");
+    j.add("latitude_index_rule",
+          "floor((latitude_deg + 90)/realised_latitude_width_deg), clamped into the grid");
+    j.add("longitude_index_rule",
+          "floor(mod(longitude_deg + 180, 360)/realised_longitude_width_deg), wrapped modulo the "
+          "cell count, so the +180/-180 seam is one cell boundary and never a straddling cell");
+    j.add("altitude_index_rule",
+          "floor(max(altitude_km, band_min_km) - band_min_km)/altitude_km against the study's "
+          "configured altitude band; the band, not a fixed constant, is the origin");
+    j.add("time_index_rule", "floor((et_seconds - time_origin)/time_s)");
     return j.str();
 }
 
 inline std::string StudySettings::json() const {
     Json j;
     j.add("kind", kind);
+    // The input set is an experimental parameter, not provenance only: it selects
+    // which pinned bytes every reference value in this process was produced from,
+    // so a result carries it beside every other knob that shaped it. Provenance
+    // and hashes live in the shared study metadata; this is the knob.
+    j.add("input_set", input_set);
+    j.add("input_set_rule",
+          "the id of the pinned input set this process verified and read; direct-v2 is the "
+          "historical primary and every other id is a separately pinned scientific experiment "
+          "whose evidence is labelled scientific-experimental-pinned, never as direct-v2");
     j.add("model", model);
     j.add("candidate", candidate);
     j.add("points", points);
@@ -70,6 +100,52 @@ inline std::string StudySettings::json() const {
     j.add("adaptive_probe_divisor", adaptive_probe_divisor);
     j.add("fixture_scan_days", fixture_scan_days);
     j.add("measurement", measurement);
+    // The node geometry candidate C actually builds, stated as real widths. The
+    // base_cells block above reports the requested widths; these report what the
+    // interpolation divides by, which differs whenever the axis transform or
+    // the whole-cell counts change it.
+    {
+        const bool logarithmic = axis_mode == AxisMode::logarithmic;
+        const auto latitude_count = static_cast<double>(base_cells.latitude_cells());
+        const auto longitude_count = static_cast<double>(base_cells.longitude_cells());
+        Json geometry;
+        geometry.add("altitude_axis_anchor", logarithmic ? "ln(1 km)" : "altitude_min_km");
+        geometry.add("altitude_node_km",
+                     logarithmic ? "exp(index * log_altitude_width)"
+                                 : "altitude_min_km + index * base_cells.altitude_km");
+        geometry.add("altitude_node_rule_note",
+                     logarithmic
+                         ? "a logarithmic altitude axis is anchored at 1 km, so its nodes near the "
+                           "band are not integer multiples of base_cells.altitude_km and a node may "
+                           "fall just below the band or just above its top. When that happens the "
+                           "query is refused and answered natively, and out_of_contract_nodes counts "
+                           "it; base_cells.altitude_km is not the altitude cell width in this mode"
+                         : "in the linear mode the node altitude is the band origin plus a whole "
+                           "number of base_cells.altitude_km cells");
+        geometry.add("latitude_node_deg", "latitude_min - 90 + index * (180/latitude_cells)");
+        geometry.add("longitude_node_deg", "-180 + index * (360/longitude_cells), wrapped");
+        geometry.add("latitude_width_deg", 180.0 / latitude_count);
+        geometry.add("longitude_width_deg", 360.0 / longitude_count);
+        geometry.add("spatial_width_rule",
+                     "the realised geographic degree widths are the sphere extent divided by the "
+                     "whole-cell counts, which coincide with the requested widths only when those "
+                     "divide the extent evenly. These are degrees of geodetic latitude and of "
+                     "longitude on the WGS84 ellipsoid");
+        geometry.add("time_origin_anchor", "time_origin_et_seconds");
+        geometry.add("time_node_s",
+                     logarithmic ? "ln(offset) = index * log_time_width"
+                                 : "offset = index * base_cells.time_s");
+        geometry.add("noninterpolated_axis_rule",
+                     "an axis that is not interpolated is not divided by any width at all: its node "
+                     "coordinate is the exact query coordinate, so it is carried bitwise into the "
+                     "node identity and contributes a weight of one");
+        geometry.add("log_time_note",
+                     "a logarithmic time axis requires a positive offset from the time origin; a "
+                     "backwards or out-of-order query on an active logarithmic time axis is refused "
+                     "and answered natively, and negative_time_fallbacks counts it. A logarithmic "
+                     "axis that is switched off is never evaluated, so it cannot refuse anything");
+        j.raw("interpolation_node_geometry", geometry.str());
+    }
     j.add("error_targets", numbers(study_error_targets()));
     return j.str();
 }
@@ -97,6 +173,16 @@ inline std::string DensityStatistics::json() const {
     Json j;
     j.add("queries", queries);
     j.add("exact_hits", exact_hits);
+    j.add("acquisition_skips", acquisition_skips);
+    j.add("acquisition_skips_note",
+          "candidate A queries answered from the memo without constructing the geometry or the "
+          "native input and without calling the native model: no Earth-fixed rotation, no geodetic "
+          "conversion, no local solar time, no Sun right ascension and declination. It is NOT a "
+          "count of queries that skipped all preprocessing. The space-weather identity is part of "
+          "the memo key, so those queries still perform the UTC calendar conversion and the "
+          "space-weather record read that identity requires; that cost is inside lookup_seconds and "
+          "is deliberately not hidden, because skipping it would mean not knowing whether the "
+          "stored value belongs to this epoch's weather");
     j.add("cell_reuses", cell_reuses);
     j.add("interpolations", interpolations);
     j.add("adaptive_anchor_uses", adaptive_anchor_uses);
@@ -104,23 +190,45 @@ inline std::string DensityStatistics::json() const {
     j.add("adaptive_refinements", adaptive_refinements);
     j.add("adaptive_degradations", adaptive_degradations);
     j.add("native_calls", native_calls);
-    j.add("native_call_fraction", measured());
+    j.add("native_calls_per_query", queries ? double(native_calls) / double(queries) : 0.0);
+    // "Avoided" is the number of queries that did not cost a native evaluation,
+    // not one minus a fallback rate. It is queries minus *every* native call the
+    // run made, including the calls spent building the cache and the calls a
+    // guard forced. It can legitimately be negative: a four-dimensional
+    // interpolation spends up to 2^N fresh native evaluations per query, so on
+    // a cold region it costs more than it saves. That number is the finding, and
+    // hiding it behind a positive-looking fraction would be the bug.
+    j.add("native_calls_avoided", double(queries) - double(native_calls));
     j.add("native_calls_avoided_fraction", avoided());
     j.add("native_calls_avoided_percent", avoided() * 100.0);
+    j.add("native_calls_avoided_rule",
+          "queries minus native_calls, where native_calls counts every native evaluation the run "
+          "performed: cache construction, guard and domain fallbacks, adaptive probes and "
+          "interpolation corner builds. The fraction is negative exactly when the run performed "
+          "more native evaluations than it served queries, which is a real and reportable result");
     j.add("insertions", insertions);
     j.add("evictions", evictions);
     j.add("guard_fallbacks", guard_fallbacks);
     j.add("domain_fallbacks", domain_fallbacks);
     j.add("weather_guard_rejections", weather_guard_rejections);
     j.add("incomplete_corners", incomplete_corners);
+    j.add("incomplete_corners_rule",
+          "interpolation nodes this run had to evaluate natively because the store did not hold "
+          "them: a cold cache, an unvisited cell, or a bounded store that evicted the node. It is "
+          "a count of fresh native node evaluations, not a count of failed interpolations, and a "
+          "four-dimensional interpolation needs up to 2^N of them per query");
     j.add("out_of_contract_nodes", out_of_contract_nodes);
-    j.add("corner_note",
-          "incomplete_corners includes corners refused because their space-weather identity differs "
-          "bitwise from the query's, which is the weather guard doing its work");
+    j.add("out_of_contract_nodes_rule",
+          "a query abandoned and answered natively because a node it needed lay outside the "
+          "model's documented native altitude range or inside the polar fallback band");
     j.add("negative_time_fallbacks", negative_time_fallbacks);
     j.add("invalid_values_refused", invalid_native_values);
     j.add("invalidations", invalidations);
     j.add("construction_queries", construction_queries);
+    j.add("construction_queries_note",
+          "queries issued while the evaluator was still in its population phase; this is a count of "
+          "queries, not a separate timing region, and it only differs from queries once "
+          "invalidate() has been called");
     j.add("entries", entries);
     j.add("peak_entries", peak_entries);
     j.add("capacity", capacity);
@@ -135,6 +243,12 @@ inline std::string DensityStatistics::json() const {
     j.add("construction_seconds", construction_seconds);
     j.add("lookup_seconds", lookup_seconds);
     j.add("native_seconds", native_seconds);
+    j.add("section_timers_note",
+          "these three are the in-evaluator section timers. They accumulate only when those timers "
+          "were enabled for the run, and they add two clock reads per query when they are. A zero "
+          "here means the section timers were switched off and nothing was measured; it does NOT "
+          "mean the phase was free. The evaluator statistics object reports measurement_enabled, "
+          "and the benchmark study measures these phases on an uninstrumented build instead");
     j.add("construction_note",
           "construction_seconds and construction_queries cover only the population phase; every "
           "native call spent building the cache is counted in native_calls and is never free");
@@ -327,11 +441,72 @@ inline double DensityEvaluator::emit(const QueryInputs& inputs, double density, 
     return density;
 }
 
-inline double DensityEvaluator::evaluate(leo::Epoch epoch, leo::InertialVector position,
+// The complete identity of a native evaluation, assembled without performing
+// one. The space-weather vector is the shared weather_identity() definition, so
+// it is the same vector build_inputs() would carry and not a second rule; the
+// epoch and the three position components are the original bits, never a
+// re-derived geodetic form; the managed kernel token is part of the key, so a
+// generation change is a miss even if it somehow reached a lookup.
+//
+// The supplied Sun's position bits are carried too, under exactly the rule the
+// provider itself applies: they count only when the provider would actually use
+// the supplied observation. This makes the key complete by construction rather
+// than complete by assumption. It does not imply that several different Sun
+// geometries are available at one epoch: under the held configuration the
+// observation is fixed by the epoch and the managed kernel generation, and
+// compatible_sun() is exact in both, so a second, different same-epoch Sun
+// position is not representable through the public API. The bits are here so
+// that if that ever stopped being true the memo would miss rather than serve a
+// value built from a different Sun.
+inline DensityEvaluator::ExactKey DensityEvaluator::exact_key(
+    leo::Epoch epoch, const leo::InertialVector& position, const leo::SunObservation* sun) const {
+    ExactKey key;
+    key.epoch_bits = bits_of(epoch.et_seconds);
+    key.x_bits = bits_of(position.x());
+    key.y_bits = bits_of(position.y());
+    key.z_bits = bits_of(position.z());
+    key.weather = weather_identity(config_, environment_, model_, epoch);
+    // Exactly the production sharing rule: a supplied Sun counts only when the
+    // provider itself would use it.
+    const bool shared = sun != nullptr && config_.options.sun_sharing &&
+                        environment_.ephemeris.compatible_sun(*sun, epoch);
+    key.sun_x_bits = key.sun_y_bits = key.sun_z_bits = 0;
+    if (shared) {
+        const Eigen::Vector3d value = sun->state().position_m.as_eigen();
+        key.sun_x_bits = bits_of(value.x());
+        key.sun_y_bits = bits_of(value.y());
+        key.sun_z_bits = bits_of(value.z());
+    }
+    key.kernel_token = kernel_token_;
+    return key;
+}
+
+// A trace record for a value served without building the QueryInputs. The
+// geodetic coordinates are still derived, but only when a trace is actually
+// being written: the Earth-fixed rotation is the production cached one, so this
+// adds no native call and no weather read, and it keeps the trace format and
+// the locality analysis's altitude/latitude/longitude columns complete. The
+// coordinates are always the real ones, including for a refused value, so a
+// trace never carries a fabricated altitude.
+inline void DensityEvaluator::emit_prepared(leo::Epoch epoch, const leo::InertialVector& position,
+                                            double density, std::uint32_t flags) {
+    const Eigen::Matrix3d rotation =
+        leo::SpiceEphemerisProvider::earth_fixed_rotation(epoch, config_.frame,
+                                                          config_.options.orientation_reuse);
+    const auto geodetic = leo::atmosphere::geodetic(rotation * position.as_eigen());
+    trace_.record(epoch.et_seconds, position.as_eigen(), geodetic.altitude_m,
+                  geodetic.latitude_rad * kDeg, geodetic.longitude_rad * kDeg, density, flags);
+}
+
+inline double DensityEvaluator::evaluate(leo::Epoch epoch, InertialVector position,
                                           const leo::SunObservation* sun) {
     const auto start = measurement_ ? Clock::now() : Clock::time_point{};
     if (generation_observation_ &&
         !environment_.ephemeris.compatible_sun(*generation_observation_, generation_observation_->epoch())) {
+        // The managed generation stamp is checked *before* anything is served
+        // from the store, including the pre-acquisition exact path below, so a
+        // load/unload cycle or an explicit invalidation can never let a stale
+        // value out. refresh_kernel_generation() clears every store.
         refresh_kernel_generation();
     }
     if (!generation_observation_) {
@@ -340,7 +515,6 @@ inline double DensityEvaluator::evaluate(leo::Epoch epoch, leo::InertialVector p
         else
             generation_observation_.emplace(environment_.ephemeris.observe_sun(epoch));
     }
-    const QueryInputs inputs = build_inputs(epoch, position, sun);
     if (!time_origin_fixed_) {
         // The log-time origin is fixed at the first epoch the evaluator ever
         // sees and then held, so a later backwards or out-of-order query cannot
@@ -348,9 +522,49 @@ inline double DensityEvaluator::evaluate(leo::Epoch epoch, leo::InertialVector p
         time_origin_ = epoch.et_seconds;
         time_origin_fixed_ = true;
     }
+    ExactKey prebuilt{};
+    if (settings_.candidate_kind == Candidate::exact) {
+        // Candidate A is a memo of the *complete* native evaluation, so the
+        // lookup happens before the geometry and the native input are built,
+        // not after them.
+        //
+        // The owner is immutable for the lifetime of the evaluator: the Config
+        // (frame, model selection, preprocessing switches, Ap-history switch),
+        // the Environment (pinned weather archive, managed kernels) and the model
+        // are all fixed and shared under the existing held-state contract. Inside
+        // that owner the discrete space-weather vector is a pure function of the
+        // epoch, and the managed generation is checked above and clears every
+        // store when it changes. So (epoch bits, position bits, full weather
+        // identity, supplied-Sun bits, kernel token) identifies the whole
+        // evaluation, and a hit is a hit on the whole thing rather than on a
+        // cheaper proxy for it.
+        //
+        // What this does not skip: the weather identity is part of the key, so
+        // the UTC calendar conversion and the space-weather record read still
+        // happen on every query, hit or miss. Skipping them would mean serving a
+        // stored value without knowing whether it belongs to this epoch's
+        // weather, which is exactly the error the weather guard exists to stop.
+        // acquisition_skips counts what is genuinely skipped and its JSON note
+        // states the rest.
+        prebuilt = exact_key(epoch, position, sun);
+        if (const double* stored = exact_.find(prebuilt)) {
+            ++stats_.exact_hits;
+            ++stats_.acquisition_skips;
+            if (trace_.active()) emit_prepared(epoch, position, *stored, trace_exact_hit);
+            if (measurement_) stats_.lookup_seconds += elapsed(start);
+            previous_weather_ = prebuilt.weather;
+            has_previous_weather_ = true;
+            ++stats_.queries;
+            if (building_) ++stats_.construction_queries;
+            const std::size_t live = entries();
+            if (live > stats_.peak_entries) stats_.peak_entries = live;
+            return *stored;
+        }
+    }
+    const QueryInputs inputs = build_inputs(epoch, position, sun);
     double density = 0;
     switch (settings_.candidate_kind) {
-    case Candidate::exact: density = serve_exact(inputs); break;
+    case Candidate::exact: density = serve_exact(inputs, prebuilt); break;
     case Candidate::cell: density = serve_cell(inputs); break;
     case Candidate::interp: density = serve_interpolation(inputs); break;
     case Candidate::adaptive: density = serve_adaptive(inputs); break;
@@ -373,9 +587,11 @@ inline double DensityEvaluator::serve_control(const QueryInputs& inputs) {
     return emit(inputs, native_call(inputs, nullptr), trace_native_call);
 }
 
-inline double DensityEvaluator::serve_exact(const QueryInputs& inputs) {
-    const ExactKey key{bits_of(inputs.epoch.et_seconds), bits_of(inputs.position.x()),
-                       bits_of(inputs.position.y()), bits_of(inputs.position.z()), inputs.weather};
+inline double DensityEvaluator::serve_exact(const QueryInputs& inputs, const ExactKey& key) {
+    // The key was already assembled and probed by evaluate() before the
+    // acquisition path ran; it is the same key, so a hit here can only happen
+    // when the store gained the entry between the probe and here, which is
+    // impossible on this single-threaded path but is handled rather than assumed.
     if (const double* stored = exact_.find(key)) {
         ++stats_.exact_hits;
         return emit(inputs, *stored, trace_exact_hit);
@@ -396,7 +612,7 @@ inline double DensityEvaluator::serve_cell(const QueryInputs& inputs) {
         return emit(inputs, native_call(inputs, nullptr), trace_native_call | trace_guard_fallback);
     }
     const CellScheme& scheme = settings_.base_cells;
-    const CellKey key{cell_index_altitude(altitude_km, scheme),
+    const CellKey key{cell_index_altitude(altitude_km, scheme, settings_.altitude_min_km),
                       cell_index_latitude(inputs.latitude_deg, scheme),
                       cell_index_longitude(inputs.longitude_deg, scheme),
                       cell_index_time(inputs.epoch.et_seconds, time_origin_, scheme),
@@ -446,21 +662,33 @@ inline double DensityEvaluator::serve_interpolation(const QueryInputs& inputs) {
     const double latitude_width = 180.0 / latitude_count;
     double longitude = std::fmod(inputs.longitude_deg + 180.0, 360.0);
     if (longitude < 0) longitude += 360.0;
-    const std::array<double, 4> raw{
-        (logarithmic ? std::log(altitude_km) : altitude_km - settings_.altitude_min_km) /
-            (logarithmic ? settings_.log_altitude_width : settings_.base_cells.altitude_km),
-        (inputs.latitude_deg + 90.0) / latitude_width, longitude / longitude_width,
-        (active[3] && logarithmic ? std::log(offset) : offset) /
-            (logarithmic ? settings_.log_time_width : settings_.base_cells.time_s)};
+    // Only an *active* axis is quantised. An inactive axis keeps the exact query
+    // coordinate as its node coordinate and contributes a weight of one, so it
+    // is never divided by a width and never becomes a source of a nonfinite
+    // coordinate: a logarithmic axis that is switched off must not evaluate
+    // log() of a nonpositive time offset on a backwards or out-of-order query.
+    std::array<double, 4> raw{0, 0, 0, 0};
+    if (active[0])
+        raw[0] = (logarithmic ? std::log(altitude_km) : altitude_km - settings_.altitude_min_km) /
+                 (logarithmic ? settings_.log_altitude_width : settings_.base_cells.altitude_km);
+    if (active[1]) raw[1] = (inputs.latitude_deg + 90.0) / latitude_width;
+    if (active[2]) raw[2] = longitude / longitude_width;
+    if (active[3])
+        raw[3] = (logarithmic ? std::log(offset) : offset) /
+                 (logarithmic ? settings_.log_time_width : settings_.base_cells.time_s);
     std::array<std::int64_t, 4> index{};
     std::array<double, 4> fraction{};
     const std::array<double, 4> exact{altitude_km, inputs.latitude_deg, inputs.longitude_deg, inputs.epoch.et_seconds};
     std::size_t corner_count = 1;
     for (std::size_t axis = 0; axis < 4; ++axis) {
+        if (!active[axis]) {
+            index[axis] = std::bit_cast<std::int64_t>(exact[axis]);
+            fraction[axis] = 0;
+            continue;
+        }
         if (!std::isfinite(raw[axis]))
-            throw std::runtime_error("nonfinite interpolation coordinate");
-        index[axis] = active[axis] ? static_cast<std::int64_t>(std::floor(raw[axis]))
-                                  : std::bit_cast<std::int64_t>(exact[axis]);
+            throw std::runtime_error("nonfinite interpolation coordinate on an active axis");
+        index[axis] = static_cast<std::int64_t>(std::floor(raw[axis]));
         fraction[axis] = raw[axis] - std::floor(raw[axis]);
         if (active[axis]) corner_count *= 2;
     }
@@ -476,6 +704,13 @@ inline double DensityEvaluator::serve_interpolation(const QueryInputs& inputs) {
             node_index[axis] += static_cast<std::int64_t>(digit);
             weight *= digit ? fraction[axis] : 1 - fraction[axis];
         }
+        // A corner whose weight is exactly zero contributes exactly zero to the
+        // weighted sum, because every node value here is finite. Building it
+        // anyway would spend a real native evaluation on nothing, which is an
+        // experimentally avoidable cost and not part of the candidate's
+        // definition, so it is skipped. The reconstructed sum is unchanged
+        // bit for bit.
+        if (weight == 0.0) continue;
         if (active[2]) node_index[2] = (node_index[2] % longitude_count + longitude_count) % longitude_count;
         if (active[1]) node_index[1] = std::clamp<std::int64_t>(node_index[1], 0, latitude_count);
         const CornerKey key{node_index[0], node_index[1], node_index[2], node_index[3], inputs.weather};
@@ -483,6 +718,12 @@ inline double DensityEvaluator::serve_interpolation(const QueryInputs& inputs) {
         if (const auto* stored = corners_.find(key)) {
             node_log = stored->log_density;
         } else {
+            // Every corner this query needs that the store does not already
+            // hold, whatever the reason: a cold cache, a cell never visited, or
+            // a bounded store that evicted it. The figure is therefore the
+            // number of fresh native node evaluations, and it can exceed the
+            // number of queries because a four-dimensional interpolation needs up
+            // to 2^N of them.
             ++stats_.incomplete_corners;
             const double node_altitude = active[0]
                 ? (logarithmic ? std::exp(node_index[0] * settings_.log_altitude_width)
@@ -552,10 +793,13 @@ inline double DensityEvaluator::serve_adaptive(const QueryInputs& inputs) {
     const bool probe = (++probe_counter_ % divisor) == 0;
 
     // Look for the finest anchor first: a refined anchor is always at least as
-    // informative as the coarse one it replaced.
+    // informative as the coarse one it replaced. The altitude index uses the
+    // configured band, exactly as every other candidate and the locality
+    // analysis do, so a refined cell is always a genuine sub-cell of the coarse
+    // one it replaced and a moved band moves all of them together.
     auto locate = [&](std::int64_t depth, AdaptiveKey& out) -> const AdaptiveValue* {
         const CellScheme scheme = depth_scheme(depth);
-        out = AdaptiveKey{cell_index_altitude(altitude_km, scheme),
+        out = AdaptiveKey{cell_index_altitude(altitude_km, scheme, settings_.altitude_min_km),
                           cell_index_latitude(inputs.latitude_deg, scheme),
                           cell_index_longitude(inputs.longitude_deg, scheme),
                           cell_index_time(inputs.epoch.et_seconds, time_origin_, scheme),
@@ -576,36 +820,53 @@ inline double DensityEvaluator::serve_adaptive(const QueryInputs& inputs) {
             ++stats_.weather_guard_rejections;
         const double density = native_call(inputs, nullptr);
         ++stats_.adaptive_probes;
-        if (anchor != nullptr && usable(density) && density > 0.0) {
-            // Midpoint-error measurement: the stored anchor value is compared
-            // with the native value at this exact physical input. That measured
-            // local relative error, not a model, drives the resolution.
-            AdaptiveValue updated = *anchor;
-            updated.measured_relative_error = std::abs(updated.density - density) / density;
-            updated.probes += 1;
-            if (updated.measured_relative_error > settings_.target &&
-                depth < static_cast<std::int64_t>(settings_.adaptive_max_depth)) {
-                // Refinement: the anchor moves into the finer sub-cell that
-                // contains this query, at one level deeper. Storage stays
-                // bounded and the policy stays a plain rule.
-                adaptive_.erase(anchor_key);
-                AdaptiveKey fine{};
-                locate(depth + 1, fine);
-                AdaptiveValue created{density, updated.measured_relative_error, 1, 0};
-                adaptive_.insert(fine, created, stats_.evictions);
-                ++stats_.adaptive_refinements;
-            } else if (updated.measured_relative_error > settings_.target) {
-                ++stats_.adaptive_degradations;
-                adaptive_.erase(anchor_key);
+        if (usable(density)) {
+            if (anchor != nullptr) {
+                // The measured local relative error is the difference between
+                // the value this cell currently serves and the native value at
+                // this exact physical input. That measurement, not a model of
+                // the density field, is what drives the resolution.
+                AdaptiveValue updated = *anchor;
+                updated.measured_relative_error = std::abs(updated.density - density) / density;
+                updated.probes += 1;
+                if (updated.measured_relative_error > settings_.target &&
+                    depth < static_cast<std::int64_t>(settings_.adaptive_max_depth)) {
+                    // Refinement: the anchor moves into the finer sub-cell that
+                    // contains this query, one level deeper. Storage stays
+                    // bounded and the policy stays a plain rule.
+                    adaptive_.erase(anchor_key);
+                    AdaptiveKey fine{};
+                    locate(depth + 1, fine);
+                    adaptive_.insert(fine, AdaptiveValue{density, updated.measured_relative_error, 1, 0},
+                                     stats_.evictions);
+                    ++stats_.adaptive_refinements;
+                } else if (updated.measured_relative_error > settings_.target) {
+                    // At the deepest permitted level the cell cannot be made
+                    // finer. It is kept, and re-seeded with the value just
+                    // measured at this exact input: discarding it here would
+                    // leave the next query in this cell with no anchor at all and
+                    // would silently drop the whole region back to the coarsest
+                    // cell, which is a worse answer than the one already there.
+                    ++stats_.adaptive_degradations;
+                    AdaptiveValue degraded = *anchor;
+                    degraded.density = density;
+                    degraded.measured_relative_error = 0.0;
+                    degraded.probes = 1;
+                    adaptive_.insert(anchor_key, degraded, stats_.evictions);
+                } else {
+                    updated.density = density;
+                    adaptive_.insert(anchor_key, updated, stats_.evictions);
+                }
             } else {
-                updated.density = density;
-                adaptive_.insert(anchor_key, updated, stats_.evictions);
+                AdaptiveKey fresh{};
+                locate(0, fresh);
+                adaptive_.insert(fresh, AdaptiveValue{density, 0.0, 1, 0}, stats_.evictions);
+                ++stats_.insertions;
             }
-        } else if (usable(density)) {
-            AdaptiveKey fresh{};
-            locate(0, fresh);
-            adaptive_.insert(fresh, AdaptiveValue{density, 0.0, 1, 0}, stats_.evictions);
-            ++stats_.insertions;
+        } else if (anchor != nullptr) {
+            // A native value that is not usable at an anchor's own cell can
+            // never be served again from it.
+            adaptive_.erase(anchor_key);
         }
         return emit(inputs, density, trace_native_call | trace_adaptive_probe);
     }

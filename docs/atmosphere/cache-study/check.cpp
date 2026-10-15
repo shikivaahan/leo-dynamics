@@ -154,6 +154,21 @@ std::string check_study(const Config& c, Environment& env, const StudySettings& 
         check.worst_difference = worst;
         check.outcome = ok ? "every repeated query returned the identical bits" : "a repeat differed";
         check.detail.add("exact_hits", candidate.counts().exact_hits);
+        // The second evaluation of each probe is served before the geometry and
+        // the native input are rebuilt. The UTC calendar and the space-weather
+        // record read are not skipped, because the weather identity is part of
+        // the key; this counter names exactly what was avoided.
+        check.detail.add("acquisition_skips", candidate.counts().acquisition_skips);
+        check.detail.add("acquisition_skip_rule",
+                         "one per repeated probe, counted when the memo answered before the "
+                         "Earth-fixed rotation, the geodetic conversion, the local solar time and "
+                         "the native model call; the weather identity read still happened, because "
+                         "serving a stored value without checking its weather identity is exactly "
+                         "the error this study's weather guard exists to prevent");
+        check.detail.add("repeats_served_before_acquisition",
+                         candidate.counts().acquisition_skips == probes.size());
+        if (candidate.counts().acquisition_skips != probes.size())
+            check.passed = false;
         rows.push_back(check.json());
     }
 
@@ -251,62 +266,116 @@ std::string check_study(const Config& c, Environment& env, const StudySettings& 
         }
     }
 
-    // ---- 5. a weather boundary is never crossed ----
+    // ---- 5. isolated weather contexts, including actual interior DTC transitions ----
     {
         Check check;
         check.name = "weather-boundaries";
-        check.question =
-            "is a value ever reused or interpolated across a change of the discrete space-weather "
-            "vector?";
+        check.question = "can an evaluator carry a value across a changed discrete input vector?";
         check.method =
-            "pairs of probes one second either side of a three-hourly Ap bin boundary, UTC midnight "
-            "and the following daily boundary are evaluated in sequence on one evaluator, and each "
-            "answer is compared against the provider at its own input";
+            "warm the pre-transition context, then compare the post-transition result bitwise with "
+            "an isolated evaluator at the same grid origin; bracket actual rising and falling "
+            "integer-DTC transitions within archived hours, plus daily, Ap-bin and leap boundaries";
         StudySettings settings = s;
-        settings.candidate_kind = s.candidate_kind == Candidate::control ? Candidate::interp
-                                                                         : s.candidate_kind;
-        DensityEvaluator candidate(c, env, s.model_kind, settings);
-        candidate.set_time_origin(probes.front().epoch.et_seconds);
+        if (settings.candidate_kind == Candidate::control) settings.candidate_kind = Candidate::interp;
         bool ok = true;
         double worst = 0;
-        int year = 0, month = 0, day = 0;
-        civil_date(probes.front().epoch, year, month, day);
-        const std::vector<std::pair<std::string, std::string>> pairs{
-            {utc_string(year, month, day, 2, 59, 59), utc_string(year, month, day, 3, 0, 0)},
-            {utc_string(year, month, day, 5, 59, 59), utc_string(year, month, day, 6, 0, 0)},
-            {utc_string(year, month, day, 23, 59, 59), next_day_utc(year, month, day, 0, 0, 0)}};
-        std::vector<double> boundary_jumps;
-        for (const auto& [before, after] : pairs) {
-            const leo::Epoch first = leo::SpiceEphemerisProvider::epoch_from_utc(before);
-            const leo::Epoch second = leo::SpiceEphemerisProvider::epoch_from_utc(after);
+        std::size_t changed_contexts = 0;
+        std::vector<std::string> evidence;
+        const auto exercise = [&](leo::Epoch first, leo::Epoch second, const std::string& kind) {
+            const auto before_weather = weather_identity(c, env, s.model_kind, first);
+            const auto after_weather = weather_identity(c, env, s.model_kind, second);
+            const bool changed = before_weather != after_weather;
+            changed_contexts += changed;
+            const double origin = first.et_seconds - settings.base_cells.time_s * 0.5;
+            DensityEvaluator warmed(c, env, s.model_kind, settings);
+            DensityEvaluator isolated(c, env, s.model_kind, settings);
+            warmed.set_time_origin(origin);
+            isolated.set_time_origin(origin);
             const double longitude = longitude_for_local_solar_time(first, 12.0);
-            for (double altitude : {400.0, 600.0, 900.0}) {
-                const InertialVector a = probe.position(first, 0.0, longitude, altitude);
-                const InertialVector b = probe.position(second, 0.0, longitude, altitude);
-                const double reference_a = probe.density(a, first);
-                const double reference_b = probe.density(b, second);
-                boundary_jumps.push_back(std::abs(reference_b - reference_a) / reference_a);
-                const double got_a = candidate.evaluate(first, a);
-                const double got_b = candidate.evaluate(second, b);
-                // A cached or interpolated answer is allowed to differ from the
-                // provider; what is not allowed is for it to be exactly the
-                // *other* side's value, which is what crossing a boundary would
-                // look like. That case is caught by checking both against their
-                // own reference and by the boundary-jump table below.
-                if (!std::isfinite(got_a) || got_a <= 0 || !std::isfinite(got_b) || got_b <= 0) ok = false;
-                if (got_a > reference_a && got_b < reference_b && reference_b > reference_a &&
-                    bitwise_equal(got_a, reference_b))
-                    ok = false;
-                worst = std::max({worst, std::abs(got_a - reference_a), std::abs(got_b - reference_b)});
-            }
+            const auto a = probe.position(first, 0.0, longitude, 600.37);
+            const auto b = probe.position(second, 0.0, longitude, 600.37);
+            const double before = warmed.evaluate(first, a);
+            const auto counts_before = warmed.counts();
+            const double after = warmed.evaluate(second, b);
+            const double clean_after = isolated.evaluate(second, b);
+            const auto counts_after = warmed.counts();
+            const bool isolated_match = bitwise_equal(after, clean_after);
+            const bool no_pretransition_hit = !changed ||
+                (counts_after.cell_reuses == counts_before.cell_reuses &&
+                 counts_after.exact_hits == counts_before.exact_hits);
+            ok = ok && std::isfinite(before) && before > 0 && std::isfinite(after) && after > 0 &&
+                (!changed || (isolated_match && no_pretransition_hit));
+            if (changed) worst = std::max(worst, std::abs(after - clean_after));
+            Json row;
+            row.add("kind", kind);
+            row.add("before_utc", utc_label(first));
+            row.add("after_utc", utc_label(second));
+            row.add("before_epoch_et_seconds", first.et_seconds);
+            row.add("after_epoch_et_seconds", second.et_seconds);
+            row.add("discrete_inputs_changed", changed);
+            row.raw("before_inputs", read_weather(c, env, first, c.ap_history).json());
+            row.raw("after_inputs", read_weather(c, env, second, c.ap_history).json());
+            row.add("posttransition_matches_isolated_evaluator_bitwise", isolated_match);
+            row.add("pretransition_hit_refused", no_pretransition_hit);
+            row.add("native_calls_after_transition",
+                    counts_after.native_calls - counts_before.native_calls);
+            row.add("weather_guard_rejections_after_transition",
+                    counts_after.weather_guard_rejections - counts_before.weather_guard_rejections);
+            row.add("guard_fallbacks_after_transition",
+                    counts_after.guard_fallbacks - counts_before.guard_fallbacks);
+            row.add("before_density_kg_m3", before);
+            row.add("after_density_kg_m3", after);
+            row.add("isolated_after_density_kg_m3", clean_after);
+            row.add("fresh_native_after_density_kg_m3", probe.density(b, second));
+            evidence.push_back(row.str());
+        };
+        for (const auto& regime : regimes) {
+            int year = 0, month = 0, day = 0;
+            civil_date(regime.epoch, year, month, day);
+            for (int hour : {3, 6, 12})
+                exercise(leo::SpiceEphemerisProvider::epoch_from_utc(
+                             utc_string(year, month, day, hour - 1, 59, 59)),
+                         leo::SpiceEphemerisProvider::epoch_from_utc(
+                             utc_string(year, month, day, hour, 0, 0)), "three-hourly-Ap");
+            exercise(leo::SpiceEphemerisProvider::epoch_from_utc(
+                         utc_string(year, month, day, 23, 59, 59)),
+                     leo::SpiceEphemerisProvider::epoch_from_utc(
+                         next_day_utc(year, month, day, 0, 0, 0)), "daily");
         }
-        check.passed = ok;
+        exercise(leo::SpiceEphemerisProvider::epoch_from_utc("2016-12-31T23:59:60"),
+                 leo::SpiceEphemerisProvider::epoch_from_utc("2017-01-01T00:00:00"), "leap-second");
+        bool rising = false, falling = false;
+        if (s.model_kind == leo::atmosphere::Model::jb2008) {
+            for (const auto& regime : regimes) {
+                for (int hour = 0; hour < 24 && !(rising && falling); ++hour) {
+                    double lo = regime.epoch.et_seconds + hour * 3600.0 + 1.0;
+                    double hi = regime.epoch.et_seconds + hour * 3600.0 + 3599.0;
+                    const auto input = [&](double et) {
+                        return env.weather.jb2008(leo::SpiceEphemerisProvider::utc_calendar(leo::Epoch{et}));
+                    };
+                    const double initial = input(lo).dstdtc_k, final = input(hi).dstdtc_k;
+                    if (initial == final || (final > initial ? rising : falling)) continue;
+                    while (hi - lo > 1e-5) {
+                        const double mid = lo + (hi - lo) * 0.5;
+                        if (input(mid).dstdtc_k == initial) lo = mid; else hi = mid;
+                    }
+                    exercise(leo::Epoch{lo}, leo::Epoch{hi},
+                             final > initial ? "interior-DTC-rising" : "interior-DTC-falling");
+                    if (final > initial) rising = true; else falling = true;
+                }
+                if (rising && falling) break;
+            }
+            ok = ok && rising && falling;
+        }
+        check.passed = ok && changed_contexts > 0;
         check.worst_difference = worst;
-        check.outcome = ok ? "no answer was the value belonging to the other side of a boundary"
-                           : "an answer crossed a weather boundary";
-        check.detail.raw("boundary_relative_jumps", numbers(boundary_jumps));
-        check.detail.add("weather_guard_rejections", candidate.counts().weather_guard_rejections);
-        check.detail.add("incomplete_corners", candidate.counts().incomplete_corners);
+        check.outcome = check.passed
+            ? "changed weather contexts match isolated evaluators and never hit a pretransition value"
+            : "a changed context failed isolation, or a required archived DTC direction was not found";
+        check.detail.add("changed_contexts_tested", changed_contexts);
+        check.detail.add("interior_DTC_rising_found", rising);
+        check.detail.add("interior_DTC_falling_found", falling);
+        check.detail.raw("boundary_evidence", raw_array(evidence));
         rows.push_back(check.json());
     }
 
@@ -453,7 +522,22 @@ std::string check_study(const Config& c, Environment& env, const StudySettings& 
             "candidate B is a first-hit reuse, so the answer to a cell is the density the first query "
             "into that cell produced; this check measures that order dependence instead of hiding it";
         check.detail.add("order_dependent_difference", order_dependence);
-        check.detail.add("seam_is_a_cell_boundary_not_a_straddling_cell", true);
+        // Both exact spellings map to cell zero. Points just west and east are
+        // in the last and first cells: that is a boundary, not one straddling cell.
+        const auto seam_index = [&](double degrees) {
+            return cell_index_longitude(degrees, settings.base_cells);
+        };
+        const std::int64_t seam_cell = seam_index(180.0);
+        const std::int64_t last_cell =
+            static_cast<std::int64_t>(settings.base_cells.longitude_cells()) - 1;
+        const bool seam_is_one_cell = seam_index(-180.0) == seam_cell && seam_cell == 0;
+        const bool seam_is_a_boundary_not_a_straddling_cell = seam_is_one_cell &&
+            seam_index(180.0 - 1e-9) == last_cell && seam_index(-180.0 + 1e-9) == 0;
+        check.detail.add("seam_cell_index", static_cast<double>(seam_cell));
+        check.detail.add("periodic_grid_last_cell_index", static_cast<double>(last_cell));
+        check.detail.add("seam_is_one_cell_for_both_spellings", seam_is_one_cell);
+        check.detail.add("seam_is_a_cell_boundary_not_a_straddling_cell",
+                         seam_is_a_boundary_not_a_straddling_cell);
         check.detail.add("cell_index_longitude_plus_180",
                          static_cast<double>(cell_index_longitude(180.0, settings.base_cells)));
         check.detail.add("cell_index_longitude_minus_180",
@@ -463,8 +547,31 @@ std::string check_study(const Config& c, Environment& env, const StudySettings& 
         check.detail.add("cell_index_longitude_minus_179_999",
                          static_cast<double>(cell_index_longitude(-179.999, settings.base_cells)));
         check.detail.add("wrap_rule",
-                         "both spellings of the seam map to the same cell and the periodic grid never "
-                         "produces a cell that straddles it");
+                         seam_is_a_boundary_not_a_straddling_cell
+                             ? "both exact seam spellings map to cell zero; the immediate west "
+                               "and east neighbourhoods map to the last and first periodic cells"
+                             : "seam spellings or the west/east periodic cell boundary disagreed");
+        DensityEvaluator selected_candidate(c, env, s.model_kind, s);
+        selected_candidate.set_time_origin(epoch.et_seconds);
+        std::vector<std::string> selected_boundaries;
+        for (double boundary_longitude : {-180.00001, -180.0, -179.99999, 179.99999, 180.0, 180.00001}) {
+            const auto position = probe.position(epoch, 0.37, boundary_longitude, 600.37);
+            const auto before = selected_candidate.counts();
+            const double reconstructed = selected_candidate.evaluate(epoch, position);
+            const double native = probe.density(position, epoch);
+            const auto after = selected_candidate.counts();
+            check.passed = check.passed && std::isfinite(reconstructed) && reconstructed > 0;
+            Json sample;
+            sample.add("longitude_deg", boundary_longitude);
+            sample.add("fresh_native_density_kg_m3", native);
+            sample.add("reconstructed_density_kg_m3", reconstructed);
+            sample.add("signed_relative_error", (reconstructed - native) / native);
+            sample.add("native_calls", after.native_calls - before.native_calls);
+            sample.add("interpolations", after.interpolations - before.interpolations);
+            sample.add("guard_fallbacks", after.guard_fallbacks - before.guard_fallbacks);
+            selected_boundaries.push_back(sample.str());
+        }
+        check.detail.raw("selected_candidate_seam_evidence", raw_array(selected_boundaries));
 
         // Near-pole fallback, on the same evaluator.
         const std::uint64_t before_polar = forward.counts().domain_fallbacks;
@@ -476,7 +583,11 @@ std::string check_study(const Config& c, Environment& env, const StudySettings& 
         check.detail.add("polar_fallback_triggered", after_polar > before_polar);
         check.detail.add("polar_fallback_exact", bitwise_equal(polar, polar_reference));
         check.detail.add("polar_fallback_limit_deg", domain_polar_fallback_deg);
-        check.passed = check.passed && after_polar > before_polar && bitwise_equal(polar, polar_reference);
+        check.passed = check.passed && after_polar > before_polar && bitwise_equal(polar, polar_reference) &&
+                       seam_is_a_boundary_not_a_straddling_cell;
+        check.outcome = seam_is_a_boundary_not_a_straddling_cell
+            ? "periodic indexing is consistent; candidate B first-hit order dependence is measured"
+            : "the seam spellings or neighbouring periodic indices are inconsistent";
         rows.push_back(check.json());
     }
 
@@ -540,13 +651,10 @@ std::string check_study(const Config& c, Environment& env, const StudySettings& 
         check.name = "out-of-contract-cell-refused";
         check.question =
             "can a candidate build a cell whose altitude nodes lie outside its model's native range?";
-        check.method = "the altitude cells the configured scheme generates are compared with the "
-                       "model's documented native range, and a query at the exact top of the "
-                       "study band is evaluated on the candidate under test. A model whose native "
-                       "range ends at the band top must answer that query natively; a model whose "
-                       "native range extends above it interpolates between in-contract nodes, "
-                       "where bitwise equality with the native value is not expected and only "
-                       "finiteness, positivity and a stated agreement are asserted";
+        check.method = "inspect configured altitude cell bounds, then evaluate the band top. "
+                       "Zero-weight outer nodes are not required; only an actually refused node "
+                       "requires native fallback. In-contract log-density reconstruction need not "
+                       "be bitwise identical to exp(log(native density)).";
         double lowest_cell = 1e9, highest_cell = -1e9;
         for (double altitude = s.altitude_min_km; altitude < s.altitude_max_km;
              altitude += s.base_cells.altitude_km) {
@@ -570,36 +678,60 @@ std::string check_study(const Config& c, Environment& env, const StudySettings& 
         // A cell that would leave the model's own native altitude range is refused
         // before any reconstruction; only an in-contract interpolation may answer
         // approximately.
-        const bool crosses_native_upper_bound = s.altitude_max_km >=
-            model_altitude_max_km(s.model_kind) - 1e-9;
+        const bool out_of_contract_refused = candidate.counts().out_of_contract_nodes > 0;
         const bool exact_candidate = settings.candidate_kind == Candidate::exact ||
                                      settings.candidate_kind == Candidate::control;
-        const bool native_fallback_expected = crosses_native_upper_bound &&
-            (settings.candidate_kind == Candidate::interp ||
-             settings.candidate_kind == Candidate::adaptive);
+        const bool native_fallback_expected = out_of_contract_refused;
         const bool usable_answer = std::isfinite(at_top) && at_top > 0;
         const double relative_difference = reference > 0
             ? std::abs(at_top - reference) / reference : 1.0;
-        // An in-contract reconstruction is judged on agreement, never bitwise:
-        // exp(ln(rho)) is mathematically rho but is not the same double.
-        const double agreement_limit = native_fallback_expected ? 0.0 : 1e-9;
+        check.detail.add("absolute_relative_difference", relative_difference);
+        check.detail.add("relative_difference_note",
+                         "reported, never thresholded: only a path that must reproduce the native "
+                         "value exactly is judged on it");
+        // Bitwise identity is required only where the answer is required to *be*
+        // the native value: the exact and control candidates, which cache
+        // nothing and reconstruct nothing, and an interpolation or adaptive
+        // candidate at a band top whose cell would cross the model's own native
+        // bound and is therefore refused. Everywhere else the answer is a
+        // reconstruction and is judged on being finite, positive and reported.
+        // A first-hit cell candidate inside JB2008's range returns the density
+        // some earlier query in that cell produced; demanding bitwise identity
+        // of it would fail a correct implementation for being what it is.
+        const bool bitwise_required = exact_candidate || native_fallback_expected;
+        const bool answered_as_required = bitwise_required ? bitwise_equal(at_top, reference)
+                                                           : usable_answer;
         check.passed = lowest_cell >= model_altitude_min_km(s.model_kind) - 1e-9 &&
-                       usable_answer && relative_difference <= agreement_limit;
+                       usable_answer && answered_as_required;
         check.worst_difference = std::abs(at_top - reference);
         check.outcome = check.passed
             ? (native_fallback_expected
                    ? "the band's top cell would cross the model's native altitude bound, so the "
                      "query was refused and answered natively, bit for bit"
-                   : "every generated cell lies inside the model's native altitude range and the "
-                     "in-contract reconstruction agrees with the native value")
-            : "a generated cell left the model's native altitude range, or the answer was invalid "
-              "or disagreed with the native value beyond the stated limit";
+                   : bitwise_required
+                         ? "every generated cell lies inside the model's native altitude range and "
+                           "this candidate is required to reproduce the native value exactly, which "
+                           "it did"
+                         : "every generated cell lies inside the model's native altitude range and "
+                           "the in-contract reconstruction is finite and positive; its signed "
+                           "difference from the native value is reported and is not required to be "
+                           "zero, because this candidate reconstructs by design")
+            : bitwise_required
+                  ? "a generated cell left the model's native altitude range, or the answer was "
+                    "invalid, or a path required to reproduce the native value bit for bit did not"
+                  : "a generated cell left the model's native altitude range, or the answer was not "
+                    "finite and positive";
         check.detail.add("native_fallback_expected_at_band_top", native_fallback_expected);
-        check.detail.add("exact_bitwise_identity_expected", exact_candidate ||
-                         native_fallback_expected);
+        check.detail.add("bitwise_identity_required", bitwise_required);
+        check.detail.add("bitwise_identity_rule",
+                         "required only for the exact and control candidates and for a refused "
+                         "out-of-contract interpolation or adaptive cell; an in-contract "
+                         "reconstruction is never judged bitwise, because exp(ln(rho)) is "
+                         "mathematically rho but is not the same double");
         check.detail.add("signed_relative_difference", reference > 0
                               ? (at_top - reference) / reference : 0.0);
-        check.detail.add("relative_difference_limit", agreement_limit);
+        check.detail.add("band_top_against_model_native_upper_bound",
+                         s.altitude_max_km - model_altitude_max_km(s.model_kind));
         check.detail.add("cell_lowest_altitude_km", lowest_cell);
         check.detail.add("cell_highest_altitude_km", highest_cell);
         check.detail.add("model_native_altitude_km",

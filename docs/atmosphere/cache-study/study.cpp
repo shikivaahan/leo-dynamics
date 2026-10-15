@@ -78,7 +78,9 @@ int main(int argc, char** argv) {
                 required.insert(required.end(), {
                     {c.spk, "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b"},
                     {c.pck, "14deb9ab9dd49482185cc49a9c29fe56ae65d50ab94caf3197db8694836b6f81"},
-                    {c.solfsmy, "891a0767702d11c2cd8432b3b012d4350c4becbf86873c32073cff852155f9d7"},
+                    {c.solfsmy, s.input_set == "direct-v2"
+                        ? "891a0767702d11c2cd8432b3b012d4350c4becbf86873c32073cff852155f9d7"
+                        : "9bc734e66da7b5919ce6fd2b3475db82c28e500988dbb2f8d994d5ff3c074e35"},
                     {c.dtcfile, "f6485450c363e9be8e71c37e143ac768462deca77565b727ec2e96c025ab8d91"}});
             }
             for (const auto& [path, expected] : required)

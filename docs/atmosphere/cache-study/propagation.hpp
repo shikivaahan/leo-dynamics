@@ -139,6 +139,11 @@ struct Perturbation {
     std::array<double, 3> velocity_offset_m_s{};
     std::array<double, 3> body_rate_offset_rad_s{};
     double attitude_angle_rad = 0;
+    // Read back off the perturbed state, not derived from the request. The
+    // difference between the two is the proof that the quaternion the integrator
+    // received encodes the rotation this record claims.
+    double attitude_angle_realised_rad = 0;
+    double attitude_angle_realisation_error = 0;
     leo::State state{};
     std::string json() const {
         Json j;
@@ -163,6 +168,18 @@ struct Perturbation {
                                                  body_rate_offset_rad_s[1],
                                                  body_rate_offset_rad_s[2]}));
         j.add("attitude_offset_angle_rad", attitude_angle_rad);
+        j.add("attitude_offset_angle_realised_rad", attitude_angle_realised_rad);
+        j.add("attitude_offset_angle_realisation_error_rad", attitude_angle_realisation_error);
+        j.add("attitude_offset_angle_proof",
+              "attitude_offset_angle_realised_rad is the orientation angle between the base state "
+              "and the perturbed state, measured from the quaternions the integrator actually "
+              "received; it is not copied from the requested angle. The two agree only when the "
+              "applied rotation really is the requested one, so a component-order mistake in the "
+              "quaternion construction shows up here as a large error rather than as a silent "
+              "change of experiment");
+        j.add("attitude_offset_angle_tolerance_rad", 1e-12);
+        j.add("attitude_offset_angle_within_tolerance",
+              attitude_angle_realisation_error <= 1e-12);
         j.add("craft_mass_inertia_surfaces_modified", false);
         j.add("force_law_gravity_tolerances_modified", false);
         return j.str();
@@ -202,12 +219,23 @@ inline Perturbation perturb_state(const leo::State& base, std::uint64_t seed,
         unit_draw(state) * perturbation.level.attitude_rad * perturbation.magnitude_multiplier;
     const double half = 0.5 * perturbation.attitude_angle_rad;
     const double sine = std::sin(half);
-    const Eigen::Quaterniond applied(ax / length * sine, ay / length * sine, az / length * sine,
-                                     std::cos(half));
+    // Eigen::Quaterniond takes (w, x, y, z). Passing the axis components first
+    // builds a different quaternion entirely: the cosine lands in the z slot and
+    // the axis in w, which turns any small attitude perturbation into a rotation
+    // of a different magnitude about a different axis. The realised rotation
+    // angle is measured and published below, so the mistake cannot be silent.
+    const Eigen::Quaterniond applied(std::cos(half), ax / length * sine, ay / length * sine,
+                                     az / length * sine);
     const Eigen::Quaterniond current(base.q.w, base.q.x, base.q.y, base.q.z);
     const Eigen::Quaterniond rotated = applied * current;
     perturbation.state.q =
         leo::normalize_quaternion({rotated.w(), rotated.x(), rotated.y(), rotated.z()});
+    // The angle actually applied, read back off the perturbed state. This is the
+    // observable proof that the recorded perturbation is the perturbation the
+    // integrator received; it is not derived from the requested angle.
+    perturbation.attitude_angle_realised_rad = bench::angle(base.q, perturbation.state.q);
+    perturbation.attitude_angle_realisation_error =
+        std::abs(perturbation.attitude_angle_realised_rad - std::abs(perturbation.attitude_angle_rad));
     perturbation.state.r = base.r + leo::InertialVector{perturbation.position_offset_m[0],
                                                         perturbation.position_offset_m[1],
                                                         perturbation.position_offset_m[2]};
@@ -1004,7 +1032,10 @@ struct SeriesBitwise {
         j.add("role", std::string(role));
         j.add("attempted", attempted);
         j.add("compared", static_cast<double>(samples));
-        j.add("bitwise_equal", attempted ? equal : false);
+        // Null when nothing was compared. Reporting false there would be a claim
+        // that a comparison failed, which is a different and wrong statement.
+        if (attempted) j.add("bitwise_equal", equal);
+        else j.raw("bitwise_equal", "null");
         j.add("mismatched_samples", static_cast<double>(mismatched_samples));
         j.add("first_mismatch_index", static_cast<double>(first_mismatch));
         j.add("driver_baseline_checksum", baseline_checksum);
@@ -1218,9 +1249,22 @@ inline std::string propagation_study(const Config& c, Environment& env, const St
                         "the configuration this proof is about";
                 }
                 Json proof;
-                proof.add("direct_series_bitwise_equal",
-                          candidate_series.attempted && candidate_series.equal);
+                // Not attempted is not the same observation as failed. A
+                // candidate that reconstructs density by design has no bitwise
+                // series to compare, so the field is null and the reason says so;
+                // publishing false there would report a passing check as a
+                // failing one.
+                if (candidate_series.attempted)
+                    proof.add("direct_series_bitwise_equal", candidate_series.equal);
+                else
+                    proof.raw("direct_series_bitwise_equal", "null");
                 proof.add("direct_series_bitwise_check_attempted", candidate_series.attempted);
+                proof.add("direct_series_bitwise_not_attempted_reason",
+                          candidate_series.attempted
+                              ? std::string()
+                              : "the candidate under test reconstructs density, so its trajectory "
+                                "series is not expected to equal the direct provider's bit for bit; "
+                                "this field is null rather than false because nothing was compared");
                 proof.add("driver_baseline", std::string("experiment execute() dopri5, unperturbed "
                                                           "nominal member, identical options"));
                 proof.raw("authoritative_run",
@@ -1253,15 +1297,33 @@ inline std::string propagation_study(const Config& c, Environment& env, const St
             // Optional independent tightened reference, so that error introduced by
             // the candidate is separated from error introduced by the integrator.
             if (refined) {
+                // A fresh evaluator for the whole refined pair. Reusing the
+                // nominal pair's evaluator would start the refined candidate from
+                // a cache already populated by the dopri5 candidate run and then
+                // by the fixed-state comparison, so its measured error and its
+                // native-call counts would depend on the order the runs happened
+                // to be issued in rather than on the candidate itself. The
+                // refined comparison is therefore a cold-cache comparison, and
+                // that is stated where it is reported.
+                DensityEvaluator refined_evaluator(c, env, model, settings);
+                AuthoritativeDensitySource refined_reference_source(refined_evaluator);
+                CandidateDensitySource refined_candidate_source(refined_evaluator);
                 const auto refined_reference =
-                    run_coupled(c, env, spec, perturbation.state, reference_source, evaluator,
-                                labels, epoch, true);
+                    run_coupled(c, env, spec, perturbation.state, refined_reference_source,
+                                refined_evaluator, labels, epoch, true);
                 const auto refined_candidate =
-                    run_coupled(c, env, spec, perturbation.state, candidate_source, evaluator,
-                                labels, epoch, true);
+                    run_coupled(c, env, spec, perturbation.state, refined_candidate_source,
+                                refined_evaluator, labels, epoch, true);
                 const auto integrator_only = compare_runs(reference_run, refined_reference);
                 const auto cache_only = compare_runs(refined_reference, refined_candidate);
                 const auto combined = compare_runs(reference_run, refined_candidate);
+                // The same-state comparison is also re-measured at the refined
+                // reference's own output states, against the same fresh
+                // evaluator, so it is a second sample of the same quantity taken
+                // on states the nominal pair never visited.
+                const auto refined_fixed = compare_fixed_state(
+                    env, spec, refined_reference, refined_evaluator, refined_evaluator,
+                    selected_sample_indices(refined_reference.trajectory.samples.size(), s.points));
                 Json separation;
                 separation.raw("integrator_only_dopri5_vs_rkf78", integrator_only.json(false));
                 separation.raw("candidate_only_rkf78", cache_only.json(false));
@@ -1270,6 +1332,23 @@ inline std::string propagation_study(const Config& c, Environment& env, const St
                 separation.add("candidate_only_max_position_m", cache_only.position.maximum);
                 separation.add("candidate_effect_exceeds_integrator_noise",
                                cache_only.position.maximum > integrator_only.position.maximum);
+                separation.add("cache_state_rule",
+                               "the refined pair runs on a fresh evaluator of its own, so the "
+                               "candidate under test starts from an empty cache and is not "
+                               "influenced by what the dopri5 pair or the same-state comparison "
+                               "stored. Its native-call counts and its error are properties of the "
+                               "candidate on this trajectory, not of the order the runs were issued "
+                               "in");
+                separation.add("baseline_floor_rule",
+                               "integrator_only is the measured baseline floor: the largest "
+                               "difference two runs of this case produce when the density is "
+                               "identical and only the integrator changes. A candidate effect "
+                               "smaller than that floor is not demonstrated by this study and is "
+                               "not claimed to be absent");
+                separation.add("baseline_floor_max_position_m", integrator_only.position.maximum);
+                separation.raw("same_state_at_rkf78_reference_states",
+                               fixed_state_json(refined_fixed, targets));
+                separation.raw("refined_evaluator_counters", refined_evaluator.counts().json());
                 separation.add("same_state_density_vs_rkf78_reference",
                                "the same-state block is measured at output states of the dopri5 "
                                "reference; the rkf78 pair re-measures it at the rkf78 reference's "
@@ -1288,6 +1367,12 @@ inline std::string propagation_study(const Config& c, Environment& env, const St
 
             // Cache accounting, read outside every timed region.
             entry.raw("evaluator_counters", evaluator.counts().json());
+            entry.add("evaluator_measurement_enabled", false);
+            entry.add("evaluator_measurement_note",
+                      "the in-evaluator section timers were switched off for every propagation run, "
+                      "so the three section timers inside evaluator_counters are zero because "
+                      "nothing was measured, not because the phases were free; the benchmark study "
+                      "measures them on an uninstrumented build");
 
             if (!run_first) runs << ',';
             run_first = false;
@@ -1619,8 +1704,12 @@ struct LocalityOutcome {
     }
 };
 
+// The altitude band is the configured one, the same band the candidates and
+// their guards use. Using a fixed constant here would describe a different cell
+// from the one a candidate would have looked up whenever the band was moved.
 inline LocalityOutcome analyse_traces(const std::vector<TraceFile>& files,
-                                      const std::vector<CellScheme>& schemes) {
+                                      const std::vector<CellScheme>& schemes,
+                                      double band_min_km = domain_altitude_min_km) {
     LocalityOutcome outcome;
     for (const auto& file : files)
         outcome.traces.push_back(TraceSummary{file.path, file.records_on_disk,
@@ -1693,7 +1782,7 @@ inline LocalityOutcome analyse_traces(const std::vector<TraceFile>& files,
             for (std::size_t r = 0; r < schemes.size(); ++r) {
                 auto& table = cell_owner[r];
                 const CellScheme& scheme = schemes[r];
-                const QuantisedCellKey key{cell_index_altitude(sample.altitude_m / 1000.0, scheme),
+                const QuantisedCellKey key{cell_index_altitude(sample.altitude_m / 1000.0, scheme, band_min_km),
                                            cell_index_latitude(sample.latitude_deg, scheme),
                                            cell_index_longitude(sample.longitude_deg, scheme),
                                            cell_index_time(sample.et, origin, scheme),
@@ -1740,7 +1829,8 @@ inline std::filesystem::path locality_trace_path(const Config& c, const StudySet
 // they appear.
 inline std::string packet_probe(const Config& c, Environment& env, const StudySettings& s,
                                 const std::vector<QuerySample>& samples, const std::string& regime,
-                                const std::vector<CellScheme>& schemes) {
+                                const std::vector<CellScheme>& schemes,
+                                double band_min_km = domain_altitude_min_km) {
     const auto model = required_model(s);
     StudySettings probe_settings = evaluator_settings_for(s);
     probe_settings.trace_path.clear();
@@ -1769,7 +1859,7 @@ inline std::string packet_probe(const Config& c, Environment& env, const StudySe
         if (!inserted.second) ++exact_repeats;
         for (std::size_t r = 0; r < schemes.size(); ++r) {
             const CellScheme& scheme = schemes[r];
-            const QuantisedCellKey key{cell_index_altitude(record.altitude_m / 1000.0, scheme),
+            const QuantisedCellKey key{cell_index_altitude(record.altitude_m / 1000.0, scheme, band_min_km),
                                        cell_index_latitude(record.latitude_deg, scheme),
                                        cell_index_longitude(record.longitude_deg, scheme),
                                        cell_index_time(record.et, epoch.et_seconds, scheme),
@@ -1847,10 +1937,19 @@ inline std::string locality_study(const Config& c, Environment& env, const Study
                "one evaluator and one trace file per trajectory, so a threaded ensemble never "
                "imposes an order on records whose interleaving is not deterministic and a "
                "process-isolated chunk analyses only the files its own process wrote");
+    header.add("trace_population_rule",
+               "every locality scope runs its coupled propagation with the post-run diagnostics "
+               "switched off, so all of them trace exactly the same population: the atmospheric "
+               "requests the integrator's right-hand side makes. The diagnostics pass would "
+               "otherwise re-evaluate the density once per output sample and append those records, "
+               "and the scopes would then be counting different request populations and could not be "
+               "compared with each other");
     header.add("cell_geometry",
-               "every reuse figure below uses the study's shared cell_index_* helpers and the "
-               "same CellScheme the candidates themselves use, so a locality number can never "
-               "describe a different cell from the one a candidate would have used");
+               "every reuse figure below uses the study's shared cell_index_* helpers, the same "
+               "CellScheme the candidates themselves use and the same configured altitude band, so a "
+               "locality number can never describe a different cell from the one a candidate would "
+               "have used");
+    header.add("altitude_band_km", numbers({s.altitude_min_km, s.altitude_max_km}));
     header.raw("base_cell_scheme", s.base_cells.json());
 
     // One interner per result: a handle stands for the full WeatherIdentity
@@ -1882,10 +1981,10 @@ inline std::string locality_study(const Config& c, Environment& env, const Study
             trace_settings.trace_path = locality_trace_path(c, s, 0, "single", spec.id);
             DensityEvaluator evaluator(c, env, model, trace_settings);
             CandidateDensitySource source(evaluator);
-            run_coupled(c, env, spec, initials.front(), source, evaluator, labels, epoch, false);
+            run_coupled(c, env, spec, initials.front(), source, evaluator, labels, epoch, false, false);
             evaluator.finish_trace();
             const auto trace = load(trace_settings.trace_path);
-            const auto outcome = analyse_traces({trace}, schemes);
+            const auto outcome = analyse_traces({trace}, schemes, s.altitude_min_km);
             scope_rows.push_back(outcome.json("single_trajectory", schemes,
                                               "one trajectory, one evaluator", summaries));
         }
@@ -1918,7 +2017,7 @@ inline std::string locality_study(const Config& c, Environment& env, const Study
             }
             trace.samples.clear();
             trace.samples.shrink_to_fit();
-            const auto outcome = analyse_traces(member_traces, schemes);
+            const auto outcome = analyse_traces(member_traces, schemes, s.altitude_min_km);
             scope_rows.push_back(outcome.json("sequential_ensemble_shared_cache", schemes,
                                               "one evaluator and one trace for the whole "
                                               "ensemble, evaluated sequentially: the cross-"
@@ -1937,11 +2036,11 @@ inline std::string locality_study(const Config& c, Environment& env, const Study
                 trace_settings.trace_path = locality_trace_path(c, s, member, "private", spec.id);
                 DensityEvaluator evaluator(c, env, model, trace_settings);
                 CandidateDensitySource source(evaluator);
-                run_coupled(c, env, spec, initials[member], source, evaluator, labels, epoch, false);
+                run_coupled(c, env, spec, initials[member], source, evaluator, labels, epoch, false, false);
                 evaluator.finish_trace();
                 traces.push_back(load(trace_settings.trace_path));
             }
-            const auto outcome = analyse_traces(traces, schemes);
+            const auto outcome = analyse_traces(traces, schemes, s.altitude_min_km);
             scope_rows.push_back(outcome.json("sequential_ensemble_per_trajectory_cache", schemes,
                                               "one evaluator and one trace per trajectory, "
                                               "evaluated sequentially: cross_trajectory_* "
@@ -1993,7 +2092,7 @@ inline std::string locality_study(const Config& c, Environment& env, const Study
                 evaluators[member]->finish_trace();
                 traces.push_back(load(paths[member]));
             }
-            const auto outcome = analyse_traces(traces, schemes);
+            const auto outcome = analyse_traces(traces, schemes, s.altitude_min_km);
             scope_rows.push_back(outcome.json("threaded_ensemble_per_trajectory_cache", schemes,
                                               "one evaluator per worker thread; records from "
                                               "different trajectories are not ordered relative to "
@@ -2014,10 +2113,10 @@ inline std::string locality_study(const Config& c, Environment& env, const Study
             trace_settings.trace_path = locality_trace_path(c, s, 0, "native", spec.id);
             DensityEvaluator evaluator(c, env, model, trace_settings);
             CandidateDensitySource source(evaluator);
-            run_coupled(c, env, spec, initials.front(), source, evaluator, labels, epoch, false);
+            run_coupled(c, env, spec, initials.front(), source, evaluator, labels, epoch, false, false);
             evaluator.finish_trace();
             const auto trace = load(trace_settings.trace_path);
-            const auto outcome = analyse_traces({trace}, schemes);
+            const auto outcome = analyse_traces({trace}, schemes, s.altitude_min_km);
             scope_rows.push_back(outcome.json("authoritative_native_request_sequence", schemes,
                                               "one trajectory evaluated by the control candidate: "
                                               "every query is one fresh native evaluation, so this "
@@ -2033,8 +2132,8 @@ inline std::string locality_study(const Config& c, Environment& env, const Study
                                                       per_packet, mix64(s.seed), 5.0, 60.0);
             const auto uniform = make_random_packets(epoch, clustered.size(), mix64(s.seed), 400.0,
                                                      900.0, 60.0, c.frame);
-            scope_rows.push_back(packet_probe(c, env, s, clustered, "clustered_packets", schemes));
-            scope_rows.push_back(packet_probe(c, env, s, uniform, "uniform_random_packets", schemes));
+            scope_rows.push_back(packet_probe(c, env, s, clustered, "clustered_packets", schemes, s.altitude_min_km));
+            scope_rows.push_back(packet_probe(c, env, s, uniform, "uniform_random_packets", schemes, s.altitude_min_km));
         }
     }
     header.raw("scopes", raw_array(scope_rows));
@@ -2124,6 +2223,13 @@ struct BenchmarkConfiguration {
     std::size_t ensemble = 1;
     std::size_t workers = 1;
     std::size_t rhs_evaluations = 0;
+    // The authoritative configuration this one is compared against. It is
+    // written out per configuration rather than inferred from the workload name,
+    // so a baseline can only ever be a configuration that was actually measured
+    // in this run on the same route, the same thread count, the same ensemble
+    // and the same cache-ownership shape. An empty name means this
+    // configuration reports its own wall time and no ratio at all.
+    std::string baseline;
 };
 
 inline BenchmarkRow run_benchmark_configuration(const Config& c, Environment& env,
@@ -2205,10 +2311,16 @@ inline BenchmarkRow run_benchmark_configuration(const Config& c, Environment& en
             DensityEvaluator& evaluator = *evaluators[member];
             std::size_t* rhs = &rhs_counts[member];
             std::size_t* density_count = &density_counts[member];
-            return [&, rhs, density_count](leo::ElapsedTime t, const leo::State& state) {
+            // The authoritative route performs one fresh provider evaluation per
+            // RHS call on the same worker and through the same shared Sun, so the
+            // two threaded configurations differ in the cache and in nothing else.
+            const bool authoritative = configuration.authoritative;
+            return [&, rhs, density_count, authoritative](leo::ElapsedTime t, const leo::State& state) {
                 const leo::Epoch at{epoch.et_seconds + t.seconds};
                 const auto observation = env.ephemeris.observe_sun(at);
-                const double density = evaluator.evaluate(at, state.r, &observation);
+                const double density = authoritative
+                    ? evaluator.direct(at, state.r, &observation)
+                    : evaluator.evaluate(at, state.r, &observation);
                 ++(*density_count);
                 ++(*rhs);
                 return dynamics(t, state, coupled_snapshot(env, at, state, density, &observation));
@@ -2229,43 +2341,63 @@ inline BenchmarkRow run_benchmark_configuration(const Config& c, Environment& en
     }
 
     if (configuration.workload == "sequential_ensemble") {
-        const auto timer_construction = Clock::now();
-        std::unique_ptr<DensityEvaluator> owned;
-        DensityEvaluator* evaluator = shared;
-        if (!evaluator && configuration.share_cache) {
-            owned = std::make_unique<DensityEvaluator>(c, env, model, settings);
-            evaluator = owned.get();
-        }
-        row.construction_seconds = elapsed(timer_construction);
+        // The authoritative and candidate ensemble configurations construct the
+        // same number of evaluators, so construction inside the timed region
+        // cannot favour one route over the other. A candidate with a per-
+        // trajectory cache constructs one per trajectory; an authoritative run
+        // does the same and evaluates through each of them, which is also the
+        // realistic architecture, since a worker owns its own provider.
+        std::vector<std::unique_ptr<DensityEvaluator>> owned;
+        // The post-run diagnostics reference is built before the timer opens.
+        // Diagnostics are off for every benchmark configuration, so this object
+        // is never dereferenced inside the timed region and neither route pays
+        // for constructing it inside its own wall time.
         DensityEvaluator reference(c, env, model, settings);
+        const auto timer_construction = Clock::now();
+        if (!shared && configuration.share_cache)
+            owned.push_back(std::make_unique<DensityEvaluator>(c, env, model, settings));
+        if (!shared && !configuration.share_cache)
+            for (std::size_t member = 0; member < states.size(); ++member)
+                owned.push_back(std::make_unique<DensityEvaluator>(c, env, model, settings));
+        row.construction_seconds = elapsed(timer_construction);
         std::vector<DensityStatistics> per_trajectory_statistics;
         per_trajectory_statistics.reserve(states.size());
-        for (const auto& state : states) {
-            std::unique_ptr<DensityEvaluator> private_evaluator;
-            if (!configuration.share_cache) {
-                private_evaluator = std::make_unique<DensityEvaluator>(c, env, model, settings);
-                evaluator = private_evaluator.get();
-            }
+        std::vector<CoupledRun> runs;
+        runs.reserve(states.size());
+        DensityEvaluator* shared_cache_evaluator = nullptr;
+        for (std::size_t member = 0; member < states.size(); ++member) {
+            DensityEvaluator* evaluator = shared;
+            if (!evaluator && configuration.share_cache) evaluator = owned.front().get();
+            if (!evaluator && !configuration.share_cache)
+                evaluator = owned[member].get();
+            if (configuration.share_cache) shared_cache_evaluator = evaluator;
             CoupledRun run;
             if (configuration.authoritative) {
                 AuthoritativeDensitySource source(*evaluator);
-                run = run_coupled(c, env, spec, state, source, reference, labels, epoch, false, false);
+                run = run_coupled(c, env, spec, states[member], source, reference, labels, epoch,
+                                  false, false);
             } else {
                 CandidateDensitySource source(*evaluator);
-                run = run_coupled(c, env, spec, state, source, reference, labels, epoch, false, false);
+                run = run_coupled(c, env, spec, states[member], source, reference, labels, epoch,
+                                  false, false);
             }
             row.rhs_calls += run.rhs_calls;
             row.density_evaluations += run.density_evaluations;
             row.output_samples += run.trajectory.samples.size();
-            for (const auto& sample : run.trajectory.samples) checksum.add(sample.state);
             if (!configuration.authoritative && !configuration.share_cache)
                 per_trajectory_statistics.push_back(evaluator->counts());
+            runs.push_back(std::move(run));
         }
         row.wall_seconds = elapsed(timer_construction);
+        // The checksum is read after the timed region has closed, exactly as the
+        // threaded route does, so no configuration pays for it inside its wall
+        // time while another does not.
+        for (const auto& run : runs)
+            for (const auto& sample : run.trajectory.samples) checksum.add(sample.state);
         row.trajectories = states.size();
         row.checksum = checksum.str();
-        if (!configuration.authoritative && configuration.share_cache)
-            row.cache_statistics = evaluator->statistics();
+        if (!configuration.authoritative && configuration.share_cache && shared_cache_evaluator)
+            row.cache_statistics = shared_cache_evaluator->statistics();
         if (!configuration.authoritative && !configuration.share_cache) {
             std::vector<std::string> rows;
             for (const auto& statistics : per_trajectory_statistics) rows.push_back(statistics.json());
@@ -2286,17 +2418,18 @@ inline BenchmarkRow run_benchmark_configuration(const Config& c, Environment& en
         evaluator = owned.get();
     }
     row.construction_seconds = elapsed(timer_construction);
-    DensityEvaluator reference(c, env, model, settings);
     CoupledRun run;
     if (configuration.authoritative) {
         // The authoritative path is the production provider, evaluated afresh for
-        // every query exactly as the current baseline does.
-        AuthoritativeDensitySource source(reference);
-        run = run_coupled(c, env, spec, states.front(), source, reference, labels, epoch, false,
+        // every query exactly as the current baseline does. It uses the same
+        // single evaluator the candidate route would build, so the two
+        // configurations construct the same one object inside the timed region.
+        AuthoritativeDensitySource source(*evaluator);
+        run = run_coupled(c, env, spec, states.front(), source, *evaluator, labels, epoch, false,
                           false);
     } else {
         CandidateDensitySource source(*evaluator);
-        run = run_coupled(c, env, spec, states.front(), source, reference, labels, epoch, false,
+        run = run_coupled(c, env, spec, states.front(), source, *evaluator, labels, epoch, false,
                           false);
     }
     row.wall_seconds = elapsed(timer_construction);
@@ -2307,6 +2440,265 @@ inline BenchmarkRow run_benchmark_configuration(const Config& c, Environment& en
     row.checksum = run.checksum;
     if (!configuration.authoritative) row.cache_statistics = evaluator->statistics();
     return row;
+}
+
+// ---------------------------------------------------------------------------
+// Provider and preprocessing cost components
+//
+// nanoseconds_per_density_evaluation on a trajectory configuration is a wall
+// time divided by an RHS count: it is the cost of one *step*, not the cost of
+// one provider call. The rows below are the missing measurement. Each one times
+// exactly one operation, repeated `calls` times per repeat, and nothing else:
+// no clock read inside the loop, no counter, no key construction, no JSON, no
+// checksum, no allocation that scales with the loop. Every value a loop
+// produces is consumed by a sink *after* the timer closes.
+//
+// Each row is measured on its own and reported on its own. No component is
+// obtained by subtracting one median from another: the sum of independently
+// timed medians is not the median of the sum, and a subtraction would also hide
+// whatever the two parts share. The provider's total cost and the parts are
+// therefore independent observations that may be compared by a reader, and the
+// study asserts no identity among them.
+// ---------------------------------------------------------------------------
+
+struct ProviderComponent {
+    std::string name;
+    std::string model;
+    std::string timed_unit;
+    std::string inside;
+    std::string outside;
+    std::size_t calls = 0;
+    std::vector<double> nanoseconds;
+    std::string sink;
+    bool available = true;
+    std::string unavailable_reason;
+};
+
+inline std::string provider_component_json(const ProviderComponent& component,
+                                           std::size_t repeats) {
+    Json j;
+    j.add("component", component.name);
+    j.add("model", component.model);
+    j.add("available", component.available);
+    if (!component.available) {
+        j.add("unavailable_reason", component.unavailable_reason);
+        return j.str();
+    }
+    j.add("timed_unit", component.timed_unit);
+    j.add("inside_the_timer", component.inside);
+    j.add("outside_the_timer", component.outside);
+    j.add("calls_per_repeat", static_cast<double>(component.calls));
+    j.add("recorded_repeats", static_cast<double>(repeats));
+    j.raw("nanoseconds_per_call", Distribution::of(component.nanoseconds).json());
+    j.add("sink_consumed_after_the_timer", component.sink);
+    return j.str();
+}
+
+// Everything the coupled RHS does apart from obtaining the density: the
+// snapshot construction (Sun reuse, illumination) and the force and torque
+// evaluation. Timed separately so the fixed-state RHS figure can be read as
+// this component plus a density component rather than as one opaque number.
+inline std::vector<ProviderComponent> measure_provider_components(
+    const Config& c, Environment& env, const StudySettings& settings,
+    std::size_t calls, std::size_t repeats) {
+    std::vector<ProviderComponent> components;
+    const auto model = required_model(settings);
+    const auto epoch = leo::SpiceEphemerisProvider::epoch_from_utc(c.epoch_utc);
+    const auto spec = experiment::load(c.case_files.at(0));
+    const leo::State state = spec.start();
+    const auto dynamics = case_dynamics(spec);
+    const std::string model_name_text = model_name(model);
+    const std::size_t count = std::max<std::size_t>(1, calls);
+
+    // Everything the timers rely on is prepared here, outside every timer. Each
+    // component below recomputes its own inputs inside its own loop, because a
+    // precomputed value would measure a loop that does no work.
+    const auto observation = env.ephemeris.observe_sun(epoch);
+    const Eigen::Vector3d fixed =
+        leo::SpiceEphemerisProvider::earth_fixed_rotation(epoch, c.frame, c.options.orientation_reuse) *
+        state.r.as_eigen();
+    // The driver's own input builder, used for one purpose only: to obtain a
+    // prepared native input for the model-under-test that is built *outside*
+    // every timer. It prepares both backends and its Sun comes from the
+    // uncached geometric_state path, so it is never itself timed and never
+    // presented as the preprocessing cost.
+    const NativeInput prepared = build_native_input(epoch, state, c, env);
+    DensityEvaluator provider(c, env, model, settings);
+
+    const auto record = [&](const char* name, const char* unit, std::string inside, std::string outside,
+                            const auto& body) {
+        ProviderComponent component;
+        component.name = name;
+        component.model = model_name_text;
+        component.timed_unit = unit;
+        component.inside = std::move(inside);
+        component.outside = std::move(outside);
+        component.calls = count;
+        double sink = 0;
+        // One discarded execution before any recorded repeat, so first-touch
+        // and one-time effects are excluded exactly as in the trajectory rows.
+        sink += body();
+        for (std::size_t repeat = 0; repeat < repeats; ++repeat) {
+            const auto timer = Clock::now();
+            sink += body();
+            component.nanoseconds.push_back(elapsed(timer) / double(count) * 1e9);
+        }
+        std::ostringstream described;
+        described << std::setprecision(17) << sink;
+        component.sink = described.str();
+        components.push_back(std::move(component));
+    };
+
+    record("earth_fixed_rotation",
+           "nanoseconds for one cached Earth-fixed rotation matrix lookup and multiply",
+           "earth_fixed_rotation(epoch) and the rotation times the inertial position",
+           "the epoch, the frame and the position vector; the returned matrix is discarded into "
+           "the sink",
+           [&] {
+               const auto value =
+                   leo::SpiceEphemerisProvider::earth_fixed_rotation(epoch, c.frame,
+                                                                     c.options.orientation_reuse) *
+                   state.r.as_eigen();
+               return value.x();
+           });
+
+    record("geodetic_conversion", "nanoseconds for one Earth-fixed vector to geodetic conversion",
+           "the closed-form geodetic solution applied to one Earth-fixed vector",
+           "the Earth-fixed vector; the rotation that produced it is not inside this timer",
+           [&] { return leo::atmosphere::geodetic(fixed).altitude_m; });
+
+    record("utc_calendar", "nanoseconds for one UTC epoch to civil calendar conversion",
+           "utc_calendar(epoch) through the production leapsecond path with its reuse enabled",
+           "the epoch",
+           [&] { return double(leo::SpiceEphemerisProvider::utc_calendar(epoch, c.options.utc_reuse)
+                                   .seconds_of_day); });
+
+    if (model == leo::atmosphere::Model::nrlmsise00) {
+        record("space_weather_record_nrlmsise00", "nanoseconds for one NRLMSISE-00 record read",
+               "env.weather.nrlmsise(utc, ap_history) for the selected backend only",
+               "the epoch; the civil calendar conversion it consumes is outside this timer",
+               [&] {
+                   const auto calendar =
+                       leo::SpiceEphemerisProvider::utc_calendar(epoch, c.options.utc_reuse);
+                   const auto value = env.weather.nrlmsise(calendar, c.ap_history);
+                   return value.f107 + value.ap;
+               });
+    } else if (model == leo::atmosphere::Model::jb2008) {
+        record("space_weather_record_jb2008", "nanoseconds for one JB2008 record read",
+               "env.weather.jb2008(utc) for the selected backend only",
+               "the epoch; the civil calendar conversion it consumes is outside this timer",
+               [&] {
+                   const auto calendar =
+                       leo::SpiceEphemerisProvider::utc_calendar(epoch, c.options.utc_reuse);
+                   const auto value = env.weather.jb2008(calendar);
+                   return value.f10 + value.s10 + value.dstdtc_k;
+               });
+    }
+
+    // The provider's own acquisition contract for the selected backend: the
+    // rotation, the geodetic conversion, the civil calendar, the record read and
+    // the Sun right ascension and declination. Exactly one backend's record is
+    // read. This is a *replay of the contract*, measured here as a cost; it is
+    // not a second definition of anything, and nothing in the study uses it to
+    // make a decision.
+    record("provider_acquisition_contract",
+           "nanoseconds for one complete acquisition without the native model call",
+           "one Earth-fixed rotation, one geodetic conversion, one civil calendar, one "
+           "space-weather record read for the selected backend only, and for JB2008 the Sun "
+           "right ascension and declination from the shared observation",
+           "the native model itself, the Sun observation (it is shared and prepared once), and "
+           "the density evaluation that follows",
+           [&] {
+               const auto rotation_value =
+                   leo::SpiceEphemerisProvider::earth_fixed_rotation(epoch, c.frame,
+                                                                     c.options.orientation_reuse);
+               const auto g = leo::atmosphere::geodetic(rotation_value * state.r.as_eigen());
+               const auto calendar =
+                   leo::SpiceEphemerisProvider::utc_calendar(epoch, c.options.utc_reuse);
+               double total = g.altitude_m + g.latitude_rad + g.longitude_rad +
+                              calendar.seconds_of_day;
+               if (model == leo::atmosphere::Model::nrlmsise00) {
+                   const auto value = env.weather.nrlmsise(calendar, c.ap_history);
+                   total += value.f107 + value.ap;
+               } else if (model == leo::atmosphere::Model::jb2008) {
+                   const auto value = env.weather.jb2008(calendar);
+                   const Eigen::Vector3d sun_fixed = rotation_value * observation.state().position_m.as_eigen();
+                   total += value.f10 + value.dstdtc_k + std::atan2(sun_fixed.y(), sun_fixed.x()) +
+                            std::atan2(sun_fixed.z(), std::hypot(sun_fixed.x(), sun_fixed.y()));
+               }
+               return total;
+           });
+
+    // The native model alone, on an input prepared outside every timer. The model
+    // object is the configured one, built once outside every timer, so the row
+    // measures the adapter's evaluate() and not its construction, and it runs
+    // the switch vector this study actually selected.
+    if (model == leo::atmosphere::Model::nrlmsise00) {
+#ifdef LEO_HAS_NRLMSISE00
+        const leo::atmosphere::Nrlmsise00 adapter(
+            c.ap_history ? ap_history_switches()
+                         : leo::atmosphere::Nrlmsise00::standard_switches());
+        record("native_adapter_nrlmsise00", "nanoseconds for one NRLMSISE-00 model evaluation",
+               "one leo::atmosphere::Nrlmsise00::evaluate on the prepared native input, with the "
+               "switch vector this run selected",
+               "the model object itself and everything that builds the native input: the rotation, "
+               "the geodetic conversion, the civil calendar and the space-weather record read are "
+               "all outside this timer",
+               [&] { return adapter.evaluate(prepared.nrlmsise).density_kg_m3; });
+#endif
+    } else if (model == leo::atmosphere::Model::jb2008) {
+#ifdef LEO_HAS_JB2008
+        const leo::atmosphere::Jb2008 adapter;
+        record("native_adapter_jb2008", "nanoseconds for one JB2008 model evaluation",
+               "one leo::atmosphere::Jb2008::evaluate on the prepared native input",
+               "the model object itself and everything that builds the native input, including the "
+               "Sun geometry",
+               [&] { return adapter.evaluate(prepared.jb2008).density_kg_m3; });
+#endif
+    }
+
+    // The provider call itself, in the two sharing configurations that actually
+    // occur: one Sun observation prepared once and shared, and the provider
+    // performing its own Sun lookup on every call.
+    record("provider_evaluate_shared_sun",
+           "nanoseconds for one DirectAtmosphere::evaluate with a shared Sun observation",
+           "the complete production acquisition path plus the native model evaluation",
+           "the Sun observation, which is furnished once and shared exactly as the coupled RHS "
+           "shares it",
+           [&] { return provider.direct(epoch, state.r, &observation); });
+
+    record("provider_evaluate_own_sun",
+           "nanoseconds for one DirectAtmosphere::evaluate that performs its own Sun lookup",
+           "the complete production acquisition path, one Sun lookup, and the native model "
+           "evaluation",
+           "nothing: this is the unshared configuration",
+           [&] { return provider.direct(epoch, state.r, nullptr); });
+
+    // Everything the coupled RHS does apart from the density.
+    record("coupled_snapshot_and_forces",
+           "nanoseconds for one snapshot construction plus one force and torque evaluation",
+           "coupled_snapshot (Sun reuse, illumination factor, corotation) and the full dynamics "
+           "evaluation at a fixed density",
+           "the density: it is a fixed, valid number, so this row contains no provider cost at all",
+           [&] {
+               const auto snapshot = coupled_snapshot(env, epoch, state, 1e-9, &observation);
+               return dynamics(leo::ElapsedTime{0}, state, snapshot).v_dot.x();
+           });
+
+    // And the full fixed-state RHS, so the two are directly comparable.
+    record("fixed_state_rhs_full",
+           "nanoseconds for one complete coupled RHS evaluation including its density",
+           "the Sun observation, coupled_snapshot, the provider density call and the full dynamics "
+           "evaluation: the real one-Sun shared pipeline the trajectory configurations also use",
+           "nothing",
+           [&] {
+               const auto snapshot_observation = env.ephemeris.observe_sun(epoch);
+               const double density = provider.direct(epoch, state.r, &snapshot_observation);
+               const auto snapshot = coupled_snapshot(env, epoch, state, density, &snapshot_observation);
+               return dynamics(leo::ElapsedTime{0}, state, snapshot).v_dot.x();
+           });
+
+    return components;
 }
 
 inline std::string benchmark_study(const Config& c, Environment& env, const StudySettings& s) {
@@ -2359,26 +2751,64 @@ inline std::string benchmark_study(const Config& c, Environment& env, const Stud
     header.add("speedup_rule",
                "a speedup is the ratio of the medians of interleaved repeats of the same "
                "workload, never a difference of independently measured medians");
+    header.add("speedup_baseline_rule",
+               "a speedup is only reported against an authoritative configuration that was itself "
+               "measured on the same route, the same thread count and the same ensemble in this "
+               "same run. A sequential baseline is never aliased onto a threaded result and a "
+               "threaded baseline is never aliased onto a sequential one; an unmatched route "
+               "reports its own wall time and no ratio");
+    header.add("trajectory_timed_unit",
+               "nanoseconds_per_rhs and nanoseconds_per_density_evaluation on a trajectory "
+               "configuration are the wall time of a real production propagation divided by that "
+               "repeat's own RHS and density-evaluation counts. They are the cost of one "
+               "integrator step, which includes the density acquisition and every force and torque "
+               "evaluation; they are NOT the latency of one provider call. The provider_cost "
+               "components below measure that separately, each on its own timer");
+    header.add("timed_region_contents",
+               "construction of the cache-owning evaluators, the production propagation itself, and "
+               "the per-RHS integer counters. Cache key construction and lookup, the stored-value "
+               "comparisons and the candidate's own bookkeeping are all inside the candidate's "
+               "wall time, because they are what the candidate costs. Checksums, JSON assembly, "
+               "cache-statistics collection and every other diagnostic are outside every timer");
 
     std::vector<BenchmarkConfiguration> configurations;
-    configurations.push_back({"authoritative_single", "single", true, true, false, 1, 1, 0});
-    configurations.push_back({"candidate_single_cold", "single", false, true, false, 1, 1, 0});
-    configurations.push_back({"candidate_single_warm", "single", false, false, false, 1, 1, 0});
+    configurations.push_back({"authoritative_single", "single", true, true, false, 1, 1, 0, ""});
+    configurations.push_back({"candidate_single_cold", "single", false, true, false, 1, 1, 0,
+                              "authoritative_single"});
+    configurations.push_back({"candidate_single_warm", "single", false, false, false, 1, 1, 0,
+                              "authoritative_single"});
     if (members > 1) {
-        configurations.push_back(
-            {"authoritative_sequential_ensemble", "sequential_ensemble", true, true, true, members, 1, 0});
+        configurations.push_back({"authoritative_sequential_ensemble_shared_cache",
+                                  "sequential_ensemble", true, true, true, members, 1, 0, ""});
         configurations.push_back({"candidate_sequential_ensemble_shared_cache",
-                                  "sequential_ensemble", false, false, true, members, 1, 0});
+                                  "sequential_ensemble", false, false, true, members, 1, 0,
+                                  "authoritative_sequential_ensemble_shared_cache"});
+        // A per-trajectory ownership shape with its own authoritative counterpart,
+        // so the two differ in the cache and in nothing else. Comparing a
+        // per-trajectory candidate against a single-evaluator authoritative run
+        // would charge the candidate for the extra provider constructions it
+        // genuinely needs, and the difference is not a property of the cache.
+        configurations.push_back({"authoritative_sequential_ensemble_per_trajectory_provider",
+                                  "sequential_ensemble", true, true, false, members, 1, 0, ""});
         configurations.push_back({"candidate_sequential_ensemble_per_trajectory_cache",
-                                  "sequential_ensemble", false, true, false, members, 1, 0});
-        if (workers > 1)
+                                  "sequential_ensemble", false, true, false, members, 1, 0,
+                                  "authoritative_sequential_ensemble_per_trajectory_provider"});
+        if (workers > 1) {
+            // A threaded authoritative route, measured rather than aliased, so the
+            // threaded candidate comparison is against a baseline that really
+            // ran the same number of workers over the same ensemble.
+            configurations.push_back({"authoritative_threaded_ensemble_per_trajectory_provider",
+                                      "threaded_ensemble", true, true, false, members, workers, 0,
+                                      ""});
             configurations.push_back({"candidate_threaded_ensemble_per_trajectory_cache",
-                                      "threaded_ensemble", false, true, false, members, workers, 0});
+                                      "threaded_ensemble", false, true, false, members, workers, 0,
+                                      "authoritative_threaded_ensemble_per_trajectory_provider"});
+        }
     }
     configurations.push_back({"authoritative_fixed_state_rhs", "fixed_state_rhs", true, true, false,
-                              1, 1, fixed_state_calls});
+                              1, 1, fixed_state_calls, ""});
     configurations.push_back({"candidate_fixed_state_rhs", "fixed_state_rhs", false, true, false, 1,
-                              1, fixed_state_calls});
+                              1, fixed_state_calls, "authoritative_fixed_state_rhs"});
 
     // Warm configurations own one evaluator for the whole benchmark; cold ones
     // construct a fresh one on every execution. The difference between them is
@@ -2407,19 +2837,20 @@ inline std::string benchmark_study(const Config& c, Environment& env, const Stud
                                                        step));
         }
 
-    std::map<std::string, std::vector<double>> baseline_walls;
-    for (const auto& row : rows)
-        if (row.configuration == "authoritative_single")
-            baseline_walls["single"].push_back(row.wall_seconds);
-    for (const auto& row : rows)
-        if (row.configuration == "authoritative_sequential_ensemble")
-            baseline_walls["sequential_ensemble"].push_back(row.wall_seconds);
-    for (const auto& row : rows)
-        if (row.configuration == "authoritative_fixed_state_rhs")
-            baseline_walls["fixed_state_rhs"].push_back(row.wall_seconds);
-    // The threaded workload has no authoritative ensemble counterpart in this
-    // protocol: a threaded candidate result is reported as its own wall time,
-    // never as a speedup against a configuration that was not measured.
+    // Baselines are keyed by configuration name, taken from the explicit pairing
+    // each configuration declares. No workload name is ever used to look one up,
+    // so a threaded result can never pick up a sequential baseline, and a
+    // per-trajectory ownership shape can never pick up a shared-evaluator one.
+    std::map<std::string, std::vector<double>> walls_by_configuration;
+    for (const auto& row : rows) walls_by_configuration[row.configuration].push_back(row.wall_seconds);
+    // A configuration that declares a baseline which was not itself measured in
+    // this run is a configuration error, not a silently dropped ratio.
+    for (const auto& configuration : configurations)
+        if (!configuration.baseline.empty() &&
+            walls_by_configuration.find(configuration.baseline) == walls_by_configuration.end())
+            throw std::runtime_error("benchmark configuration " + configuration.name +
+                                     " names a baseline that was not measured: " +
+                                     configuration.baseline);
 
     std::vector<std::string> configuration_rows;
     for (const auto& configuration : configurations) {
@@ -2464,8 +2895,18 @@ inline std::string benchmark_study(const Config& c, Environment& env, const Stud
         entry.raw("nanoseconds_per_rhs", Distribution::of(per_rhs).json());
         entry.raw("nanoseconds_per_density_evaluation", Distribution::of(per_density).json());
         entry.add("trajectory_checksum", checksum);
-        const auto baseline = baseline_walls.find(configuration.workload);
-        if (!configuration.authoritative && baseline != baseline_walls.end() &&
+        entry.add("nanoseconds_per_rhs_definition",
+                  "wall_seconds of this repeat divided by that repeat's own rhs_calls, in "
+                  "nanoseconds: the cost of one integrator step, which contains the density "
+                  "acquisition and every force and torque evaluation. It is not a provider call "
+                  "latency; see provider_cost_components for that");
+        entry.add("nanoseconds_per_density_evaluation_definition",
+                  "wall_seconds of this repeat divided by that repeat's own density_evaluations, "
+                  "in nanoseconds: the cost of one integrator step allocated per density "
+                  "acquisition, not the cost of one density acquisition");
+        entry.add("baseline_configuration", configuration.baseline.empty() ? "none" : configuration.baseline);
+        const auto baseline = walls_by_configuration.find(configuration.baseline);
+        if (!configuration.baseline.empty() && baseline != walls_by_configuration.end() &&
             !baseline->second.empty()) {
             const auto baseline_distribution = Distribution::of(baseline->second);
             entry.add("authoritative_baseline_median_seconds", baseline_distribution.median);
@@ -2473,10 +2914,24 @@ inline std::string benchmark_study(const Config& c, Environment& env, const Stud
                       baseline_distribution.median > 0 ? baseline_distribution.median / median_wall
                                                        : 0.0);
             entry.add("speedup_note",
-                      "ratio of the medians of interleaved repeats of the same workload");
+                      "ratio of the medians of interleaved repeats of the named baseline "
+                      "configuration and this one, which were both measured in this run on the "
+                      "same route, thread count, ensemble and cache-ownership shape");
         } else if (configuration.authoritative) {
             entry.add("authoritative_baseline_median_seconds", median_wall);
             entry.add("speedup_versus_authoritative", 1.0);
+            entry.raw("is_a_baseline_for", strings([&] {
+                std::vector<std::string> names;
+                for (const auto& other : configurations)
+                    if (other.baseline == configuration.name) names.push_back(other.name);
+                return names;
+            }()));
+        } else {
+            entry.raw("authoritative_baseline_median_seconds", "null");
+            entry.raw("speedup_versus_authoritative", "null");
+            entry.add("no_baseline_reason",
+                      "this configuration declares no authoritative counterpart that was measured on "
+                      "its own route, so it reports its wall time and no ratio");
         }
         if (configuration.authoritative)
             entry.raw("cache_statistics", "null");
@@ -2487,6 +2942,48 @@ inline std::string benchmark_study(const Config& c, Environment& env, const Stud
         configuration_rows.push_back(entry.str());
     }
     header.raw("configurations", raw_array(configuration_rows));
+
+    // The provider and preprocessing cost components, each on its own timer. A
+    // trajectory configuration's nanoseconds-per-density figure is a step cost,
+    // so without these rows there is no measured provider latency anywhere in
+    // this result.
+    {
+        const auto components = measure_provider_components(
+            c, env, settings, fixed_state_calls, std::max<std::size_t>(1, repeats));
+        Json block;
+        block.add("why",
+                  "a trajectory configuration divides a wall time by an RHS count, which is the "
+                  "cost of one integrator step. These rows measure one operation each on its own "
+                  "timer, so the provider call, the native model call and the acquisition contract "
+                  "are separately observable");
+        block.add("sizing", std::string("--timing-calls operations per repeat"));
+        block.add("method",
+                  "each component runs its loop body `calls` times per repeat after one discarded "
+                  "warm-up execution; the timer opens and closes around the loop only, and the "
+                  "sink the loop produces is consumed after the timer has closed");
+        block.add("no_subtraction_rule",
+                  "no component here is obtained by subtracting one median from another. The "
+                  "provider total and its parts are independent observations; the sum of "
+                  "independently timed medians is not the median of the sum, and a subtraction "
+                  "would silently absorb whatever the parts share");
+        block.add("prepared_input_rule",
+                  "the native-adapter rows use the driver's own build_native_input to obtain a "
+                  "prepared native input for the backend under test, entirely outside every "
+                  "timer. build_native_input prepares both backends and takes its Sun from the "
+                  "uncached geometric_state path, so it is never itself timed and is never "
+                  "presented as the cost of the provider's preprocessing");
+        block.add("no_old_preprocessing_comparison",
+                  "these rows measure the current provider only. No component is compared with a "
+                  "previous, pre-optimisation measurement");
+        block.add("six_hour_direct_clock",
+                  "the full six-hour direct-versus-candidate propagation clock is the trajectory "
+                  "configurations above; it is not reproduced here");
+        std::vector<std::string> component_rows;
+        for (const auto& component : components)
+            component_rows.push_back(provider_component_json(component, repeats));
+        block.raw("components", raw_array(component_rows));
+        header.raw("provider_cost_components", block.str());
+    }
 
     std::vector<std::string> repeat_rows;
     for (const auto& row : rows) {

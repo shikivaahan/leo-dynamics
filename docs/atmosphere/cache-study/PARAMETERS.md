@@ -7,12 +7,12 @@ rejected are listed with the reason, so a later run does not repeat the experime
 
 | Parameter | Value | Reason |
 |---|---|---|
-| Scientific baseline | `direct-v2` frozen manifest | exact prior baseline |
+| Experimental scientific input set | `exp-solfsmy-20261011-original-pck` | separately pinned SOLFSMY release; historical `direct-v2` unchanged; all-five fixture equivalence is domain-limited |
 | Preprocessing | UTC reuse, Sun sharing, Earth-orientation reuse all **on** | ATM-OPT-001 production configuration; the study refuses to run primary otherwise |
 | Reference density | fresh `DirectAtmosphere::evaluate()` at the same epoch and position | errors must not be confounded with different spacecraft states |
 | Native source | pinned Brodowski NRLMSISE-00 and official JB2008 Fortran, hash-checked | no model reimplementation |
-| Weather | pinned CSSI 2020-02-24, pinned SOLFSMY, pinned DTCFILE | no index is ever synthesised, scaled or interpolated for the record |
-| Kernels | NAIF0012 LSK, DE432s, `earth_000101_270105_261009.bpc`, pck00011 | ITRF93 orientation |
+| Weather | original CSSI 2020-02-24 and DTCFILE pins; SOLFSMY-live SHA `9bc734e66da7b5919ce6fd2b3475db82c28e500988dbb2f8d994d5ff3c074e35` | only the explicitly selected SOLFSMY release differs from historical inputs |
+| Kernels | original NAIF0012 LSK, DE432s and recovered `earth_000101_270105_261009.bpc` (SHA `14deb9ab9dd49482185cc49a9c29fe56ae65d50ab94caf3197db8694836b6f81`) | original ITRF93 orientation, hash verified; no alternate Earth kernel |
 
 ## Pinned-input native sensitivity (measured)
 
@@ -42,7 +42,7 @@ rejected are listed with the reason, so a later run does not repeat the experime
 | Error targets | 0.01, 0.1, 0.5, 1, 5 % | requested thresholds; satisfied only on the **maximum** observed error |
 | Adaptive probe divisor | 16 | one periodic native validation per 16 queries drives refinement |
 | Adaptive max depth | 4 | bounded refinement; no adaptive mesh framework |
-| Holdouts | uniform-random, local-query-packet (40 km/300 s), broad-query-packet (200 km/1800 s) | uniform points mostly exercise the fallback path; clustered packets match an integrator's stage sequence |
+| Holdouts | independent uniform, local and broad packets plus 684 physical-boundary/cell-interior probes | whole-domain coverage and explicit approximation-active reuse; not a fallback-only accuracy claim |
 | Points | 512 per task in smoke, larger in screen/full | recorded per task |
 
 ## Coupled propagation
@@ -84,8 +84,8 @@ rejected are listed with the reason, so a later run does not repeat the experime
 
 - **Production density cache.** Out of scope by instruction; nothing in the production path changed.
 - **Generic caching framework.** Each candidate is a small evaluator with its own guard logic.
-- **Substituting current SOLFSMY/Earth kernel for the pinned ones.** Offered to the user and declined;
-  the primary study stays blocked instead.
+- **Relabelling or re-pinning the historical baseline.** Not permitted. New work has its own
+  input-set manifest, run directory and evidence namespace; the blocked original run is preserved.
 - **Adaptive mesh.** Candidate D is bounded anchors and a periodic native check, nothing more.
 - **Interprocess cache sharing, IPC, distributed cache.** Not built; interprocess reuse is reported
   as unrealisable for a process-local cache.

@@ -267,6 +267,7 @@ struct StudySettings {
     std::string kind = "sensitivity";
     std::string model = "nrlmsise00";
     std::string candidate = "A";
+    std::string input_set = "direct-v2";
 
     // Workload sizing and reproducibility.
     std::size_t points = 200;        // random holdout/query points
@@ -466,6 +467,10 @@ inline StudyArguments parse_study_arguments(int argc, char** argv) {
             settings.model = value;
         } else if (key == "--study-candidate") {
             settings.candidate = value;
+        } else if (key == "--study-input-set") {
+            if (value != "direct-v2" && value != "exp-solfsmy-20261011-original-pck")
+                throw std::invalid_argument("unknown explicitly pinned input set: " + value);
+            settings.input_set = value;
         } else if (key == "--study-points") {
             settings.points = static_cast<std::size_t>(study_positive(value, "--study-points", 1, 1e9));
         } else if (key == "--study-seed") {
@@ -550,20 +555,19 @@ inline StudyArguments parse_study_arguments(int argc, char** argv) {
         forwarded.emplace_back("--mode");
         forwarded.emplace_back(settings.native_geodetic ? "coordinates" : "timing");
     }
-    bool placeholder_spk = false;
+    // Native-only mode keeps the inherited environment's LSK alias until a
+    // dedicated native environment is constructed; no arbitrary ephemeris is used.
     if (settings.native_geodetic &&
         std::find(forwarded.begin(), forwarded.end(), "--spk") == forwarded.end()) {
-        // The inherited parser demands a planetary ephemeris for the modes it
-        // implements. The partial native slice genuinely does not use one, so the
-        // requirement is satisfied by a placeholder that is discarded before any
-        // kernel is furnished, rather than by loading an unused ephemeris.
+        // The inherited driver requires two kernel slots. Both name the same
+        // verified LSK in native-only mode, which reads UTC but no Sun geometry.
         const auto lsk = std::find(forwarded.begin(), forwarded.end(), "--lsk");
         if (lsk == forwarded.end() || lsk + 1 == forwarded.end())
             throw std::invalid_argument("--lsk is required: the native slice reads UTC from the "
                                         "leapsecond kernel and uses no other ephemeris");
+        const std::string lsk_path = *(lsk + 1);
         forwarded.push_back("--spk");
-        forwarded.push_back(*(lsk + 1));
-        placeholder_spk = true;
+        forwarded.push_back(lsk_path);
     }
     std::vector<char*> raw;
     raw.reserve(forwarded.size());
@@ -1123,6 +1127,7 @@ struct QueryInputs {
 struct DensityStatistics {
     std::uint64_t queries = 0;
     std::uint64_t exact_hits = 0;
+    std::uint64_t acquisition_skips = 0;
     std::uint64_t cell_reuses = 0;
     std::uint64_t interpolations = 0;
     std::uint64_t adaptive_anchor_uses = 0;
@@ -1188,6 +1193,7 @@ public:
     DensityStatistics counts() const;
     const StudySettings& settings() const { return settings_; }
     std::uint64_t kernel_token() const { return kernel_token_; }
+    std::uint64_t authoritative_calls() const { return authoritative_calls_; }
 
     // Clears every stored payload but keeps the counters, so cold-start and
     // eviction behaviour can be measured on one evaluator.
@@ -1215,10 +1221,14 @@ private:
     // an arbitrary ordering on equal magnitudes. Raw integer words avoid both.
     struct ExactKey {
         std::uint64_t epoch_bits = 0, x_bits = 0, y_bits = 0, z_bits = 0;
+        std::uint64_t sun_x_bits = 0, sun_y_bits = 0, sun_z_bits = 0;
+        std::uint64_t kernel_token = 0;
         WeatherIdentity weather{};
         bool operator<(const ExactKey& o) const {
-            return std::tie(epoch_bits, x_bits, y_bits, z_bits, weather) <
-                   std::tie(o.epoch_bits, o.x_bits, o.y_bits, o.z_bits, o.weather);
+            return std::tie(epoch_bits, x_bits, y_bits, z_bits,
+                            sun_x_bits, sun_y_bits, sun_z_bits, kernel_token, weather) <
+                   std::tie(o.epoch_bits, o.x_bits, o.y_bits, o.z_bits,
+                            o.sun_x_bits, o.sun_y_bits, o.sun_z_bits, o.kernel_token, o.weather);
         }
     };
     struct CellKey {
@@ -1256,9 +1266,13 @@ private:
 
     QueryInputs build_inputs(leo::Epoch epoch, const leo::InertialVector& position,
                              const leo::SunObservation* sun) const;
+    ExactKey exact_key(leo::Epoch epoch, const leo::InertialVector& position,
+                       const leo::SunObservation* sun) const;
+    void emit_prepared(leo::Epoch epoch, const leo::InertialVector& position,
+                       double density, std::uint32_t flags);
     double native_density(const QueryInputs& inputs, const leo::SunObservation* sun) const;
 
-    double serve_exact(const QueryInputs& inputs);
+    double serve_exact(const QueryInputs& inputs, const ExactKey& key);
     double serve_cell(const QueryInputs& inputs);
     double serve_interpolation(const QueryInputs& inputs);
     double serve_adaptive(const QueryInputs& inputs);
@@ -1411,13 +1425,16 @@ inline std::string study_metadata(const Config& c, Environment& env, const Study
               ? "pipeline-verification-only: not pinned direct-v2 scientific or performance evidence"
               : s.native_geodetic
                     ? "scientific-native-input-partial: pinned NRLMSISE-00/CSSI/UTC, no provider or trajectory claims"
-                    : "scientific-primary: measured against the pinned direct-v2 inputs");
+                    : s.input_set == "direct-v2"
+                        ? "scientific-primary: pinned direct-v2 input set"
+                        : "scientific-experimental-pinned: separately pinned SOLFSMY release and original Earth PCK");
     j.add("verification_only", s.verification_only);
     j.add("verification_reason", s.verification_reason);
+    j.add("input_set", s.input_set);
+    j.add("historical_reference", "direct-v2");
     j.add("input_pinning_rule",
-          "the hashes below are of the files this process actually read; a mismatch against the "
-          "pinned direct-v2 hashes is the caller's decision to declare with --study-verification-only "
-          "and never something this tool resolves on its own");
+          "all input bytes must match the explicitly selected input set; a separately pinned "
+          "experimental input set is never relabelled as the historical direct-v2 input set");
     j.add("model", model_name(s.model_kind));
     j.add("candidate", candidate_name(s.candidate_kind));
     j.add("candidate_slug", candidate_slug(s.candidate_kind));

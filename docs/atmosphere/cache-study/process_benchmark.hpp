@@ -64,8 +64,31 @@ inline std::string process_benchmark_study(const Config& c, Environment& env, co
     result.add("trajectory_binary", destination.string());
     result.add("trajectory_checksum", checksum.str());
     result.add("wall_seconds_construction_propagation_output", seconds);
+    result.add("wall_seconds_contents",
+               "construction of the one cache-owning evaluator, the coupled propagations of this "
+               "process's global slice, the MT-002 13-component state output and its checksum. The "
+               "result JSON and every counter above are assembled after this timer closed");
     result.add("rhs_calls", rhs_calls);
-    result.add("native_model_calls", s.benchmark_route == "direct" ? rhs_calls : evaluator.counts().native_calls);
+    // Both routes report a counted number. The direct route counts the fresh
+    // provider evaluations it actually made through the same counter the
+    // candidate route uses; it is not the RHS count assumed to equal it.
+    result.add("native_model_calls",
+               s.benchmark_route == "direct" ? evaluator.authoritative_calls()
+                                              : evaluator.counts().native_calls);
+    result.add("native_model_calls_source",
+               s.benchmark_route == "direct"
+                   ? "counted fresh DirectAtmosphere evaluations made by this process"
+                   : "counted native model evaluations, including cache construction and every "
+                     "guard fallback");
+    result.add("native_calls_per_rhs", rhs_calls
+               ? double(s.benchmark_route == "direct" ? evaluator.authoritative_calls()
+                                                       : evaluator.counts().native_calls) /
+                     double(rhs_calls)
+               : 0.0);
+    result.add("native_calls_note",
+               "a candidate route can legitimately spend more native evaluations than it has RHS "
+               "calls, because a reconstruction may need several fresh nodes per query; the "
+               "per-RHS figure is therefore not bounded above by one and is not a saving");
     result.raw("evaluator_statistics", evaluator.statistics());
     result.add("scope", "one process, one cache retained across its contiguous global input range; no interprocess reuse");
     result.add("end_to_end_boundary", "parent group wall includes exec, kernel/weather loading, this work, result publication and MT-002 binary merge");
