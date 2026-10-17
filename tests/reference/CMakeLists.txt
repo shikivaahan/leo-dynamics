@@ -36,6 +36,16 @@ set(LEO_ENABLE_CSPICE OFF CACHE BOOL "" FORCE)
 set(LEO_ENABLE_NRLMSISE00 OFF CACHE BOOL "" FORCE)
 set(LEO_ENABLE_JB2008 OFF CACHE BOOL "" FORCE)
 
+# Eigen may be an apt package, a header-only SDK or an unpacked prefix. The
+# candidate roots let a fresh build directory succeed without requiring the
+# caller to know which layout the host uses, without changing any dependency.
+set(LEO_EIGEN3_HINT_ROOTS "/home/user/leo-cache-study-build-deps/headers/usr" ENV LEO_EIGEN3_ROOT)
+foreach(root IN LISTS LEO_EIGEN3_HINT_ROOTS)
+  if(root AND EXISTS "${root}/share/eigen3/cmake")
+    list(APPEND CMAKE_PREFIX_PATH "${root}")
+  endif()
+endforeach()
+
 add_subdirectory("${LEO_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/leo")
 
 add_executable(leo_reference_dump harness.cpp)
