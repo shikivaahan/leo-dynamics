@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "frozen_before_engine_acceptance": true,
+  "basis": "Independent DOP853 rtol 1e-10/1e-12/1e-13 and max-step 30/10/2.5 s convergence, analytical Kepler and rigid-top checks, plus existing numerical-audit conditional allowances. Not fitted to C++ comparison errors.",
+  "reference_margin_fraction": 0.05,
+  "pointwise": {
+    "relative": 5e-11,
+    "force_n_absolute": 5e-15,
+    "torque_nm_absolute": 5e-16,
+    "acceleration_m_s2_absolute": 1e-12,
+    "angular_acceleration_rad_s2_absolute": 1e-14,
+    "density_kg_m3_absolute": 1e-25,
+    "illumination_absolute": 5e-10,
+    "velocity_m_s_absolute": 1e-9,
+    "quaternion_derivative_absolute": 1e-13
+  },
+  "classes": {
+    "gravity": {"position_m": 0.05, "velocity_m_s": 5e-5, "attitude_rad": 1e-10, "angular_rate_rad_s": 1e-12},
+    "rigid_body": {"position_m": 0.05, "velocity_m_s": 5e-5, "attitude_rad": 1e-8, "angular_rate_rad_s": 1e-9},
+    "gravity_gradient": {"position_m": 0.05, "velocity_m_s": 5e-5, "attitude_rad": 1e-7, "angular_rate_rad_s": 1e-9},
+    "environmental": {"position_m": 0.1, "velocity_m_s": 1e-4, "attitude_rad": 0.00017453292519943296, "angular_rate_rad_s": 1e-7},
+    "coupled": {"position_m": 0.1, "velocity_m_s": 1e-4, "attitude_rad": 0.00017453292519943296, "angular_rate_rad_s": 1e-7},
+    "stress_short": {"position_m": 0.1, "velocity_m_s": 1e-4, "attitude_rad": 0.00017453292519943296, "angular_rate_rad_s": 1e-7}
+  },
+  "scenarios": {
+    "two_body_circular": "gravity",
+    "two_body_eccentric": "gravity",
+    "j2_equatorial": "gravity",
+    "j2_inclined": "gravity",
+    "torque_free_spherical": "rigid_body",
+    "torque_free_symmetric": "rigid_body",
+    "torque_free_elongated": "rigid_body",
+    "gravity_gradient": "gravity_gradient",
+    "srp": "environmental",
+    "albedo": "environmental",
+    "drag_flat_plate": "environmental",
+    "drag_sentman": "environmental",
+    "eclipse_conical": "environmental",
+    "eclipse_cylindrical": "environmental",
+    "coupled_case_a": "coupled",
+    "coupled_case_b": "coupled",
+    "case_c_short": "stress_short"
+  },
+  "case_c_six_hour": {"release_gate": false, "reason": "Existing full six-hour coupled stress solution remains numerically unresolved. Qualifying the shorter horizon does not close that limitation."}
+}
