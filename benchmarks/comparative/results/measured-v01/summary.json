@@ -1,0 +1,3827 @@
+{
+  "kind": "v0.1-comparative-benchmarks",
+  "status": "complete",
+  "quick": false,
+  "host": {
+    "cpu": "x86_64",
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "logical_cpus": 16
+  },
+  "identity": {
+    "binary_sha256": "20721beb1027ed63c89453f9d9dd9ca0f01a63a9db35c6952c9aa9df394b74c7",
+    "sources": {
+      "benchmarks/comparative/run.py": "0d8aea30edd509d2377e82aa61ab646e51250921a4fe54ccbfd6d715512e863a",
+      "benchmarks/comparative/worker.py": "e076bf10f359fca8c76a29f210a2e4d629bc995288927a5f31e5719becc15f93",
+      "tests/reference/acceptance.json": "9b5cb1d8ac9cabc5228e8d673ceb2eee4ee0a57e4898ecc8f8a58186f29b7856",
+      "tests/reference/generators/conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+      "tests/reference/generators/dop853_reference.py": "c49377a6d869de26bfa7cb436f00da08b3edba47c42b0fa5428dcb63b08f2c85",
+      "tests/reference/generators/export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+      "tests/reference/generators/generate_fixtures.py": "f5e087546de59c407fd3c1cd7f107cdd8984f3418109e1a196ac86d000dcc6ac",
+      "tests/reference/generators/physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+      "tests/reference/generators/qualify_tudat.py": "ca765c4603d6b99f858a01b1973b7392478bd0ebe747a8522a2a64e34ae325f9",
+      "tests/reference/generators/scenarios.py": "748d87748f7bfb92d277908ad6dc7714e74091754befeb0128744484368e2e7d",
+      "tests/reference/generators/tudat_reference.py": "5f00a0235c4b92aab2598d19e604b3937ffac71a6f93c89501edbf780d8aa913",
+      "tests/reference/scenarios/albedo.json": "7d236650273c066d3a8f7402894f4d8beab71d1e63bef7cda95d74cea312ef4a",
+      "tests/reference/scenarios/case_c_short.json": "00c1d48c0fe9d626196a6be3514dec22aa9068d4751217df90f367de55976fd6",
+      "tests/reference/scenarios/coupled_case_a.json": "90a37d4b68b5526b0c0c661fd06da26d6313aca9fa3b704fc79f954b58251882",
+      "tests/reference/scenarios/coupled_case_b.json": "ba6e41b81fecdb7e0e4a3080104daeddadb3121b84f0e457aebf093f8b467b44",
+      "tests/reference/scenarios/drag_flat_plate.json": "2174e9ad8e572251605ea75f9dd6c0edf94c5aa088e56e74720a323891cb9361",
+      "tests/reference/scenarios/drag_sentman.json": "c7f447f46cb751ea36265acd7a1c13e18e78cdbce0d70b2c0deb30698ad7a581",
+      "tests/reference/scenarios/eclipse_conical.json": "a2cd687f30b5034e4799446cad81fba89a0c7beef2801af167cc651774379a2d",
+      "tests/reference/scenarios/eclipse_cylindrical.json": "2adc680f2547cb35f7bbd2d16658a8bab938ee030c4d82e118fbe27c2a0b371a",
+      "tests/reference/scenarios/gravity_gradient.json": "6e2bd45ab01dc1cf46357aba2048b9a455023df8bc0de0aee9f801ce0289c07b",
+      "tests/reference/scenarios/j2_equatorial.json": "368edbd99fe3361dc41b62642bc80f7a1b68170160457d3ae2d3048131a90d7e",
+      "tests/reference/scenarios/j2_inclined.json": "228bb9d0031771348500216b8b1834a66f2389274dc56df8ef6d7b88f7acd270",
+      "tests/reference/scenarios/srp.json": "6dcb45e1802309914c0c3f35044783738a14dd1906f5b68004d565a176d17b1a",
+      "tests/reference/scenarios/torque_free_elongated.json": "3b87a030eaffeed8ad1c117622aef272985c19e2c61acbd92416c47017d261d6",
+      "tests/reference/scenarios/torque_free_spherical.json": "e2faad3b09286cd75a05ddf0e4ce85478e1d5725c31eb418a872268fa35d97a0",
+      "tests/reference/scenarios/torque_free_symmetric.json": "81a12a7bf9aaabca1a74c245d65466c4ea352aeb88a835e86d58d701bd7105e4",
+      "tests/reference/scenarios/two_body_circular.json": "9f30b876ec0360e5ac51ab515b40a6c17c48ec8d11f6551e307253b809cc0316",
+      "tests/reference/scenarios/two_body_eccentric.json": "9d01f096955fb68bedf0747942277d02037546ec34ce6631538473ad2285d7ad"
+    },
+    "configs": [
+      {
+        "name": "two_body_circular",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "two_body_circular",
+        "tool": "scipy",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "two_body_circular",
+        "tool": "tudat",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "two_body_circular",
+        "tool": "cpp",
+        "duration_s": 21600.0,
+        "cadence_s": 30.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "two_body_circular",
+        "tool": "scipy",
+        "duration_s": 21600.0,
+        "cadence_s": 30.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "two_body_circular",
+        "tool": "tudat",
+        "duration_s": 21600.0,
+        "cadence_s": 30.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "scipy",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "tudat",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "cpp",
+        "duration_s": 21600.0,
+        "cadence_s": 30.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "scipy",
+        "duration_s": 21600.0,
+        "cadence_s": 30.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "tudat",
+        "duration_s": 21600.0,
+        "cadence_s": 30.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "torque_free_elongated",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "torque_free_elongated",
+        "tool": "scipy",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "torque_free_elongated",
+        "tool": "tudat",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "torque_free_elongated",
+        "tool": "cpp",
+        "duration_s": 1800.0,
+        "cadence_s": 5.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "torque_free_elongated",
+        "tool": "scipy",
+        "duration_s": 1800.0,
+        "cadence_s": 5.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "torque_free_elongated",
+        "tool": "tudat",
+        "duration_s": 1800.0,
+        "cadence_s": 5.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "drag_flat_plate",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "drag_flat_plate",
+        "tool": "scipy",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "drag_flat_plate",
+        "tool": "tudat",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "drag_flat_plate",
+        "tool": "cpp",
+        "duration_s": 3600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "drag_flat_plate",
+        "tool": "scipy",
+        "duration_s": 3600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "drag_flat_plate",
+        "tool": "tudat",
+        "duration_s": 3600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "scipy",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "tudat",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "cpp",
+        "duration_s": 21600.0,
+        "cadence_s": 30.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "scipy",
+        "duration_s": 21600.0,
+        "cadence_s": 30.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "tudat",
+        "duration_s": 21600.0,
+        "cadence_s": 30.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_b",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_b",
+        "tool": "scipy",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_b",
+        "tool": "tudat",
+        "duration_s": 600.0,
+        "cadence_s": 10.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_b",
+        "tool": "cpp",
+        "duration_s": 21600.0,
+        "cadence_s": 30.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_b",
+        "tool": "scipy",
+        "duration_s": 21600.0,
+        "cadence_s": 30.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_b",
+        "tool": "tudat",
+        "duration_s": 21600.0,
+        "cadence_s": 30.0,
+        "members": 1,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 8,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "scipy",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 8,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "tudat",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 8,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "scipy",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "tudat",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 1,
+        "route": "batch"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 2,
+        "route": "batch"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 4,
+        "route": "batch"
+      },
+      {
+        "name": "j2_inclined",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 8,
+        "route": "batch"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 8,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "scipy",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 8,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "tudat",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 8,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "scipy",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "tudat",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 1,
+        "route": "sequential"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 1,
+        "route": "batch"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 2,
+        "route": "batch"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 4,
+        "route": "batch"
+      },
+      {
+        "name": "coupled_case_a",
+        "tool": "cpp",
+        "duration_s": 600.0,
+        "cadence_s": 30.0,
+        "members": 64,
+        "workers": 8,
+        "route": "batch"
+      }
+    ],
+    "repeats": 3,
+    "warmups": 1,
+    "tudat_python": "/home/user/leo-release-tools/tudat-env/bin/python3.10",
+    "python": "/usr/bin/python3"
+  },
+  "rows": [
+    {
+      "name": "two_body_circular",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.000113708,
+      "min_seconds": 0.000113543,
+      "max_seconds": 0.000129839,
+      "trajectories_per_second": 8794.45597495339,
+      "repetitions_seconds": [
+        0.000113543,
+        0.000129839,
+        0.000113708
+      ],
+      "achieved_accuracy": {
+        "position_m": 2.6944614821563044e-08,
+        "velocity_m_s": 2.518003057031297e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "bf304862472ae885794a675a17c7a829b0c91cc5019fb05609e791a5f18c025d",
+      "raw_file": "000-two_body_circular-cpp-1-1-sequential-raw.json",
+      "raw_sha256": "392054d579bf6e4ece86a72469da8a4e79af2d02efc4b4c93a2c90b238a1b817",
+      "setup_seconds": 0.000342677,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.002879515988752246,
+      "rhs_evaluations_per_repeat": [
+        727,
+        727,
+        727
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/000-two_body_circular-cpp-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/000-two_body_circular-cpp-1-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "1",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "two_body_circular",
+      "tool": "scipy",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.09493277201545425,
+      "min_seconds": 0.09145174702280201,
+      "max_seconds": 0.09959830000298098,
+      "trajectories_per_second": 10.533770148808133,
+      "repetitions_seconds": [
+        0.09145174702280201,
+        0.09493277201545425,
+        0.09959830000298098
+      ],
+      "achieved_accuracy": {
+        "position_m": 6.401784291894883e-09,
+        "velocity_m_s": 9.363821064641343e-12,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "bf304862472ae885794a675a17c7a829b0c91cc5019fb05609e791a5f18c025d",
+      "raw_file": "001-two_body_circular-scipy-1-1-sequential-raw.json",
+      "raw_sha256": "9a09299e3a29a587402cc9138a5a0e959c4be5f0fa48a2c3f9c6dd476557d169",
+      "setup_seconds": 0.00038311700336635113,
+      "import_seconds": 0.4488939579750877,
+      "python_solver_seconds": [
+        0.09144310501869768,
+        0.09492541701183654,
+        0.09959134500240907
+      ],
+      "sampling_seconds": [
+        8.642004104331136e-06,
+        7.355003617703915e-06,
+        6.955000571906567e-06
+      ],
+      "repeated_setup_seconds": [
+        4.3001986341550946e-05,
+        4.0615006582811475e-05,
+        3.778599784709513e-05
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.9485083130130079,
+      "rhs_evaluations_per_repeat": [
+        941,
+        941,
+        941
+      ],
+      "process_peak_rss_bytes": 78229504,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 6832,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          8.844464493449777e-05,
+          8.802069496596232e-05,
+          9.878344004391692e-05
+        ],
+        "rhs_sink": -2224.360499006829,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/001-two_body_circular-scipy-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/001-two_body_circular-scipy-1-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "two_body_circular",
+      "tool": "tudat",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.001736061996780336,
+      "min_seconds": 0.0016319499700330198,
+      "max_seconds": 0.002013663004618138,
+      "trajectories_per_second": 576.0162954172023,
+      "repetitions_seconds": [
+        0.001736061996780336,
+        0.002013663004618138,
+        0.0016319499700330198
+      ],
+      "achieved_accuracy": {
+        "position_m": 1.3683660410182426e-08,
+        "velocity_m_s": 6.821210263296962e-12,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "bf304862472ae885794a675a17c7a829b0c91cc5019fb05609e791a5f18c025d",
+      "raw_file": "002-two_body_circular-tudat-1-1-sequential-raw.json",
+      "raw_sha256": "d190ddce1a72fdc6c00c5283b81094b4bad3f01916f7576661cbf002abc31d12",
+      "setup_seconds": 0.00024784202105365694,
+      "import_seconds": 5.493071716016857,
+      "python_solver_seconds": [
+        0.0016457370074931532,
+        0.0019164140103384852,
+        0.0015487649943679571
+      ],
+      "sampling_seconds": [
+        9.032498928718269e-05,
+        9.724899427965283e-05,
+        8.318497566506267e-05
+      ],
+      "repeated_setup_seconds": [
+        0.00022085598902776837,
+        0.00021092197857797146,
+        0.00023016298655420542
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 5.554543337988434,
+      "rhs_evaluations_per_repeat": [
+        1573.0,
+        1573.0,
+        1573.0
+      ],
+      "process_peak_rss_bytes": 262070272,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 6832,
+      "diagnostics": {},
+      "command": [
+        "/home/user/leo-release-tools/tudat-env/bin/python3.10",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/002-two_body_circular-tudat-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/002-two_body_circular-tudat-1-1-sequential-raw.json",
+        "--tool",
+        "tudat",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "two_body_circular",
+      "tool": "cpp",
+      "duration_s": 21600.0,
+      "cadence_s": 30.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.00439884,
+      "min_seconds": 0.00438219,
+      "max_seconds": 0.004460994,
+      "trajectories_per_second": 227.33266042865844,
+      "repetitions_seconds": [
+        0.00439884,
+        0.00438219,
+        0.004460994
+      ],
+      "achieved_accuracy": {
+        "position_m": 8.239820340974697e-06,
+        "velocity_m_s": 8.615196003642923e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "2bb1d7bd8d105e7d4974caf1c09d509bcf45dacb17c80e74c3beb2b4ec1ea72a",
+      "raw_file": "003-two_body_circular-cpp-1-1-sequential-raw.json",
+      "raw_sha256": "eb990acc75a7866c80f91ffcc2aa5d4fb6ee2cc8f1322dc8ce14097bbf2559ac",
+      "setup_seconds": 0.001332836,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.024084325996227562,
+      "rhs_evaluations_per_repeat": [
+        25927,
+        25927,
+        25927
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/003-two_body_circular-cpp-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/003-two_body_circular-cpp-1-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "1",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "two_body_circular",
+      "tool": "scipy",
+      "duration_s": 21600.0,
+      "cadence_s": 30.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 4.06299578899052,
+      "min_seconds": 3.908165956992889,
+      "max_seconds": 4.31505549402209,
+      "trajectories_per_second": 0.24612380911387977,
+      "repetitions_seconds": [
+        4.06299578899052,
+        3.908165956992889,
+        4.31505549402209
+      ],
+      "achieved_accuracy": {
+        "position_m": 2.161471000506363e-06,
+        "velocity_m_s": 2.239146079292683e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "2bb1d7bd8d105e7d4974caf1c09d509bcf45dacb17c80e74c3beb2b4ec1ea72a",
+      "raw_file": "004-two_body_circular-scipy-1-1-sequential-raw.json",
+      "raw_sha256": "889ec6cda6556ab056cd915eedb4c161f95d610ea90bcde80b1563427633c8d2",
+      "setup_seconds": 0.0006046550115570426,
+      "import_seconds": 0.43972477098577656,
+      "python_solver_seconds": [
+        4.062951656989753,
+        3.9081043989863247,
+        4.314976726018358
+      ],
+      "sampling_seconds": [
+        4.4132000766694546e-05,
+        6.155800656415522e-05,
+        7.876800373196602e-05
+      ],
+      "repeated_setup_seconds": [
+        6.513198604807258e-05,
+        6.744099664501846e-05,
+        5.610601510852575e-05
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 16.927425563015277,
+      "rhs_evaluations_per_repeat": [
+        28121,
+        28121,
+        28121
+      ],
+      "process_peak_rss_bytes": 79597568,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 80752,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          0.00015303904510801657,
+          0.0001448872200853657,
+          0.00011736004002159461
+        ],
+        "rhs_sink": -2224.360499006829,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/004-two_body_circular-scipy-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/004-two_body_circular-scipy-1-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "two_body_circular",
+      "tool": "tudat",
+      "duration_s": 21600.0,
+      "cadence_s": 30.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.09869898899341933,
+      "min_seconds": 0.08876365699688904,
+      "max_seconds": 0.10641773999668658,
+      "trajectories_per_second": 10.13181604187125,
+      "repetitions_seconds": [
+        0.10641773999668658,
+        0.08876365699688904,
+        0.09869898899341933
+      ],
+      "achieved_accuracy": {
+        "position_m": 4.654561765455665e-07,
+        "velocity_m_s": 4.455691030738165e-10,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "2bb1d7bd8d105e7d4974caf1c09d509bcf45dacb17c80e74c3beb2b4ec1ea72a",
+      "raw_file": "005-two_body_circular-tudat-1-1-sequential-raw.json",
+      "raw_sha256": "c630be1a629f104448da91efe3b6cc05bf79307b322db6e67311aaea5e8e098c",
+      "setup_seconds": 0.0008534369990229607,
+      "import_seconds": 7.670039762975648,
+      "python_solver_seconds": [
+        0.10357318099704571,
+        0.08631790999788791,
+        0.09582343499641865
+      ],
+      "sampling_seconds": [
+        0.002844558999640867,
+        0.0024457469990011305,
+        0.0028755539970006794
+      ],
+      "repeated_setup_seconds": [
+        0.004306855000322685,
+        0.0019921100174542516,
+        0.002099591016303748
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 8.208629802014912,
+      "rhs_evaluations_per_repeat": [
+        56173.0,
+        56173.0,
+        56173.0
+      ],
+      "process_peak_rss_bytes": 262475776,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 80752,
+      "diagnostics": {},
+      "command": [
+        "/home/user/leo-release-tools/tudat-env/bin/python3.10",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/005-two_body_circular-tudat-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/005-two_body_circular-tudat-1-1-sequential-raw.json",
+        "--tool",
+        "tudat",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.000143376,
+      "min_seconds": 0.000142972,
+      "max_seconds": 0.000284911,
+      "trajectories_per_second": 6974.668005802924,
+      "repetitions_seconds": [
+        0.000284911,
+        0.000143376,
+        0.000142972
+      ],
+      "achieved_accuracy": {
+        "position_m": 2.146718736618665e-08,
+        "velocity_m_s": 1.929865463709843e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "a77288ff8dac0d8e01f427905b2c8b3aced9715fe868181d7eb4d24af2c53d93",
+      "raw_file": "006-j2_inclined-cpp-1-1-sequential-raw.json",
+      "raw_sha256": "630bde4b119a3d9d44bb39d97e0fa7a5fe014b3c5f1ebf934729c04c3724a9a7",
+      "setup_seconds": 0.000762233,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.004831775004277006,
+      "rhs_evaluations_per_repeat": [
+        727,
+        727,
+        727
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/006-j2_inclined-cpp-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/006-j2_inclined-cpp-1-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "1",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "scipy",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.15187670796876773,
+      "min_seconds": 0.1510500209988095,
+      "max_seconds": 0.1546720440092031,
+      "trajectories_per_second": 6.584288093771708,
+      "repetitions_seconds": [
+        0.15187670796876773,
+        0.1546720440092031,
+        0.1510500209988095
+      ],
+      "achieved_accuracy": {
+        "position_m": 3.8680731611876166e-09,
+        "velocity_m_s": 1.1138989715542166e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "a77288ff8dac0d8e01f427905b2c8b3aced9715fe868181d7eb4d24af2c53d93",
+      "raw_file": "007-j2_inclined-scipy-1-1-sequential-raw.json",
+      "raw_sha256": "74c5b140019d776f2ee69dab754809198a3d6a663481a67608d15c5e06f03a3e",
+      "setup_seconds": 0.0008822850068099797,
+      "import_seconds": 0.5915878980013076,
+      "python_solver_seconds": [
+        0.15186682497733273,
+        0.1546639340231195,
+        0.15104197300388478
+      ],
+      "sampling_seconds": [
+        9.882991435006261e-06,
+        8.109986083582044e-06,
+        8.047994924709201e-06
+      ],
+      "repeated_setup_seconds": [
+        4.5622000470757484e-05,
+        4.4437998440116644e-05,
+        4.1950028389692307e-05
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 1.418162078014575,
+      "rhs_evaluations_per_repeat": [
+        941,
+        941,
+        941
+      ],
+      "process_peak_rss_bytes": 78458880,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 6832,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          0.0001335300899518188,
+          0.00014132166994386354,
+          0.00014725034998264164
+        ],
+        "rhs_sink": -2755.8820014808603,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/007-j2_inclined-scipy-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/007-j2_inclined-scipy-1-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "tudat",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.0054626930213999,
+      "min_seconds": 0.003726156981429085,
+      "max_seconds": 0.005530471011297777,
+      "trajectories_per_second": 183.05989300195645,
+      "repetitions_seconds": [
+        0.005530471011297777,
+        0.003726156981429085,
+        0.0054626930213999
+      ],
+      "achieved_accuracy": {
+        "position_m": 6.333678266375998e-09,
+        "velocity_m_s": 1.2544764307798434e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "a77288ff8dac0d8e01f427905b2c8b3aced9715fe868181d7eb4d24af2c53d93",
+      "raw_file": "008-j2_inclined-tudat-1-1-sequential-raw.json",
+      "raw_sha256": "6fcac28b9cdb61c3ad02c211e546262abb3bccabcab2f03f4118a109d3e99800",
+      "setup_seconds": 0.0007390490209218115,
+      "import_seconds": 6.078643859014846,
+      "python_solver_seconds": [
+        0.005254643998341635,
+        0.003527023975038901,
+        0.005181462998734787
+      ],
+      "sampling_seconds": [
+        0.0002758270129561424,
+        0.00019913300639018416,
+        0.0002812300226651132
+      ],
+      "repeated_setup_seconds": [
+        0.0009709980222396553,
+        0.0005426570132840425,
+        0.0004661590210162103
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 6.193724725977518,
+      "rhs_evaluations_per_repeat": [
+        1573.0,
+        1573.0,
+        1573.0
+      ],
+      "process_peak_rss_bytes": 262160384,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 6832,
+      "diagnostics": {},
+      "command": [
+        "/home/user/leo-release-tools/tudat-env/bin/python3.10",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/008-j2_inclined-tudat-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/008-j2_inclined-tudat-1-1-sequential-raw.json",
+        "--tool",
+        "tudat",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "cpp",
+      "duration_s": 21600.0,
+      "cadence_s": 30.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.004602237,
+      "min_seconds": 0.004586099,
+      "max_seconds": 0.00465676,
+      "trajectories_per_second": 217.28563739763945,
+      "repetitions_seconds": [
+        0.00465676,
+        0.004586099,
+        0.004602237
+      ],
+      "achieved_accuracy": {
+        "position_m": 7.65510895359767e-06,
+        "velocity_m_s": 7.72076064094111e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "8fa511f08cf86a27004907da194885c9563c99736cf7711865b2a2f7b7852242",
+      "raw_file": "009-j2_inclined-cpp-1-1-sequential-raw.json",
+      "raw_sha256": "4c28c20e02f9087b8799406b6a786c6ba7d45637fd6a0bb8600065da82d282e3",
+      "setup_seconds": 0.001631124,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.025183477002428845,
+      "rhs_evaluations_per_repeat": [
+        25927,
+        25927,
+        25927
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/009-j2_inclined-cpp-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/009-j2_inclined-cpp-1-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "1",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "scipy",
+      "duration_s": 21600.0,
+      "cadence_s": 30.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 3.670094136003172,
+      "min_seconds": 3.074813289975282,
+      "max_seconds": 5.031014949025121,
+      "trajectories_per_second": 0.2724725750737898,
+      "repetitions_seconds": [
+        3.074813289975282,
+        3.670094136003172,
+        5.031014949025121
+      ],
+      "achieved_accuracy": {
+        "position_m": 8.923675388073906e-07,
+        "velocity_m_s": 9.174624444481289e-10,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "8fa511f08cf86a27004907da194885c9563c99736cf7711865b2a2f7b7852242",
+      "raw_file": "010-j2_inclined-scipy-1-1-sequential-raw.json",
+      "raw_sha256": "bf0983e76de3834a21571dd57de904aee2ab86c2572112cb5bc321cac06634dd",
+      "setup_seconds": 0.0006061949825379997,
+      "import_seconds": 0.4346539260004647,
+      "python_solver_seconds": [
+        3.074734070978593,
+        3.6700162019988056,
+        5.030970423016697
+      ],
+      "sampling_seconds": [
+        7.921899668872356e-05,
+        7.793400436639786e-05,
+        4.452600842341781e-05
+      ],
+      "repeated_setup_seconds": [
+        6.141301128081977e-05,
+        0.00027897499967366457,
+        6.0233986005187035e-05
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 15.598737789987354,
+      "rhs_evaluations_per_repeat": [
+        28121,
+        28121,
+        28121
+      ],
+      "process_peak_rss_bytes": 79372288,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 80752,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          0.00011406911493395455,
+          0.00019278515508631245,
+          0.0001926888749585487
+        ],
+        "rhs_sink": -2755.8820014808603,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/010-j2_inclined-scipy-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/010-j2_inclined-scipy-1-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "tudat",
+      "duration_s": 21600.0,
+      "cadence_s": 30.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.10254719702061266,
+      "min_seconds": 0.0960147739679087,
+      "max_seconds": 0.1126672160171438,
+      "trajectories_per_second": 9.75160734816568,
+      "repetitions_seconds": [
+        0.0960147739679087,
+        0.1126672160171438,
+        0.10254719702061266
+      ],
+      "achieved_accuracy": {
+        "position_m": 7.002889346085424e-07,
+        "velocity_m_s": 6.980240002568393e-10,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "8fa511f08cf86a27004907da194885c9563c99736cf7711865b2a2f7b7852242",
+      "raw_file": "011-j2_inclined-tudat-1-1-sequential-raw.json",
+      "raw_sha256": "917bfa4250f9d31fe82fabb7c6acc36915d67486f85d8531a18594ad345066df",
+      "setup_seconds": 0.0004119469958823174,
+      "import_seconds": 6.03957483798149,
+      "python_solver_seconds": [
+        0.09493254197877832,
+        0.10997917500208132,
+        0.10144096601288766
+      ],
+      "sampling_seconds": [
+        0.0010822319891303778,
+        0.002688041015062481,
+        0.0011062310077250004
+      ],
+      "repeated_setup_seconds": [
+        0.002531873993575573,
+        0.0007412850100081414,
+        0.0011148600024171174
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 6.524887273000786,
+      "rhs_evaluations_per_repeat": [
+        56173.0,
+        56173.0,
+        56173.0
+      ],
+      "process_peak_rss_bytes": 262483968,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 80752,
+      "diagnostics": {},
+      "command": [
+        "/home/user/leo-release-tools/tudat-env/bin/python3.10",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/011-j2_inclined-tudat-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/011-j2_inclined-tudat-1-1-sequential-raw.json",
+        "--tool",
+        "tudat",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "torque_free_elongated",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.000132088,
+      "min_seconds": 0.00013178,
+      "max_seconds": 0.00014609,
+      "trajectories_per_second": 7570.710435467264,
+      "repetitions_seconds": [
+        0.00013178,
+        0.00014609,
+        0.000132088
+      ],
+      "achieved_accuracy": {
+        "position_m": 1.2675912667826004e-08,
+        "velocity_m_s": 2.8311446687936733e-11,
+        "attitude_rad": 2.5608937202913e-15,
+        "angular_rate_rad_s": 4.193494424498669e-18
+      },
+      "scenario_sha256": "7d27ebd7d7b76db6697ee0b520debadf3f3895684838856a81bb1d838be95f39",
+      "raw_file": "012-torque_free_elongated-cpp-1-1-sequential-raw.json",
+      "raw_sha256": "cd3acde86d0be38c438aed522a1452c5f9683e3cb01451a1f165914009678f80",
+      "setup_seconds": 0.000393519,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.0028695349756162614,
+      "rhs_evaluations_per_repeat": [
+        812,
+        812,
+        812
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/012-torque_free_elongated-cpp-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/012-torque_free_elongated-cpp-1-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "1",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "torque_free_elongated",
+      "tool": "scipy",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.09440984600223601,
+      "min_seconds": 0.09389963102876209,
+      "max_seconds": 0.10037272796034813,
+      "trajectories_per_second": 10.592115572101621,
+      "repetitions_seconds": [
+        0.09389963102876209,
+        0.09440984600223601,
+        0.10037272796034813
+      ],
+      "achieved_accuracy": {
+        "position_m": 6.812037359144442e-09,
+        "velocity_m_s": 8.640199666842818e-12,
+        "attitude_rad": 1.8143316843804122e-15,
+        "angular_rate_rad_s": 4.393695025417561e-18
+      },
+      "scenario_sha256": "7d27ebd7d7b76db6697ee0b520debadf3f3895684838856a81bb1d838be95f39",
+      "raw_file": "013-torque_free_elongated-scipy-1-1-sequential-raw.json",
+      "raw_sha256": "37639fa38ca83542edb13cfaa1cbbf3dddbf1422d3440b6f4165ddef555d55ae",
+      "setup_seconds": 0.000385537015972659,
+      "import_seconds": 0.4593390540103428,
+      "python_solver_seconds": [
+        0.09389143201406114,
+        0.09440246000303887,
+        0.1003647759789601
+      ],
+      "sampling_seconds": [
+        8.199014700949192e-06,
+        7.385999197140336e-06,
+        7.951981388032436e-06
+      ],
+      "repeated_setup_seconds": [
+        4.02109872084111e-05,
+        3.704699338413775e-05,
+        3.672798629850149e-05
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 1.0155276280129328,
+      "rhs_evaluations_per_repeat": [
+        953,
+        953,
+        953
+      ],
+      "process_peak_rss_bytes": 77905920,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 6832,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          9.55915849772282e-05,
+          0.00012562735500978305,
+          0.0001408439099031966
+        ],
+        "rhs_sink": -4650.873892343419,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/013-torque_free_elongated-scipy-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/013-torque_free_elongated-scipy-1-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "torque_free_elongated",
+      "tool": "tudat",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.001712755998596549,
+      "min_seconds": 0.0016911599959712476,
+      "max_seconds": 0.0017632720118854195,
+      "trajectories_per_second": 583.8543264886597,
+      "repetitions_seconds": [
+        0.0017632720118854195,
+        0.0016911599959712476,
+        0.001712755998596549
+      ],
+      "achieved_accuracy": {
+        "position_m": 1.0381218422953018e-08,
+        "velocity_m_s": 7.059577317822925e-12,
+        "attitude_rad": 1.516430134756745e-15,
+        "angular_rate_rad_s": 3.635312261569777e-18
+      },
+      "scenario_sha256": "7d27ebd7d7b76db6697ee0b520debadf3f3895684838856a81bb1d838be95f39",
+      "raw_file": "014-torque_free_elongated-tudat-1-1-sequential-raw.json",
+      "raw_sha256": "fdd42f797ec4237881f4ece98e255376911c00f4ddfa73357aab96edd3417e61",
+      "setup_seconds": 0.00021370299509726465,
+      "import_seconds": 5.45188842000789,
+      "python_solver_seconds": [
+        0.001676438987487927,
+        0.0016071010031737387,
+        0.0016284089942928404
+      ],
+      "sampling_seconds": [
+        8.683302439749241e-05,
+        8.405899279750884e-05,
+        8.434700430370867e-05
+      ],
+      "repeated_setup_seconds": [
+        0.00025197200011461973,
+        0.00020878200302831829,
+        0.0001739129947964102
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 5.51032688000123,
+      "rhs_evaluations_per_repeat": [
+        1573.0,
+        1573.0,
+        1573.0
+      ],
+      "process_peak_rss_bytes": 262180864,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 6832,
+      "diagnostics": {},
+      "command": [
+        "/home/user/leo-release-tools/tudat-env/bin/python3.10",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/014-torque_free_elongated-tudat-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/014-torque_free_elongated-tudat-1-1-sequential-raw.json",
+        "--tool",
+        "tudat",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "torque_free_elongated",
+      "tool": "cpp",
+      "duration_s": 1800.0,
+      "cadence_s": 5.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.000422464,
+      "min_seconds": 0.000413464,
+      "max_seconds": 0.000437566,
+      "trajectories_per_second": 2367.0655961218,
+      "repetitions_seconds": [
+        0.000413464,
+        0.000437566,
+        0.000422464
+      ],
+      "achieved_accuracy": {
+        "position_m": 4.9467608627260155e-08,
+        "velocity_m_s": 5.412412923332193e-11,
+        "attitude_rad": 8.236358917029717e-15,
+        "angular_rate_rad_s": 1.010360669074586e-17
+      },
+      "scenario_sha256": "e57d4c96b420942eb12851101cc826dee6018f4b143920cb4e2ac974329988a1",
+      "raw_file": "015-torque_free_elongated-cpp-1-1-sequential-raw.json",
+      "raw_sha256": "89e87b0c6582fc8051097ebcd22002909f8d6fbc832b7a062a09ef7eaeea8c1e",
+      "setup_seconds": 0.00091856,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.006756900023901835,
+      "rhs_evaluations_per_repeat": [
+        2434,
+        2434,
+        2434
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/015-torque_free_elongated-cpp-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/015-torque_free_elongated-cpp-1-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "1",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "torque_free_elongated",
+      "tool": "scipy",
+      "duration_s": 1800.0,
+      "cadence_s": 5.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.2789286450133659,
+      "min_seconds": 0.2709993860335089,
+      "max_seconds": 0.2819236990180798,
+      "trajectories_per_second": 3.585146301313303,
+      "repetitions_seconds": [
+        0.2709993860335089,
+        0.2789286450133659,
+        0.2819236990180798
+      ],
+      "achieved_accuracy": {
+        "position_m": 2.7534130985206142e-08,
+        "velocity_m_s": 3.23670240491524e-11,
+        "attitude_rad": 5.443491507242976e-15,
+        "angular_rate_rad_s": 5.727895077200639e-18
+      },
+      "scenario_sha256": "e57d4c96b420942eb12851101cc826dee6018f4b143920cb4e2ac974329988a1",
+      "raw_file": "016-torque_free_elongated-scipy-1-1-sequential-raw.json",
+      "raw_sha256": "dbf536c85061ecc4b77e1f168726c9860e1a98c5a97385295476372f3120dd6e",
+      "setup_seconds": 0.0004619449900928885,
+      "import_seconds": 0.4890867730136961,
+      "python_solver_seconds": [
+        0.2709561640222091,
+        0.2788942689949181,
+        0.281917237007292
+      ],
+      "sampling_seconds": [
+        4.322201129980385e-05,
+        3.437601844780147e-05,
+        6.462010787799954e-06
+      ],
+      "repeated_setup_seconds": [
+        4.780301242135465e-05,
+        4.6540022594854236e-05,
+        4.244098090566695e-05
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 1.7156859250098933,
+      "rhs_evaluations_per_repeat": [
+        2753,
+        2753,
+        2753
+      ],
+      "process_peak_rss_bytes": 78864384,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 40432,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          0.00010807176498929038,
+          9.815324505325406e-05,
+          8.293835504446179e-05
+        ],
+        "rhs_sink": -4650.873892343419,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/016-torque_free_elongated-scipy-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/016-torque_free_elongated-scipy-1-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "torque_free_elongated",
+      "tool": "tudat",
+      "duration_s": 1800.0,
+      "cadence_s": 5.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.005979861976811662,
+      "min_seconds": 0.0058218280028086156,
+      "max_seconds": 0.006633304030401632,
+      "trajectories_per_second": 167.2279400223179,
+      "repetitions_seconds": [
+        0.0058218280028086156,
+        0.005979861976811662,
+        0.006633304030401632
+      ],
+      "achieved_accuracy": {
+        "position_m": 3.829763307227211e-08,
+        "velocity_m_s": 4.553892285132275e-11,
+        "attitude_rad": 5.0888922570839056e-15,
+        "angular_rate_rad_s": 3.635312261569777e-18
+      },
+      "scenario_sha256": "e57d4c96b420942eb12851101cc826dee6018f4b143920cb4e2ac974329988a1",
+      "raw_file": "017-torque_free_elongated-tudat-1-1-sequential-raw.json",
+      "raw_sha256": "ea8b4ab6f5254f633e60e1a267e6e4016637aa908445039f030a258c08229c09",
+      "setup_seconds": 0.000326312001561746,
+      "import_seconds": 5.424404356017476,
+      "python_solver_seconds": [
+        0.005466389004141092,
+        0.005606096005067229,
+        0.00629713901435025
+      ],
+      "sampling_seconds": [
+        0.00035543899866752326,
+        0.00037376597174443305,
+        0.0003361650160513818
+      ],
+      "repeated_setup_seconds": [
+        0.000528087024576962,
+        0.00043113500578328967,
+        0.0005372769956011325
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 5.505709196993848,
+      "rhs_evaluations_per_repeat": [
+        4693.0,
+        4693.0,
+        4693.0
+      ],
+      "process_peak_rss_bytes": 262381568,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 40432,
+      "diagnostics": {},
+      "command": [
+        "/home/user/leo-release-tools/tudat-env/bin/python3.10",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/017-torque_free_elongated-tudat-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/017-torque_free_elongated-tudat-1-1-sequential-raw.json",
+        "--tool",
+        "tudat",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "drag_flat_plate",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.0009925,
+      "min_seconds": 0.000917738,
+      "max_seconds": 0.001042163,
+      "trajectories_per_second": 1007.5566750629724,
+      "repetitions_seconds": [
+        0.000917738,
+        0.0009925,
+        0.001042163
+      ],
+      "achieved_accuracy": {
+        "position_m": 2.4792692061753437e-07,
+        "velocity_m_s": 6.340177849497974e-10,
+        "attitude_rad": 9.737652468100093e-09,
+        "angular_rate_rad_s": 2.365161365102408e-11
+      },
+      "scenario_sha256": "b1c07ea90b7164a7895c9ed61a10eabafec5cf21263c2afc228c4e2aa607faec",
+      "raw_file": "018-drag_flat_plate-cpp-1-1-sequential-raw.json",
+      "raw_sha256": "f429d5a1c8d219a11f8cd6ddd6e6c2fcb696308c4f1e61ee83611c6fba364f27",
+      "setup_seconds": 0.00035252,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.006399042991688475,
+      "rhs_evaluations_per_repeat": [
+        2960,
+        2960,
+        2960
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/018-drag_flat_plate-cpp-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/018-drag_flat_plate-cpp-1-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "1",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "drag_flat_plate",
+      "tool": "scipy",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.3637345479801297,
+      "min_seconds": 0.3453528210229706,
+      "max_seconds": 0.3657628200016916,
+      "trajectories_per_second": 2.749257681331465,
+      "repetitions_seconds": [
+        0.3453528210229706,
+        0.3637345479801297,
+        0.3657628200016916
+      ],
+      "achieved_accuracy": {
+        "position_m": 7.459669999592376e-09,
+        "velocity_m_s": 1.1323117721975661e-11,
+        "attitude_rad": 2.5096708836574643e-11,
+        "angular_rate_rad_s": 9.012112054521344e-14
+      },
+      "scenario_sha256": "b1c07ea90b7164a7895c9ed61a10eabafec5cf21263c2afc228c4e2aa607faec",
+      "raw_file": "019-drag_flat_plate-scipy-1-1-sequential-raw.json",
+      "raw_sha256": "4339b746d9dc083cd85cff16ce78110488f98d29024810c7c5703a6e7aa66254",
+      "setup_seconds": 0.0003836700052488595,
+      "import_seconds": 0.4767980949836783,
+      "python_solver_seconds": [
+        0.34534477701527067,
+        0.3637284039868973,
+        0.36575587501283735
+      ],
+      "sampling_seconds": [
+        8.044007699936628e-06,
+        6.143993232399225e-06,
+        6.94498885422945e-06
+      ],
+      "repeated_setup_seconds": [
+        3.9615988498553634e-05,
+        3.529002424329519e-05,
+        3.49509937223047e-05
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 2.078223163000075,
+      "rhs_evaluations_per_repeat": [
+        1937,
+        1937,
+        1937
+      ],
+      "process_peak_rss_bytes": 78176256,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 6832,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          0.00017860710999229924,
+          0.00017976347502553835,
+          0.00016938009997829795
+        ],
+        "rhs_sink": -5215.998456666079,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/019-drag_flat_plate-scipy-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/019-drag_flat_plate-scipy-1-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "drag_flat_plate",
+      "tool": "tudat",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "UNMATCHED",
+      "reason": "Native Tudat environmental panel equations differ; not an equivalent propagation timing"
+    },
+    {
+      "name": "drag_flat_plate",
+      "tool": "cpp",
+      "duration_s": 3600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.005921216,
+      "min_seconds": 0.005552583,
+      "max_seconds": 0.006150824,
+      "trajectories_per_second": 168.88422918535653,
+      "repetitions_seconds": [
+        0.005552583,
+        0.005921216,
+        0.006150824
+      ],
+      "achieved_accuracy": {
+        "position_m": 8.237082563836414e-06,
+        "velocity_m_s": 8.585883488190312e-09,
+        "attitude_rad": 4.628481912712646e-08,
+        "angular_rate_rad_s": 3.054308266606558e-11
+      },
+      "scenario_sha256": "10be3996332ab5c83b8c8eec6defd45f02f79e3af20ba13a0e749035ff3c748d",
+      "raw_file": "021-drag_flat_plate-cpp-1-1-sequential-raw.json",
+      "raw_sha256": "3cae9095453a30740c9271833879e254699b4f582ed4654cd3a8af76eeb3470c",
+      "setup_seconds": 0.000770439,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.02819626301061362,
+      "rhs_evaluations_per_repeat": [
+        17278,
+        17278,
+        17278
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/021-drag_flat_plate-cpp-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/021-drag_flat_plate-cpp-1-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "1",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "drag_flat_plate",
+      "tool": "scipy",
+      "duration_s": 3600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 2.545357826980762,
+      "min_seconds": 2.3400802820106037,
+      "max_seconds": 2.7063576920190826,
+      "trajectories_per_second": 0.3928720706377752,
+      "repetitions_seconds": [
+        2.3400802820106037,
+        2.7063576920190826,
+        2.545357826980762
+      ],
+      "achieved_accuracy": {
+        "position_m": 6.362542001139464e-08,
+        "velocity_m_s": 7.614811943834676e-11,
+        "attitude_rad": 2.23066860285626e-09,
+        "angular_rate_rad_s": 1.2780719041291304e-12
+      },
+      "scenario_sha256": "10be3996332ab5c83b8c8eec6defd45f02f79e3af20ba13a0e749035ff3c748d",
+      "raw_file": "022-drag_flat_plate-scipy-1-1-sequential-raw.json",
+      "raw_sha256": "be2f39813a067ba116787b463fa69886a9a11633b326487cd04c59750730ef91",
+      "setup_seconds": 0.0004948329878970981,
+      "import_seconds": 0.5096989870071411,
+      "python_solver_seconds": [
+        2.340013472014107,
+        2.7063356960134115,
+        2.545334135997109
+      ],
+      "sampling_seconds": [
+        6.680999649688601e-05,
+        2.199600567109883e-05,
+        2.3690983653068542e-05
+      ],
+      "repeated_setup_seconds": [
+        5.6649005273357034e-05,
+        6.711899186484516e-05,
+        5.53760037291795e-05
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 10.60675076500047,
+      "rhs_evaluations_per_repeat": [
+        11801,
+        11801,
+        11801
+      ],
+      "process_peak_rss_bytes": 78639104,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 40432,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          0.00018688052499783226,
+          0.00019788942488958128,
+          0.0001800443149113562
+        ],
+        "rhs_sink": -5215.998456666079,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/022-drag_flat_plate-scipy-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/022-drag_flat_plate-scipy-1-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "drag_flat_plate",
+      "tool": "tudat",
+      "duration_s": 3600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "UNMATCHED",
+      "reason": "Native Tudat environmental panel equations differ; not an equivalent propagation timing"
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.0028549,
+      "min_seconds": 0.002834337,
+      "max_seconds": 0.00289279,
+      "trajectories_per_second": 350.27496584819085,
+      "repetitions_seconds": [
+        0.00289279,
+        0.0028549,
+        0.002834337
+      ],
+      "achieved_accuracy": {
+        "position_m": 3.487489063917246e-08,
+        "velocity_m_s": 6.286871846897711e-11,
+        "attitude_rad": 1.1682009230544e-10,
+        "angular_rate_rad_s": 1.7781231139688063e-12
+      },
+      "scenario_sha256": "de6c3f9d79fc7a34bdf215629246d145d2923896f7db082a21179f104cf80621",
+      "raw_file": "024-coupled_case_a-cpp-1-1-sequential-raw.json",
+      "raw_sha256": "8357ac95fd800bf6acc17d099565afca971da250468cde7c0d6045afd287fe1e",
+      "setup_seconds": 0.000605542,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.01454373201704584,
+      "rhs_evaluations_per_repeat": [
+        2786,
+        2786,
+        2786
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/024-coupled_case_a-cpp-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/024-coupled_case_a-cpp-1-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "1",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "scipy",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.39833710200036876,
+      "min_seconds": 0.39210556700709276,
+      "max_seconds": 0.41531719398335554,
+      "trajectories_per_second": 2.5104364995833963,
+      "repetitions_seconds": [
+        0.39833710200036876,
+        0.39210556700709276,
+        0.41531719398335554
+      ],
+      "achieved_accuracy": {
+        "position_m": 8.495989867896204e-08,
+        "velocity_m_s": 4.3999156251010807e-10,
+        "attitude_rad": 7.840970726574269e-09,
+        "angular_rate_rad_s": 2.792901866996551e-11
+      },
+      "scenario_sha256": "de6c3f9d79fc7a34bdf215629246d145d2923896f7db082a21179f104cf80621",
+      "raw_file": "025-coupled_case_a-scipy-1-1-sequential-raw.json",
+      "raw_sha256": "c6b69835c4a9b5992a4f21b88aab2dc9133284d6efd06cc0b8c024175e2041e1",
+      "setup_seconds": 0.0003932880063075572,
+      "import_seconds": 0.513786250987323,
+      "python_solver_seconds": [
+        0.3983293350029271,
+        0.3920980260008946,
+        0.4153104959987104
+      ],
+      "sampling_seconds": [
+        7.766997441649437e-06,
+        7.5410061981529e-06,
+        6.697984645143151e-06
+      ],
+      "repeated_setup_seconds": [
+        4.028299008496106e-05,
+        3.617402398958802e-05,
+        3.5289995139464736e-05
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 2.4184577129781246,
+      "rhs_evaluations_per_repeat": [
+        1037,
+        1037,
+        1037
+      ],
+      "process_peak_rss_bytes": 78258176,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 6832,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          0.0003563883749302477,
+          0.0003659656499803532,
+          0.00039082037503249015
+        ],
+        "rhs_sink": -4656.848897176542,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/025-coupled_case_a-scipy-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/025-coupled_case_a-scipy-1-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "tudat",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "UNMATCHED",
+      "reason": "Native Tudat environmental panel equations differ; not an equivalent propagation timing"
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "cpp",
+      "duration_s": 21600.0,
+      "cadence_s": 30.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.067921704,
+      "min_seconds": 0.067793806,
+      "max_seconds": 0.069158483,
+      "trajectories_per_second": 14.722834397676477,
+      "repetitions_seconds": [
+        0.069158483,
+        0.067921704,
+        0.067793806
+      ],
+      "achieved_accuracy": {
+        "position_m": 2.539149977019102e-05,
+        "velocity_m_s": 2.762141430150715e-08,
+        "attitude_rad": 2.0492218475515872e-07,
+        "angular_rate_rad_s": 2.2050039250583255e-11
+      },
+      "scenario_sha256": "8f491916a5cbbaf7747cdd883bd97751b4fc720be15c37fc82626056aa6a0819",
+      "raw_file": "027-coupled_case_a-cpp-1-1-sequential-raw.json",
+      "raw_sha256": "1c77ab7b289e06613a58a9cd0a5582fcf29ee6b3c56c6a682bc6c900179d6a55",
+      "setup_seconds": 0.00130532,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.2834990030096378,
+      "rhs_evaluations_per_repeat": [
+        93901,
+        93901,
+        93901
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/027-coupled_case_a-cpp-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/027-coupled_case_a-cpp-1-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "1",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "scipy",
+      "duration_s": 21600.0,
+      "cadence_s": 30.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 12.065807568986202,
+      "min_seconds": 11.950811744027305,
+      "max_seconds": 12.125086036016,
+      "trajectories_per_second": 0.08287882881294968,
+      "repetitions_seconds": [
+        12.065807568986202,
+        12.125086036016,
+        11.950811744027305
+      ],
+      "achieved_accuracy": {
+        "position_m": 1.3171125992621084e-05,
+        "velocity_m_s": 1.2805732918420123e-08,
+        "attitude_rad": 1.04181524324148e-06,
+        "angular_rate_rad_s": 1.0937647358134375e-10
+      },
+      "scenario_sha256": "8f491916a5cbbaf7747cdd883bd97751b4fc720be15c37fc82626056aa6a0819",
+      "raw_file": "028-coupled_case_a-scipy-1-1-sequential-raw.json",
+      "raw_sha256": "bc59bb9ab4c9702b2ecbde993c24cc093244b27dfe01feca1d7f69bdbfd8ec2a",
+      "setup_seconds": 0.0006363240245264024,
+      "import_seconds": 0.46297756099374965,
+      "python_solver_seconds": [
+        12.065724790008971,
+        12.124990978016285,
+        11.950776152021717
+      ],
+      "sampling_seconds": [
+        8.277897723019123e-05,
+        9.505799971520901e-05,
+        3.559200558811426e-05
+      ],
+      "repeated_setup_seconds": [
+        5.432698526419699e-05,
+        5.364400567486882e-05,
+        5.438199150376022e-05
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 49.16868229498505,
+      "rhs_evaluations_per_repeat": [
+        30305,
+        30305,
+        30305
+      ],
+      "process_peak_rss_bytes": 79466496,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 80752,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          0.00037706019502365963,
+          0.00037164174995268695,
+          0.0003712021750106942
+        ],
+        "rhs_sink": -4656.848897176542,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/028-coupled_case_a-scipy-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/028-coupled_case_a-scipy-1-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "tudat",
+      "duration_s": 21600.0,
+      "cadence_s": 30.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "UNMATCHED",
+      "reason": "Native Tudat environmental panel equations differ; not an equivalent propagation timing"
+    },
+    {
+      "name": "coupled_case_b",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.00140624,
+      "min_seconds": 0.001363453,
+      "max_seconds": 0.001425343,
+      "trajectories_per_second": 711.1161679371942,
+      "repetitions_seconds": [
+        0.00140624,
+        0.001363453,
+        0.001425343
+      ],
+      "achieved_accuracy": {
+        "position_m": 1.3719732128239225e-08,
+        "velocity_m_s": 7.402750541632352e-12,
+        "attitude_rad": 5.809896162237808e-12,
+        "angular_rate_rad_s": 1.1430431287074488e-13
+      },
+      "scenario_sha256": "4b96555784d92dbe9c8b13dfe6ac6ea56b0d1c5dee6c92cbb696404b4ddc03b9",
+      "raw_file": "030-coupled_case_b-cpp-1-1-sequential-raw.json",
+      "raw_sha256": "538a16b5ca691b92ff37d488f2b76ade850d8094bbd7b3a4e009dee8279769ac",
+      "setup_seconds": 0.000287917,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.007796991994837299,
+      "rhs_evaluations_per_repeat": [
+        2057,
+        2057,
+        2057
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/030-coupled_case_b-cpp-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/030-coupled_case_b-cpp-1-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "1",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_b",
+      "tool": "scipy",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.4379120839876123,
+      "min_seconds": 0.42285924198222347,
+      "max_seconds": 0.44286023400491104,
+      "trajectories_per_second": 2.2835633830745996,
+      "repetitions_seconds": [
+        0.4379120839876123,
+        0.44286023400491104,
+        0.42285924198222347
+      ],
+      "achieved_accuracy": {
+        "position_m": 4.839294052409597e-09,
+        "velocity_m_s": 7.378267009511525e-12,
+        "attitude_rad": 1.2508921004788712e-13,
+        "angular_rate_rad_s": 2.4658446918784228e-15
+      },
+      "scenario_sha256": "4b96555784d92dbe9c8b13dfe6ac6ea56b0d1c5dee6c92cbb696404b4ddc03b9",
+      "raw_file": "031-coupled_case_b-scipy-1-1-sequential-raw.json",
+      "raw_sha256": "e13f043e4a991610fd32ca101b80a43871d062efb97cab5e107dc1feb657a2a1",
+      "setup_seconds": 0.00033273198641836643,
+      "import_seconds": 0.5100307569955476,
+      "python_solver_seconds": [
+        0.4379038189945277,
+        0.4428551390010398,
+        0.42285218098550104
+      ],
+      "sampling_seconds": [
+        8.264993084594607e-06,
+        5.095003871247172e-06,
+        7.060996722429991e-06
+      ],
+      "repeated_setup_seconds": [
+        3.7187011912465096e-05,
+        3.699201624840498e-05,
+        3.408899647183716e-05
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 2.516689650976332,
+      "rhs_evaluations_per_repeat": [
+        1109,
+        1109,
+        1109
+      ],
+      "process_peak_rss_bytes": 78675968,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 6832,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          0.00036311322008259595,
+          0.0003682367749570403,
+          0.00035828450505505317
+        ],
+        "rhs_sink": -1244.4887598751952,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/031-coupled_case_b-scipy-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/031-coupled_case_b-scipy-1-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_b",
+      "tool": "tudat",
+      "duration_s": 600.0,
+      "cadence_s": 10.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "UNMATCHED",
+      "reason": "Native Tudat environmental panel equations differ; not an equivalent propagation timing"
+    },
+    {
+      "name": "coupled_case_b",
+      "tool": "cpp",
+      "duration_s": 21600.0,
+      "cadence_s": 30.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.0492686,
+      "min_seconds": 0.049077203,
+      "max_seconds": 0.049834285,
+      "trajectories_per_second": 20.296903098525227,
+      "repetitions_seconds": [
+        0.049834285,
+        0.049077203,
+        0.0492686
+      ],
+      "achieved_accuracy": {
+        "position_m": 4.891316624175455e-06,
+        "velocity_m_s": 9.401140860496309e-09,
+        "attitude_rad": 3.184454825225281e-06,
+        "angular_rate_rad_s": 3.331091042948625e-09
+      },
+      "scenario_sha256": "6c4d34afa96ddb23dada0fdc1281e402a44e79d9f8b83630a4fb7b09c9461604",
+      "raw_file": "033-coupled_case_b-cpp-1-1-sequential-raw.json",
+      "raw_sha256": "a01ab339ecf2e98f0b7b2a024bb22e819aef0218264ad7628370ea19ab1eb5d2",
+      "setup_seconds": 0.0016523,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.20558908500242978,
+      "rhs_evaluations_per_repeat": [
+        73778,
+        73778,
+        73778
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/033-coupled_case_b-cpp-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/033-coupled_case_b-cpp-1-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "1",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_b",
+      "tool": "scipy",
+      "duration_s": 21600.0,
+      "cadence_s": 30.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 12.22945225602598,
+      "min_seconds": 11.769590473006247,
+      "max_seconds": 13.213389665004797,
+      "trajectories_per_second": 0.08176981103199098,
+      "repetitions_seconds": [
+        12.22945225602598,
+        13.213389665004797,
+        11.769590473006247
+      ],
+      "achieved_accuracy": {
+        "position_m": 1.306008498322022e-06,
+        "velocity_m_s": 3.1711199721985602e-09,
+        "attitude_rad": 1.0002125839150836e-06,
+        "angular_rate_rad_s": 1.0431932530958647e-09
+      },
+      "scenario_sha256": "6c4d34afa96ddb23dada0fdc1281e402a44e79d9f8b83630a4fb7b09c9461604",
+      "raw_file": "034-coupled_case_b-scipy-1-1-sequential-raw.json",
+      "raw_sha256": "45e84b4698c1640dd01c637a7f996fea0e94a6b870fe4269a8b8d324bd8b1054",
+      "setup_seconds": 0.00081034199683927,
+      "import_seconds": 0.5329964289849158,
+      "python_solver_seconds": [
+        12.229420551011572,
+        13.213343037001323,
+        11.769517000997439
+      ],
+      "sampling_seconds": [
+        3.1705014407634735e-05,
+        4.662800347432494e-05,
+        7.347200880758464e-05
+      ],
+      "repeated_setup_seconds": [
+        5.4005999118089676e-05,
+        5.614399560727179e-05,
+        5.4561998695135117e-05
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 50.360030607000226,
+      "rhs_evaluations_per_repeat": [
+        31325,
+        31325,
+        31325
+      ],
+      "process_peak_rss_bytes": 79581184,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 80752,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          0.00036856268998235463,
+          0.0003553871549956966,
+          0.00033871334002469664
+        ],
+        "rhs_sink": -1244.4887598751952,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/034-coupled_case_b-scipy-1-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/034-coupled_case_b-scipy-1-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_b",
+      "tool": "tudat",
+      "duration_s": 21600.0,
+      "cadence_s": 30.0,
+      "members": 1,
+      "workers": 1,
+      "route": "sequential",
+      "status": "UNMATCHED",
+      "reason": "Native Tudat environmental panel equations differ; not an equivalent propagation timing"
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 8,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.000999158,
+      "min_seconds": 0.000946508,
+      "max_seconds": 0.00101999,
+      "trajectories_per_second": 8006.741676491606,
+      "repetitions_seconds": [
+        0.000946508,
+        0.00101999,
+        0.000999158
+      ],
+      "achieved_accuracy": {
+        "position_m": 2.2083345244413942e-08,
+        "velocity_m_s": 1.7694288961450837e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "0a34332a564ad8934e60ed65bbb3766390818aa76709960f4b488081549a5abf",
+      "raw_file": "036-j2_inclined-cpp-8-1-sequential-raw.json",
+      "raw_sha256": "7bfbb3a146c3aa4b78764f58dcc83522a5cb9316c564f513ae8ae048855e2c57",
+      "setup_seconds": 0.000333282,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.006104164989665151,
+      "rhs_evaluations_per_repeat": [
+        5816,
+        5816,
+        5816
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/036-j2_inclined-cpp-8-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/036-j2_inclined-cpp-8-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "8",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "scipy",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 8,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.717673490929883,
+      "min_seconds": 0.7160236320632976,
+      "max_seconds": 1.0045113600208424,
+      "trajectories_per_second": 11.147130416694747,
+      "repetitions_seconds": [
+        1.0045113600208424,
+        0.717673490929883,
+        0.7160236320632976
+      ],
+      "achieved_accuracy": {
+        "position_m": 3.52336697988714e-09,
+        "velocity_m_s": 1.1138989715542166e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "0a34332a564ad8934e60ed65bbb3766390818aa76709960f4b488081549a5abf",
+      "raw_file": "037-j2_inclined-scipy-8-1-sequential-raw.json",
+      "raw_sha256": "01de2895aabea922eeeabf6c8bfb41e3eb37c508dcdbe2cc00a9618d931449a7",
+      "setup_seconds": 0.0008291309932246804,
+      "import_seconds": 0.5827723169932142,
+      "python_solver_seconds": [
+        1.0044730880181305,
+        0.7176392679393757,
+        0.7159923600847833
+      ],
+      "sampling_seconds": [
+        3.827200271189213e-05,
+        3.4222990507259965e-05,
+        3.1271978514268994e-05
+      ],
+      "repeated_setup_seconds": [
+        0.0003355560183990747,
+        0.000465388031443581,
+        0.0002859459782484919
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 3.8416177019826137,
+      "rhs_evaluations_per_repeat": [
+        6568,
+        6568,
+        6568
+      ],
+      "process_peak_rss_bytes": 78376960,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 18816,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          8.76979299937375e-05,
+          8.658477003336884e-05,
+          9.678677495685406e-05
+        ],
+        "rhs_sink": -2755.8820014808603,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/037-j2_inclined-scipy-8-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/037-j2_inclined-scipy-8-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "8",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "tudat",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 8,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.024862323014531285,
+      "min_seconds": 0.02453103198786266,
+      "max_seconds": 0.026616203016601503,
+      "trajectories_per_second": 321.77202409140284,
+      "repetitions_seconds": [
+        0.02453103198786266,
+        0.026616203016601503,
+        0.024862323014531285
+      ],
+      "achieved_accuracy": {
+        "position_m": 6.072596346840717e-09,
+        "velocity_m_s": 1.2544764307798434e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "0a34332a564ad8934e60ed65bbb3766390818aa76709960f4b488081549a5abf",
+      "raw_file": "038-j2_inclined-tudat-8-1-sequential-raw.json",
+      "raw_sha256": "54c176b6334be0dfd75531c6c22ed3cbd4d9f5de802d62fc4f75c1f78f9c15e9",
+      "setup_seconds": 0.0009602659847587347,
+      "import_seconds": 5.442275188019266,
+      "python_solver_seconds": [
+        0.023943414009409025,
+        0.0259355120069813,
+        0.024048406950896606
+      ],
+      "sampling_seconds": [
+        0.0005876179784536362,
+        0.0006806910096202046,
+        0.0008139160636346787
+      ],
+      "repeated_setup_seconds": [
+        0.002061834908090532,
+        0.002253445942187682,
+        0.002573461999418214
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 5.647582583012991,
+      "rhs_evaluations_per_repeat": [
+        12584.0,
+        12584.0,
+        12584.0
+      ],
+      "process_peak_rss_bytes": 262209536,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 18816,
+      "diagnostics": {},
+      "command": [
+        "/home/user/leo-release-tools/tudat-env/bin/python3.10",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/038-j2_inclined-tudat-8-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/038-j2_inclined-tudat-8-1-sequential-raw.json",
+        "--tool",
+        "tudat",
+        "--members",
+        "8",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.008307253,
+      "min_seconds": 0.008108889,
+      "max_seconds": 0.008512194,
+      "trajectories_per_second": 7704.111094244992,
+      "repetitions_seconds": [
+        0.008108889,
+        0.008512194,
+        0.008307253
+      ],
+      "achieved_accuracy": {
+        "position_m": 2.2083345244413942e-08,
+        "velocity_m_s": 1.7694288961450837e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "0a34332a564ad8934e60ed65bbb3766390818aa76709960f4b488081549a5abf",
+      "raw_file": "039-j2_inclined-cpp-64-1-sequential-raw.json",
+      "raw_sha256": "ecbb9386c6e2c47f6dee5411963d487ac8555013d79d281009b836ffb8682ebc",
+      "setup_seconds": 0.000450642,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.03561350199743174,
+      "rhs_evaluations_per_repeat": [
+        46528,
+        46528,
+        46528
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/039-j2_inclined-cpp-64-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/039-j2_inclined-cpp-64-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "64",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "scipy",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 5.6623048687470146,
+      "min_seconds": 5.522272237867583,
+      "max_seconds": 5.8464706538652536,
+      "trajectories_per_second": 11.302817754170531,
+      "repetitions_seconds": [
+        5.8464706538652536,
+        5.6623048687470146,
+        5.522272237867583
+      ],
+      "achieved_accuracy": {
+        "position_m": 3.52336697988714e-09,
+        "velocity_m_s": 1.1138989715542166e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "0a34332a564ad8934e60ed65bbb3766390818aa76709960f4b488081549a5abf",
+      "raw_file": "040-j2_inclined-scipy-64-1-sequential-raw.json",
+      "raw_sha256": "f74055b78c68196d43ab785cf72fb79960d88787d0df1b6f2d541fd7c33c2ec2",
+      "setup_seconds": 0.0049587549874559045,
+      "import_seconds": 0.4309683149913326,
+      "python_solver_seconds": [
+        5.846230381983332,
+        5.662058563786559,
+        5.522051169886254
+      ],
+      "sampling_seconds": [
+        0.00024027188192121685,
+        0.00024630496045574546,
+        0.00022106798132881522
+      ],
+      "repeated_setup_seconds": [
+        0.0023761728953104466,
+        0.002369590918533504,
+        0.00222006905823946
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 23.18014753999887,
+      "rhs_evaluations_per_repeat": [
+        52544,
+        52544,
+        52544
+      ],
+      "process_peak_rss_bytes": 79167488,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 150528,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          0.00010750464498414658,
+          0.0001063878599961754,
+          0.00010710598508012481
+        ],
+        "rhs_sink": -2755.8820014808603,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/040-j2_inclined-scipy-64-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/040-j2_inclined-scipy-64-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "64",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "tudat",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.21691050013760105,
+      "min_seconds": 0.20662000420270488,
+      "max_seconds": 0.24014224990969524,
+      "trajectories_per_second": 295.0525675769521,
+      "repetitions_seconds": [
+        0.24014224990969524,
+        0.21691050013760105,
+        0.20662000420270488
+      ],
+      "achieved_accuracy": {
+        "position_m": 6.072596346840717e-09,
+        "velocity_m_s": 1.2544764307798434e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "0a34332a564ad8934e60ed65bbb3766390818aa76709960f4b488081549a5abf",
+      "raw_file": "041-j2_inclined-tudat-64-1-sequential-raw.json",
+      "raw_sha256": "fb740aa9fac8720bc437d9677e22a0617970844fd1a3c85488ab243f02d66482",
+      "setup_seconds": 0.006036994978785515,
+      "import_seconds": 5.372780567995505,
+      "python_solver_seconds": [
+        0.23274558887351304,
+        0.21034487910219468,
+        0.19996945819002576
+      ],
+      "sampling_seconds": [
+        0.007396661036182195,
+        0.006565621035406366,
+        0.006650546012679115
+      ],
+      "repeated_setup_seconds": [
+        0.024237786856247112,
+        0.023553503007860854,
+        0.022904262878000736
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 6.447329054994043,
+      "rhs_evaluations_per_repeat": [
+        100672.0,
+        100672.0,
+        100672.0
+      ],
+      "process_peak_rss_bytes": 262832128,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 150528,
+      "diagnostics": {},
+      "command": [
+        "/home/user/leo-release-tools/tudat-env/bin/python3.10",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/041-j2_inclined-tudat-64-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/041-j2_inclined-tudat-64-1-sequential-raw.json",
+        "--tool",
+        "tudat",
+        "--members",
+        "64",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 1,
+      "route": "batch",
+      "status": "MEASURED",
+      "median_seconds": 0.008238137,
+      "min_seconds": 0.008207582,
+      "max_seconds": 0.008278449,
+      "trajectories_per_second": 7768.746744561301,
+      "repetitions_seconds": [
+        0.008207582,
+        0.008278449,
+        0.008238137
+      ],
+      "achieved_accuracy": {
+        "position_m": 2.2083345244413942e-08,
+        "velocity_m_s": 1.7694288961450837e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "0a34332a564ad8934e60ed65bbb3766390818aa76709960f4b488081549a5abf",
+      "raw_file": "042-j2_inclined-cpp-64-1-batch-raw.json",
+      "raw_sha256": "b2a5814ceecf1bec83210dd73f73c5e67ffc0f1537dfc7089311402f89f49a25",
+      "setup_seconds": 0.000383542,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.03542981899227016,
+      "rhs_evaluations_per_repeat": [
+        46528,
+        46528,
+        46528
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/042-j2_inclined-cpp-64-1-batch-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/042-j2_inclined-cpp-64-1-batch-raw.json",
+        "--route",
+        "batch",
+        "--members",
+        "64",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 2,
+      "route": "batch",
+      "status": "MEASURED",
+      "median_seconds": 0.004231266,
+      "min_seconds": 0.004197921,
+      "max_seconds": 0.004352129,
+      "trajectories_per_second": 15125.49671894889,
+      "repetitions_seconds": [
+        0.004231266,
+        0.004352129,
+        0.004197921
+      ],
+      "achieved_accuracy": {
+        "position_m": 2.2083345244413942e-08,
+        "velocity_m_s": 1.7694288961450837e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "0a34332a564ad8934e60ed65bbb3766390818aa76709960f4b488081549a5abf",
+      "raw_file": "043-j2_inclined-cpp-64-2-batch-raw.json",
+      "raw_sha256": "480bc61a29e57ed073d6e317f1120a1227d9e19cf7b2bd6980fe2f15e6692daf",
+      "setup_seconds": 0.000293707,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.01922171498881653,
+      "rhs_evaluations_per_repeat": [
+        46528,
+        46528,
+        46528
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/043-j2_inclined-cpp-64-2-batch-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/043-j2_inclined-cpp-64-2-batch-raw.json",
+        "--route",
+        "batch",
+        "--members",
+        "64",
+        "--workers",
+        "2",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 4,
+      "route": "batch",
+      "status": "MEASURED",
+      "median_seconds": 0.002615186,
+      "min_seconds": 0.002517285,
+      "max_seconds": 0.002795668,
+      "trajectories_per_second": 24472.44670168776,
+      "repetitions_seconds": [
+        0.002795668,
+        0.002615186,
+        0.002517285
+      ],
+      "achieved_accuracy": {
+        "position_m": 2.2083345244413942e-08,
+        "velocity_m_s": 1.7694288961450837e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "0a34332a564ad8934e60ed65bbb3766390818aa76709960f4b488081549a5abf",
+      "raw_file": "044-j2_inclined-cpp-64-4-batch-raw.json",
+      "raw_sha256": "a31c912a917192e52d64a859103503667eb647f0d034ec50933bd8beba32fab8",
+      "setup_seconds": 0.000367509,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.013242489018011838,
+      "rhs_evaluations_per_repeat": [
+        46528,
+        46528,
+        46528
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/044-j2_inclined-cpp-64-4-batch-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/044-j2_inclined-cpp-64-4-batch-raw.json",
+        "--route",
+        "batch",
+        "--members",
+        "64",
+        "--workers",
+        "4",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "j2_inclined",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 8,
+      "route": "batch",
+      "status": "MEASURED",
+      "median_seconds": 0.001889849,
+      "min_seconds": 0.001772707,
+      "max_seconds": 0.002001831,
+      "trajectories_per_second": 33865.139489980415,
+      "repetitions_seconds": [
+        0.001889849,
+        0.002001831,
+        0.001772707
+      ],
+      "achieved_accuracy": {
+        "position_m": 2.2083345244413942e-08,
+        "velocity_m_s": 1.7694288961450837e-11,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "scenario_sha256": "0a34332a564ad8934e60ed65bbb3766390818aa76709960f4b488081549a5abf",
+      "raw_file": "045-j2_inclined-cpp-64-8-batch-raw.json",
+      "raw_sha256": "d9a7b57961094bb5d94ac9854ad9ca9e0329909a0ec13dd113f541d023e3d3b7",
+      "setup_seconds": 0.000366157,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.009616972005460411,
+      "rhs_evaluations_per_repeat": [
+        46528,
+        46528,
+        46528
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/045-j2_inclined-cpp-64-8-batch-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/045-j2_inclined-cpp-64-8-batch-raw.json",
+        "--route",
+        "batch",
+        "--members",
+        "64",
+        "--workers",
+        "8",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 8,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.015074131,
+      "min_seconds": 0.014740533,
+      "max_seconds": 0.015387474,
+      "trajectories_per_second": 530.7105265305178,
+      "repetitions_seconds": [
+        0.015387474,
+        0.015074131,
+        0.014740533
+      ],
+      "achieved_accuracy": {
+        "position_m": 1.2538313882272932e-08,
+        "velocity_m_s": 5.1873100279769276e-11,
+        "attitude_rad": 1.4416740617270724e-10,
+        "angular_rate_rad_s": 8.720331985369744e-13
+      },
+      "scenario_sha256": "65a79a01d42565657147fcafebab2a7ebdfbca696080eda373a8c8821ee05990",
+      "raw_file": "046-coupled_case_a-cpp-8-1-sequential-raw.json",
+      "raw_sha256": "4695639cc3e7aa4e2dfb91ecc28647ef2c32010f37f918d2a1313c7ae9e63d4e",
+      "setup_seconds": 0.000293841,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.06251794801210053,
+      "rhs_evaluations_per_repeat": [
+        20820,
+        20820,
+        20820
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/046-coupled_case_a-cpp-8-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/046-coupled_case_a-cpp-8-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "8",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "scipy",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 8,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 2.8884730260178912,
+      "min_seconds": 2.8525662000174634,
+      "max_seconds": 3.0202793289499823,
+      "trajectories_per_second": 2.7696294644056154,
+      "repetitions_seconds": [
+        2.8525662000174634,
+        3.0202793289499823,
+        2.8884730260178912
+      ],
+      "achieved_accuracy": {
+        "position_m": 8.495989867896204e-08,
+        "velocity_m_s": 3.1888815500008714e-10,
+        "attitude_rad": 7.840970726574269e-09,
+        "angular_rate_rad_s": 2.792901866996551e-11
+      },
+      "scenario_sha256": "65a79a01d42565657147fcafebab2a7ebdfbca696080eda373a8c8821ee05990",
+      "raw_file": "047-coupled_case_a-scipy-8-1-sequential-raw.json",
+      "raw_sha256": "2241414d48014669d6db3a4c330258fd3d6bd22dbce61014ccabbc1d34e01838",
+      "setup_seconds": 0.0008237430010922253,
+      "import_seconds": 0.5135070699907374,
+      "python_solver_seconds": [
+        2.8525404340180103,
+        3.0202495739795268,
+        2.8884438770182896
+      ],
+      "sampling_seconds": [
+        2.5765999453142285e-05,
+        2.9754970455542207e-05,
+        2.9148999601602554e-05
+      ],
+      "repeated_setup_seconds": [
+        0.0002661010075826198,
+        0.000269112060777843,
+        0.0003223390085622668
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 12.494064149010228,
+      "rhs_evaluations_per_repeat": [
+        7348,
+        7348,
+        7348
+      ],
+      "process_peak_rss_bytes": 78655488,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 18816,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          0.0003499638449284248,
+          0.00036477545494562947,
+          0.0003750913399562705
+        ],
+        "rhs_sink": -4656.848897176542,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/047-coupled_case_a-scipy-8-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/047-coupled_case_a-scipy-8-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "8",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "tudat",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 8,
+      "workers": 1,
+      "route": "sequential",
+      "status": "UNMATCHED",
+      "reason": "Native Tudat environmental panel equations differ; not an equivalent propagation timing"
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 0.122536709,
+      "min_seconds": 0.119007057,
+      "max_seconds": 0.12446306,
+      "trajectories_per_second": 522.2924666599297,
+      "repetitions_seconds": [
+        0.122536709,
+        0.119007057,
+        0.12446306
+      ],
+      "achieved_accuracy": {
+        "position_m": 1.2538313882272932e-08,
+        "velocity_m_s": 5.1873100279769276e-11,
+        "attitude_rad": 1.4416740617270724e-10,
+        "angular_rate_rad_s": 8.720331985369744e-13
+      },
+      "scenario_sha256": "65a79a01d42565657147fcafebab2a7ebdfbca696080eda373a8c8821ee05990",
+      "raw_file": "049-coupled_case_a-cpp-64-1-sequential-raw.json",
+      "raw_sha256": "b961f33ef481118f4bb0b88776742dad0d262e09132adf06fe7e87e15b68c020",
+      "setup_seconds": 0.000325853,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.494561239000177,
+      "rhs_evaluations_per_repeat": [
+        166515,
+        166515,
+        166515
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/049-coupled_case_a-cpp-64-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/049-coupled_case_a-cpp-64-1-sequential-raw.json",
+        "--route",
+        "sequential",
+        "--members",
+        "64",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "scipy",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 1,
+      "route": "sequential",
+      "status": "MEASURED",
+      "median_seconds": 23.867873248877004,
+      "min_seconds": 23.497394375066506,
+      "max_seconds": 23.909380202181637,
+      "trajectories_per_second": 2.68142868585961,
+      "repetitions_seconds": [
+        23.497394375066506,
+        23.867873248877004,
+        23.909380202181637
+      ],
+      "achieved_accuracy": {
+        "position_m": 8.495989867896204e-08,
+        "velocity_m_s": 3.1888815500008714e-10,
+        "attitude_rad": 7.840970726574269e-09,
+        "angular_rate_rad_s": 2.792901866996551e-11
+      },
+      "scenario_sha256": "65a79a01d42565657147fcafebab2a7ebdfbca696080eda373a8c8821ee05990",
+      "raw_file": "050-coupled_case_a-scipy-64-1-sequential-raw.json",
+      "raw_sha256": "90ccc3dced3cb18a0adc89acf124583e616803865bca01bfd019e2413279ad07",
+      "setup_seconds": 0.006267882010433823,
+      "import_seconds": 0.5595692000060808,
+      "python_solver_seconds": [
+        23.497158682032023,
+        23.867656283982797,
+        23.90916061613825
+      ],
+      "sampling_seconds": [
+        0.00023569303448311985,
+        0.00021696489420719445,
+        0.0002195860433857888
+      ],
+      "repeated_setup_seconds": [
+        0.002367215871345252,
+        0.0025424619088880718,
+        0.002411987050436437
+      ],
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 94.8273695980024,
+      "rhs_evaluations_per_repeat": [
+        57992,
+        57992,
+        57992
+      ],
+      "process_peak_rss_bytes": 79364096,
+      "memory_scope": "fresh isolated process peak including interpreter/import/setup, not incremental trajectory memory",
+      "logical_output_bytes": 150528,
+      "diagnostics": {
+        "rhs_seconds_per_call": [
+          0.00038844485505251213,
+          0.00041704155504703524,
+          0.0003489996850839816
+        ],
+        "rhs_sink": -4656.848897176542,
+        "implementation": "Python DOP853 stages/controller and Python RHS, compiled NumPy algebra; no separately isolated compiled solver"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/home/user/leo-dynamics/benchmarks/comparative/worker.py",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/050-coupled_case_a-scipy-64-1-sequential-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/050-coupled_case_a-scipy-64-1-sequential-raw.json",
+        "--tool",
+        "scipy",
+        "--members",
+        "64",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "tudat",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 1,
+      "route": "sequential",
+      "status": "UNMATCHED",
+      "reason": "Native Tudat environmental panel equations differ; not an equivalent propagation timing"
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 1,
+      "route": "batch",
+      "status": "MEASURED",
+      "median_seconds": 0.122138296,
+      "min_seconds": 0.121551732,
+      "max_seconds": 0.122290969,
+      "trajectories_per_second": 523.9961756139123,
+      "repetitions_seconds": [
+        0.121551732,
+        0.122138296,
+        0.122290969
+      ],
+      "achieved_accuracy": {
+        "position_m": 1.2538313882272932e-08,
+        "velocity_m_s": 5.1873100279769276e-11,
+        "attitude_rad": 1.4416740617270724e-10,
+        "angular_rate_rad_s": 8.720331985369744e-13
+      },
+      "scenario_sha256": "65a79a01d42565657147fcafebab2a7ebdfbca696080eda373a8c8821ee05990",
+      "raw_file": "052-coupled_case_a-cpp-64-1-batch-raw.json",
+      "raw_sha256": "63e04347cf35148e23ce5bd1b46d7e0d890df63398f1a81dcf5e3d81a5316d03",
+      "setup_seconds": 0.000383251,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.4876872249878943,
+      "rhs_evaluations_per_repeat": [
+        166515,
+        166515,
+        166515
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/052-coupled_case_a-cpp-64-1-batch-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/052-coupled_case_a-cpp-64-1-batch-raw.json",
+        "--route",
+        "batch",
+        "--members",
+        "64",
+        "--workers",
+        "1",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 2,
+      "route": "batch",
+      "status": "MEASURED",
+      "median_seconds": 0.063367257,
+      "min_seconds": 0.062509129,
+      "max_seconds": 0.066044926,
+      "trajectories_per_second": 1009.985330436506,
+      "repetitions_seconds": [
+        0.063367257,
+        0.066044926,
+        0.062509129
+      ],
+      "achieved_accuracy": {
+        "position_m": 1.2538313882272932e-08,
+        "velocity_m_s": 5.1873100279769276e-11,
+        "attitude_rad": 1.4416740617270724e-10,
+        "angular_rate_rad_s": 8.720331985369744e-13
+      },
+      "scenario_sha256": "65a79a01d42565657147fcafebab2a7ebdfbca696080eda373a8c8821ee05990",
+      "raw_file": "053-coupled_case_a-cpp-64-2-batch-raw.json",
+      "raw_sha256": "833759e6494e6fdd5ec44a23a93fa80e959d8b8e0678f059e1b10ec9f1c06fa3",
+      "setup_seconds": 0.000509747,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.2581226080073975,
+      "rhs_evaluations_per_repeat": [
+        166515,
+        166515,
+        166515
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/053-coupled_case_a-cpp-64-2-batch-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/053-coupled_case_a-cpp-64-2-batch-raw.json",
+        "--route",
+        "batch",
+        "--members",
+        "64",
+        "--workers",
+        "2",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 4,
+      "route": "batch",
+      "status": "MEASURED",
+      "median_seconds": 0.036701229,
+      "min_seconds": 0.032810193,
+      "max_seconds": 0.03772568,
+      "trajectories_per_second": 1743.8108135288874,
+      "repetitions_seconds": [
+        0.032810193,
+        0.03772568,
+        0.036701229
+      ],
+      "achieved_accuracy": {
+        "position_m": 1.2538313882272932e-08,
+        "velocity_m_s": 5.1873100279769276e-11,
+        "attitude_rad": 1.4416740617270724e-10,
+        "angular_rate_rad_s": 8.720331985369744e-13
+      },
+      "scenario_sha256": "65a79a01d42565657147fcafebab2a7ebdfbca696080eda373a8c8821ee05990",
+      "raw_file": "054-coupled_case_a-cpp-64-4-batch-raw.json",
+      "raw_sha256": "76e080c55bbee7a4aaa2523eb8d27446b6038def4f8f8da825763750be44d252",
+      "setup_seconds": 0.000319824,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.14623548899544403,
+      "rhs_evaluations_per_repeat": [
+        166515,
+        166515,
+        166515
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/054-coupled_case_a-cpp-64-4-batch-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/054-coupled_case_a-cpp-64-4-batch-raw.json",
+        "--route",
+        "batch",
+        "--members",
+        "64",
+        "--workers",
+        "4",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    },
+    {
+      "name": "coupled_case_a",
+      "tool": "cpp",
+      "duration_s": 600.0,
+      "cadence_s": 30.0,
+      "members": 64,
+      "workers": 8,
+      "route": "batch",
+      "status": "MEASURED",
+      "median_seconds": 0.026705738,
+      "min_seconds": 0.024126557,
+      "max_seconds": 0.027607394,
+      "trajectories_per_second": 2396.4887246328863,
+      "repetitions_seconds": [
+        0.024126557,
+        0.026705738,
+        0.027607394
+      ],
+      "achieved_accuracy": {
+        "position_m": 1.2538313882272932e-08,
+        "velocity_m_s": 5.1873100279769276e-11,
+        "attitude_rad": 1.4416740617270724e-10,
+        "angular_rate_rad_s": 8.720331985369744e-13
+      },
+      "scenario_sha256": "65a79a01d42565657147fcafebab2a7ebdfbca696080eda373a8c8821ee05990",
+      "raw_file": "055-coupled_case_a-cpp-64-8-batch-raw.json",
+      "raw_sha256": "24c98fecfb3084c326315304dcb4d96a9e9057413ac3f49c3fa408b54311e53a",
+      "setup_seconds": 0.000375374,
+      "import_seconds": null,
+      "python_solver_seconds": null,
+      "sampling_seconds": null,
+      "repeated_setup_seconds": null,
+      "whole_process_wall_seconds_including_startup_warmups_and_publication": 0.10378339301678352,
+      "rhs_evaluations_per_repeat": [
+        166515,
+        166515,
+        166515
+      ],
+      "process_peak_rss_bytes": null,
+      "memory_scope": null,
+      "logical_output_bytes": null,
+      "diagnostics": null,
+      "command": [
+        "/home/user/leo-release-tools/build-reference/leo_reference_dump",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/055-coupled_case_a-cpp-64-8-batch-scenario.json",
+        "/home/user/leo-release-evidence/v0.1-qualification/comparative-full/055-coupled_case_a-cpp-64-8-batch-raw.json",
+        "--route",
+        "batch",
+        "--members",
+        "64",
+        "--workers",
+        "8",
+        "--repeats",
+        "3",
+        "--warmups",
+        "1"
+      ]
+    }
+  ],
+  "timing_boundary": "propagation plus requested-output generation and retention; setup, import, publication and outer process times separately reported",
+  "fairness": [
+    "same explicit SI inputs and physical equations",
+    "each actual duration/cadence accuracy-checked before timing",
+    "one benchmark child at a time, one discarded warmup and measured repetitions",
+    "no automatic process strategy, new integrator, hidden atmosphere model or reference generation in headline clocks",
+    "matched constant-Sun environment has no SPICE contention; not a replacement for MT-002 environmental scaling evidence"
+  ]
+}

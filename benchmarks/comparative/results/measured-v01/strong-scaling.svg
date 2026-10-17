@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 380" font-family="system-ui" font-size="14" fill="currentColor">
+<text x="65" y="24">Actual 64-trajectory strong scaling (same inline batch baseline)</text>
+<path d="M 65 45 V 320 H 750" fill="none" stroke="currentColor"/>
+<text x="65.0" y="345" text-anchor="middle">1</text>
+<text x="162.9" y="345" text-anchor="middle">2</text>
+<text x="358.6" y="345" text-anchor="middle">4</text>
+<text x="750.0" y="345" text-anchor="middle">8</text>
+<text x="55" y="325.0" text-anchor="end">0×</text>
+<path d="M 65 320.0 H 750" stroke="var(--border)" fill="none"/>
+<text x="55" y="272.7" text-anchor="end">1×</text>
+<path d="M 65 267.7 H 750" stroke="var(--border)" fill="none"/>
+<text x="55" y="220.4" text-anchor="end">2×</text>
+<path d="M 65 215.4 H 750" stroke="var(--border)" fill="none"/>
+<text x="55" y="115.9" text-anchor="end">4×</text>
+<path d="M 65 110.9 H 750" stroke="var(--border)" fill="none"/>
+<polyline points="65.00,267.71 162.86,218.20 358.57,155.29 750.00,92.08" fill="none" stroke="var(--c1)" stroke-width="2"/>
+<circle cx="65.00" cy="267.71" r="4" fill="var(--c1)"/>
+<circle cx="162.86" cy="218.20" r="4" fill="var(--c1)"/>
+<circle cx="358.57" cy="155.29" r="4" fill="var(--c1)"/>
+<circle cx="750.00" cy="92.08" r="4" fill="var(--c1)"/>
+<text x="80" y="375" fill="var(--c1)">j2_inclined</text>
+<polyline points="65.00,267.71 162.86,219.22 358.57,146.00 750.00,80.87" fill="none" stroke="var(--c2)" stroke-width="2"/>
+<circle cx="65.00" cy="267.71" r="4" fill="var(--c2)"/>
+<circle cx="162.86" cy="219.22" r="4" fill="var(--c2)"/>
+<circle cx="358.57" cy="146.00" r="4" fill="var(--c2)"/>
+<circle cx="750.00" cy="80.87" r="4" fill="var(--c2)"/>
+<text x="380" y="375" fill="var(--c2)">coupled_case_a</text>
+<text x="410" y="345" text-anchor="middle">native worker count</text></svg>

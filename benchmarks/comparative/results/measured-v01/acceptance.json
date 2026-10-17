@@ -1,0 +1,964 @@
+{
+  "kind": "v0.1-reference-acceptance",
+  "suite": "full",
+  "status": "PASS",
+  "binary_sha256": "20721beb1027ed63c89453f9d9dd9ca0f01a63a9db35c6952c9aa9df394b74c7",
+  "acceptance_sha256": "9b5cb1d8ac9cabc5228e8d673ceb2eee4ee0a57e4898ecc8f8a58186f29b7856",
+  "golden_manifest_sha256": "f441d940fc941bf4ab3080ffe1425e2c2a88e6a7bb62b1808108a033cdfa65dd",
+  "scenarios": [
+    {
+      "name": "albedo",
+      "duration_s": 3600.0,
+      "samples": 361,
+      "max_errors": {
+        "position_m": 2.034625453242968e-07,
+        "velocity_m_s": 2.849829483977016e-10,
+        "attitude_rad": 1.5829833114075962e-09,
+        "angular_rate_rad_s": 6.08908756749571e-13
+      },
+      "end_errors": {
+        "position_m": 2.034625453242968e-07,
+        "velocity_m_s": 2.83616921713532e-10,
+        "attitude_rad": 1.5829833114075962e-09,
+        "angular_rate_rad_s": 5.932303259736926e-13
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 5.634860374059478e-15,
+        "j2_m_s2": 0.0,
+        "total_acceleration_m_s2": 5.634860374059478e-15,
+        "total_angular_acceleration_rad_s2": 4.820357565054784e-24,
+        "srp_force_n": 0.0,
+        "srp_torque_nm": 0.0,
+        "drag_force_n": 0.0,
+        "drag_torque_nm": 0.0,
+        "albedo_force_n": 2.996175610187237e-23,
+        "albedo_torque_nm": 2.19339382650858e-25,
+        "gravity_gradient_nm": 0.0,
+        "density_kg_m3": 0.0,
+        "illumination": 0.0,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 5.634860374059478e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 4.820357565054784e-24
+      },
+      "thresholds": {
+        "position_m": 0.1,
+        "velocity_m_s": 0.0001,
+        "attitude_rad": 0.00017453292519943296,
+        "angular_rate_rad_s": 1e-07
+      },
+      "reference_convergence": {
+        "position_m": 5.120152977974908e-07,
+        "velocity_m_s": 4.0039987777314983e-10,
+        "attitude_rad": 4.22704452274215e-08,
+        "angular_rate_rad_s": 1.9121926264631384e-11
+      },
+      "rhs_evaluations": 16683,
+      "failures": [],
+      "other_references": {}
+    },
+    {
+      "name": "case_c_short",
+      "duration_s": 3600.0,
+      "samples": 121,
+      "max_errors": {
+        "position_m": 6.283372243162679e-07,
+        "velocity_m_s": 5.904135660665432e-10,
+        "attitude_rad": 6.419557610910695e-08,
+        "angular_rate_rad_s": 1.5530167942522418e-10
+      },
+      "end_errors": {
+        "position_m": 6.283372243162679e-07,
+        "velocity_m_s": 5.742405789142859e-10,
+        "attitude_rad": 6.419557610910695e-08,
+        "angular_rate_rad_s": 1.0695166244819236e-10
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 7.755684626330685e-15,
+        "j2_m_s2": 1.8683543625880677e-17,
+        "total_acceleration_m_s2": 7.755684668958488e-15,
+        "total_angular_acceleration_rad_s2": 9.00517930051114e-20,
+        "srp_force_n": 2.88174583146911e-20,
+        "srp_torque_nm": 1.9064731278281895e-21,
+        "drag_force_n": 1.3483157615813921e-17,
+        "drag_torque_nm": 1.9208094634209923e-19,
+        "albedo_force_n": 2.6193047324307845e-21,
+        "albedo_torque_nm": 2.117582368135751e-22,
+        "gravity_gradient_nm": 4.518198316617359e-21,
+        "density_kg_m3": 8.724170523020214e-26,
+        "illumination": 3.3306690738754696e-16,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 7.755684668958488e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 9.00517930051114e-20
+      },
+      "thresholds": {
+        "position_m": 0.1,
+        "velocity_m_s": 0.0001,
+        "attitude_rad": 0.00017453292519943296,
+        "angular_rate_rad_s": 1e-07
+      },
+      "reference_convergence": {
+        "position_m": 2.843966984116001e-08,
+        "velocity_m_s": 4.14171307550259e-11,
+        "attitude_rad": 2.6093874540604876e-09,
+        "angular_rate_rad_s": 8.53796294251977e-12
+      },
+      "rhs_evaluations": 10511,
+      "failures": [],
+      "other_references": {}
+    },
+    {
+      "name": "coupled_case_a",
+      "duration_s": 21600.0,
+      "samples": 721,
+      "max_errors": {
+        "position_m": 2.539149977019102e-05,
+        "velocity_m_s": 2.762141430150715e-08,
+        "attitude_rad": 2.0492218475515872e-07,
+        "angular_rate_rad_s": 2.2050039250583255e-11
+      },
+      "end_errors": {
+        "position_m": 2.539149977019102e-05,
+        "velocity_m_s": 2.762141430150715e-08,
+        "attitude_rad": 2.0492218475515872e-07,
+        "angular_rate_rad_s": 8.264072832841942e-12
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 7.755684626330685e-15,
+        "j2_m_s2": 2.0707977669969865e-17,
+        "total_acceleration_m_s2": 7.7556846263429e-15,
+        "total_angular_acceleration_rad_s2": 1.7528111372969313e-21,
+        "srp_force_n": 5.825231164955228e-22,
+        "srp_torque_nm": 1.654438112321539e-24,
+        "drag_force_n": 1.7875082733944608e-19,
+        "drag_torque_nm": 7.949098915949934e-23,
+        "albedo_force_n": 5.884039849342479e-23,
+        "albedo_torque_nm": 2.19339382650858e-25,
+        "gravity_gradient_nm": 1.3565762045869654e-22,
+        "density_kg_m3": 8.724170523020214e-26,
+        "illumination": 3.3306690738754696e-16,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 7.7556846263429e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 1.7528111372969313e-21
+      },
+      "thresholds": {
+        "position_m": 0.1,
+        "velocity_m_s": 0.0001,
+        "attitude_rad": 0.00017453292519943296,
+        "angular_rate_rad_s": 1e-07
+      },
+      "reference_convergence": {
+        "position_m": 1.3171125992621084e-05,
+        "velocity_m_s": 1.2805732918420123e-08,
+        "attitude_rad": 1.0418152432704973e-06,
+        "angular_rate_rad_s": 1.0937647358134375e-10
+      },
+      "rhs_evaluations": 93901,
+      "failures": [],
+      "other_references": {}
+    },
+    {
+      "name": "coupled_case_b",
+      "duration_s": 21600.0,
+      "samples": 721,
+      "max_errors": {
+        "position_m": 4.891316624175455e-06,
+        "velocity_m_s": 9.401140860496309e-09,
+        "attitude_rad": 3.184454825225281e-06,
+        "angular_rate_rad_s": 3.331091042948625e-09
+      },
+      "end_errors": {
+        "position_m": 4.891316624175455e-06,
+        "velocity_m_s": 9.320757542790217e-09,
+        "attitude_rad": 3.1219907689775043e-06,
+        "angular_rate_rad_s": 3.331091042948625e-09
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 7.755684626330685e-15,
+        "j2_m_s2": 1.8683543625880677e-17,
+        "total_acceleration_m_s2": 7.755685325533172e-15,
+        "total_angular_acceleration_rad_s2": 2.6684397162872486e-19,
+        "srp_force_n": 4.7945357055764195e-20,
+        "srp_torque_nm": 6.196416538814994e-22,
+        "drag_force_n": 3.360559194646578e-17,
+        "drag_torque_nm": 1.0023377900853771e-18,
+        "albedo_force_n": 2.5870062747537598e-21,
+        "albedo_torque_nm": 2.710646923487126e-23,
+        "gravity_gradient_nm": 6.2251617651786695e-21,
+        "density_kg_m3": 8.724170523020214e-26,
+        "illumination": 3.3306690738754696e-16,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 7.755685325533172e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 2.6684397162872486e-19
+      },
+      "thresholds": {
+        "position_m": 0.1,
+        "velocity_m_s": 0.0001,
+        "attitude_rad": 0.00017453292519943296,
+        "angular_rate_rad_s": 1e-07
+      },
+      "reference_convergence": {
+        "position_m": 1.306008498322022e-06,
+        "velocity_m_s": 3.1711199721985602e-09,
+        "attitude_rad": 1.0002125839297923e-06,
+        "angular_rate_rad_s": 1.0431932530958647e-09
+      },
+      "rhs_evaluations": 73778,
+      "failures": [],
+      "other_references": {}
+    },
+    {
+      "name": "drag_flat_plate",
+      "duration_s": 3600.0,
+      "samples": 361,
+      "max_errors": {
+        "position_m": 8.237082563836414e-06,
+        "velocity_m_s": 8.585883488190312e-09,
+        "attitude_rad": 4.628481912712646e-08,
+        "angular_rate_rad_s": 3.054308266606558e-11
+      },
+      "end_errors": {
+        "position_m": 8.237082563836414e-06,
+        "velocity_m_s": 8.585883488190312e-09,
+        "attitude_rad": 4.54624069537852e-08,
+        "angular_rate_rad_s": 1.9381073258694485e-11
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 3.572176009035959e-15,
+        "j2_m_s2": 0.0,
+        "total_acceleration_m_s2": 3.572176009035959e-15,
+        "total_angular_acceleration_rad_s2": 5.7661089740526875e-22,
+        "srp_force_n": 0.0,
+        "srp_torque_nm": 0.0,
+        "drag_force_n": 9.188770394225557e-20,
+        "drag_torque_nm": 6.050960550244208e-23,
+        "albedo_force_n": 0.0,
+        "albedo_torque_nm": 0.0,
+        "gravity_gradient_nm": 0.0,
+        "density_kg_m3": 4.765982044983265e-26,
+        "illumination": 0.0,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 3.572176009035959e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 5.7661089740526875e-22
+      },
+      "thresholds": {
+        "position_m": 0.1,
+        "velocity_m_s": 0.0001,
+        "attitude_rad": 0.00017453292519943296,
+        "angular_rate_rad_s": 1e-07
+      },
+      "reference_convergence": {
+        "position_m": 6.362542001139464e-08,
+        "velocity_m_s": 7.614811943834676e-11,
+        "attitude_rad": 2.230668598145797e-09,
+        "angular_rate_rad_s": 1.2780719041291304e-12
+      },
+      "rhs_evaluations": 17278,
+      "failures": [],
+      "other_references": {}
+    },
+    {
+      "name": "drag_sentman",
+      "duration_s": 3600.0,
+      "samples": 361,
+      "max_errors": {
+        "position_m": 7.565256423757669e-06,
+        "velocity_m_s": 7.049279227816485e-09,
+        "attitude_rad": 7.206035617629889e-08,
+        "angular_rate_rad_s": 4.569439534949467e-11
+      },
+      "end_errors": {
+        "position_m": 7.565256423757669e-06,
+        "velocity_m_s": 7.049279227816485e-09,
+        "attitude_rad": 7.202101388038773e-08,
+        "angular_rate_rad_s": 9.878821286720995e-12
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 4.782987168225453e-15,
+        "j2_m_s2": 0.0,
+        "total_acceleration_m_s2": 4.782987168225453e-15,
+        "total_angular_acceleration_rad_s2": 7.5833291168295565e-22,
+        "srp_force_n": 0.0,
+        "srp_torque_nm": 0.0,
+        "drag_force_n": 1.0005481453802316e-19,
+        "drag_torque_nm": 7.97405334965186e-23,
+        "albedo_force_n": 0.0,
+        "albedo_torque_nm": 0.0,
+        "gravity_gradient_nm": 0.0,
+        "density_kg_m3": 4.6044233315940017e-26,
+        "illumination": 0.0,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 4.782987168225453e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 7.5833291168295565e-22
+      },
+      "thresholds": {
+        "position_m": 0.1,
+        "velocity_m_s": 0.0001,
+        "attitude_rad": 0.00017453292519943296,
+        "angular_rate_rad_s": 1e-07
+      },
+      "reference_convergence": {
+        "position_m": 3.573094037113998e-07,
+        "velocity_m_s": 4.504643799538659e-10,
+        "attitude_rad": 3.2133433113599677e-09,
+        "angular_rate_rad_s": 1.4436693046195103e-12
+      },
+      "rhs_evaluations": 17302,
+      "failures": [],
+      "other_references": {}
+    },
+    {
+      "name": "eclipse_conical",
+      "duration_s": 3600.0,
+      "samples": 361,
+      "max_errors": {
+        "position_m": 2.6591053586307396e-07,
+        "velocity_m_s": 4.14543055758119e-10,
+        "attitude_rad": 7.721254183601594e-09,
+        "angular_rate_rad_s": 5.349536785770326e-12
+      },
+      "end_errors": {
+        "position_m": 2.6591053586307396e-07,
+        "velocity_m_s": 4.14543055758119e-10,
+        "attitude_rad": 7.721254183601594e-09,
+        "angular_rate_rad_s": 3.9401849838416325e-12
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 7.755684626330685e-15,
+        "j2_m_s2": 0.0,
+        "total_acceleration_m_s2": 7.755684626330685e-15,
+        "total_angular_acceleration_rad_s2": 1.511429875233003e-23,
+        "srp_force_n": 2.167907672760629e-22,
+        "srp_torque_nm": 1.6546503932995122e-24,
+        "drag_force_n": 0.0,
+        "drag_torque_nm": 0.0,
+        "albedo_force_n": 0.0,
+        "albedo_torque_nm": 0.0,
+        "gravity_gradient_nm": 0.0,
+        "density_kg_m3": 0.0,
+        "illumination": 3.3306690738754696e-16,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 7.755684626330685e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 1.511429875233003e-23
+      },
+      "thresholds": {
+        "position_m": 0.1,
+        "velocity_m_s": 0.0001,
+        "attitude_rad": 0.00017453292519943296,
+        "angular_rate_rad_s": 1e-07
+      },
+      "reference_convergence": {
+        "position_m": 3.349919789381077e-06,
+        "velocity_m_s": 4.914575217857703e-09,
+        "attitude_rad": 8.039154147931964e-09,
+        "angular_rate_rad_s": 1.022989332133406e-11
+      },
+      "rhs_evaluations": 16701,
+      "failures": [],
+      "other_references": {}
+    },
+    {
+      "name": "eclipse_cylindrical",
+      "duration_s": 3600.0,
+      "samples": 361,
+      "max_errors": {
+        "position_m": 1.6344156626894192e-06,
+        "velocity_m_s": 1.950639490474079e-09,
+        "attitude_rad": 1.761645088852211e-08,
+        "angular_rate_rad_s": 9.169061343516915e-12
+      },
+      "end_errors": {
+        "position_m": 1.6344156626894192e-06,
+        "velocity_m_s": 1.950639490474079e-09,
+        "attitude_rad": 1.761645088852211e-08,
+        "angular_rate_rad_s": 8.61629864679081e-12
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 7.588599744428075e-15,
+        "j2_m_s2": 0.0,
+        "total_acceleration_m_s2": 7.588599744428075e-15,
+        "total_angular_acceleration_rad_s2": 2.277930748649296e-23,
+        "srp_force_n": 1.1342935646381344e-22,
+        "srp_torque_nm": 2.4820486203532082e-24,
+        "drag_force_n": 0.0,
+        "drag_torque_nm": 0.0,
+        "albedo_force_n": 0.0,
+        "albedo_torque_nm": 0.0,
+        "gravity_gradient_nm": 0.0,
+        "density_kg_m3": 0.0,
+        "illumination": 0.0,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 7.588599744428075e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 2.277930748649296e-23
+      },
+      "thresholds": {
+        "position_m": 0.1,
+        "velocity_m_s": 0.0001,
+        "attitude_rad": 0.00017453292519943296,
+        "angular_rate_rad_s": 1e-07
+      },
+      "reference_convergence": {
+        "position_m": 1.1102127817965784e-06,
+        "velocity_m_s": 1.295277882866189e-09,
+        "attitude_rad": 3.3107475871929915e-08,
+        "angular_rate_rad_s": 2.2756036638371668e-11
+      },
+      "rhs_evaluations": 16794,
+      "failures": [],
+      "other_references": {}
+    },
+    {
+      "name": "gravity_gradient",
+      "duration_s": 7200.0,
+      "samples": 721,
+      "max_errors": {
+        "position_m": 1.1968073989726489e-06,
+        "velocity_m_s": 1.1775182804856905e-09,
+        "attitude_rad": 3.7323858876578155e-12,
+        "angular_rate_rad_s": 5.316571993460178e-14
+      },
+      "end_errors": {
+        "position_m": 1.1891188669640893e-06,
+        "velocity_m_s": 1.1775182804856905e-09,
+        "attitude_rad": 3.7323858876578155e-12,
+        "angular_rate_rad_s": 5.316571993460178e-14
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 4.550560269027492e-15,
+        "j2_m_s2": 0.0,
+        "total_acceleration_m_s2": 4.550560269027492e-15,
+        "total_angular_acceleration_rad_s2": 1.2025556183325623e-21,
+        "srp_force_n": 0.0,
+        "srp_torque_nm": 0.0,
+        "drag_force_n": 0.0,
+        "drag_torque_nm": 0.0,
+        "albedo_force_n": 0.0,
+        "albedo_torque_nm": 0.0,
+        "gravity_gradient_nm": 8.990682752379591e-23,
+        "density_kg_m3": 0.0,
+        "illumination": 0.0,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 4.550560269027492e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 1.2025556183325623e-21
+      },
+      "thresholds": {
+        "position_m": 0.05,
+        "velocity_m_s": 5e-05,
+        "attitude_rad": 1e-07,
+        "angular_rate_rad_s": 1e-09
+      },
+      "reference_convergence": {
+        "position_m": 3.6245951112962124e-07,
+        "velocity_m_s": 4.1304936188136975e-10,
+        "attitude_rad": 2.1054474641032997e-13,
+        "angular_rate_rad_s": 2.917257700345509e-16
+      },
+      "rhs_evaluations": 33397,
+      "failures": [],
+      "other_references": {
+        "native_tudat": {
+          "position_m": 9.884411996477612e-07,
+          "velocity_m_s": 8.705933756247132e-10,
+          "attitude_rad": 3.489530832496057e-12,
+          "angular_rate_rad_s": 5.316763246104515e-14
+        }
+      }
+    },
+    {
+      "name": "j2_equatorial",
+      "duration_s": 21600.0,
+      "samples": 721,
+      "max_errors": {
+        "position_m": 4.391908525192461e-06,
+        "velocity_m_s": 4.6370904726444865e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "end_errors": {
+        "position_m": 4.391908525192461e-06,
+        "velocity_m_s": 4.6370904726444865e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 6.24198150805748e-15,
+        "j2_m_s2": 1.0489340839012054e-17,
+        "total_acceleration_m_s2": 6.24198150805748e-15,
+        "total_angular_acceleration_rad_s2": 0.0,
+        "srp_force_n": 0.0,
+        "srp_torque_nm": 0.0,
+        "drag_force_n": 0.0,
+        "drag_torque_nm": 0.0,
+        "albedo_force_n": 0.0,
+        "albedo_torque_nm": 0.0,
+        "gravity_gradient_nm": 0.0,
+        "density_kg_m3": 0.0,
+        "illumination": 0.0,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 6.24198150805748e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 0.0
+      },
+      "thresholds": {
+        "position_m": 0.05,
+        "velocity_m_s": 5e-05,
+        "attitude_rad": 1e-10,
+        "angular_rate_rad_s": 1e-12
+      },
+      "reference_convergence": {
+        "position_m": 2.375475303297595e-06,
+        "velocity_m_s": 2.4546576274095307e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "rhs_evaluations": 25927,
+      "failures": [],
+      "other_references": {
+        "native_tudat": {
+          "position_m": 2.8746603066105765e-06,
+          "velocity_m_s": 3.17450244406998e-09,
+          "attitude_rad": 0.0,
+          "angular_rate_rad_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "j2_inclined",
+      "duration_s": 21600.0,
+      "samples": 721,
+      "max_errors": {
+        "position_m": 7.65510895359767e-06,
+        "velocity_m_s": 7.72076064094111e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "end_errors": {
+        "position_m": 7.65510895359767e-06,
+        "velocity_m_s": 7.72076064094111e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 4.165926057296536e-15,
+        "j2_m_s2": 1.6930225707429498e-17,
+        "total_acceleration_m_s2": 4.165926057296536e-15,
+        "total_angular_acceleration_rad_s2": 0.0,
+        "srp_force_n": 0.0,
+        "srp_torque_nm": 0.0,
+        "drag_force_n": 0.0,
+        "drag_torque_nm": 0.0,
+        "albedo_force_n": 0.0,
+        "albedo_torque_nm": 0.0,
+        "gravity_gradient_nm": 0.0,
+        "density_kg_m3": 0.0,
+        "illumination": 0.0,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 4.165926057296536e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 0.0
+      },
+      "thresholds": {
+        "position_m": 0.05,
+        "velocity_m_s": 5e-05,
+        "attitude_rad": 1e-10,
+        "angular_rate_rad_s": 1e-12
+      },
+      "reference_convergence": {
+        "position_m": 8.923675388073906e-07,
+        "velocity_m_s": 9.174624444481289e-10,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "rhs_evaluations": 25927,
+      "failures": [],
+      "other_references": {
+        "native_tudat": {
+          "position_m": 7.853525218025649e-06,
+          "velocity_m_s": 7.883412461643335e-09,
+          "attitude_rad": 0.0,
+          "angular_rate_rad_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "srp",
+      "duration_s": 3600.0,
+      "samples": 361,
+      "max_errors": {
+        "position_m": 1.998267557955444e-07,
+        "velocity_m_s": 2.5397710792017784e-10,
+        "attitude_rad": 6.424752291450539e-09,
+        "angular_rate_rad_s": 4.611890730421564e-12
+      },
+      "end_errors": {
+        "position_m": 1.6641056171166016e-07,
+        "velocity_m_s": 2.2370473100495384e-10,
+        "attitude_rad": 6.424752291450539e-09,
+        "angular_rate_rad_s": 3.272299098355802e-12
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 4.021398830883446e-15,
+        "j2_m_s2": 0.0,
+        "total_acceleration_m_s2": 4.021398830883446e-15,
+        "total_angular_acceleration_rad_s2": 1.9025253141952835e-23,
+        "srp_force_n": 5.825231164955228e-22,
+        "srp_torque_nm": 8.273495484660296e-25,
+        "drag_force_n": 0.0,
+        "drag_torque_nm": 0.0,
+        "albedo_force_n": 0.0,
+        "albedo_torque_nm": 0.0,
+        "gravity_gradient_nm": 0.0,
+        "density_kg_m3": 0.0,
+        "illumination": 0.0,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 4.021398830883446e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 1.9025253141952835e-23
+      },
+      "thresholds": {
+        "position_m": 0.1,
+        "velocity_m_s": 0.0001,
+        "attitude_rad": 0.00017453292519943296,
+        "angular_rate_rad_s": 1e-07
+      },
+      "reference_convergence": {
+        "position_m": 9.5280125661007e-07,
+        "velocity_m_s": 1.2647296433546666e-09,
+        "attitude_rad": 1.0206376022115022e-08,
+        "angular_rate_rad_s": 1.27972216157346e-11
+      },
+      "rhs_evaluations": 16722,
+      "failures": [],
+      "other_references": {}
+    },
+    {
+      "name": "torque_free_elongated",
+      "duration_s": 1800.0,
+      "samples": 361,
+      "max_errors": {
+        "position_m": 4.9467608627260155e-08,
+        "velocity_m_s": 5.412412923332193e-11,
+        "attitude_rad": 8.236358917029717e-15,
+        "angular_rate_rad_s": 1.010360669074586e-17
+      },
+      "end_errors": {
+        "position_m": 4.9265555749692404e-08,
+        "velocity_m_s": 5.170789334050275e-11,
+        "attitude_rad": 8.236358917029717e-15,
+        "angular_rate_rad_s": 9.314678632899422e-18
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 3.552713678800501e-15,
+        "j2_m_s2": 0.0,
+        "total_acceleration_m_s2": 3.552713678800501e-15,
+        "total_angular_acceleration_rad_s2": 2.1827539436923206e-22,
+        "srp_force_n": 0.0,
+        "srp_torque_nm": 0.0,
+        "drag_force_n": 0.0,
+        "drag_torque_nm": 0.0,
+        "albedo_force_n": 0.0,
+        "albedo_torque_nm": 0.0,
+        "gravity_gradient_nm": 0.0,
+        "density_kg_m3": 0.0,
+        "illumination": 0.0,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 3.552713678800501e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 2.1827539436923206e-22
+      },
+      "thresholds": {
+        "position_m": 0.05,
+        "velocity_m_s": 5e-05,
+        "attitude_rad": 1e-08,
+        "angular_rate_rad_s": 1e-09
+      },
+      "reference_convergence": {
+        "position_m": 2.7534130985206142e-08,
+        "velocity_m_s": 3.23670240491524e-11,
+        "attitude_rad": 5.392043872394706e-15,
+        "angular_rate_rad_s": 5.727895077200639e-18
+      },
+      "rhs_evaluations": 2434,
+      "failures": [],
+      "other_references": {
+        "native_tudat": {
+          "position_m": 7.775602359146712e-08,
+          "velocity_m_s": 4.7379458482596265e-11,
+          "attitude_rad": 1.1731296673531335e-14,
+          "angular_rate_rad_s": 1.2004816009036225e-17
+        }
+      }
+    },
+    {
+      "name": "torque_free_spherical",
+      "duration_s": 1800.0,
+      "samples": 361,
+      "max_errors": {
+        "position_m": 1.6012520206599335e-07,
+        "velocity_m_s": 2.257490846895737e-10,
+        "attitude_rad": 1.1360894878998269e-12,
+        "angular_rate_rad_s": 0.0
+      },
+      "end_errors": {
+        "position_m": 1.6012520206599335e-07,
+        "velocity_m_s": 2.249306079300235e-10,
+        "attitude_rad": 1.1360894878998269e-12,
+        "angular_rate_rad_s": 0.0
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 5.102196573270515e-15,
+        "j2_m_s2": 0.0,
+        "total_acceleration_m_s2": 5.102196573270515e-15,
+        "total_angular_acceleration_rad_s2": 0.0,
+        "srp_force_n": 0.0,
+        "srp_torque_nm": 0.0,
+        "drag_force_n": 0.0,
+        "drag_torque_nm": 0.0,
+        "albedo_force_n": 0.0,
+        "albedo_torque_nm": 0.0,
+        "gravity_gradient_nm": 0.0,
+        "density_kg_m3": 0.0,
+        "illumination": 0.0,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 5.102196573270515e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 0.0
+      },
+      "thresholds": {
+        "position_m": 0.05,
+        "velocity_m_s": 5e-05,
+        "attitude_rad": 1e-08,
+        "angular_rate_rad_s": 1e-09
+      },
+      "reference_convergence": {
+        "position_m": 1.697589283209125e-08,
+        "velocity_m_s": 2.6578416866327565e-11,
+        "attitude_rad": 7.670000594338198e-14,
+        "angular_rate_rad_s": 0.0
+      },
+      "rhs_evaluations": 8993,
+      "failures": [],
+      "other_references": {
+        "native_tudat": {
+          "position_m": 1.4827053183641744e-07,
+          "velocity_m_s": 2.0395431361371896e-10,
+          "attitude_rad": 1.141151965629299e-12,
+          "angular_rate_rad_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "torque_free_symmetric",
+      "duration_s": 1800.0,
+      "samples": 361,
+      "max_errors": {
+        "position_m": 1.2465205579836522e-07,
+        "velocity_m_s": 1.6624483461544145e-10,
+        "attitude_rad": 1.2857395268307464e-12,
+        "angular_rate_rad_s": 2.8126135288001793e-16
+      },
+      "end_errors": {
+        "position_m": 1.2429929460293584e-07,
+        "velocity_m_s": 1.6624483461544145e-10,
+        "attitude_rad": 1.2857395268307464e-12,
+        "angular_rate_rad_s": 2.6527092819049853e-16
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 3.552713678800501e-15,
+        "j2_m_s2": 0.0,
+        "total_acceleration_m_s2": 3.552713678800501e-15,
+        "total_angular_acceleration_rad_s2": 6.776263578034403e-21,
+        "srp_force_n": 0.0,
+        "srp_torque_nm": 0.0,
+        "drag_force_n": 0.0,
+        "drag_torque_nm": 0.0,
+        "albedo_force_n": 0.0,
+        "albedo_torque_nm": 0.0,
+        "gravity_gradient_nm": 0.0,
+        "density_kg_m3": 0.0,
+        "illumination": 0.0,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 3.552713678800501e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 6.776263578034403e-21
+      },
+      "thresholds": {
+        "position_m": 0.05,
+        "velocity_m_s": 5e-05,
+        "attitude_rad": 1e-08,
+        "angular_rate_rad_s": 1e-09
+      },
+      "reference_convergence": {
+        "position_m": 9.463355612429592e-09,
+        "velocity_m_s": 1.8909303119711136e-11,
+        "attitude_rad": 9.427017694005703e-13,
+        "angular_rate_rad_s": 2.638890179929606e-16
+      },
+      "rhs_evaluations": 12650,
+      "failures": [],
+      "other_references": {
+        "native_tudat": {
+          "position_m": 1.1045599597567976e-07,
+          "velocity_m_s": 1.4736989338572912e-10,
+          "attitude_rad": 1.3245768974093588e-12,
+          "angular_rate_rad_s": 3.151093679572389e-16
+        }
+      }
+    },
+    {
+      "name": "two_body_circular",
+      "duration_s": 21600.0,
+      "samples": 721,
+      "max_errors": {
+        "position_m": 8.239820340974697e-06,
+        "velocity_m_s": 8.615196003642923e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "end_errors": {
+        "position_m": 8.239820340974697e-06,
+        "velocity_m_s": 8.615196003642923e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 2.5510982866352577e-15,
+        "j2_m_s2": 0.0,
+        "total_acceleration_m_s2": 2.5510982866352577e-15,
+        "total_angular_acceleration_rad_s2": 0.0,
+        "srp_force_n": 0.0,
+        "srp_torque_nm": 0.0,
+        "drag_force_n": 0.0,
+        "drag_torque_nm": 0.0,
+        "albedo_force_n": 0.0,
+        "albedo_torque_nm": 0.0,
+        "gravity_gradient_nm": 0.0,
+        "density_kg_m3": 0.0,
+        "illumination": 0.0,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 2.5510982866352577e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 0.0
+      },
+      "thresholds": {
+        "position_m": 0.05,
+        "velocity_m_s": 5e-05,
+        "attitude_rad": 1e-10,
+        "angular_rate_rad_s": 1e-12
+      },
+      "reference_convergence": {
+        "position_m": 2.161471000506363e-06,
+        "velocity_m_s": 2.239146079292683e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "rhs_evaluations": 25927,
+      "failures": [],
+      "other_references": {
+        "analytical_kepler": {
+          "position_m": 7.003533504205245e-06,
+          "velocity_m_s": 7.331774250918253e-09
+        },
+        "native_tudat": {
+          "position_m": 6.939052825133731e-06,
+          "velocity_m_s": 7.304198523030611e-09,
+          "attitude_rad": 0.0,
+          "angular_rate_rad_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "two_body_eccentric",
+      "duration_s": 21600.0,
+      "samples": 721,
+      "max_errors": {
+        "position_m": 5.3957122598533336e-06,
+        "velocity_m_s": 5.41156243238644e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "end_errors": {
+        "position_m": 5.3957122598533336e-06,
+        "velocity_m_s": 5.41156243238644e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "pointwise_max_absolute": {
+        "point_mass_m_s2": 3.9968028886505635e-15,
+        "j2_m_s2": 0.0,
+        "total_acceleration_m_s2": 3.9968028886505635e-15,
+        "total_angular_acceleration_rad_s2": 0.0,
+        "srp_force_n": 0.0,
+        "srp_torque_nm": 0.0,
+        "drag_force_n": 0.0,
+        "drag_torque_nm": 0.0,
+        "albedo_force_n": 0.0,
+        "albedo_torque_nm": 0.0,
+        "gravity_gradient_nm": 0.0,
+        "density_kg_m3": 0.0,
+        "illumination": 0.0,
+        "rhs_velocity": 0.0,
+        "rhs_acceleration": 3.9968028886505635e-15,
+        "rhs_quaternion": 0.0,
+        "rhs_angular_acceleration": 0.0
+      },
+      "thresholds": {
+        "position_m": 0.05,
+        "velocity_m_s": 5e-05,
+        "attitude_rad": 1e-10,
+        "angular_rate_rad_s": 1e-12
+      },
+      "reference_convergence": {
+        "position_m": 1.447429463110485e-06,
+        "velocity_m_s": 1.526105347540028e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "rhs_evaluations": 25927,
+      "failures": [],
+      "other_references": {
+        "analytical_kepler": {
+          "position_m": 7.045868362278928e-06,
+          "velocity_m_s": 7.142465984979883e-09
+        },
+        "native_tudat": {
+          "position_m": 8.483189664890969e-06,
+          "velocity_m_s": 8.656117173912304e-09,
+          "attitude_rad": 0.0,
+          "angular_rate_rad_s": 0.0
+        }
+      }
+    }
+  ],
+  "batch": [
+    {
+      "workers": 1,
+      "members": 8,
+      "bitwise_identical": true
+    },
+    {
+      "workers": 2,
+      "members": 8,
+      "bitwise_identical": true
+    },
+    {
+      "workers": 4,
+      "members": 8,
+      "bitwise_identical": true
+    },
+    {
+      "workers": 8,
+      "members": 8,
+      "bitwise_identical": true
+    }
+  ],
+  "failures": []
+}
