@@ -68,6 +68,13 @@ jobs:
           python3 plotting/plot_analysis.py "$RUNNER_TEMP/analysis-deterministic" --output "$RUNNER_TEMP/analysis-deterministic/plots" --format both
           ./build/analyze_orbit "$RUNNER_TEMP/analysis-spice" --spice "$RUNNER_TEMP/spice-kernels/naif0012.tls" "$RUNNER_TEMP/spice-kernels/de432s.bsp" 0
           python3 plotting/plot_analysis.py "$RUNNER_TEMP/analysis-spice" --output "$RUNNER_TEMP/analysis-spice/plots"
+      - name: Validate frozen independent v0.1 references
+        run: |
+          # Consume committed data only: no reference regeneration and no
+          # mandatory SciPy/Tudat dependency in the production C++ build.
+          cmake -S tests/reference -B build-reference -G Ninja -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" -DCMAKE_CXX_FLAGS="${{ matrix.cxx_flags }}" -DCMAKE_EXE_LINKER_FLAGS="${{ matrix.linker_flags }}"
+          cmake --build build-reference --parallel
+          ctest --test-dir build-reference --output-on-failure -L reference
       - name: Validate optional direct NRLMSISE reference
         run: |
           python3 docs/atmosphere/acquire.py --destination "$RUNNER_TEMP/atmosphere-reference" --groups nrlmsise00 --acknowledge-external-terms

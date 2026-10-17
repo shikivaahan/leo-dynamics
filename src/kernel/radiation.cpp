@@ -130,6 +130,8 @@ Wrench solar_radiation_pressure(const Spacecraft& craft, const State& state,
     require_unit_range(env.illumination,"illumination must lie in [0,1]");
     if (!state.r.as_eigen().allFinite()||!env.sun_position_m.as_eigen().allFinite())
         throw std::invalid_argument("solar radiation pressure requires a finite state and environment");
+    if (env.sun_position_m.as_eigen().isZero(0))
+        throw std::invalid_argument("solar radiation pressure requires a nonzero Sun position");
     const InertialVector to_sun = env.sun_position_m - state.r;
     const double distance = norm(to_sun);
     if (!std::isfinite(distance)||!(distance>0)) throw std::invalid_argument("solar radiation pressure requires a distinct finite source");

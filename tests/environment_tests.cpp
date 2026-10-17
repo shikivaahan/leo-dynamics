@@ -81,3 +81,47 @@ TEST_CASE("Environment uses epoch plus fractional elapsed time and explicit cove
     REQUIRE_THROWS_AS(source({0},far),std::out_of_range);
     REQUIRE(empty({0},far).density_kg_m3==0);
 }
+
+TEST_CASE("Selected environmental models reject missing built-in acquisition", "[environment][validation]") {
+    const Earth earth;
+    const Spacecraft craft(10,Inertia(Eigen::Matrix3d::Identity()),{Surface(1,{-1,0,0},{})});
+    const EarthEnvironment empty(earth,{100});
+    for (bool torque_only:{false,true}) {
+        for (bool albedo:{false,true}) {
+            EnvironmentalModels models;
+            (albedo?models.albedo:models.srp)={!torque_only,torque_only};
+            const EarthDynamics dynamics(EarthGravity(earth,false),craft,models);
+            REQUIRE_THROWS_AS(EnvironmentalDynamics(dynamics,empty),std::invalid_argument);
+        }
+        EnvironmentalModels models;
+        models.drag={!torque_only,torque_only};
+        models.drag_model=DragModel::flat_plate;
+        const EarthDynamics dynamics(EarthGravity(earth,false),craft,models);
+        REQUIRE_THROWS_AS(EnvironmentalDynamics(dynamics,empty),std::invalid_argument);
+    }
+    const EarthDynamics gravity(EarthGravity(earth,false),craft);
+    const EnvironmentalDynamics valid(gravity,empty);
+    const State state{{earth.equatorial_radius_m+400e3,0,0},{0,7700,0},{1,0,0,0},{}};
+    REQUIRE(norm(valid({0},state).v_dot-gravity({0},state).v_dot)==0);
+}
+
+TEST_CASE("Explicit zero-density vacuum is distinct from disabled acquisition", "[environment][validation]") {
+    const Earth earth;
+    const Spacecraft craft(10,Inertia(Eigen::Matrix3d::Identity()),{Surface(1,{0,1,0},{})});
+    EnvironmentalModels models; models.drag={true,true}; models.drag_model=DragModel::flat_plate;
+    const EarthDynamics drag(EarthGravity(earth,false),craft,models);
+    const EarthDynamics gravity(EarthGravity(earth,false),craft);
+    const EarthEnvironment vacuum(earth,{0},nullptr,true,EclipseModel::none,ExponentialAtmosphere(0));
+    const EnvironmentalDynamics coupled(drag,vacuum);
+    const State state{{earth.equatorial_radius_m+400e3,0,0},{0,7700,0},{1,0,0,0},{}};
+    REQUIRE(norm(coupled({0},state).v_dot-gravity({0},state).v_dot)==0);
+}
+
+TEST_CASE("Missing Sun snapshot cannot masquerade as a near-Earth radiation source", "[environment][validation]") {
+    const Earth earth;
+    const Spacecraft craft(10,Inertia(Eigen::Matrix3d::Identity()),{Surface(1,{-1,0,0},{})});
+    const State state{{earth.equatorial_radius_m+400e3,0,0},{0,7700,0},{1,0,0,0},{}};
+    EnvironmentalModels models; models.srp={true,true};
+    const EarthDynamics radiation(EarthGravity(earth,false),craft,models);
+    REQUIRE_THROWS_AS(radiation({0},state,EnvironmentSnapshot{}),std::invalid_argument);
+}

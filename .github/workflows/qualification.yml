@@ -1,0 +1,41 @@
+name: Manual six-hour and comparative qualification
+on:
+  workflow_dispatch:
+jobs:
+  qualification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install native and isolated Python prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build g++ libeigen3-dev libboost-dev python3-venv curl bzip2
+          python3 -m venv "$RUNNER_TEMP/qualification-venv"
+          "$RUNNER_TEMP/qualification-venv/bin/python" -m pip install -r tests/reference/requirements-generation.txt
+          echo "QUALIFICATION_PY=$RUNNER_TEMP/qualification-venv/bin/python" >> "$GITHUB_ENV"
+      - name: Install separately pinned native Tudat reference
+        run: |
+          curl --fail --location https://micro.mamba.pm/api/micromamba/linux-64/latest -o "$RUNNER_TEMP/micromamba.tar.bz2"
+          tar -xjf "$RUNNER_TEMP/micromamba.tar.bz2" -C "$RUNNER_TEMP" bin/micromamba
+          "$RUNNER_TEMP/bin/micromamba" create -y -p "$RUNNER_TEMP/tudat-env" -c tudat-team -c conda-forge python=3.10 tudatpy=0.9.0 tudat=2.14.0 libboost=1.85 numpy
+          echo "TUDAT_PY=$RUNNER_TEMP/tudat-env/bin/python" >> "$GITHUB_ENV"
+      - name: Build the release-optimised C++ harness
+        run: |
+          cmake -S tests/reference -B build-reference -G Ninja -DCMAKE_BUILD_TYPE=Release -DPython3_EXECUTABLE="$QUALIFICATION_PY"
+          cmake --build build-reference --parallel
+      - name: Consume frozen six-hour reference fixtures
+        run: |
+          "$QUALIFICATION_PY" tests/reference/test_reference_regression.py --binary build-reference/leo_reference_dump --suite full --out qualification-results/acceptance.json
+          # Native reference regeneration is explicit and separate. Ordinary
+          # acceptance above never creates its own expected data.
+          "$TUDAT_PY" tests/reference/generators/qualify_tudat.py --out qualification-results/tudat-independent-rerun
+      - name: Measure equivalent workloads without a performance pass threshold
+        run: |
+          "$QUALIFICATION_PY" benchmarks/comparative/run.py --binary build-reference/leo_reference_dump --tudat-python "$TUDAT_PY" --out qualification-results/comparative --repeats 3 --warmups 1
+          "$QUALIFICATION_PY" benchmarks/comparative/analyse.py --input qualification-results/comparative/summary.json --out qualification-results/comparative/report
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v01-qualification-evidence
+          path: qualification-results/

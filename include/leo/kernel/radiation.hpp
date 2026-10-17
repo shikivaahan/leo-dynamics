@@ -21,6 +21,8 @@ double illumination_factor(EclipseModel,InertialVector r,InertialVector sun,
 // The 2/3 term is Lambertian recoil. At face-on incidence, absorption gives PA,
 // specular reflection 2PA, fully diffuse reflection (5/3)PA, all away from the source.
 // Torques derive from the same force via surface_body_torque.
+// A zero Earth-to-Sun position is missing data and is rejected, not interpreted
+// as a radiation source at the Earth's centre.
 Wrench solar_radiation_pressure(const Spacecraft&,const State&,const EnvironmentSnapshot&);
 // Smallest defensible radial-beam albedo: Earth-reflected flux is treated as a
 // point source at Earth's centre with radial falloff (R/|r|)^2, scaled by the

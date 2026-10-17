@@ -149,8 +149,10 @@ Environment acquisition remains caller-controlled: a supplied zero density is
 not distinguishable from intentionally disabled atmospheric acquisition;
 illumination is the supplied snapshot field, not recomputed by analysis.
 Snapshots must have finite epoch exactly equal to trajectory epoch+sample time.
-Supply real solar geometry whenever solar physics is enabled; Stage 2's
-constructor does not validate source/model compatibility.
+Supply real solar geometry whenever solar physics is enabled. The v0.1
+qualification fix now cross-checks built-in `EarthEnvironment`/model compatibility
+in `EnvironmentalDynamics` construction; explicit custom snapshots remain the
+caller's responsibility.
 
 The exporter validates counts, timestamps, finite outputs and event/interval
 brackets before opening files, then creates the directory and replaces these

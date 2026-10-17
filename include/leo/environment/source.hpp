@@ -5,17 +5,16 @@
 #include "leo/kernel/radiation.hpp"
 #include <cmath>
 #include <stdexcept>
+#include <type_traits>
 #include <utility>
 namespace leo {
 // The provider is borrowed and must outlive the source. A null provider means no solar acquisition.
 // Epoch is explicit; elapsed solver seconds never masquerade as UTC or absolute ephemeris time.
-// Does not validate compatibility with enabled dynamics models. SRP/albedo need
-// a covering Sun provider here (or solar data from another snapshot source);
-// null leaves a zero Sun position, which may cause evaluation failure or incorrect
-// SRP geometry without an immediate error. Atmospheric acquisition must be enabled
-// for model density; disabled leaves zero density and hence zero drag.
-// Acquisition is independent of model switches. Geometry, atmosphere-domain and
-// provider/coverage errors occur during evaluation and propagate to the caller.
+// Acquisition alone cannot know which force/torque models a caller will select.
+// When combined through EnvironmentalDynamics, required Sun/density acquisition
+// is checked at construction. Provider coverage and geometry errors still occur
+// during evaluation and propagate unchanged. Custom snapshot sources remain
+// responsible for supplying the explicit data their selected models require.
 class EarthEnvironment {
     Earth earth_;
     Epoch epoch_;
@@ -37,6 +36,12 @@ public:
         if (eclipse!=EclipseModel::none&&eclipse!=EclipseModel::cylindrical&&eclipse!=EclipseModel::conical)
             throw std::invalid_argument("unsupported eclipse model");
     }
+    void validate_for(const EnvironmentalModels& models) const {
+        if ((models.srp.enabled()||models.albedo.enabled())&&!ephemeris_)
+            throw std::invalid_argument("selected radiation models require a Sun provider");
+        if (models.drag.enabled()&&!atmosphere_)
+            throw std::invalid_argument("selected drag requires atmospheric acquisition");
+    }
     EnvironmentSnapshot operator()(ElapsedTime t,const State& s) const {
         const double et=epoch_.et_seconds+t.seconds;
         if (!std::isfinite(t.seconds)||!std::isfinite(et)||!s.r.as_eigen().allFinite())
@@ -57,14 +62,17 @@ public:
 };
 // Acquisition is a wrapper, not a hidden dependency of EarthDynamics or its force laws.
 // A source is any callable (ElapsedTime,const State&) -> EnvironmentSnapshot.
-// Construction does not cross-check source data against enabled forces/torques.
+// Built-in EarthEnvironment sources are cross-checked against model selection.
 // Source/RHS exceptions propagate unchanged; no missing-data fallback is provided.
 template<class Source> class EnvironmentalDynamics {
     EarthDynamics dynamics_;
     Source source_;
 public:
     EnvironmentalDynamics(EarthDynamics dynamics,Source source)
-        :dynamics_(std::move(dynamics)),source_(std::move(source)) {}
+        :dynamics_(std::move(dynamics)),source_(std::move(source)) {
+        if constexpr (std::is_same_v<Source,EarthEnvironment>)
+            source_.validate_for(dynamics_.models());
+    }
     StateDerivative operator()(ElapsedTime t,const State& s) const {
         return dynamics_(t,s,source_(t,s));
     }

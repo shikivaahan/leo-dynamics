@@ -1,0 +1,166 @@
+{
+  "kind": "v0.1-native-tudat-qualification",
+  "runtime_module_version": "0.8.0",
+  "integrator": "native RKDP 8(7) higher order; 5/2.5 s fixed-step convergence; exact requested samples",
+  "frame": "Earth-centred J2000; inertially fixed Earth pole, explicit normalized C20",
+  "fixtures": [
+    {
+      "name": "two_body_circular",
+      "passed": true,
+      "reference_refinement": {
+        "position_m": 1.3931915738132642e-06,
+        "velocity_m_s": 1.403642432031198e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "vs_dop853": {
+        "position_m": 1.3013853885438516e-06,
+        "velocity_m_s": 1.311936334537686e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "file": "two_body_circular.json",
+      "sha256": "79f48a9cde7bd6d00ec0d3ad4b2d051eb6293d0203d60ee1a3393ed124902494",
+      "scenario_sha256": "9f30b876ec0360e5ac51ab515b40a6c17c48ec8d11f6551e307253b809cc0316"
+    },
+    {
+      "name": "two_body_eccentric",
+      "passed": true,
+      "reference_refinement": {
+        "position_m": 9.585875969149888e-07,
+        "velocity_m_s": 9.050336318487684e-10,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "vs_dop853": {
+        "position_m": 3.087830377033918e-06,
+        "velocity_m_s": 3.244657275023e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "file": "two_body_eccentric.json",
+      "sha256": "4e060d4ab13d5d671a7e384f1822e24e4a4e2cb1bdb0878f123beec838dd58fe",
+      "scenario_sha256": "9d01f096955fb68bedf0747942277d02037546ec34ce6631538473ad2285d7ad"
+    },
+    {
+      "name": "j2_equatorial",
+      "passed": true,
+      "reference_refinement": {
+        "position_m": 1.4152306872927253e-06,
+        "velocity_m_s": 1.5585244783666024e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "vs_dop853": {
+        "position_m": 1.5215224478422489e-06,
+        "velocity_m_s": 1.4630855573736462e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "file": "j2_equatorial.json",
+      "sha256": "b3f845542bbd41fa6ef272ce7f78acd67d026b29edab51cc9f629fb02b9fb0d5",
+      "scenario_sha256": "368edbd99fe3361dc41b62642bc80f7a1b68170160457d3ae2d3048131a90d7e"
+    },
+    {
+      "name": "j2_inclined",
+      "passed": true,
+      "reference_refinement": {
+        "position_m": 8.987171159965906e-07,
+        "velocity_m_s": 8.608160755653869e-10,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "vs_dop853": {
+        "position_m": 2.1428819718246982e-07,
+        "velocity_m_s": 2.3241994299710056e-10,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "file": "j2_inclined.json",
+      "sha256": "4da3889d9c4bbf8ae58f736a21ddbc548523857dca8d3332822ed6c2b8f5a248",
+      "scenario_sha256": "228bb9d0031771348500216b8b1834a66f2389274dc56df8ef6d7b88f7acd270"
+    },
+    {
+      "name": "torque_free_spherical",
+      "passed": true,
+      "reference_refinement": {
+        "position_m": 1.0900851255952963e-08,
+        "velocity_m_s": 9.787637850436515e-12,
+        "attitude_rad": 1.3334236103572998e-15,
+        "angular_rate_rad_s": 0.0
+      },
+      "vs_dop853": {
+        "position_m": 1.834640467361725e-08,
+        "velocity_m_s": 2.2793006020961474e-11,
+        "attitude_rad": 5.713065722842628e-15,
+        "angular_rate_rad_s": 0.0
+      },
+      "file": "torque_free_spherical.json",
+      "sha256": "ba1cc799ec93c421692c84f903f142e17327e2a2e934ae03d22fc117a7d190b3",
+      "scenario_sha256": "e2faad3b09286cd75a05ddf0e4ce85478e1d5725c31eb418a872268fa35d97a0"
+    },
+    {
+      "name": "torque_free_symmetric",
+      "passed": true,
+      "reference_refinement": {
+        "position_m": 1.0900851255952963e-08,
+        "velocity_m_s": 9.787637850436515e-12,
+        "attitude_rad": 4.083093522245446e-14,
+        "angular_rate_rad_s": 7.611068361834777e-17
+      },
+      "vs_dop853": {
+        "position_m": 1.6791270796305307e-08,
+        "velocity_m_s": 2.3394088415247066e-11,
+        "attitude_rad": 4.0217745263892514e-14,
+        "angular_rate_rad_s": 2.8120751748383396e-16
+      },
+      "file": "torque_free_symmetric.json",
+      "sha256": "ab762857e3cf731e8757d59120c388eefe5dd26bfbddfba4846f9e8c444fac10",
+      "scenario_sha256": "81a12a7bf9aaabca1a74c245d65466c4ea352aeb88a835e86d58d701bd7105e4"
+    },
+    {
+      "name": "torque_free_elongated",
+      "passed": true,
+      "reference_refinement": {
+        "position_m": 1.0900851255952963e-08,
+        "velocity_m_s": 9.787637850436515e-12,
+        "attitude_rad": 2.2232198742534223e-15,
+        "angular_rate_rad_s": 2.074909169069005e-18
+      },
+      "vs_dop853": {
+        "position_m": 3.36309337714087e-08,
+        "velocity_m_s": 4.077856698282823e-11,
+        "attitude_rad": 5.6582656761382525e-15,
+        "angular_rate_rad_s": 4.9661460071388214e-18
+      },
+      "file": "torque_free_elongated.json",
+      "sha256": "aa794e50929e45190a461aaaa8c235c0c0482daf263ba4bb2edd71302025de6f",
+      "scenario_sha256": "3b87a030eaffeed8ad1c117622aef272985c19e2c61acbd92416c47017d261d6"
+    },
+    {
+      "name": "gravity_gradient",
+      "passed": true,
+      "reference_refinement": {
+        "position_m": 1.2637471681968116e-07,
+        "velocity_m_s": 1.103566045083765e-10,
+        "attitude_rad": 3.968950264381261e-14,
+        "angular_rate_rad_s": 4.513834732558177e-17
+      },
+      "vs_dop853": {
+        "position_m": 3.1507139602579253e-07,
+        "velocity_m_s": 3.5735916294213904e-10,
+        "attitude_rad": 2.8842646008928423e-13,
+        "angular_rate_rad_s": 1.0590700713574946e-16
+      },
+      "file": "gravity_gradient.json",
+      "sha256": "ed83c8318997b36f4343f61525559a80706b59cf19b8d026f35e7e98e42f2ac4",
+      "scenario_sha256": "6e2bd45ab01dc1cf46357aba2048b9a455023df8bc0de0aee9f801ce0289c07b"
+    }
+  ],
+  "unmatched": [
+    "panel optical SRP",
+    "cold-beam Sentman/flat-plate panel drag",
+    "radial-beam albedo",
+    "full matched environmental coupling"
+  ]
+}

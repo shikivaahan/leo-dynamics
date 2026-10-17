@@ -71,7 +71,7 @@ Headers live under `include/leo`; physics/integration/environment use namespace 
 
 `EnvironmentalModels` contains `srp`, `drag` and `albedo` selections, each `{force,torque}`. All default disabled; forces and torques can be selected independently without reimplementing their physics. `drag_model` explicitly selects `DragModel::none`, `flat_plate` or `sentman`; enabled drag with `none` is rejected. `gravity_gradient` selects the independent inertia-based torque, and `earth_albedo` is a finite [0,1] radial-beam coefficient. Point-mass/J2 selection remains `EarthGravity(earth,enable_j2)`.
 
-Environment compatibility is **not fully validated at construction**. `EarthDynamics` checks drag selection and albedo bounds, but `EnvironmentalDynamics` does not check whether its source supplies the data needed by enabled forces **or torques**:
+`EarthDynamics` validates drag selection and albedo bounds. `EnvironmentalDynamics` additionally checks a built-in `EarthEnvironment` at construction: enabled SRP/albedo force **or torque** requires a Sun provider, and enabled drag requires atmospheric acquisition. Custom snapshot sources retain their explicit caller-owned data contract:
 
 | Enabled contribution | Required environment |
 |---|---|
@@ -80,7 +80,7 @@ Environment compatibility is **not fully validated at construction**. `EarthDyna
 | Albedo | Valid Sun position; with `EarthEnvironment`, supply a covering Sun provider (direct-Sun illumination is not used by albedo) |
 | Either drag model | Select `flat_plate` or `sentman` and supply density/rotation; with `EarthEnvironment`, enable atmospheric acquisition for nonzero model density |
 
-An explicit/custom snapshot source can supply these fields without an ephemeris provider. With `EarthEnvironment`, a null provider leaves the Sun position at zero; atmospheric acquisition disabled leaves density at zero. Neither is automatically rejected as incompatible: drag is then muted, while SRP without a provider may fail during propagation **or use incorrect Sun geometry without an immediate error**. Albedo rejects the zero Sun position during evaluation. Runtime input/geometry failures raise `std::invalid_argument`, atmosphere-domain failures `std::out_of_range`, and CSPICE coverage failures `std::runtime_error`; propagation passes RHS exceptions through and returns no partial trajectory. Source acquisition is independent of model switches, so configured Sun/atmosphere acquisition can still fail when those contributions are disabled.
+An explicit/custom snapshot source can supply these fields without an ephemeris provider. A built-in `EarthEnvironment` that disables required acquisition is rejected when combined through `EnvironmentalDynamics`; standalone acquisition without selected forces remains valid. Explicit zero-density vacuum is supported by enabling acquisition with `ExponentialAtmosphere(0)`. Both SRP and albedo reject a zero Sun position during evaluation. Runtime input/geometry failures raise `std::invalid_argument`, atmosphere-domain failures `std::out_of_range`, and CSPICE coverage failures `std::runtime_error`; propagation passes RHS exceptions through and returns no partial trajectory. Source acquisition remains independent of model switches.
 
 ```cpp
 leo::Spacecraft craft(10, leo::Inertia(Eigen::Matrix3d::Identity()),

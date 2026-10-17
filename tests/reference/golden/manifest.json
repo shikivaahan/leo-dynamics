@@ -1,0 +1,516 @@
+{
+  "kind": "v0.1-independent-reference",
+  "provenance": {
+    "python": "3.12.3",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+    "sources": {
+      "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+      "dop853_reference.py": "c49377a6d869de26bfa7cb436f00da08b3edba47c42b0fa5428dcb63b08f2c85",
+      "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+      "generate_fixtures.py": "f5e087546de59c407fd3c1cd7f107cdd8984f3418109e1a196ac86d000dcc6ac",
+      "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+      "qualify_tudat.py": "ca765c4603d6b99f858a01b1973b7392478bd0ebe747a8522a2a64e34ae325f9",
+      "scenarios.py": "748d87748f7bfb92d277908ad6dc7714e74091754befeb0128744484368e2e7d",
+      "tudat_reference.py": "5f00a0235c4b92aab2598d19e604b3937ffac71a6f93c89501edbf780d8aa913"
+    }
+  },
+  "fixtures": [
+    {
+      "name": "albedo",
+      "file": "albedo.json",
+      "sha256": "9be49693950a290e812d4fdb1aa3da3b373199cf010e8d6a028616b25b50e5de",
+      "pointwise": "albedo.pointwise.json",
+      "pointwise_sha256": "01ffef37b9ebcd4b3a76e3631ddc74501b0674c1fab8918af7b9c16de66ccfb7",
+      "scenario_sha256": "7d236650273c066d3a8f7402894f4d8beab71d1e63bef7cda95d74cea312ef4a",
+      "reference_convergence": {
+        "position_m": 5.120152977974908e-07,
+        "velocity_m_s": 4.0039987777314983e-10,
+        "attitude_rad": 4.22704452274215e-08,
+        "angular_rate_rad_s": 1.9121926264631384e-11
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "case_c_short",
+      "file": "case_c_short.json",
+      "sha256": "19b60784fa21f199b3d77003f5218ef872d9f3ee1411c14482205f780aeaf0ed",
+      "pointwise": "case_c_short.pointwise.json",
+      "pointwise_sha256": "68322e823a51400fca16f3538714901dbd027c2e53826ddb26313a576a5ea31b",
+      "scenario_sha256": "00c1d48c0fe9d626196a6be3514dec22aa9068d4751217df90f367de55976fd6",
+      "reference_convergence": {
+        "position_m": 2.843966984116001e-08,
+        "velocity_m_s": 4.14171307550259e-11,
+        "attitude_rad": 2.6093874540604876e-09,
+        "angular_rate_rad_s": 8.53796294251977e-12
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "coupled_case_a",
+      "file": "coupled_case_a.json",
+      "sha256": "a9506a9815bc8ae1f3409f9422f34873762127a450d17ccaac4b9698d7113051",
+      "pointwise": "coupled_case_a.pointwise.json",
+      "pointwise_sha256": "8cb29e6ec0a8fb4e85f0425e3312a100f4f74f0147855ff3d6078a4d846407f4",
+      "scenario_sha256": "90a37d4b68b5526b0c0c661fd06da26d6313aca9fa3b704fc79f954b58251882",
+      "reference_convergence": {
+        "position_m": 1.3171125992621084e-05,
+        "velocity_m_s": 1.2805732918420123e-08,
+        "attitude_rad": 1.0418152432704973e-06,
+        "angular_rate_rad_s": 1.0937647358134375e-10
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "coupled_case_b",
+      "file": "coupled_case_b.json",
+      "sha256": "8c8b007e60a8b3afa3cf782a6bad152c8c379e375d7ea1f763a95302e9fe5cc9",
+      "pointwise": "coupled_case_b.pointwise.json",
+      "pointwise_sha256": "d662968f2cb85ae14c537bb2111cdf2697c3f3ef524843c0283c9c9de5f7646f",
+      "scenario_sha256": "ba6e41b81fecdb7e0e4a3080104daeddadb3121b84f0e457aebf093f8b467b44",
+      "reference_convergence": {
+        "position_m": 1.306008498322022e-06,
+        "velocity_m_s": 3.1711199721985602e-09,
+        "attitude_rad": 1.0002125839297923e-06,
+        "angular_rate_rad_s": 1.0431932530958647e-09
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "18a8d8f555824f70a8624367db1b1cfd203221bc8d5f297bdde3b6e5b8d0496a",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "748d87748f7bfb92d277908ad6dc7714e74091754befeb0128744484368e2e7d",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "drag_flat_plate",
+      "file": "drag_flat_plate.json",
+      "sha256": "8e2ca2444ad239fe2f5dfeb37c55afdda81d4933ca8c4ead78d32c5b9df3cbb5",
+      "pointwise": "drag_flat_plate.pointwise.json",
+      "pointwise_sha256": "2a0fee04890d30c81426e789f989f37a8293e5e66571c92cd2050f5caaecec43",
+      "scenario_sha256": "2174e9ad8e572251605ea75f9dd6c0edf94c5aa088e56e74720a323891cb9361",
+      "reference_convergence": {
+        "position_m": 6.362542001139464e-08,
+        "velocity_m_s": 7.614811943834676e-11,
+        "attitude_rad": 2.230668598145797e-09,
+        "angular_rate_rad_s": 1.2780719041291304e-12
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "drag_sentman",
+      "file": "drag_sentman.json",
+      "sha256": "bc790949c770c3023197ad47b220a43746b3481d48abb3cd8ceda3706761917c",
+      "pointwise": "drag_sentman.pointwise.json",
+      "pointwise_sha256": "3ed279e3bc2f0348db36a3306d82d071913c1f81eceb438a3c9ce136e4988539",
+      "scenario_sha256": "c7f447f46cb751ea36265acd7a1c13e18e78cdbce0d70b2c0deb30698ad7a581",
+      "reference_convergence": {
+        "position_m": 3.573094037113998e-07,
+        "velocity_m_s": 4.504643799538659e-10,
+        "attitude_rad": 3.2133433113599677e-09,
+        "angular_rate_rad_s": 1.4436693046195103e-12
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "eclipse_conical",
+      "file": "eclipse_conical.json",
+      "sha256": "99c01725dc6395d9ccc197c332a8bedeaa3778eb445b9d1d70f273320aae35ee",
+      "pointwise": "eclipse_conical.pointwise.json",
+      "pointwise_sha256": "e34df92b44a6e857fbb475c67c826705b00bc4ba9f50fb1b9cad99c20786672e",
+      "scenario_sha256": "a2cd687f30b5034e4799446cad81fba89a0c7beef2801af167cc651774379a2d",
+      "reference_convergence": {
+        "position_m": 3.349919789381077e-06,
+        "velocity_m_s": 4.914575217857703e-09,
+        "attitude_rad": 8.039154147931964e-09,
+        "angular_rate_rad_s": 1.022989332133406e-11
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "eclipse_cylindrical",
+      "file": "eclipse_cylindrical.json",
+      "sha256": "e1707471f03ca00f803e4ecab4f2541adc917d40fbe197cfa99126980e014530",
+      "pointwise": "eclipse_cylindrical.pointwise.json",
+      "pointwise_sha256": "259f7ee34f683e0e091eceaf67d50048bce3bccbf8c1695c7cfdf096c091f482",
+      "scenario_sha256": "2adc680f2547cb35f7bbd2d16658a8bab938ee030c4d82e118fbe27c2a0b371a",
+      "reference_convergence": {
+        "position_m": 1.1102127817965784e-06,
+        "velocity_m_s": 1.295277882866189e-09,
+        "attitude_rad": 3.3107475871929915e-08,
+        "angular_rate_rad_s": 2.2756036638371668e-11
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "gravity_gradient",
+      "file": "gravity_gradient.json",
+      "sha256": "b9593689f53152e092491b5c8a07af45f451e1606eb3253aee4200c03fd78f54",
+      "pointwise": "gravity_gradient.pointwise.json",
+      "pointwise_sha256": "b2ec62378e577caa29558fa0a8097e02457e0fb3d29ed7bafb916ed9ad8972d2",
+      "scenario_sha256": "6e2bd45ab01dc1cf46357aba2048b9a455023df8bc0de0aee9f801ce0289c07b",
+      "reference_convergence": {
+        "position_m": 3.6245951112962124e-07,
+        "velocity_m_s": 4.1304936188136975e-10,
+        "attitude_rad": 2.1054474641032997e-13,
+        "angular_rate_rad_s": 2.917257700345509e-16
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "j2_equatorial",
+      "file": "j2_equatorial.json",
+      "sha256": "e70b1bd45c47d85e26cb64226d28d38f52d5719728394ea09fa03b54fd51277c",
+      "pointwise": "j2_equatorial.pointwise.json",
+      "pointwise_sha256": "37af5d008162e28b864997ad67921eae2d8a3c750153454725ad6ee25fde8c7c",
+      "scenario_sha256": "368edbd99fe3361dc41b62642bc80f7a1b68170160457d3ae2d3048131a90d7e",
+      "reference_convergence": {
+        "position_m": 2.375475303297595e-06,
+        "velocity_m_s": 2.4546576274095307e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "j2_inclined",
+      "file": "j2_inclined.json",
+      "sha256": "1ebf3351e667f55edc8075efa592a214babb93d0409bd0878aea8793989038ee",
+      "pointwise": "j2_inclined.pointwise.json",
+      "pointwise_sha256": "f8a9a05aea81d492870de58e58eb4c335d035440a49f166d7c819b41b16518b5",
+      "scenario_sha256": "228bb9d0031771348500216b8b1834a66f2389274dc56df8ef6d7b88f7acd270",
+      "reference_convergence": {
+        "position_m": 8.923675388073906e-07,
+        "velocity_m_s": 9.174624444481289e-10,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "srp",
+      "file": "srp.json",
+      "sha256": "95abcbf3a5208722a86e32150948e294be08b49180e57c4ee46c49bede5ba1b9",
+      "pointwise": "srp.pointwise.json",
+      "pointwise_sha256": "1cb27246fa572d607e8e18a130f0921b15dad9adae2a1c644b8c1ea694f157ff",
+      "scenario_sha256": "6dcb45e1802309914c0c3f35044783738a14dd1906f5b68004d565a176d17b1a",
+      "reference_convergence": {
+        "position_m": 9.5280125661007e-07,
+        "velocity_m_s": 1.2647296433546666e-09,
+        "attitude_rad": 1.0206376022115022e-08,
+        "angular_rate_rad_s": 1.27972216157346e-11
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "torque_free_elongated",
+      "file": "torque_free_elongated.json",
+      "sha256": "da075b6d977f96071706682fc3aa9badd9a631f92e47fed9529bef8c54bb991f",
+      "pointwise": "torque_free_elongated.pointwise.json",
+      "pointwise_sha256": "eb04ad0f27d63719365a957ef5aab0a020f6e55e03a0151686ad1ae632ef18ba",
+      "scenario_sha256": "3b87a030eaffeed8ad1c117622aef272985c19e2c61acbd92416c47017d261d6",
+      "reference_convergence": {
+        "position_m": 2.7534130985206142e-08,
+        "velocity_m_s": 3.23670240491524e-11,
+        "attitude_rad": 5.392043872394706e-15,
+        "angular_rate_rad_s": 5.727895077200639e-18
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "torque_free_spherical",
+      "file": "torque_free_spherical.json",
+      "sha256": "4c350828ba636f8d715be24e7216e51d21a56443941627811c6dac37addd6dc5",
+      "pointwise": "torque_free_spherical.pointwise.json",
+      "pointwise_sha256": "16cad90390c48efaf284116b0e3c3de919520066f67048444e8dbc31fa696ad4",
+      "scenario_sha256": "e2faad3b09286cd75a05ddf0e4ce85478e1d5725c31eb418a872268fa35d97a0",
+      "reference_convergence": {
+        "position_m": 1.697589283209125e-08,
+        "velocity_m_s": 2.6578416866327565e-11,
+        "attitude_rad": 7.670000594338198e-14,
+        "angular_rate_rad_s": 0.0
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "torque_free_symmetric",
+      "file": "torque_free_symmetric.json",
+      "sha256": "56917bc6784943164ea420b80404f42f94c005f6379c46d29cbb1db91d172cb9",
+      "pointwise": "torque_free_symmetric.pointwise.json",
+      "pointwise_sha256": "dbd6342539bef0b6b9251bc47f71aa755851216f6ddfb33ffa8bac0e4bc65b15",
+      "scenario_sha256": "81a12a7bf9aaabca1a74c245d65466c4ea352aeb88a835e86d58d701bd7105e4",
+      "reference_convergence": {
+        "position_m": 9.463355612429592e-09,
+        "velocity_m_s": 1.8909303119711136e-11,
+        "attitude_rad": 9.427017694005703e-13,
+        "angular_rate_rad_s": 2.638890179929606e-16
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "174d0a86344ae7481eb675c2f66a27da6eaae905201d9818c7f05c45a9591de3",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "5eb108ef6f1224f1813da79572e2797eae09ae7e4fc2eff15a7c5439e8604b56",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "scenarios.py": "6073b7431525a2e6760f8d6a10bde33ff56e0e07811126b65295600cb76fd031",
+          "tudat_reference.py": "ca098893b1e51aaedf9fa6bd3da8645656a8ce1422672dbfc5cf42d1bfd94b15"
+        }
+      }
+    },
+    {
+      "name": "two_body_circular",
+      "file": "two_body_circular.json",
+      "sha256": "2d86cd1a5495834f9a4b11a3d47ad474c39490c1fa4ae755a56a997b5bf73162",
+      "pointwise": "two_body_circular.pointwise.json",
+      "pointwise_sha256": "5576f38f28bdee3e3d9dc18d0576556a5103ad2bd4b3c29f4aa7848c8792aaf8",
+      "scenario_sha256": "9f30b876ec0360e5ac51ab515b40a6c17c48ec8d11f6551e307253b809cc0316",
+      "reference_convergence": {
+        "position_m": 2.161471000506363e-06,
+        "velocity_m_s": 2.239146079292683e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "c49377a6d869de26bfa7cb436f00da08b3edba47c42b0fa5428dcb63b08f2c85",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "f5e087546de59c407fd3c1cd7f107cdd8984f3418109e1a196ac86d000dcc6ac",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "qualify_tudat.py": "ca765c4603d6b99f858a01b1973b7392478bd0ebe747a8522a2a64e34ae325f9",
+          "scenarios.py": "748d87748f7bfb92d277908ad6dc7714e74091754befeb0128744484368e2e7d",
+          "tudat_reference.py": "5f00a0235c4b92aab2598d19e604b3937ffac71a6f93c89501edbf780d8aa913"
+        }
+      }
+    },
+    {
+      "name": "two_body_eccentric",
+      "file": "two_body_eccentric.json",
+      "sha256": "e1273d088e9ee6971310875a4f30e9b9b451e51f84670c8c89bf030b2969e552",
+      "pointwise": "two_body_eccentric.pointwise.json",
+      "pointwise_sha256": "f772cb84e4acb7f005923d01f34f561f34f4e082c472907b656a996116c097a7",
+      "scenario_sha256": "9d01f096955fb68bedf0747942277d02037546ec34ce6631538473ad2285d7ad",
+      "reference_convergence": {
+        "position_m": 1.447429463110485e-06,
+        "velocity_m_s": 1.526105347540028e-09,
+        "attitude_rad": 0.0,
+        "angular_rate_rad_s": 0.0
+      },
+      "provenance": {
+        "python": "3.12.3",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "method": "independent Python equations, SciPy DOP853; analytical Kepler/top/invariant checks",
+        "sources": {
+          "conservation.py": "f4f09d9436b8716d340084b4bc2e373e8876f06e6fb306e00235b27b35dca6ac",
+          "dop853_reference.py": "c49377a6d869de26bfa7cb436f00da08b3edba47c42b0fa5428dcb63b08f2c85",
+          "export_scenarios.py": "35541389fbc5f588b131f8e5c71936a5912b16c9f9022638c823c014dedc98d0",
+          "generate_fixtures.py": "f5e087546de59c407fd3c1cd7f107cdd8984f3418109e1a196ac86d000dcc6ac",
+          "physics.py": "8dde548ddc4dc884fb199f3dcdb516663171f0aa995348b057542dec7eca9477",
+          "qualify_tudat.py": "ca765c4603d6b99f858a01b1973b7392478bd0ebe747a8522a2a64e34ae325f9",
+          "scenarios.py": "748d87748f7bfb92d277908ad6dc7714e74091754befeb0128744484368e2e7d",
+          "tudat_reference.py": "5f00a0235c4b92aab2598d19e604b3937ffac71a6f93c89501edbf780d8aa913"
+        }
+      }
+    }
+  ]
+}
