@@ -62,8 +62,10 @@ Expected output:
 leo_dynamics.Earth(mu_m3_s2=398600441800000.000000, equatorial_radius_m=6378136.300000, j2=0.001083)
 ```
 
-No installation step exists in this phase; there is no `pyproject.toml`, wheel or
-PyPI infrastructure. If the import fails with a "has not been built" message,
+This is the developer path. Ordinary installation is a wheel: see the
+[README installation section](../README.md#installation), and
+[python-packaging.md](python-packaging.md) for what has actually been built,
+installed and tested. If the import fails with a "has not been built" message,
 either the extension is missing from the directory on `PYTHONPATH` or the
 invoked interpreter is not the one the build targeted.
 
@@ -439,8 +441,10 @@ analysis and the nine-file CSV export.
 
 Limitations to keep in mind:
 
-- **No distribution packaging.** No `pyproject.toml`, wheels or PyPI. Use
-  `PYTHONPATH` as above; packaging is a separate phase.
+- **No publication yet.** Wheels and a source distribution build from this
+  repository, but nothing is on PyPI and no licence is established, so
+  `pip install leo-dynamics` does not work. See
+  [python-packaging.md](python-packaging.md).
 - **No CSPICE from Python.** The optional native provider and its tests are
   unchanged; use `SunEphemeris.constant` or `SunEphemeris.tabulated`.
 - **No NRLMSISE-00 or JB2008** in v0.1 (deferred to v0.2).

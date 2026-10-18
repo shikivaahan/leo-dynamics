@@ -2,6 +2,140 @@
 
 C++20, CPU-only, double-precision, lightweight Earth-centred 6-DoF rigid-spacecraft dynamics: point-mass/J2 gravity, panel radiation and aerodynamic forces, their torques, and gravity-gradient torque. A separate trajectory-analysis library exports CSV for optional headless Python/Matplotlib plotting. This is not a high-fidelity mission-analysis framework; no controls, third-body gravity, flexible bodies, GPU or optimisation subsystem.
 
+## Installation
+
+The Python distribution is `leo-dynamics`; the import name is `leo_dynamics`. It ships a binary wheel containing the compiled engine extension, so installing a compatible wheel needs **no compiler, CMake, Eigen, Boost or pybind11**. NumPy is the only mandatory runtime dependency.
+
+The intended installation command is:
+
+```bash
+pip install leo-dynamics
+```
+
+**This command does not work yet.** Nothing has been published to PyPI and the repository carries no licence file, so redistribution rights are not established. Until both are resolved, install a wheel built from this repository (below). See [packaging status and blockers](docs/python-packaging.md).
+
+### Installing a locally built wheel
+
+Building needs a full Python >= 3.10 interpreter (with development headers) and a C++20 compiler on the build machine only. CMake, Ninja, scikit-build-core, pybind11, Eigen and Boost are all provisioned by the pinned build itself, so no system copies are required.
+
+```sh
+python3 -m venv .venv-build
+.venv-build/bin/python -m pip install --upgrade pip build
+.venv-build/bin/python -m build --wheel           # dist/leo_dynamics-0.1.0-*.whl
+
+python3 -m venv /tmp/leo-wheel-test
+/tmp/leo-wheel-test/bin/python -m pip install dist/leo_dynamics-0.1.0-*.whl
+cd /tmp
+/tmp/leo-wheel-test/bin/python -c "import leo_dynamics as leo; print(leo.Earth())"
+```
+
+```
+leo_dynamics.Earth(mu_m3_s2=398600441800000.000000, equatorial_radius_m=6378136.300000, j2=0.001083)
+```
+
+`python -m build --sdist` produces the source distribution; rebuilding it needs the same toolchain. To prove a wheel — rather than a development build — is what got imported, install `pytest` and run the driver from outside the repository with an absolute path. It refuses to continue unless `leo_dynamics` resolves inside site-packages, then runs the existing suite from a temporary directory outside the source tree with `PYTHONPATH` removed:
+
+```sh
+/tmp/leo-wheel-test/bin/python -m pip install pytest
+cd /tmp
+REPO=/path/to/leo-dynamics
+/tmp/leo-wheel-test/bin/python "$REPO/ci/run_installed_wheel_tests.py" "$REPO"
+```
+
+### Supported platforms
+
+| Platform | Architecture | Python | Status |
+|---|---|---|---|
+| Linux | x86-64 (manylinux) | CPython 3.10–3.13 | Wheel builds and installed-wheel tests are configured in CI; see [packaging status](docs/python-packaging.md) for what has actually been executed |
+| Windows | x86-64 | CPython 3.10–3.13 | Same |
+| macOS | Apple Silicon (arm64) | CPython 3.10–3.13 | Same |
+| macOS | Intel (x86-64) | CPython 3.10–3.13 | Same |
+
+No interpreter or platform is claimed as supported until its wheel has been built and its installed-wheel tests have passed. Linux/macOS/macOS-Intel/Windows coverage comes from `.github/workflows/wheels.yml`; nothing in this repository publishes a package.
+
+### What the Python interface is, and is not
+
+- **The numerical engine executes in C++.** Python configures and reads results; it does not integrate anything itself.
+- **NumPy is the primary data interface.** Results are read-only `float64` arrays; component views share one owning buffer with `states`.
+- **Multithreading is native and controlled by `workers`.** The default worker count is **1**, which runs the batch inline and creates no thread. Higher counts use the native bounded scheduler, one whole trajectory per thread, with results bitwise identical to `workers=1`.
+- **Atmospheric models NRLMSISE-00 and JB2008 are deferred** to v0.2 and are not in the wheel; the exponential atmosphere and cold-beam Sentman drag are. No SPICE kernels, atmospheric reference sources or space-weather data are downloaded or embedded.
+- **No flight-qualified accuracy claim is made.** The engine is validated against frozen independent references and documented approximations, not against flight data.
+
+### Example: one orbit
+
+```python
+from pathlib import Path
+
+import numpy as np
+import leo_dynamics as leo
+
+earth = leo.Earth()
+radius = 7.0e6                                     # ~622 km above the reference radius
+speed = float(np.sqrt(earth.mu_m3_s2 / radius))    # circular speed
+
+initial = leo.State(position_m=[radius, 0.0, 0.0],
+                    velocity_m_s=[0.0, speed, 0.0])
+spacecraft = leo.Spacecraft(
+    mass_kg=500.0,
+    inertia_kg_m2=np.diag([12.0, 14.0, 18.0]),
+    surfaces=[leo.Surface(area_m2=2.0,
+                          normal_body=[0.0, 1.0, 0.0],
+                          center_of_pressure_body_m=[0.0, 0.4, 0.0])],
+)
+times_s = np.arange(0.0, 5400.0, 60.0)             # 90 samples from t = 0
+
+trajectory = leo.propagate(initial=initial, spacecraft=spacecraft,
+                           model=leo.DynamicsModel(gravity="j2"), times_s=times_s)
+
+trajectory.states               # (90, 13) read-only float64
+trajectory.position_m           # (90, 3) view into states
+trajectory.orbital_elements()["altitude_m"][-1]    # metres
+
+output = Path("/tmp/orbit"); output.mkdir(exist_ok=True)
+trajectory.to_csv(output / "trajectory.csv")       # parent directory must exist
+trajectory.analyze().export_csv(output)            # creates the directory, nine CSVs
+```
+
+### Example: heterogeneous batch
+
+Per-trajectory spacecraft, dynamics model and environment on one shared schedule, epoch and solver configuration. Trajectories never interact and the batch size must match exactly.
+
+```python
+import numpy as np
+import leo_dynamics as leo
+
+count = 4
+au_m = 1.495978707e11
+earth = leo.Earth()
+radius = 7.0e6
+speed = float(np.sqrt(earth.mu_m3_s2 / radius))
+initial = leo.State(position_m=[radius, 0.0, 0.0], velocity_m_s=[0.0, speed, 0.0])
+times_s = np.arange(0.0, 5400.0, 60.0)
+
+batch = leo.propagate_batch(
+    initials=np.repeat(initial.to_array()[None, :], count, axis=0),   # (4, 13)
+    spacecraft=[leo.Spacecraft(mass_kg=500.0 * (1.0 + i),
+                               inertia_kg_m2=(1.0 + 0.5 * i) * np.diag([12.0, 14.0, 18.0]),
+                               surfaces=[])
+                for i in range(count)],
+    model=[leo.DynamicsModel(gravity="j2" if i % 2 else "point_mass",
+                             gravity_gradient=bool(i % 2))
+           for i in range(count)],
+    environment=[leo.Environment(sun=leo.SunEphemeris.constant([au_m * (1.0 + 0.01 * i), 0.0, 0.0]),
+                                atmosphere=leo.ExponentialAtmosphere(scale=1.0 + 0.1 * i),
+                                eclipse="conical" if i % 2 else "cylindrical")
+                 for i in range(count)],
+    times_s=times_s,
+    workers=3,                       # native threads; the default is 1 (no thread)
+)
+
+batch.states                  # (4, 90, 13)
+batch.position_m              # (4, 90, 3)
+batch[0].analyze().export_csv("/tmp/orbit")    # nine CSV datasets
+```
+
+Developer builds — the optional CMake bindings path, the test suite and the benchmarks — stay in [Build and run](#build-and-run) and [docs/python-development.md](docs/python-development.md); they are not needed to install a wheel.
+
 ## Build and run
 
 Dependencies: CMake >=3.24, Eigen >=3.4, Boost >=1.74 headers; Catch2 v3 only for tests. Dependencies must be installed before configure; CMake does not download them. Set `CMAKE_PREFIX_PATH` for non-system installs. Boost package-config installs and upstream header-only trees (via `Boost_ROOT`/`BOOST_ROOT`) are supported.
@@ -38,7 +172,7 @@ cmake --build build-python --parallel
 PYTHONPATH="$PWD/build-python/python" .venv-python/bin/python -c "import leo_dynamics as leo; print(leo.Earth())"
 ```
 
-This needs the Python development headers, NumPy and pybind11 for the target interpreter; pass `-Dpybind11_DIR=<prefix>/share/cmake/pybind11` when pybind11 is only inside that environment. It is a local build path only: there is no `pyproject.toml`, wheel or PyPI infrastructure. See the [Python development guide](docs/python-development.md) for imports, examples, batching, multithreading, shapes, ownership and errors, the [implemented v0.1 Python interface](docs/python-api-design.md) for the full object and analysis reference, and the [binding validation report](docs/python-binding-validation.md) for the qualification evidence.
+This needs the Python development headers, NumPy and pybind11 for the target interpreter; pass `-Dpybind11_DIR=<prefix>/share/cmake/pybind11` when pybind11 is only inside that environment. It is a developer path for iterating on the bindings; ordinary installation uses the wheel in [Installation](#installation). See the [Python development guide](docs/python-development.md) for imports, examples, batching, multithreading, shapes, ownership and errors, the [implemented v0.1 Python interface](docs/python-api-design.md) for the full object and analysis reference, the [binding validation report](docs/python-binding-validation.md) for the qualification evidence, and [packaging status](docs/python-packaging.md) for distribution state and blockers.
 
 ## Analysis and plotting workflow
 
@@ -295,4 +429,4 @@ CSPICE tests create a deterministic local SPK to validate real kernel interpolat
 - Albedo force/torque now share one dimensionally valid law. Julia's torque used W/m² as pressure and incorrectly scaled solar irradiance with Earth-spacecraft distance, unlike its force.
 - Explicit TDB epoch plus elapsed seconds replaces ambiguous Unix-time handling, date-string truncation and hidden kernel downloads. Direct SPICE interpolation replaces Julia's optional daily position cache.
 
-Stages 1–3 cover propagation, the requested environmental model set, reusable analysis, CSV export and headless plotting with the documented approximations. Stage 4 (optimisation, benchmarks and packaging) remains out of scope. Finite-temperature Sentman, NRLMSISE, resolved Earth radiance and more accurate Earth orientation require separately scoped fidelity work; none is claimed here.
+Stages 1–3 cover propagation, the requested environmental model set, reusable analysis, CSV export and headless plotting with the documented approximations. Stage 4 (optimisation and benchmarks) remains out of scope; Python distribution ships as described under [Installation](#installation). Finite-temperature Sentman, NRLMSISE, resolved Earth radiance and more accurate Earth orientation require separately scoped fidelity work; none is claimed here.
