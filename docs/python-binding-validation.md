@@ -156,10 +156,15 @@ Parity assertions used by the Python suite:
   same normalized values. The frozen fixture files and acceptance limits used
   by the oracle comparison are untouched; no claim is made that a raw,
   pre-normalized quaternion is bit-identical across the two paths.
-- One residual limit is structural: the JSON harness serialises `-0.0` as the
-  integer `0`, so **signed-zero bit parity cannot be asserted across the JSON
-  boundary**. Within Python, worker/single/batch comparisons are bitwise and do
-  cover signed zero.
+- Signed zero: the C++ harness emits the textual token `-0`, which the default
+  `json.loads` parser turns into `0` because it parses integers with
+  `parse_int=int`, losing the zero sign. The Python suite's harness
+  comparisons therefore assert exact values, not zero-sign bits. The direct
+  native comparison between the default route and `--native-source` avoids
+  this by parsing with `parse_int=float` and viewing the uint64 bit patterns,
+  so it does assert signed zero bitwise; that check covers all 17 frozen
+  scenarios. Within Python, worker/single/batch comparisons are bitwise and
+  cover signed zero directly.
 
 Goldens, acceptance limits and production C++ are unchanged by this work.
 
@@ -292,8 +297,8 @@ each worker count).
   They are recorded as measured and are neither clamped nor read as the binding
   being faster than native.
 - An earlier short-lived j2_inclined two-worker outlier (~1.66 Python/native
-  ratio) did not reproduce. The default-route run measured 0.006770103 Python
-  against 0.006527438 native (≈1.037), and a follow-up probe alternating
+  ratio) did not reproduce. The matched-route sweep measured 0.006770103
+  Python against 0.006527438 native (≈1.037), and a follow-up probe alternating
   execution order over 31 blocks retained 899 native and 961 Python timings
   (unequal sample counts after trimming) with medians 0.006929889 native and
   0.006812868 Python, ratio 0.9831, difference -0.000117021 s. The baseline
