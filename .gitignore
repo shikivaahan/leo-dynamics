@@ -43,6 +43,10 @@ build/
 Build/
 build-*/
 
+# Locally built distributions (wheels, sdist, auditwheel output, evidence notes)
+dist/
+dist-*/
+
 # CMake generated files
 CMakeFiles/
 CMakeCache.txt

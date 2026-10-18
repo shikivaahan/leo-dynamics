@@ -10,6 +10,7 @@ option(LEO_TEST_PLOTTING "Run Python Matplotlib smoke tests (requires BUILD_TEST
 option(LEO_ENABLE_NRLMSISE00 "Build direct NRLMSISE-00 C reference adapter" OFF)
 option(LEO_ENABLE_JB2008 "Build direct external official JB2008 Fortran adapter" OFF)
 option(LEO_BUILD_PYTHON_BINDINGS "Build the private pybind11 extension for a local development import" OFF)
+option(LEO_PROVISION_DEPENDENCIES "Build against the pinned, hash-verified Eigen and Boost archives instead of host packages" OFF)
 set(LEO_PYTHON_BINDING_DIR "${CMAKE_BINARY_DIR}/python/leo_dynamics"
     CACHE PATH "Directory receiving the _core extension and the staged Python facade")
 if(LEO_BUILD_PYTHON_BINDINGS)
@@ -19,7 +20,12 @@ endif()
 if(LEO_BUILD_EXAMPLES AND NOT LEO_BUILD_INTEGRATION)
   message(FATAL_ERROR "LEO_BUILD_EXAMPLES requires LEO_BUILD_INTEGRATION")
 endif()
-find_package(Eigen3 3.4 REQUIRED NO_MODULE)
+if(LEO_PROVISION_DEPENDENCIES)
+  # Pinned, hash-verified archives: no host Eigen or Boost tree is consulted.
+  include(cmake/provision.cmake)
+else()
+  find_package(Eigen3 3.4 REQUIRED NO_MODULE)
+endif()
 # Record resolved header dependencies for experiment provenance, not as user defaults.
 get_target_property(_leo_eigen_includes Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
 set(LEO_EIGEN3_INCLUDE_DIRS "${_leo_eigen_includes}" CACHE INTERNAL "Resolved Eigen include directories")
@@ -59,6 +65,9 @@ if(LEO_ENABLE_NRLMSISE00 OR LEO_ENABLE_JB2008)
   endif()
 endif()
 if(LEO_BUILD_INTEGRATION)
+  if(LEO_BOOST_PROVISIONED)
+    # cmake/provision.cmake already defined Boost::headers from the pinned tree.
+  else()
   find_package(Boost 1.74 QUIET CONFIG)
   if(NOT Boost_FOUND)
     # Upstream header-only trees need module discovery, including on CMake >=3.30.
@@ -69,6 +78,7 @@ if(LEO_BUILD_INTEGRATION)
     find_package(Boost 1.74 REQUIRED)
     cmake_policy(POP)
   endif()
+  endif() # not LEO_BOOST_PROVISIONED
   find_package(Threads REQUIRED) # MT-001 batch.hpp uses std::jthread/std::stop_source only.
   add_library(leo_integration STATIC src/integration/error_control.cpp)
   add_library(leo::integration ALIAS leo_integration)
@@ -90,6 +100,11 @@ if(LEO_BUILD_PYTHON_BINDINGS)
   # Explicit discovery of both development dependencies; the kernel itself keeps no
   # Python dependency and the default C++ build never reaches this block.
   find_package(Python3 3.9 REQUIRED COMPONENTS Interpreter Development.Module)
+  # pybind11 derives the extension suffix from the interpreter it is told about;
+  # a backend that passes -DPython3_EXECUTABLE only would otherwise be ignored.
+  if(NOT DEFINED Python_EXECUTABLE)
+    set(Python_EXECUTABLE "${Python3_EXECUTABLE}" CACHE FILEPATH "Interpreter pybind11 builds for")
+  endif()
   find_package(pybind11 CONFIG QUIET)
   if(NOT pybind11_FOUND)
     # pybind11 ships its CMake package inside its own environment; ask the selected
@@ -116,12 +131,17 @@ if(LEO_BUILD_PYTHON_BINDINGS)
   # Stage the facade and its type information beside the extension, so that
   # PYTHONPATH=<build>/python makes "import leo_dynamics" resolve this package.
   file(MAKE_DIRECTORY "${LEO_PYTHON_BINDING_DIR}")
-  foreach(_leo_python_file IN ITEMS __init__.py __init__.pyi)
+  foreach(_leo_python_file IN ITEMS __init__.py __init__.pyi py.typed)
     # configure_file tracks input changes: facade-only edits are staged even
     # when no C++ source needs rebuilding.
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/python/leo_dynamics/${_leo_python_file}"
                    "${LEO_PYTHON_BINDING_DIR}/${_leo_python_file}" COPYONLY)
   endforeach()
+  if(SKBUILD)
+    # The wheel backend assembles the distribution from this install step: the
+    # Python files come from the package directory, the extension from here.
+    install(TARGETS _core DESTINATION "${SKBUILD_PLATLIB_DIR}/leo_dynamics")
+  endif()
   message(STATUS "leo_dynamics: development import with PYTHONPATH=${LEO_PYTHON_BINDING_DIR}/..")
 endif()
 if(LEO_BUILD_EXAMPLES)

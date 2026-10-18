@@ -1,0 +1,156 @@
+[build-system]
+# The build backend and the pybind11 headers are pinned exactly, so a wheel
+# build resolves the same packaging logic and the same binding headers on every
+# host. CMake and Ninja are lower bounds, not pins: any conforming release from
+# those versions up works, and the isolated build environment installs one when
+# the host has none.
+# Eigen and Boost are deliberately not listed here: they are header-only C++
+# dependencies, and cmake/provision.cmake downloads pinned, SHA-256-verified
+# archives during configure (LEO_PROVISION_DEPENDENCIES), so no host headers and
+# no host package manager are involved.
+requires = [
+  "scikit-build-core==0.11.6",
+  "pybind11==3.1.0",
+  "cmake>=3.28",
+  "ninja>=1.11",
+]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "leo-dynamics"
+version = "0.1.0"
+description = "Native LEO orbital dynamics: two-body, J2 and environmental propagation with a NumPy interface"
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.10,<3.14"
+authors = [{ name = "leo-dynamics contributors" }]
+keywords = [
+  "astrodynamics",
+  "orbit-propagation",
+  "leo",
+  "j2",
+  "solar-radiation-pressure",
+  "simulations",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: C++",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Topic :: Scientific/Engineering :: Astronomy",
+  "Topic :: Scientific/Engineering :: Physics",
+  "Typing :: Typed",
+]
+# NumPy is the only mandatory runtime dependency: it is the array interface to
+# the native engine, which itself links nothing beyond the C++ runtime. The floor
+# is the NumPy 2.x series the interface was qualified against.
+dependencies = ["numpy>=2.0"]
+# Eigen (MPL-2.0), Boost (BSL-1.0) and pybind11 (BSD-3-Clause) headers are
+# compiled into the extension, so their terms travel with both distributions.
+# No licence expression is declared for this project itself: the repository
+# carries no LICENSE or COPYING file, so no redistribution rights have been
+# established. Adding one here would assert rights the project has not granted.
+# That absence is a tracked release-readiness blocker, not an oversight.
+license-files = ["THIRD_PARTY_NOTICES.md"]
+
+[project.urls]
+Homepage = "https://github.com/shikivaahan/leo-dynamics"
+Repository = "https://github.com/shikivaahan/leo-dynamics"
+Issues = "https://github.com/shikivaahan/leo-dynamics/issues"
+# The Python guide is the canonical reference for installation, development
+# builds and the deferred atmospheric models. It is not a changelog, so it is
+# published under its real name.
+Documentation = "https://github.com/shikivaahan/leo-dynamics/blob/main/docs/python-development.md"
+
+[tool.scikit-build]
+cmake.version = ">=3.28"
+cmake.build-type = "Release"
+# Release symbols are not shipped; the install step strips the extension.
+install.strip = true
+# python/leo_dynamics is the only importable package: __init__.py, __init__.pyi
+# and py.typed ship from here, and CMake installs _core beside them.
+wheel.packages = ["python/leo_dynamics"]
+
+[tool.scikit-build.cmake.define]
+LEO_BUILD_PYTHON_BINDINGS = "ON"
+LEO_BUILD_INTEGRATION = "ON"
+LEO_BUILD_ANALYSIS = "ON"
+LEO_BUILD_EXAMPLES = "OFF"
+BUILD_TESTING = "OFF"
+# Pinned Eigen 3.4.0 and Boost 1.83.0 archives, SHA-256 verified at configure.
+LEO_PROVISION_DEPENDENCIES = "ON"
+# Stated explicitly so a reader of the built metadata sees the intent: the
+# standard distribution carries no SPICE kernels and no NRLMSISE-00 or JB2008
+# sources. A caller who overrides these through config-settings is building
+# something else on purpose and must provision those dependencies themselves.
+LEO_ENABLE_CSPICE = "OFF"
+LEO_ENABLE_NRLMSISE00 = "OFF"
+LEO_ENABLE_JB2008 = "OFF"
+LEO_TEST_PLOTTING = "OFF"
+
+[tool.scikit-build.sdist]
+# A source distribution must rebuild and self-test from a fresh checkout: the
+# C++ sources, headers, pybind11 bindings, CMake project, the Python package,
+# the Python suite with its frozen reference data, the written guides and the
+# third-party notices whose terms the compiled extension inherits. Qualification
+# campaigns, benchmark harnesses, plots and generated evidence stay out.
+include = [
+  "THIRD_PARTY_NOTICES.md",
+  # Developer and source-build guides ship; the packaging/release report does
+  # not: it quotes the artefact sizes and hashes of the very sdist being built,
+  # so including it would make the manifest self-referential and stale.
+  "docs/python-development.md",
+  "docs/python-api-design.md",
+  "docs/python-binding-validation.md",
+  "docs/stage3.md",
+  "docs/v0.1-qualification.md",
+  # The written notes in the campaign directories are small and explain why the
+  # deferred atmospheric providers are deferred; the measured evidence beside
+  # them (hundreds of megabytes) stays out.
+  "docs/atmosphere/*.md",
+  "docs/multithreading/*.md",
+  "docs/numerical-audit/*.md",
+  "tests/reference/acceptance.json",
+  "tests/reference/golden/**",
+  "tests/reference/scenarios/**",
+]
+exclude = [
+  "/build*/**",
+  # Local wheel/sdist output directories, including repaired wheels.
+  "/dist*/**",
+  "/.github/**",
+  "/.venv-python/**",
+  "/outputs/**",
+  "/benchmarks/**",
+  # The packaging/release report quotes the sizes and hashes of the very sdist
+  # being built, so shipping it would make those figures wrong on every rebuild.
+  "/docs/python-packaging.md",
+  "/examples/**",
+  "/plotting/**",
+  "/scripts/**",
+  # Evidence directories under docs/ are multi-gigabyte campaign artefacts; the
+  # written guides next to them are included above.
+  "/docs/atmosphere/**",
+  "/docs/multithreading/**",
+  "/docs/numerical-audit/**",
+  "/tests/reference/generators/**",
+  "/tests/reference/*.cpp",
+  "/tests/reference/*.py",
+  "/tests/reference/*.txt",
+  # The native Catch2 suite needs Catch2 and the optional external providers, so
+  # it is not part of the redistributable Python source distribution.
+  "/tests/*.cpp",
+  "/tests/*.hpp",
+  "/tests/*.py",
+  "/tests/support/**",
+  "**/__pycache__/**",
+  "**/*.pyc",
+  "/.pytest_cache/**",
+]
