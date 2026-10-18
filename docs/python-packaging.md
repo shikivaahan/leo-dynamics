@@ -360,6 +360,82 @@ repository:
    have not been pushed.
 6. **A v0.1.0 tag**, cut only after the above.
 
+## Wheel repair: run 39123791284
+
+The first executed run of this workflow (`39123791284`, commit `016af3a`) failed
+on `windows-amd64`, `macos-arm64` and `macos-x86_64`; only `linux-x86_64` and the
+source distribution job passed. The failures were diagnosed from the actual job
+logs, not inferred.
+
+**Windows.** `core.autocrlf=true` rewrote the byte-pinned frozen reference
+fixtures from LF to CRLF, so every SHA-256 pinned in
+`tests/reference/golden/manifest.json` stopped matching the committed bytes and
+`tests/python/test_regression.py::test_frozen_fixture_identities` reported 17
+failures. Fixed by `.gitattributes`, marking the pinned fixtures `-text` so the
+committed bytes survive checkout verbatim on every platform. No fixture, hash or
+threshold was changed.
+
+**macOS, both legs.** `include/leo/integration/batch.hpp` used `std::jthread`
+and `std::stop_source`. The libc++ shipped with AppleClang 16.4 does not
+declare either name, so `bindings/integration.cpp` failed to compile and no wheel
+was produced. Replaced with `std::thread` plus an explicitly RAII-owned worker
+pool that joins on every exit path, preserving the whole scheduling contract:
+relaxed lowest-open-index dispatch, a bounded `min(workers, trajectories)` pool,
+the inline single-worker path, input-ordered output, deterministic lowest-failure
+reporting, and launch failure still treated as an infrastructure error (started
+workers cancelled and joined, original exception rethrown unchanged).
+
+**macOS, Intel leg only.** `std::filesystem` was rejected outright:
+`"'path' is unavailable: introduced in macOS 10.15"`. cibuildwheel defaults
+`macosx_x86_64` to a `MACOSX_DEPLOYMENT_TARGET` of 10.9, below libc++'s 10.15
+availability floor. The arm64 leg defaults to 11.0, which is why only the Intel
+leg failed this way. Fixed by declaring one minimum, `MACOSX_DEPLOYMENT_TARGET=11.0`,
+for both macOS legs.
+
+No physics, integrator, force model, tolerance or default value changed, and
+`propagate()` remains the same code path.
+
+### Local verification actually executed
+
+- **Full native suite, `ctest`: 100% of 120 passed.** This is the 119-test
+  baseline plus one added regression covering the batch scheduler
+  (exactly one work claim per trajectory index across worker counts 2, 4 and 11).
+  Includes `leo_analysis_tests`. The focused scheduler suite is 229 assertions
+  across 12 cases.
+- **Native batch determinism, frozen CASE-A/B/C, rebuilt scheduler: passed.**
+  Bitwise binary64 comparison of complete trajectories from `propagate_batch()`
+  at workers 1, 2, 4 and 8 against single-threaded `propagate()`, with no
+  tolerance applied: 3 cases x 4 worker counts x 12 trajectories, 10095 doubles
+  compared per trajectory.
+  *Scope of this check:* the case files are the genuine frozen scenarios,
+  loaded through the repository's own `experiment::load`, but the optional
+  atmospheric datasets the historic campaign consumes (`--weather`, `--solfsmy`,
+  `--dtcfile`) and the recorded CSPICE kernels are absent from this environment,
+  so the harness supplies an explicit snapshot from the frozen deterministic
+  `AnalyticSun` instead. This is therefore **not** a rerun of the full historic
+  optional-atmosphere campaign, and **no scientific requalification is claimed
+  from it**. It demonstrates only that batching is bitwise-order-preserving and
+  worker-count-independent for these cases. Recreating the absent datasets is
+  deliberately out of scope.
+- **Launch-failure smoke: passed** at three injection points. A throwaway
+  `LD_PRELOAD` shim makes `pthread_create` return `EAGAIN` after N launches,
+  driving the public `propagate_batch()`: the original `std::system_error`
+  reaches the caller unchanged, is never reported as `BatchPropagationError`, no
+  partial batch is returned, and already-started workers are joined before the
+  exception leaves.
+- The two Python-driven ctest entries (`audit_metric_identities`,
+  `process_batch_contracts`) pass locally. Multi-interpreter installed-wheel
+  validation against CPython 3.10–3.13 is CI's job and is exercised per wheel by
+  the `wheels` matrix.
+
+### Still pending
+
+The cross-platform rerun that verifies the repair on real `windows-2025` and
+`macos-15` / `macos-15-intel` runners has not run yet. Nothing above is evidence
+that the macOS or Windows wheels build; it is evidence about the causes and about
+the local native and determinism checks. Executed CI evidence for every platform
+in the matrix table above remains outstanding.
+
 ## Open risks
 
 - Linux wheels built on this host are `manylinux_2_39`, produced and tested
@@ -368,8 +444,10 @@ repository:
   public distribution of any of these wheels.
 - The build downloads Eigen and Boost during configure. The archives are pinned
   and SHA-256 verified, so a build is reproducible, but it is not offline.
-- Windows and macOS compilation of the C++20 engine has never been executed. Any
-  genuine portability defect found there should be fixed with the smallest
+- Windows and macOS compilation of the C++20 engine still has no successful
+  execution. The defects that run 39123791284 exposed are fixed and diagnosed
+  above, but the repair is unverified until the cross-platform rerun completes.
+  Any genuine portability defect found there should be fixed with the smallest
   possible change, as in the numerical engine itself.
 - `requires-python` excludes 3.14 by design; no 3.14 claim is made.
 - The exponential atmosphere is spherical and Sentman is cold-beam; NRLMSISE-00

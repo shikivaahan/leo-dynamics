@@ -162,7 +162,7 @@ builds each trajectory's own RHS:
 - `workers=1` runs the whole batch inline on the calling thread and creates no
   thread at all.
 - Otherwise the call creates and joins a bounded pool of
-  `min(workers, trajectories)` `std::jthreads`, each taking whole trajectories
+  `min(workers, trajectories)` `std::threads`, each taking whole trajectories
   from one relaxed atomic work index.
 - Results retain input order regardless of completion order.
 - A failed batch returns nothing; the lowest failing trajectory index is

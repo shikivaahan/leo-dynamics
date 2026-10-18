@@ -79,7 +79,7 @@ if(LEO_BUILD_INTEGRATION)
     cmake_policy(POP)
   endif()
   endif() # not LEO_BOOST_PROVISIONED
-  find_package(Threads REQUIRED) # MT-001 batch.hpp uses std::jthread/std::stop_source only.
+  find_package(Threads REQUIRED) # MT-001 batch.hpp uses std::thread only.
   add_library(leo_integration STATIC src/integration/error_control.cpp)
   add_library(leo::integration ALIAS leo_integration)
   target_link_libraries(leo_integration PUBLIC leo::kernel Boost::headers Threads::Threads)

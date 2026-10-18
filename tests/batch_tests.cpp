@@ -201,6 +201,43 @@ std::string describe_difference(const Trajectory& expected, const Trajectory& ac
 
 }  // namespace
 
+TEST_CASE("Every trajectory is attempted exactly once regardless of worker count",
+          "[batch][scheduling]") {
+    const std::vector<double> labels = output_labels();
+    const IntegrationOptions options = test_options();
+    const std::vector<State> initials = initial_states(11);
+    // Trajectories 2, 5 and 9 fail; 2 is the lowest, so it must be reported for
+    // every worker count, however the dynamic index dispatch interleaves.
+    const auto factory = [](std::size_t index, const State&) -> Rotor {
+        if (index == 2 || index == 5 || index == 9)
+            throw std::runtime_error("factory refused " + std::to_string(index));
+        return Rotor(index);
+    };
+
+    for (const std::size_t workers : {std::size_t{2}, std::size_t{4}, std::size_t{11}}) {
+        // Each index is claimed from one shared counter, so a duplicate claim or
+        // a skipped index is visible as a count that is not exactly one.
+        std::vector<std::atomic<std::size_t>> claims(initials.size());
+        for (auto& counter : claims) counter.store(0);
+        const auto counting = [&](std::size_t index, const State& initial) -> Rotor {
+            ++claims[index];
+            return factory(index, initial);
+        };
+        try {
+            propagate_batch(counting, std::span<const State>(initials), kEpoch,
+                            std::span<const double>(labels), options, workers);
+            FAIL("expected BatchPropagationError");
+        } catch (const BatchPropagationError& error) {
+            CAPTURE(workers);
+            REQUIRE(error.trajectory_index() == 2);
+            for (std::size_t index = 0; index < initials.size(); ++index) {
+                CAPTURE(index);
+                REQUIRE(claims[index].load() == 1);
+            }
+        }
+    }
+}
+
 TEST_CASE("Batch output is bitwise identical to sequential propagation", "[batch][ordering]") {
     const std::vector<double> labels = output_labels();
     const IntegrationOptions options = test_options();

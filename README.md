@@ -53,6 +53,8 @@ REPO=/path/to/leo-dynamics
 
 No interpreter or platform is claimed as supported until its wheel has been built and its installed-wheel tests have passed. Linux/macOS/macOS-Intel/Windows coverage comes from `.github/workflows/wheels.yml`; nothing in this repository publishes a package.
 
+Both macOS architectures build against `MACOSX_DEPLOYMENT_TARGET=11.0`. One minimum is declared for both legs deliberately: the libc++ shipped with AppleClang annotates `std::filesystem` as introduced in macOS 10.15, so a lower target is a hard compile error rather than a weak link.
+
 ### What the Python interface is, and is not
 
 - **The numerical engine executes in C++.** Python configures and reads results; it does not integrate anything itself.

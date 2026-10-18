@@ -9,6 +9,14 @@ matrix from revision `8a806534987d8e04a8f6d27b24ab5ee8150bab20`.
 For current decisions use the compact [MT-002 protocol](MT002.md), not another
 complete matrix.
 
+The isolated startup probe (`startup.cpp`, and the `jthreads` wording in the
+recorded evidence) is historical: it still creates `std::jthread`s so that the
+frozen measurements remain reproducible. The production scheduler no longer does
+— `batch.hpp` uses `std::thread`, since AppleClang's libc++ does not declare
+`std::jthread` and that header is compiled into the macOS wheel. The probe's
+numbers describe thread-startup cost, which is unchanged by that substitution;
+the two are separate concerns.
+
 ## Timing boundaries
 
 Total wall time brackets the complete solver/executor call: output-vector allocation, RHS construction, thread creation/dispatch, propagation, RHS destruction, joining and result return. Kernel/weather loading, initial-state generation, post-run checksum reduction, JSON writing and instrumentation-buffer allocation are excluded. Output sample buffers remain included.

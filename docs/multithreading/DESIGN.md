@@ -26,7 +26,8 @@ All initial states share one epoch, schedule and `IntegrationOptions`. States, s
 
 - Default: one explicitly configured worker. No hardware-dependent implicit worker selection.
 - One-worker calls execute inline without thread creation.
-- Other calls create and join `min(workers, input_count)` standard C++20 `std::jthread`s. The pool lasts exactly one batch call; no background service or general task framework.
+- Other calls create and join `min(workers, input_count)` `std::thread`s. The pool lasts exactly one batch call; no background service or general task framework.
+- `std::thread` rather than `std::jthread`: `std::jthread` and `std::stop_source` are not declared by the libc++ shipped with AppleClang, and this header is compiled into the macOS wheel. Joining is therefore owned explicitly by an RAII pool that joins on every exit path, including the unwinding one, which is the guarantee `std::jthread`'s destructor used to provide. Cancellation is a relaxed `std::atomic<bool>` read only between trajectories, so cancelling never truncates an in-flight propagation.
 - One strategy: relaxed atomic next-index assignment once per trajectory, never once per RHS evaluation. No public scheduling enum or scheduler configuration object.
 - Result slots are allocated before workers start. Each slot has a single writer. Each propagation owns its stepper, adaptive state and output sample buffer.
 - Per-worker failure slots need no locks: only their owner writes them; the caller reads them after join.

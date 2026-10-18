@@ -8,9 +8,9 @@
 #include <exception>
 #include <span>
 #include <stdexcept>
-#include <stop_token>
 #include <string>
 #include <thread>
+#include <utility>
 #include <vector>
 namespace leo {
 
@@ -48,11 +48,19 @@ namespace leo {
 //
 // Scheduling: workers == 1 runs the whole batch inline on the calling thread
 // and creates no thread at all. Otherwise the call creates and joins a bounded
-// pool of min(workers, trajectories) std::jthreads, which take whole
+// pool of min(workers, trajectories) std::threads, which take whole
 // trajectories from one relaxed atomic work index: whichever worker is free
 // takes the lowest open index, so an uneven trajectory duration cannot leave a
 // worker permanently idle while work remains. There is no persistent pool to
 // keep warm and no per-RHS-evaluation allocation or task creation.
+//
+// Portability: the pool is std::thread rather than std::jthread, because
+// std::jthread and std::stop_source are not declared by the libc++ shipped
+// with AppleClang, and this header is compiled into the macOS wheel. Joining is
+// therefore explicit and owned by an RAII pool, not by the thread destructor,
+// which is what std::jthread would have provided. The cancellation flag is a
+// plain relaxed atomic<bool> read between trajectories; it is not observed
+// inside a trajectory, so cancelling cannot truncate a propagation.
 //
 // Error contract: a trajectory that throws (factory, RHS, integrator or
 // environment) does not stop the batch; every remaining trajectory still runs and
@@ -107,6 +115,35 @@ private:
     std::vector<BatchFailure> slots_;
 };
 
+// Owns the batch's worker threads and guarantees that every thread it accepted
+// is joined before the pool is destroyed, on every exit path including the
+// unwinding one. std::thread's destructor calls std::terminate when the thread
+// is still joinable, so the ownership that std::jthread would have supplied
+// inline has to be explicit: add() is the only way in, and join() is idempotent
+// so a partially constructed pool can be joined by both the caller's handler
+// and this destructor.
+class WorkerPool {
+public:
+    explicit WorkerPool(std::size_t capacity) { threads_.reserve(capacity); }
+    WorkerPool(const WorkerPool&) = delete;
+    WorkerPool& operator=(const WorkerPool&) = delete;
+    ~WorkerPool() { join(); }
+    // Forwards the worker's own arguments straight to the std::thread
+    // constructor, so a worker is launched from the caller's callable and
+    // arguments rather than from a per-worker wrapper closure.
+    template<class Worker, class... Args>
+    void add(Worker&& worker, Args&&... args) {
+        threads_.emplace_back(std::forward<Worker>(worker), std::forward<Args>(args)...);
+    }
+    void join() noexcept {
+        for (std::thread& worker : threads_)
+            if (worker.joinable()) worker.join();
+        threads_.clear();
+    }
+private:
+    std::vector<std::thread> threads_;
+};
+
 }
 
 // Propagates count = initials.size() independent trajectories and returns them in
@@ -141,28 +178,28 @@ std::vector<Trajectory> propagate_batch(Factory&& factory, std::span<const State
         // Inline: no thread objects, one calling-thread worker.
         for (std::size_t index = 0; index < count; ++index) attempt(0, index);
     } else {
-        std::stop_source cancellation; // Released only when a worker cannot be started.
-        const auto cancellation_token = cancellation.get_token();
+        std::atomic<bool> cancelled{false}; // Raised only when a worker cannot be started.
         std::atomic<std::size_t> next{0};
         auto run_worker = [&](std::size_t worker) {
             // Relaxed: the index only arbitrates ownership of disjoint slots and
-            // carries no synchronised data.
+            // carries no synchronised data. The flag is read between trajectories
+            // only, so a cancelled batch never truncates an in-flight propagation.
             for (std::size_t index = next.fetch_add(1, std::memory_order_relaxed);
-                 index < count && !cancellation_token.stop_requested();
+                 index < count && !cancelled.load(std::memory_order_relaxed);
                  index = next.fetch_add(1, std::memory_order_relaxed)) attempt(worker, index);
         };
-        std::vector<std::jthread> pool;
-        pool.reserve(pool_size);
+        detail::WorkerPool pool(pool_size);
         try {
-            for (std::size_t worker = 0; worker < pool_size; ++worker) pool.emplace_back(run_worker, worker);
+            for (std::size_t worker = 0; worker < pool_size; ++worker) pool.add(run_worker, worker);
         } catch (...) {
-            // Stop and join what was started (jthread destructor joins) and surface the
-            // original launch failure; no trajectory result is reported from it.
-            cancellation.request_stop();
-            pool.clear();
+            // Cancel and join what was started, then surface the original launch
+            // failure unchanged; no trajectory result is reported from it. The
+            // pool destructor is a second, idempotent join on this path.
+            cancelled.store(true, std::memory_order_relaxed);
+            pool.join();
             throw;
         }
-        for (std::jthread& worker : pool) worker.join();
+        pool.join();
     }
     if (const detail::BatchFailure* failure = failures.lowest())
         throw BatchPropagationError(failure->index, failure->cause);

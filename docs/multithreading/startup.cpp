@@ -1,5 +1,14 @@
 // Measurement-only C++20 thread creation/readiness and release/join probe.
 // No production worker hook, no scientific workload, no persistent executor.
+//
+// HISTORICAL TOOL, NOT THE CURRENT SCHEDULER. This probe deliberately still uses
+// std::jthread because it reproduces a frozen MT-001 measurement whose recorded
+// evidence strings describe "create jthreads". The production batch scheduler
+// (include/leo/integration/batch.hpp) now uses std::thread, because AppleClang's
+// libc++ does not declare std::jthread and the header is compiled into the macOS
+// wheel. Do not read this file as a description of the runtime scheduler; see
+// docs/multithreading/DESIGN.md for that. This probe is not compiled by the
+// native test suite or by the wheel build.
 #include <chrono>
 #include <condition_variable>
 #include <filesystem>

@@ -23,6 +23,13 @@ env:
   # toolchain.
   CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
   CIBW_SKIP: "*-musllinux_* *_i686 pp*"
+  # One macOS minimum across both architectures. cibuildwheel would otherwise
+  # default macosx_x86_64 to 10.9, below libc++'s 10.15 availability floor for
+  # std::filesystem, which is a hard compile error rather than a weak link:
+  # "'path' is unavailable: introduced in macOS 10.15". 11.0 is the arm64
+  # default and is also a supported release, so both legs build and tag from
+  # the same declared minimum.
+  CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=11.0"
   # Eigen and Boost are provisioned by the pinned build itself (hash-verified
   # archive downloads in cmake/provision.cmake), so no system copy and no
   # package manager is involved on any platform.
