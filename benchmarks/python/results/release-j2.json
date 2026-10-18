@@ -1,0 +1,202 @@
+{
+  "batch_heterogeneous_python": {
+    "1": {
+      "median_s": 0.011825801979284734,
+      "members": 32,
+      "native_exact_parity": true,
+      "native_median_s": 0.012198133,
+      "output_bytes": 69888,
+      "python_minus_native_s": -0.00037233102071526636
+    },
+    "2": {
+      "median_s": 0.006770103005692363,
+      "members": 32,
+      "native_exact_parity": true,
+      "native_median_s": 0.006527438,
+      "output_bytes": 69888,
+      "python_minus_native_s": 0.0002426650056923628
+    },
+    "4": {
+      "median_s": 0.004824214964173734,
+      "members": 32,
+      "native_exact_parity": true,
+      "native_median_s": 0.004814955,
+      "output_bytes": 69888,
+      "python_minus_native_s": 9.259964173734085e-06
+    },
+    "8": {
+      "median_s": 0.0038548189913854003,
+      "members": 32,
+      "native_exact_parity": true,
+      "native_median_s": 0.00394003,
+      "output_bytes": 69888,
+      "python_minus_native_s": -8.521100861459945e-05
+    }
+  },
+  "batch_homogeneous_native": {
+    "1": {
+      "best_s": 0.004281139,
+      "checksum": 16979842619.654493,
+      "median_s": 0.004325504,
+      "rhs_evaluations": 23264,
+      "workers_actual": 1
+    },
+    "2": {
+      "best_s": 0.00228251,
+      "checksum": 16979842619.654493,
+      "median_s": 0.00246273,
+      "rhs_evaluations": 23264,
+      "workers_actual": 2
+    },
+    "4": {
+      "best_s": 0.001470893,
+      "checksum": 16979842619.654493,
+      "median_s": 0.001500949,
+      "rhs_evaluations": 23264,
+      "workers_actual": 4
+    },
+    "8": {
+      "best_s": 0.001341682,
+      "checksum": 16979842619.654493,
+      "median_s": 0.001487401,
+      "rhs_evaluations": 23264,
+      "workers_actual": 8
+    }
+  },
+  "batch_homogeneous_python": {
+    "1": {
+      "best_s": 0.004236893029883504,
+      "checksum": 16979842619.654493,
+      "gil": {
+        "background_thread_ticks": 275190,
+        "call_s": 0.010050610988400877,
+        "gil_released": true
+      },
+      "median_s": 0.004360560036730021,
+      "output_bytes": 69888
+    },
+    "2": {
+      "best_s": 0.0023182459990493953,
+      "checksum": 16979842619.654493,
+      "gil": {
+        "background_thread_ticks": 224836,
+        "call_s": 0.008156989002600312,
+        "gil_released": true
+      },
+      "median_s": 0.002421908953692764,
+      "output_bytes": 69888
+    },
+    "4": {
+      "best_s": 0.0013907300308346748,
+      "checksum": 16979842619.654493,
+      "gil": {
+        "background_thread_ticks": 229970,
+        "call_s": 0.0071002760087139904,
+        "gil_released": true
+      },
+      "median_s": 0.0015295600169338286,
+      "output_bytes": 69888
+    },
+    "8": {
+      "best_s": 0.001194076961837709,
+      "checksum": 16979842619.654493,
+      "gil": {
+        "background_thread_ticks": 203077,
+        "call_s": 0.006688155990559608,
+        "gil_released": true
+      },
+      "median_s": 0.0012643490335904062,
+      "output_bytes": 69888
+    }
+  },
+  "environment": {
+    "extension": "/home/user/leo-dynamics/build-python/python/leo_dynamics",
+    "extension_build_type": "Release",
+    "harness": "build-python-reference/leo_reference_dump",
+    "harness_build_type": "Release",
+    "native_acquisition_route": "matched-native-source",
+    "numpy": "2.5.4",
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "release_optimised": true,
+    "usable_cores": 16
+  },
+  "kind": "v0.1-python-binding-overhead",
+  "limitations": [
+    "Native propagation-only time inside a single binding call is not separately measurable: the extension exposes no internal timer and packs results inside the same call. Python-minus-native is an estimate, not an upper bound; separate runs have noise and the harness counts RHS calls.",
+    "The native baseline runs with --native-source, acquiring through the same production EarthEnvironment the Python binding composes (owned constant EphemerisProvider, same exponential atmosphere, eclipse and rotation). Trajectories are bit-identical to the default acquisition route.",
+    "Python-minus-native is NOT pure packing cost: it also covers boundary validation and configuration materialisation on the Python side, and an RHS call counter the harness increments on every native evaluation, which biases the native baseline upward.",
+    "No numerical speedup target is imposed; the solver is unchanged."
+  ],
+  "members": 32,
+  "memory": {
+    "bytes_per_state": 104,
+    "members": 64,
+    "rss_after_bytes": 45580288,
+    "rss_before_bytes": 38989824,
+    "rss_delta_bytes": 6590464,
+    "samples": 1001,
+    "states_bytes": 6662656,
+    "states_shape": [
+      64,
+      1001,
+      13
+    ],
+    "times_bytes": 8008,
+    "workload": "point_mass; 600 seconds; dense output for retained-memory measurement"
+  },
+  "repeats": 7,
+  "samples_per_trajectory": 21,
+  "scenario": "j2_inclined",
+  "single": {
+    "native": {
+      "best_s": 0.000130256,
+      "checksum": 530619955.7741805,
+      "checksum_delta": 0.0,
+      "checksum_matches_python": true,
+      "measured": true,
+      "median_s": 0.00013047,
+      "rhs_evaluations": 727,
+      "samples_s": [
+        0.00013047,
+        0.000130266,
+        0.000188355,
+        0.000130834,
+        0.000130352,
+        0.000130256,
+        0.000134474
+      ],
+      "setup_s": 0.000362943
+    },
+    "overhead": {
+      "python_minus_native_s": 7.653985379934322e-06,
+      "relative": 0.058664715106417686
+    },
+    "python": {
+      "best_s": 0.0001330390223301947,
+      "checksum": 530619955.7741805,
+      "configuration_construction_median_s": 3.1592033337801695e-05,
+      "measured": true,
+      "median_s": 0.0001381239853799343,
+      "output_bytes": 2184,
+      "result_copy_proxy_median_s": 4.7101639211177826e-07,
+      "samples": 21,
+      "samples_s": [
+        0.00013364898040890694,
+        0.0001330390223301947,
+        0.0001509709982201457,
+        0.0001381239853799343,
+        0.00015338003868237138,
+        0.0001373330014757812,
+        0.00016209401655942202
+      ]
+    }
+  },
+  "warmups": 2,
+  "workers": [
+    1,
+    2,
+    4,
+    8
+  ]
+}

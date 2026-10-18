@@ -4,13 +4,17 @@
 #include "leo/kernel/dynamics.hpp"
 #include "leo/kernel/aerodynamics.hpp"
 #include "leo/kernel/radiation.hpp"
+#include "leo/environment/ephemeris.hpp"
+#include "leo/environment/source.hpp"
 #include <boost/property_tree/json_parser.hpp>
 #include <chrono>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <memory>
 #include <numeric>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -64,6 +68,21 @@ leo::Spacecraft spacecraft(const Tree& d) {
     }
     return leo::Spacecraft(d.get<double>("spacecraft.mass_kg"),leo::Inertia(tensor),std::move(surfaces));
 }
+// Owned constant Sun for the --native-source measurement route: the production
+// EphemerisProvider interface, filled from the frozen scenario document. This
+// is acquisition plumbing only - it contains no physics and no interpolation.
+struct NativeFixedSun final : public leo::EphemerisProvider {
+    leo::InertialVector position_m;
+    explicit NativeFixedSun(leo::InertialVector position):position_m(position) {
+        if(!position_m.as_eigen().allFinite()||leo::norm(position_m)<=0)
+            throw std::invalid_argument("native-source constant Sun must be finite and nonzero");
+    }
+    leo::EphemerisState geometric_state(int target_naif_id,leo::Epoch epoch) const override {
+        if(target_naif_id!=10||!std::isfinite(epoch.et_seconds))
+            throw std::invalid_argument("Sun target and finite TDB epoch required");
+        return {position_m,{}};
+    }
+};
 leo::EnvironmentalModels models(const Tree& d) {
     leo::EnvironmentalModels result;
     const auto select=[&](const std::string& name) {
@@ -88,6 +107,11 @@ struct Measurement {
     leo::EnvironmentSnapshot environment;
     leo::EclipseModel eclipse=leo::EclipseModel::none;
     bool constant_density=false;
+    // --native-source route only. The provider is owned here and reached
+    // through a heap-stable address, so it stays valid while Measurement
+    // objects move inside per_member and outlives every worker join.
+    std::unique_ptr<NativeFixedSun> owned_sun;
+    std::optional<leo::EarthEnvironment> source;
     std::vector<double> times;
     leo::IntegrationOptions options;
     explicit Measurement(Tree input):document(std::move(input)),selected(models(document)),
@@ -119,7 +143,22 @@ struct Measurement {
         options.omega_atol_rad_s=t.get<double>("omega_atol_rad_s"); options.initial_step_s=t.get<double>("initial_step_s");
         options.max_step_s=t.get<double>("max_step_s");
     }
+    // Opt-in measurement route: acquire through the production
+    // EarthEnvironment the Python binding composes, instead of this
+    // harness-local snapshot. Same forces, same numbers; only the
+    // acquisition path differs. Constant-density fixtures have no
+    // EarthEnvironment equivalent and are rejected rather than approximated.
+    void enable_native_source() {
+        if(constant_density) throw std::invalid_argument("native-source route does not support constant-density fixtures");
+        const bool acquisition=dynamics.needs_environment();
+        // Read the document directly: the constructor only caches the Sun for
+        // radiation fixtures, while a drag-only fixture still acquires one.
+        if(acquisition) owned_sun=std::make_unique<NativeFixedSun>(inertial(array(document,"environment.sun_position_m",3)));
+        source.emplace(earth,leo::Epoch{0},owned_sun.get(),acquisition,eclipse,exponential,environment.atmosphere_angular_velocity_rad_s);
+        source->validate_for(selected);
+    }
     leo::EnvironmentSnapshot snapshot(leo::ElapsedTime t,const leo::State& s) const {
+        if(source) return (*source)(t,s);
         auto result=environment; result.epoch={t.seconds};
         if(selected.drag.enabled() && !constant_density)
             result.density_kg_m3=exponential.density_kg_m3(leo::norm(s.r)-earth.equatorial_radius_m);
@@ -185,17 +224,19 @@ void pointwise(std::ostream& out,const Measurement& m,const std::string& path) {
 
 int main(int argc,char** argv) {
     try {
-        if(argc<3) throw std::invalid_argument("usage: leo_reference_dump SCENARIO OUTPUT [--points JSON] [--points-only] [--route single|sequential|batch] [--members N] [--workers N] [--repeats N] [--warmups N] [--dump-batch]");
-        std::string route="single",points; std::size_t members=1,workers=1,repeats=1,warmups=0;
-        bool dump_batch=false,points_only=false;
+        if(argc<3) throw std::invalid_argument("usage: leo_reference_dump SCENARIO OUTPUT [--configurations JSON] [--points JSON] [--points-only] [--route single|sequential|batch] [--members N] [--workers N] [--repeats N] [--warmups N] [--dump-batch] [--native-source]");
+        std::string route="single",points,configurations; std::size_t members=1,workers=1,repeats=1,warmups=0;
+        bool dump_batch=false,points_only=false,native_source=false;
         for(int i=3;i<argc;++i) {
             const std::string key=argv[i];
             if(key=="--dump-batch") { dump_batch=true; continue; }
             if(key=="--points-only") { points_only=true; continue; }
+            if(key=="--native-source") { native_source=true; continue; }
             if(i+1==argc) throw std::invalid_argument("missing option value");
             const std::string value=argv[++i];
             if(key=="--route") route=value;
             else if(key=="--points") points=value;
+            else if(key=="--configurations") configurations=value;
             else if(key=="--members") members=std::stoull(value);
             else if(key=="--workers") workers=std::stoull(value);
             else if(key=="--repeats") repeats=std::stoull(value);
@@ -207,8 +248,24 @@ int main(int argc,char** argv) {
         if(route=="single" && members!=1) throw std::invalid_argument("single route requires one member");
         const auto setup=Clock::now(); Tree input; boost::property_tree::read_json(argv[1],input);
         Measurement m(std::move(input));
+        // Optional heterogeneous configurations for binding-overhead measurement.
+        // The frozen qualification route does not use this option.
+        std::vector<Measurement> per_member;
+        if(!configurations.empty()) {
+            Tree documents;boost::property_tree::read_json(configurations,documents);
+            if(documents.size()!=members) throw std::invalid_argument("configuration count must equal members");
+            per_member.reserve(members);
+            for(auto& entry:documents) per_member.emplace_back(std::move(entry.second));
+        }
+        // Acquisition route is fixed before any timed region; workers join
+        // inside propagate_batch, long after these sources are built.
+        if(native_source) {
+            m.enable_native_source();
+            for(Measurement& member:per_member) member.enable_native_source();
+        }
         std::vector<leo::State> initials(members,initial(m.document));
         for(std::size_t i=0;i<members;++i) {
+            if(!per_member.empty()) initials[i]=initial(per_member[i].document);
             initials[i].r=initials[i].r+leo::InertialVector{.25*i,0.,0.};
             initials[i].v=initials[i].v+leo::InertialVector{0.,1e-4*i,0.};
         }
@@ -219,7 +276,9 @@ int main(int argc,char** argv) {
             std::vector<Counter> counters(members);
             trajectories.clear(); // Previous-repeat destruction is outside every route's clock.
             const auto begin=Clock::now();
-            auto factory=[&](std::size_t index,const leo::State&) { return Rhs{&m,&counters[index]}; };
+            auto factory=[&](std::size_t index,const leo::State&) {
+                return Rhs{per_member.empty()?&m:&per_member[index],&counters[index]};
+            };
             if(route=="batch") trajectories=leo::propagate_batch(factory,initials,leo::Epoch{0},m.times,m.options,workers);
             else {
                 std::vector<leo::Trajectory> output(members);
@@ -243,6 +302,7 @@ int main(int argc,char** argv) {
         const auto publication=Clock::now();
         std::ofstream out(argv[2]); if(!out) throw std::runtime_error("cannot open output");
         out<<std::setprecision(17)<<"{\"name\":\""<<m.document.get<std::string>("name")<<"\",\"setup_seconds\":"<<setup_seconds
+           <<",\"native_source\":"<<(native_source?"true":"false")
            <<",\"route\":\""<<route<<"\",\"members\":"<<members<<",\"workers_requested\":"<<workers
            <<",\"workers_actual\":"<<(route=="batch"?std::min(workers,members):1)<<",\"repetitions_seconds\":";
         numbers(out,durations); out<<",\"rhs_evaluations_per_repeat\":"; numbers(out,calls);
