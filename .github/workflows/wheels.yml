@@ -1,0 +1,168 @@
+name: Wheel build and installed-wheel validation
+
+# Builds the leo-dynamics wheels with cibuildwheel, installs every wheel into a
+# clean environment and runs the existing Python suite against the *installed*
+# distribution. Nothing here publishes anything.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Version-specific wheels only. The pybind11/NumPy surface is not stable-ABI
+  # qualified, so an abi3 wheel would claim a compatibility the bindings have
+  # never been validated against. Free-threaded builds stay off: same reason,
+  # and they would double the matrix.
+  CIBW_BUILD: "cp310-* cp311-* cp312-* cp313-*"
+  # Pinned so the Linux wheel policy does not move when cibuildwheel updates
+  # its default image; manylinux_2_28 is the oldest policy with a modern C++20
+  # toolchain.
+  CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+  CIBW_SKIP: "*-musllinux_* *_i686 pp*"
+  # Eigen and Boost are provisioned by the pinned build itself (hash-verified
+  # archive downloads in cmake/provision.cmake), so no system copy and no
+  # package manager is involved on any platform.
+  # Compiler and pip command lines: the only useful diagnostics when a native
+  # build fails inside a container or a Windows toolchain step.
+  CIBW_BUILD_VERBOSITY: "1"
+  # pip is part of the requirement set because the driver validates the
+  # installed environment with "pip check"; uv-created environments omit it.
+  CIBW_TEST_REQUIRES: "pytest pip"
+  # The driver refuses to run unless leo_dynamics imports from site-packages,
+  # then runs tests/python from a temporary directory with PYTHONPATH removed.
+  CIBW_TEST_COMMAND: "python {project}/ci/run_installed_wheel_tests.py {project}"
+
+jobs:
+  wheels:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux-x86_64 manylinux_2_28
+            os: ubuntu-24.04
+            archs: x86_64
+            artifact: wheels-linux
+          - name: windows-amd64
+            os: windows-2025
+            archs: AMD64
+            artifact: wheels-windows
+          - name: macos-arm64
+            os: macos-15
+            archs: arm64
+            artifact: wheels-macos-arm64
+          - name: macos-x86_64
+            os: macos-15-intel
+            archs: x86_64
+            artifact: wheels-macos-x86_64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the pinned cibuildwheel
+        run: python -m pip install --upgrade pip "cibuildwheel==4.3.1"
+      - name: Build, repair and test every wheel
+        run: python -m cibuildwheel --output-dir wheelhouse .
+        env:
+          CIBW_ARCHS: ${{ matrix.archs }}
+      - name: List the wheels that were produced
+        if: always()
+        run: >-
+          python -c "import glob, os;
+          [print(f'{os.path.basename(path)} {os.path.getsize(path)} bytes')
+          for path in sorted(glob.glob('wheelhouse/*.whl'))]"
+      - uses: actions/upload-artifact@v4
+        # Uploaded on failure as well: a partial wheelhouse plus the build log
+        # above is the whole diagnostic story when a native build breaks.
+        if: always()
+        with:
+          name: ${{ matrix.artifact }}
+          path: wheelhouse/*.whl
+          if-no-files-found: warn
+
+  installed-wheel-parity:
+    # Expensive on purpose and kept out of the wheel matrix: one Linux job that
+    # installs a published wheel artefact and compares it against the direct C++
+    # engine through the frozen qualified goldens.
+    name: Installed-wheel parity against the C++ engine
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    needs: wheels
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheels-linux
+          path: wheelhouse
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install native prerequisites for the reference harness
+        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build g++
+      - name: Build the direct C++ reference harness
+        # Pinned provisioning, exactly as the distribution build does it: no
+        # system Eigen or Boost on this runner.
+        run: |
+          cmake -S tests/reference -B build-reference -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DLEO_PROVISION_DEPENDENCIES=ON
+          cmake --build build-reference --parallel
+      - name: Install the built wheel into a fresh environment
+        run: |
+          python -m venv /tmp/leo-wheel-test
+          /tmp/leo-wheel-test/bin/python -m pip install --upgrade pip pytest
+          /tmp/leo-wheel-test/bin/python -m pip install wheelhouse/leo_dynamics-*-cp312-*.whl
+      # The driver refuses to run inside the repository, so the working
+      # directory is /tmp and every path it is given is absolute.
+      - name: Run the Python suite against the installed wheel
+        working-directory: /tmp
+        run: >-
+          /tmp/leo-wheel-test/bin/python "$GITHUB_WORKSPACE/ci/run_installed_wheel_tests.py"
+          "$GITHUB_WORKSPACE" --harness "$GITHUB_WORKSPACE/build-reference/leo_reference_dump"
+
+  sdist:
+    name: Source distribution rebuild
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build the source distribution
+        run: python -m pip install --upgrade pip build && python -m build --sdist
+      - name: Inspect the source distribution
+        run: |
+          tar -tzf dist/leo_dynamics-0.1.0.tar.gz > sdist-files.txt
+          cat sdist-files.txt
+          for required in CMakeLists.txt pyproject.toml cmake include src bindings \
+                         python/leo_dynamics/__init__.py python/leo_dynamics/__init__.pyi; do
+            grep -q "leo_dynamics-0.1.0/${required}" sdist-files.txt \
+              || { echo "source distribution is missing ${required}"; exit 1; }
+          done
+          if grep -qE "leo_dynamics-0.1.0/(build-[^/]*/|outputs/|\.venv)" sdist-files.txt; then
+            echo "source distribution carries build, output or venv directories"
+            exit 1
+          fi
+      - name: Install the source distribution into a fresh environment
+        run: |
+          python -m venv /tmp/leo-sdist-test
+          /tmp/leo-sdist-test/bin/python -m pip install --upgrade pip pytest
+          /tmp/leo-sdist-test/bin/python -m pip install dist/leo_dynamics-0.1.0.tar.gz
+      - name: Run the Python suite against the rebuilt source distribution
+        working-directory: /tmp
+        run: >-
+          /tmp/leo-sdist-test/bin/python "$GITHUB_WORKSPACE/ci/run_installed_wheel_tests.py"
+          "$GITHUB_WORKSPACE"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sdist
+          path: dist/*.tar.gz
+          if-no-files-found: error
