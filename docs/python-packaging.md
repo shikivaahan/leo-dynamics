@@ -299,14 +299,20 @@ suite could not fall back to the development build.
 
 Run `39128373040`, commit `799de81`, `push`, concluded `success` — all six jobs:
 
-| Job | Result |
-| --- | --- |
-| `linux-x86_64 manylinux_2_28` | success (also passed in `39123791284`) |
-| `macos-arm64` | success (**failed** in `39123791284`) |
-| `macos-x86_64` | success (**failed** in `39123791284`) |
-| `windows-amd64` | success (**failed** in `39123791284`) |
-| `Source distribution rebuild` | success |
-| `Installed-wheel parity against the C++ engine` | success (**skipped** in `39123791284`, blocked by the failed jobs) |
+| Job | Identifiers | Suite result | Result |
+| --- | --- | --- | --- |
+| `linux-x86_64 manylinux_2_28` | cp310-cp313 | 360 passed, 36 skipped | success (also passed in `39123791284`) |
+| `macos-arm64` | cp310-cp313 | 360 passed, 36 skipped | success (**failed** in `39123791284`) |
+| `macos-x86_64` | cp310-cp313 | 360 passed, 36 skipped | success (**failed** in `39123791284`) |
+| `windows-amd64` | cp310-cp313 | 360 passed, 36 skipped | success (**failed** in `39123791284`) |
+| `Source distribution rebuild` | cp312 from sdist | 360 passed, 36 skipped | success |
+| `Installed-wheel parity against the C++ engine` | cp312 | **396 passed, 0 skipped** | success (**skipped** in `39123791284`, blocked by the failed jobs) |
+
+Each of the four platform jobs installed the wheels it had just built, for each
+of CPython 3.10, 3.11, 3.12 and 3.13, into a clean environment on that platform's
+own interpreter and ran the suite there: 16 wheels, `360 passed, 36 skipped` per
+job. The 36 skips are the harness-dependent parity tests, which that job does not
+supply `--harness` for; they are the ones the final job executes.
 
 The parity job installed
 `leo_dynamics-0.1.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl`
@@ -316,14 +322,20 @@ against a rebuilt reference harness. macOS wheels were produced for CPython
 3.10-3.13 on both architectures, tagged `macosx_11_0_x86_64` and
 `macosx_11_0_arm64`.
 
-Everything above is anchored to `799de81`. Later commits touching only this
-document carry no CI run of their own and inherit that evidence.
+Everything above is anchored to `799de81`, the commit whose six CI jobs all
+succeeded. Commits after it that touch only this document are documentation
+changes: they contribute no additional binary validation, and no result in this
+document is claimed on their basis. Any later change to the source, the build
+configuration or the workflow would need a new run before its validation could
+be described this way.
 
-**Configured only**
+**Nothing configured but unexecuted**
 
-Nothing in `wheels.yml` remains unexecuted. What is still configured without
-evidence is publication: there is no upload job, no token, no tag and no
-release workflow, so no wheel has been pushed to any index.
+Nothing in `wheels.yml` remains unexecuted: run `39128373040` executed all six
+jobs and all six succeeded. Publication is not a case of configured-but-unproven
+steps either. There is no upload job, no token, no tag and no release workflow
+anywhere in this repository, so publication is not configured at all and has not
+been performed. No wheel has been pushed to any index.
 
 ## Project licence and redistribution status
 
@@ -361,21 +373,26 @@ name can be taken by anyone at any time.
 
 ## What eventual publication would require
 
-None of the following has been done, and none is configured anywhere in this
-repository:
+Of the six prerequisites below, one is satisfied and five are not. Items 1-4 and
+6 have not been done and are not configured anywhere in this repository; item 5
+was obtained by an actual executed run.
 
 1. **A licence decision** by the copyright holder, a `LICENSE` file, and
-   matching `license` metadata. This is the blocking item.
+   matching `license` metadata. Not done, not configured. This is the blocking
+   item.
 2. **Confirmation that every shipped file may be redistributed** — the C++ and
    pybind11 sources under this repository's control, plus the transitive
-   dependency review in the table above.
+   dependency review in the table above. Not done, not configured.
 3. **A PyPI account or organisation**, then either an API token (classic upload)
-   or a GitHub Actions trusted publisher for `shikivaahan/leo-dynamics`.
+   or a GitHub Actions trusted publisher for `shikivaahan/leo-dynamics`. None
+   exists.
 4. **A publication workflow** with an explicit release trigger, a version bump,
-   and artefact checksums. Nothing uploads today.
-5. **Executed CI evidence** for every platform in the matrix above — obtained in
-   run `39128373040` at commit `799de81`, where all six jobs succeeded.
-6. **A v0.1.0 tag**, cut only after the above.
+   and artefact checksums. Not configured; nothing uploads today.
+5. **Executed CI evidence** for every platform in the matrix above —
+   **satisfied**: obtained in run `39128373040` at commit `799de81`, where all
+   six jobs succeeded and each of the 16 wheels across four platforms was
+   installed and tested on its own interpreter.
+6. **A v0.1.0 tag**. Not cut; to follow items 1-4.
 
 ## Wheel repair: run 39123791284
 
@@ -479,9 +496,22 @@ do not appear. See the CI table in the verification log above.
 
 Publication only. No licence decision, no `LICENSE` file, no index credentials
 and no release tag exist, so although every wheel now builds and installs, no
-wheel has been uploaded anywhere. The macOS wheels are additionally built but
-not yet exercised by an installed-wheel test on a macOS interpreter — the
-installed-wheel parity job installs the manylinux wheel.
+wheel has been uploaded anywhere.
+
+Nothing is outstanding about binary validation. In run `39128373040` all four
+operating-system/architecture combinations — `linux-x86_64`, `windows-amd64`,
+`macos-x86_64` and `macos-arm64` — built the complete CPython 3.10, 3.11, 3.12
+and 3.13 matrix, and each job installed that platform's own wheel into a clean
+environment and ran the Python suite on that same interpreter. That is 16
+wheels, each reporting `360 passed, 36 skipped`.
+
+The one bounded gap is narrower than "macOS is untested". The direct C++ harness
+comparison is limited to one configuration: `linux-x86_64` on CPython 3.12, the
+only job that builds `leo_reference_dump`, where the suite reports
+`396 passed` with 0 skipped. No Windows or macOS job builds the C++ harness, so
+the 36 harness-dependent parity tests are skipped on those interpreters rather
+than executed. That bounds *parity* coverage; it does not qualify buildability
+or installed-wheel testing on any of the four platforms.
 
 ## Open risks
 
@@ -493,9 +523,14 @@ installed-wheel parity job installs the manylinux wheel.
   and SHA-256 verified, so a build is reproducible, but it is not offline.
 - Windows and macOS compilation of the C++20 engine now has successful execution:
   run `39128373040` built the full CPython 3.10-3.13 wheel matrix on both macOS
-  architectures and on Windows. The residual risk is coverage, not buildability —
-  the Windows and macOS wheels are not exercised by an installed-wheel test on
-  their own interpreters, since that job installs the manylinux wheel.
+  architectures and on Windows, and every one of those wheels was installed and
+  tested on its own platform interpreter (`360 passed, 36 skipped` per job). The
+  residual risk is narrower than coverage of the platforms: it is coverage of
+  the *direct C++ harness parity* comparison, which runs only for
+  `linux-x86_64` on CPython 3.12 (`396 passed`, 0 skipped) because that is the
+  only job that builds `leo_reference_dump`. The 36 skipped tests on Windows and
+  macOS are exactly those parity tests, and they are untested there rather than
+  failing there.
 - `requires-python` excludes 3.14 by design; no 3.14 claim is made.
 - The exponential atmosphere is spherical and Sentman is cold-beam; NRLMSISE-00
   and JB2008 are deferred to v0.2 and are absent from the distribution.
