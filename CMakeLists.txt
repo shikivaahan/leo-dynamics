@@ -9,6 +9,13 @@ option(LEO_BUILD_ANALYSIS "Build trajectory postprocessing and CSV export" ON)
 option(LEO_TEST_PLOTTING "Run Python Matplotlib smoke tests (requires BUILD_TESTING)" OFF)
 option(LEO_ENABLE_NRLMSISE00 "Build direct NRLMSISE-00 C reference adapter" OFF)
 option(LEO_ENABLE_JB2008 "Build direct external official JB2008 Fortran adapter" OFF)
+option(LEO_BUILD_PYTHON_BINDINGS "Build the private pybind11 extension for a local development import" OFF)
+set(LEO_PYTHON_BINDING_DIR "${CMAKE_BINARY_DIR}/python/leo_dynamics"
+    CACHE PATH "Directory receiving the _core extension and the staged Python facade")
+if(LEO_BUILD_PYTHON_BINDINGS)
+  # The extension links the static engine targets, which therefore need PIC.
+  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
 if(LEO_BUILD_EXAMPLES AND NOT LEO_BUILD_INTEGRATION)
   message(FATAL_ERROR "LEO_BUILD_EXAMPLES requires LEO_BUILD_INTEGRATION")
 endif()
@@ -75,6 +82,47 @@ if(LEO_BUILD_ANALYSIS)
     src/analysis/orbital.cpp src/analysis/loads.cpp src/analysis/export.cpp)
   add_library(leo::analysis ALIAS leo_analysis)
   target_link_libraries(leo_analysis PUBLIC leo::kernel)
+endif()
+if(LEO_BUILD_PYTHON_BINDINGS)
+  if(NOT LEO_BUILD_INTEGRATION OR NOT LEO_BUILD_ANALYSIS)
+    message(FATAL_ERROR "LEO_BUILD_PYTHON_BINDINGS requires LEO_BUILD_INTEGRATION and LEO_BUILD_ANALYSIS")
+  endif()
+  # Explicit discovery of both development dependencies; the kernel itself keeps no
+  # Python dependency and the default C++ build never reaches this block.
+  find_package(Python3 3.9 REQUIRED COMPONENTS Interpreter Development.Module)
+  find_package(pybind11 CONFIG QUIET)
+  if(NOT pybind11_FOUND)
+    # pybind11 ships its CMake package inside its own environment; ask the selected
+    # interpreter so a virtual environment is used without extra configuration.
+    execute_process(COMMAND "${Python3_EXECUTABLE}" -m pybind11 --cmakedir
+                    OUTPUT_VARIABLE _leo_pybind11_dir OUTPUT_STRIP_TRAILING_WHITESPACE
+                    RESULT_VARIABLE _leo_pybind11_result ERROR_QUIET)
+    if(NOT _leo_pybind11_result EQUAL 0)
+      message(FATAL_ERROR "pybind11 not found: pass -Dpybind11_DIR=<prefix>/share/cmake/pybind11")
+    endif()
+    find_package(pybind11 CONFIG REQUIRED PATHS "${_leo_pybind11_dir}" NO_DEFAULT_PATH)
+  endif()
+  pybind11_add_module(_core MODULE
+    bindings/module.cpp bindings/configuration.cpp bindings/integration.cpp bindings/analysis.cpp)
+  target_include_directories(_core PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/bindings")
+  target_link_libraries(_core PRIVATE leo::integration leo::analysis)
+  if(TARGET leo_environment) # Optional CSPICE provider; never required by v0.1.
+    target_link_libraries(_core PRIVATE leo::environment)
+  endif()
+  set_target_properties(_core PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY "${LEO_PYTHON_BINDING_DIR}"
+    RUNTIME_OUTPUT_DIRECTORY "${LEO_PYTHON_BINDING_DIR}"
+    CXX_VISIBILITY_PRESET hidden VISIBILITY_INLINES_HIDDEN ON)
+  # Stage the facade and its type information beside the extension, so that
+  # PYTHONPATH=<build>/python makes "import leo_dynamics" resolve this package.
+  file(MAKE_DIRECTORY "${LEO_PYTHON_BINDING_DIR}")
+  foreach(_leo_python_file IN ITEMS __init__.py __init__.pyi)
+    # configure_file tracks input changes: facade-only edits are staged even
+    # when no C++ source needs rebuilding.
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/python/leo_dynamics/${_leo_python_file}"
+                   "${LEO_PYTHON_BINDING_DIR}/${_leo_python_file}" COPYONLY)
+  endforeach()
+  message(STATUS "leo_dynamics: development import with PYTHONPATH=${LEO_PYTHON_BINDING_DIR}/..")
 endif()
 if(LEO_BUILD_EXAMPLES)
   add_executable(propagate_leo examples/propagate_leo.cpp)

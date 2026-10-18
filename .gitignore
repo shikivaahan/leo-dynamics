@@ -69,3 +69,4 @@ Testing/
 __pycache__/
 *.pyc
 .venv/
+.venv-python/
