@@ -297,15 +297,33 @@ suite could not fall back to the development build.
 
 **Executed in CI**
 
-None. These commits are not on `origin/main`, so no GitHub Actions job has run.
-Nothing here claims a platform or interpreter that has not passed its wheel build
-and installed-wheel tests.
+Run `39128373040`, commit `799de81`, `push`, concluded `success` — all six jobs:
+
+| Job | Result |
+| --- | --- |
+| `linux-x86_64 manylinux_2_28` | success (also passed in `39123791284`) |
+| `macos-arm64` | success (**failed** in `39123791284`) |
+| `macos-x86_64` | success (**failed** in `39123791284`) |
+| `windows-amd64` | success (**failed** in `39123791284`) |
+| `Source distribution rebuild` | success |
+| `Installed-wheel parity against the C++ engine` | success (**skipped** in `39123791284`, blocked by the failed jobs) |
+
+The parity job installed
+`leo_dynamics-0.1.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl`
+into a clean venv on CPython 3.12, reported `No broken requirements found.`, ran
+the compiled-extension smoke, and finished `396 passed in 3.06s` with 0 skipped
+against a rebuilt reference harness. macOS wheels were produced for CPython
+3.10-3.13 on both architectures, tagged `macosx_11_0_x86_64` and
+`macosx_11_0_arm64`.
+
+Everything above is anchored to `799de81`. Later commits touching only this
+document carry no CI run of their own and inherit that evidence.
 
 **Configured only**
 
-All of `.github/workflows/wheels.yml`: the four wheel jobs, the installed-wheel
-parity job and the source-distribution job. Their existence is not evidence that
-a Windows or macOS build succeeds.
+Nothing in `wheels.yml` remains unexecuted. What is still configured without
+evidence is publication: there is no upload job, no token, no tag and no
+release workflow, so no wheel has been pushed to any index.
 
 ## Project licence and redistribution status
 
@@ -355,9 +373,8 @@ repository:
    or a GitHub Actions trusted publisher for `shikivaahan/leo-dynamics`.
 4. **A publication workflow** with an explicit release trigger, a version bump,
    and artefact checksums. Nothing uploads today.
-5. **Executed CI evidence** for every platform in the matrix above — at present
-   the cross-platform wheels are configured but unexecuted, because these commits
-   have not been pushed.
+5. **Executed CI evidence** for every platform in the matrix above — obtained in
+   run `39128373040` at commit `799de81`, where all six jobs succeeded.
 6. **A v0.1.0 tag**, cut only after the above.
 
 ## Wheel repair: run 39123791284
@@ -427,28 +444,58 @@ No physics, integrator, force model, tolerance or default value changed, and
   `process_batch_contracts`) pass locally. Multi-interpreter installed-wheel
   validation against CPython 3.10–3.13 is CI's job and is exercised per wheel by
   the `wheels` matrix.
+- **Installed-wheel validation against the repaired tree: 396 passed, 0 skipped.**
+  A CPython 3.12.14 wheel was built after the final scheduler correction —
+  every artefact postdates the settled `batch.hpp`, confirmed by a compiled-source
+  digest over `src`, `include`, `bindings`, `CMakeLists.txt` and `cmake` that was
+  unchanged across the rebuild. `ci/run_installed_wheel_tests.py` was run from
+  outside the repository against the installed distribution, not the source
+  tree: `pip check` reported `No broken requirements found.`, the extension smoke
+  propagated a j2 case, and all 396 tests passed with none skipped. Passing the
+  reference harness converted the 36 parity skips seen in `39123791284` into real
+  assertions, which is why 396/0 is the expected result rather than 360/36. That
+  includes all 17 frozen fixture identities, `test_python_reproduces_the_direct_cpp_path`
+  across all 17 scenarios, and the 8-member batch-determinism contract at workers
+  1, 2, 4 and 8 through the Python surface, so the scheduler change preserved
+  bitwise reproducibility. Full command log: `/tmp/leo-wheel-repair-python.md`.
+- **Python-side Windows diagnosis.** The Windows leg failed on byte-pinned
+  fixture line endings, not on the scheduler; the `.gitattributes` correction and
+  its controlled-clone proof are recorded in `/tmp/leo-wheel-failure-windows.md`.
 
-### Still pending
+### CI rerun
 
-The cross-platform rerun that verifies the repair on real `windows-2025` and
-`macos-15` / `macos-15-intel` runners has not run yet. Nothing above is evidence
-that the macOS or Windows wheels build; it is evidence about the causes and about
-the local native and determinism checks. Executed CI evidence for every platform
-in the matrix table above remains outstanding.
+Run `39128373040` at commit `799de81` (`push`, 2026-10-18, concluded `success`)
+executed the repair on real runners. All six jobs passed: the three that failed
+in `39123791284` — `macos-arm64`, `macos-x86_64` and `windows-amd64` — are now
+green, and the installed-wheel parity job, previously skipped because those jobs
+failed, ran and reported `396 passed` with 0 skipped, `No broken requirements
+found.`, and a successful compiled-extension smoke. Both macOS jobs built with
+`MACOSX_DEPLOYMENT_TARGET=11.0` and emitted wheels tagged `macosx_11_0_x86_64`
+and `macosx_11_0_arm64` for CPython 3.10-3.13; the previously failing `std::jthread`
+and `std::stop_source` diagnostics and the `std::filesystem` availability error
+do not appear. See the CI table in the verification log above.
+
+### What remains outstanding
+
+Publication only. No licence decision, no `LICENSE` file, no index credentials
+and no release tag exist, so although every wheel now builds and installs, no
+wheel has been uploaded anywhere. The macOS wheels are additionally built but
+not yet exercised by an installed-wheel test on a macOS interpreter — the
+installed-wheel parity job installs the manylinux wheel.
 
 ## Open risks
 
 - Linux wheels built on this host are `manylinux_2_39`, produced and tested
-  locally; broader `manylinux_2_28` compatibility remains unverified until CI's
-  pinned container image builds it. Licensing, independently, still blocks
-  public distribution of any of these wheels.
+  locally; CI additionally built and installed the pinned
+  `manylinux_2_28`-compatible wheel in run `39128373040`. Licensing,
+  independently, still blocks public distribution of any of these wheels.
 - The build downloads Eigen and Boost during configure. The archives are pinned
   and SHA-256 verified, so a build is reproducible, but it is not offline.
-- Windows and macOS compilation of the C++20 engine still has no successful
-  execution. The defects that run 39123791284 exposed are fixed and diagnosed
-  above, but the repair is unverified until the cross-platform rerun completes.
-  Any genuine portability defect found there should be fixed with the smallest
-  possible change, as in the numerical engine itself.
+- Windows and macOS compilation of the C++20 engine now has successful execution:
+  run `39128373040` built the full CPython 3.10-3.13 wheel matrix on both macOS
+  architectures and on Windows. The residual risk is coverage, not buildability —
+  the Windows and macOS wheels are not exercised by an installed-wheel test on
+  their own interpreters, since that job installs the manylinux wheel.
 - `requires-python` excludes 3.14 by design; no 3.14 claim is made.
 - The exponential atmosphere is spherical and Sentman is cold-beam; NRLMSISE-00
   and JB2008 are deferred to v0.2 and are absent from the distribution.
