@@ -27,6 +27,19 @@ ctest --test-dir build-kernel --output-on-failure
 
 Requesting examples with integration OFF is a configuration error. CI defines GCC/Clang Release and Clang Debug ASan/UBSan validation, full environmental propagation and kernel-only builds. Catch2 v3.7.1 and CSPICE N0067 are bootstrapped outside project configure in CI. Tests never fetch dependencies or kernels.
 
+An optional development build compiles the private pybind11 extension for local use (the kernel keeps no Python dependency and the default build never needs Python):
+
+```sh
+python3 -m venv .venv-python
+.venv-python/bin/python -m pip install numpy pybind11 pytest
+cmake -S . -B build-python -DCMAKE_BUILD_TYPE=Release -DLEO_BUILD_PYTHON_BINDINGS=ON \
+  -DPython3_EXECUTABLE="$PWD/.venv-python/bin/python"
+cmake --build build-python --parallel
+PYTHONPATH="$PWD/build-python/python" .venv-python/bin/python -c "import leo_dynamics as leo; print(leo.Earth())"
+```
+
+This needs the Python development headers, NumPy and pybind11 for the target interpreter; pass `-Dpybind11_DIR=<prefix>/share/cmake/pybind11` when pybind11 is only inside that environment. It is a local build path only: there is no `pyproject.toml`, wheel or PyPI infrastructure. See the [Python development guide](docs/python-development.md) for imports, examples, batching, multithreading, shapes, ownership and errors, the [implemented v0.1 Python interface](docs/python-api-design.md) for the full object and analysis reference, and the [binding validation report](docs/python-binding-validation.md) for the qualification evidence.
+
 ## Analysis and plotting workflow
 
 ```sh
