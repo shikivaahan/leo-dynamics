@@ -1,0 +1,12 @@
+# The frozen v0.1 reference fixtures are byte-pinned: every SHA-256 in
+# tests/reference/golden/manifest.json, in the native Tudat manifest and in
+# tests/reference/acceptance.json is computed over the exact committed bytes.
+# A Windows checkout with core.autocrlf=true rewrote those LF files to CRLF and
+# the identities no longer matched the pins (run 39123791284: 17 failures in
+# tests/python/test_regression.py::test_frozen_fixture_identities).
+# -text keeps the committed bytes verbatim on every platform without turning
+# reviewable JSON into an opaque blob.
+tests/reference/acceptance.json -text
+tests/reference/golden/*.json -text
+tests/reference/golden/tudat/*.json -text
+tests/reference/scenarios/*.json -text
