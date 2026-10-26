@@ -164,8 +164,11 @@ Design choices that keep it economical and boring:
 as `manylinux_2_39_x86_64` (`auditwheel show`), because `libstdc++` needs
 `GLIBCXX_3.4.32` and `libm` needs `GLIBC_2.38`. That is why the Linux job
 pins `CIBW_MANYLINUX_X86_64_IMAGE=manylinux_2_28`: the container image, not
-the developer host, is what produces the distributable tag. No
-`manylinux_2_28` wheel has been produced or tested yet.
+the developer host, is what produces the distributable tag. CI has since
+produced and installed those wheels — see the executed-in-CI table below, where
+the Linux wheels carry the dual
+`manylinux_2_27_x86_64.manylinux_2_28_x86_64` tag. The host-only
+`manylinux_2_39` build remains a local artefact.
 
 Failure diagnostics: compiler and pip command lines are echoed
 (`CIBW_BUILD_VERBOSITY=1`), the wheel listing is printed on every outcome, and
@@ -297,16 +300,21 @@ suite could not fall back to the development build.
 
 **Executed in CI**
 
-Run `39128373040`, commit `799de81`, `push`, concluded `success` — all six jobs:
+Run `39130183664`, commit `72dddd07`, `push`, concluded `success` — all six jobs:
 
 | Job | Identifiers | Suite result | Result |
 | --- | --- | --- | --- |
-| `linux-x86_64 manylinux_2_28` | cp310-cp313 | 360 passed, 36 skipped | success (also passed in `39123791284`) |
-| `macos-arm64` | cp310-cp313 | 360 passed, 36 skipped | success (**failed** in `39123791284`) |
-| `macos-x86_64` | cp310-cp313 | 360 passed, 36 skipped | success (**failed** in `39123791284`) |
-| `windows-amd64` | cp310-cp313 | 360 passed, 36 skipped | success (**failed** in `39123791284`) |
+| `linux-x86_64 manylinux_2_28` | cp310-cp313 | 360 passed, 36 skipped | success |
+| `macos-arm64` | cp310-cp313 | 360 passed, 36 skipped | success |
+| `macos-x86_64` | cp310-cp313 | 360 passed, 36 skipped | success |
+| `windows-amd64` | cp310-cp313 | 360 passed, 36 skipped | success |
 | `Source distribution rebuild` | cp312 from sdist | 360 passed, 36 skipped | success |
-| `Installed-wheel parity against the C++ engine` | cp312 | **396 passed, 0 skipped** | success (**skipped** in `39123791284`, blocked by the failed jobs) |
+| `Installed-wheel parity against the C++ engine` | cp312 | **396 passed, 0 skipped** | success |
+
+The immediately preceding green run was `39128373040` at commit `799de81`,
+which executed the same six jobs after the `std::jthread` and
+`MACOSX_DEPLOYMENT_TARGET` repairs; run `39123791284` at `016af3a` is the run
+that failed, and is the subject of the "Wheel repair" section below.
 
 Each of the four platform jobs installed the wheels it had just built, for each
 of CPython 3.10, 3.11, 3.12 and 3.13, into a clean environment on that platform's
@@ -317,25 +325,47 @@ supply `--harness` for; they are the ones the final job executes.
 The parity job installed
 `leo_dynamics-0.1.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl`
 into a clean venv on CPython 3.12, reported `No broken requirements found.`, ran
-the compiled-extension smoke, and finished `396 passed in 3.06s` with 0 skipped
+the compiled-extension smoke, and finished `396 passed` with 0 skipped
 against a rebuilt reference harness. macOS wheels were produced for CPython
 3.10-3.13 on both architectures, tagged `macosx_11_0_x86_64` and
 `macosx_11_0_arm64`.
 
-Everything above is anchored to `799de81`, the commit whose six CI jobs all
+The sixteen wheel artefacts from run `39130183664` were downloaded and
+inspected locally: they are the sixteen expected slots, named
+
+- `leo_dynamics-0.1.0-cp310…cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl` (4)
+- `leo_dynamics-0.1.0-cp310…cp313-win_amd64.whl` (4)
+- `leo_dynamics-0.1.0-cp310…cp313-macosx_11_0_arm64.whl` (4)
+- `leo_dynamics-0.1.0-cp310…cp313-macosx_11_0_x86_64.whl` (4)
+
+plus `leo_dynamics-0.1.0.tar.gz`. They carry `THIRD_PARTY_NOTICES.md` but no
+`LICENSE` and no `License-Expression`, because the project has no licence yet.
+
+Everything above is anchored to `72dddd07`, the commit whose six CI jobs all
 succeeded. Commits after it that touch only this document are documentation
 changes: they contribute no additional binary validation, and no result in this
 document is claimed on their basis. Any later change to the source, the build
 configuration or the workflow would need a new run before its validation could
 be described this way.
 
-**Nothing configured but unexecuted**
+**What is configured but unexecuted**
 
-Nothing in `wheels.yml` remains unexecuted: run `39128373040` executed all six
-jobs and all six succeeded. Publication is not a case of configured-but-unproven
-steps either. There is no upload job, no token, no tag and no release workflow
-anywhere in this repository, so publication is not configured at all and has not
-been performed. No wheel has been pushed to any index.
+Run `39130183664` executed all six jobs of `wheels.yml` as it stood at commit
+`72dddd07`, and all six succeeded. That is the historical baseline for the
+workflow's *behaviour*; it is not a statement about the file as it now stands.
+Since that run, `wheels.yml` has been modified — its actions are pinned to
+commit SHAs, it declares `permissions: contents: read`, it gained a
+`workflow_call:` trigger so the release can reuse it, and its wheel and sdist
+jobs now record a `provenance.json`. **Those modifications have never run
+remotely.** The same is true of `ci.yml` and `qualification.yml`, which were
+given a `workflow_call:` trigger, and of `.github/workflows/release.yml`,
+which is new.
+
+The release workflow is deliberately not executed: its first job is a licence
+gate that fails while the repository has no `LICENSE`. No wheel has been pushed
+to any index and no upload has been attempted. See
+[release-readiness-report.md](release-readiness-report.md) for the exact
+blockers and for the local verification that stands in for a run.
 
 ## Project licence and redistribution status
 
@@ -373,26 +403,42 @@ name can be taken by anyone at any time.
 
 ## What eventual publication would require
 
-Of the six prerequisites below, one is satisfied and five are not. Items 1-4 and
-6 have not been done and are not configured anywhere in this repository; item 5
-was obtained by an actual executed run.
+Of the six prerequisites below, one is satisfied, one is configured but not yet
+exercised, and four are not done. Item 5 was obtained by an actual executed run.
 
 1. **A licence decision** by the copyright holder, a `LICENSE` file, and
-   matching `license` metadata. Not done, not configured. This is the blocking
-   item.
+   matching `license` metadata. **Not done.** This is the blocking item. The
+   release workflow's first job enforces it: the workflow refuses to build or
+   publish without it. The enforcement is configured; the licence itself does
+   not exist.
 2. **Confirmation that every shipped file may be redistributed** — the C++ and
    pybind11 sources under this repository's control, plus the transitive
-   dependency review in the table above. Not done, not configured.
-3. **A PyPI account or organisation**, then either an API token (classic upload)
-   or a GitHub Actions trusted publisher for `shikivaahan/leo-dynamics`. None
-   exists.
+   dependency review in the table above. **Not done.** The dependency-licence
+   review above covers the code compiled into `_core`; it does not establish
+   redistribution rights for the project's own code, and one question about
+   quoted upstream values in the tracked evidence is still unanswered. See
+   [release-readiness-report.md](release-readiness-report.md) §2.3 and §2.4.
+3. **A PyPI account or organisation** and a GitHub Actions **trusted
+   publisher** for `shikivaahan/leo-dynamics`. **Partly configured:** the
+   production PyPI pending publisher is registered; the separate **TestPyPI**
+   one still has to be added, with environment `testpypi`. This release uses
+   OIDC trusted publishing only — no API token is used or planned for it.
 4. **A publication workflow** with an explicit release trigger, a version bump,
-   and artefact checksums. Not configured; nothing uploads today.
+   and artefact checksums. **Now configured and not yet executed**:
+   `.github/workflows/release.yml` is a manual-trigger, TestPyPI-only workflow
+   that reuses this file's own matrix, verifies every artefact against the
+   released commit, and refuses to publish while the licence is missing.
+   Nothing uploads today.
 5. **Executed CI evidence** for every platform in the matrix above —
-   **satisfied**: obtained in run `39128373040` at commit `799de81`, where all
+   **satisfied**: obtained in run `39130183664` at commit `72dddd07`, where all
    six jobs succeeded and each of the 16 wheels across four platforms was
-   installed and tested on its own interpreter.
-6. **A v0.1.0 tag**. Not cut; to follow items 1-4.
+   installed and tested on its own interpreter. **Caveat:** the workflow files
+   have since been modified (SHA-pinned actions, `workflow_call:` triggers,
+   provenance recording) and those modifications have not run remotely; the
+   evidence describes `wheels.yml` as it stood at `72dddd07`.
+6. **A v0.1.0 tag**. Not cut; to follow items 1-4. A release must also be
+   published from the default branch at a commit that has itself been through
+   CI, so that the artefacts and the tested source are the same tree.
 
 ## Wheel repair: run 39123791284
 

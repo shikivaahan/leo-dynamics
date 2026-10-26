@@ -1,12 +1,21 @@
 name: Manual six-hour and comparative qualification
 on:
   workflow_dispatch:
+  # Callable so that a release can gate on the same qualification campaign, at
+  # the same commit, that a manual qualification run uses.
+  workflow_call:
+# Read-only by default: this workflow measures, it never writes to the
+# repository, publishes a release or requests an identity token.
+permissions:
+  contents: read
 jobs:
   qualification:
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
       - name: Install native and isolated Python prerequisites
         run: |
           sudo apt-get update
@@ -34,7 +43,7 @@ jobs:
         run: |
           "$QUALIFICATION_PY" benchmarks/comparative/run.py --binary build-reference/leo_reference_dump --tudat-python "$TUDAT_PY" --out qualification-results/comparative --repeats 3 --warmups 1
           "$QUALIFICATION_PY" benchmarks/comparative/analyse.py --input qualification-results/comparative/summary.json --out qualification-results/comparative/report
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
           name: v01-qualification-evidence

@@ -1,5 +1,14 @@
 name: Analytical numerical-audit plotting and cache validation
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  # Callable so that a release can gate on the same native validation, at the
+  # same commit, that ordinary CI runs.
+  workflow_call:
+# Read-only by default: this workflow builds and tests, it never writes to the
+# repository, publishes a release or requests an identity token.
+permissions:
+  contents: read
 jobs:
   validate:
     runs-on: ubuntu-24.04
@@ -32,7 +41,9 @@ jobs:
       ASAN_OPTIONS: detect_leaks=1
       UBSAN_OPTIONS: halt_on_error=1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
       - name: Install prerequisites
         run: sudo apt-get update && sudo apt-get install -y cmake ninja-build g++ clang libeigen3-dev libboost-dev git curl ncompress python3-venv
       - name: Bootstrap Catch2 v3.7.1 outside project configure

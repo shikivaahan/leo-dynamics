@@ -7,10 +7,25 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+  # Callable so that a release reuses exactly this wheel matrix, at exactly the
+  # commit being released, instead of duplicating it.
+  workflow_call:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # The `wheels-` prefix keeps this group distinct from the release
+  # workflow's own group. `github.workflow` is the *caller's* workflow name
+  # inside a reusable workflow, so a wheel build started by the release and a
+  # wheel build started by an ordinary push are already in different groups;
+  # the prefix additionally guarantees that neither can ever collide with
+  # `release-testpypi-...`, and therefore that a release can never cancel, or
+  # be cancelled by, ordinary CI.
+  group: wheels-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+# Read-only by default: this workflow builds and tests, it never writes to the
+# repository, publishes a release or requests an identity token.
+permissions:
+  contents: read
 
 env:
   # Version-specific wheels only. The pybind11/NumPy surface is not stable-ABI
@@ -69,8 +84,10 @@ jobs:
             archs: x86_64
             artifact: wheels-macos-x86_64
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
       - name: Install the pinned cibuildwheel
@@ -85,13 +102,23 @@ jobs:
           python -c "import glob, os;
           [print(f'{os.path.basename(path)} {os.path.getsize(path)} bytes')
           for path in sorted(glob.glob('wheelhouse/*.whl'))]"
-      - uses: actions/upload-artifact@v4
+      # Records which commit these wheels were built from, so a release can
+      # refuse to publish anything that is not this commit's output.
+      - name: Record the provenance of the wheels
+        if: always()
+        run: >-
+          python3 ci/write_release_provenance.py
+          --output wheelhouse/provenance.json
+          --commit "${{ github.sha }}"
+          --workflow-run-id "${{ github.run_id }}"
+          --directory wheelhouse
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         # Uploaded on failure as well: a partial wheelhouse plus the build log
         # above is the whole diagnostic story when a native build breaks.
         if: always()
         with:
           name: ${{ matrix.artifact }}
-          path: wheelhouse/*.whl
+          path: wheelhouse/
           if-no-files-found: warn
 
   installed-wheel-parity:
@@ -103,12 +130,14 @@ jobs:
     timeout-minutes: 60
     needs: wheels
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: wheels-linux
           path: wheelhouse
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
       - name: Install native prerequisites for the reference harness
@@ -138,8 +167,10 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
       - name: Build the source distribution
@@ -167,9 +198,20 @@ jobs:
         run: >-
           /tmp/leo-sdist-test/bin/python "$GITHUB_WORKSPACE/ci/run_installed_wheel_tests.py"
           "$GITHUB_WORKSPACE"
-      - uses: actions/upload-artifact@v4
+      # Records which commit this source distribution was built from, so a
+      # release can refuse to publish anything that is not this commit's
+      # output.
+      - name: Record the provenance of the source distribution
+        if: always()
+        run: >-
+          python3 ci/write_release_provenance.py
+          --output dist/provenance.json
+          --commit "${{ github.sha }}"
+          --workflow-run-id "${{ github.run_id }}"
+          --directory dist
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
           name: sdist
-          path: dist/*.tar.gz
+          path: dist/
           if-no-files-found: error
