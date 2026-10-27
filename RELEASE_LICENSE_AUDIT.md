@@ -228,6 +228,16 @@ No artifact was uploaded. Exact identities:
 | source distribution | 83279 | `0906aade8fa832c1f9ad7c05f14ae62c47984787dc3a26c997a61fbb70fa5767` |
 | wheel rebuilt from sdist, CPython 3.12 | 368448 | `e4e874217f2cde42bcf5fbd73d11ebed24cef9c1534bea33314b0c094803c947` |
 
+The final archive set embeds the **current** tree bytes: the shipped
+`THIRD_PARTY_NOTICES.md` is SHA-256
+`d622f8acdf537bbba7391a429d2016fb6705426237a0d8e6ad2a86da8c6a0c8c` (43,737
+bytes) in both the source distribution and the rebuilt wheel, identical to the
+working-tree file after the last MPL-3.1/3.2 wording correction; the same
+equality holds for `README.dist.md`, `LICENSE` and `LICENSE_SCOPE.md`. No file
+that ships is newer than these artifacts. The earlier `5634a26d…` value is the
+pre-correction review snapshot quoted by the independent reviewer, not the
+shipped bytes. All evidence in this report is from this final tree.
+
 `archive-identities.json` contains exact filenames and hashes;
 `final-archive-inventory.json` enumerates **every member**, size and SHA-256.
 Each wheel has the three Python facade/typing files, one `_core` extension,
