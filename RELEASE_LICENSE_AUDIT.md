@@ -314,6 +314,11 @@ to expose the original research history.
 
 ## Reproducibility, changes and limitations
 
+The work is committed locally on the audit branch as `2bb5ccb` ("audit: scope
+the MIT core, enforce the proprietary boundary, verify v0.1.0 packaging").
+Nothing was pushed, uploaded, published or dispatched; `origin/main` still
+points at `23df023d`, and the pre-existing untracked `outputs/` is untouched.
+
 Full final commands, working directories, exit codes and persistent log names
 are in `release-audit/commands.json`. This includes final direct/sdist builds,
 clean installed tests, runtime smoke, dependency closure, provider refusals and

@@ -2,7 +2,9 @@
 
 Branch: `audit/release-licensing-v0.1.0`, created from `23df023d`.
 No history rewrite, destructive git, push, upload, remote creation, workflow
-dispatch or publication. The pre-existing untracked `outputs/` was preserved.
+dispatch or publication. The work is committed locally as `2bb5ccb` on this
+branch; `origin/main` still points at `23df023d`. The pre-existing untracked
+`outputs/` was preserved.
 
 ## Delivered locally
 
