@@ -1,0 +1,421 @@
+{
+  "schema": "leo.audit.docs-sweep/1",
+  "audit": {
+    "name": "v0.1.0 pre-release licensing audit — internal documentation licensing sweep",
+    "date": "2026-10-26",
+    "branch": "audit/release-licensing-v0.1.0",
+    "baseline_commit": "2bb5ccb",
+    "baseline_commit_subject": "audit: scope the MIT core, enforce the proprietary boundary, verify v0.1.0 packaging",
+    "authoritative_report": "RELEASE_LICENSE_AUDIT.md",
+    "disclaimer": "Research evidence only. This file records which internal documentation statements were found to be stale and what was done about them. It is not a licence grant, not legal advice, not a clearance, and not an authorisation to publish. The licence grant itself is LICENSE scoped by LICENSE_SCOPE.md; the current position, the open legal items and the NO-GO recommendation are in RELEASE_LICENSE_AUDIT.md."
+  },
+  "constraints_observed": {
+    "branch_never_switched_or_checked_out": true,
+    "no_push_no_publish_no_index_upload_no_workflow_dispatch": true,
+    "no_repository_creation": true,
+    "no_history_rewritten": true,
+    "no_measurement_baseline_hash_count_or_gate_record_deleted_or_altered": true,
+    "only_allowed_documentation_files_edited": true,
+    "concurrent_agent_files_left_untouched": [
+      "RELEASE_LICENSE_AUDIT.md",
+      "THIRD_PARTY_NOTICES.md",
+      "audit-progress.md",
+      "release-audit/**",
+      ".github/workflows/**",
+      "LICENSE",
+      "LICENSE_SCOPE.md",
+      "PROPRIETARY-NOTICE.md",
+      "README.dist.md",
+      "pyproject.toml",
+      "CMakeLists.txt",
+      "ci/**",
+      "tests/**",
+      "audit-evidence/** (pre-existing files)"
+    ],
+    "evidence_files_created": [
+      "audit-evidence/docs-licensing-sweep.json",
+      "audit-evidence/docs-licensing-sweep.md"
+    ]
+  },
+  "banner_policy": {
+    "text_form": "> **Status update — 2026-10-26 licensing audit.** …",
+    "requirements": [
+      "dated 2026-10-26, placed at the top of the document",
+      "states that the scoped MIT grant exists (LICENSE, LICENSE_SCOPE.md) and that all other repository material stays proprietary and is not distributed",
+      "states that the licence grant exists but publication is not authorised and remains NO-GO",
+      "points at RELEASE_LICENSE_AUDIT.md for the current position and the open legal items",
+      "does not assert a release, legal clearance or verified copyright ownership"
+    ],
+    "annotation_form": "*[superseded 2026-10-26: …]* placed immediately after the statement it corrects; the original statement is kept verbatim"
+  },
+  "files": [
+    {
+      "path": "docs/release-readiness-report.md",
+      "banner": {
+        "present": true,
+        "line": 3,
+        "added_by": "concurrent licensing commit 2bb5ccb",
+        "action": "retained unchanged",
+        "reason": "the banner already carried the dated status, the pointer to RELEASE_LICENSE_AUDIT.md, the scoped-MIT-grant statement and the NO-GO statement; rewriting it would have reverted another agent's committed work"
+      },
+      "stale_statements": [
+        {
+          "line": 28,
+          "quote": "1. **The project has no licence.** No `LICENSE` file exists, and `pyproject.toml` declares no licence expression. Uploading a wheel to TestPyPI is a redistribution event, and nothing here grants redistribution rights for the project's own code. Only the copyright holder can grant them.",
+          "kind": "present-tense claim that no licence exists",
+          "action": "annotated",
+          "note_at_line": 34,
+          "note": "the scoped MIT grant now exists for the enumerated component; the copyright-title question the blocker turns on remains open and blocking, and publication remains NO-GO"
+        },
+        {
+          "line": 51,
+          "quote": "The release workflow exists and refuses to publish while the licence is missing",
+          "kind": "historical description of the publishing gate",
+          "action": "banner-only",
+          "note": "still accurate: the workflow still refuses to publish without a licence and has still never been dispatched"
+        },
+        {
+          "line": 76,
+          "quote": "| No licence file tracked | `git ls-files \\| grep -iE \"licen\\|copying\\|notice\"` | only `THIRD_PARTY_NOTICES.md` |",
+          "kind": "recorded command output (evidence table row)",
+          "action": "banner-only",
+          "note": "command/result evidence of the baseline run; kept verbatim"
+        },
+        {
+          "line": 77,
+          "quote": "| No licence metadata | `grep -n \"license\" pyproject.toml` | one line: `license-files = [\"THIRD_PARTY_NOTICES.md\"]`; no `license = ...` |",
+          "kind": "recorded command output (evidence table row)",
+          "action": "banner-only",
+          "note": "command/result evidence of the baseline run; kept verbatim"
+        },
+        {
+          "line": 78,
+          "quote": "| `THIRD_PARTY_NOTICES.md` grants nothing | read §6 of that file | item 1 states the project's own licence is unresolved |",
+          "kind": "recorded command output (evidence table row)",
+          "action": "banner-only",
+          "note": "command/result evidence of the baseline run; kept verbatim"
+        },
+        {
+          "line": 79,
+          "quote": "| Built wheel carries no licence | `zipfile.ZipFile(...).namelist()` on the built wheel | `leo_dynamics-0.1.0.dist-info/licenses/THIRD_PARTY_NOTICES.md` only; `METADATA` has `License-File: THIRD_PARTY_NOTICES.md` and **no** `License-Expression` |",
+          "kind": "recorded command output (evidence table row)",
+          "action": "banner-only",
+          "note": "command/result evidence of the baseline run; kept verbatim"
+        },
+        {
+          "line": 89,
+          "quote": "**Why it was not applied.** Applying a licence asserts a grant that only the copyright holder can make, and §2.3 shows that the holder has not been established. The workflow was written so that it becomes usable the moment an approved licence is added, rather than containing a placeholder that would let an unlicensed artefact reach an index.",
+          "kind": "present-tense claim that the licence was not applied",
+          "action": "annotated",
+          "note_at_line": 97,
+          "note": "the owner has since approved scoped MIT intent and the grant has been applied to the enumerated component; legal copyright-title verification is open and publication remains NO-GO"
+        },
+        {
+          "line": 161,
+          "quote": "**Owner confirmation required before any licence is applied.**",
+          "kind": "ownership gate heading",
+          "action": "banner-only",
+          "note": "the ownership question is still open and blocking; only the mechanical application changed"
+        },
+        {
+          "line": 180,
+          "quote": "Until 1–4 are answered, no licence may be applied and no artefact may be redistributed.",
+          "kind": "present-tense precondition now partly obsolete",
+          "action": "annotated",
+          "note_at_line": 188,
+          "note": "annotated in its first clause only: redistribution of the enumerated component is permitted on the MIT terms; legal title open, no artefact may be published, NO-GO retained"
+        },
+        {
+          "line": 231,
+          "quote": "**One gap that is a real defect, not a formality:** the wheel currently carries `THIRD_PARTY_NOTICES.md` but **no `LICENSE` and no `License-Expression`**, because the project has no licence.",
+          "kind": "present-tense claim that the artefact carries no licence",
+          "action": "annotated",
+          "note_at_line": 243,
+          "note": "the final audited wheel and sdist carry LICENSE, LICENSE_SCOPE.md and THIRD_PARTY_NOTICES.md and declare License-Expression: MIT; the boundary gate and release verifier still refuse any artefact that does not"
+        },
+        {
+          "line": 276,
+          "quote": "because the repository's visibility is an owner decision and the licence and redistribution rights in §2.1 and §2.3 are still unresolved",
+          "kind": "visibility rationale",
+          "action": "banner-only",
+          "note": "still accurate for the ownership/title question; the licence grant exists but title verification is open"
+        },
+        {
+          "line": 666,
+          "quote": "`pyproject.toml` and `THIRD_PARTY_NOTICES.md` were **not** changed. The first needs the owner's licence decision",
+          "kind": "record of what that workstream changed at the time",
+          "action": "banner-only",
+          "note": "historical change-list of that workstream; kept as written"
+        },
+        {
+          "line": 718,
+          "quote": "On that confirmation, this workstream adds the `LICENSE` file and applies the `pyproject.toml` metadata (`license = \"MIT\"`, `license-files = [\"LICENSE\", \"THIRD_PARTY_NOTICES.md\"]`) in one change, so the two cannot drift apart.",
+          "kind": "pending action that has since been carried out",
+          "action": "annotated",
+          "note_at_line": 731,
+          "note": "the scoped MIT terms, the LICENSE file and the matching metadata have since been applied; answering the ownership questions remains open and blocking and publication remains NO-GO"
+        }
+      ]
+    },
+    {
+      "path": "docs/v0.1-release-readiness.md",
+      "banner": {
+        "present": true,
+        "line": 3,
+        "added_by": "concurrent licensing commit 2bb5ccb",
+        "action": "retained unchanged",
+        "reason": "already compliant; the document contains no licensing statement to correct"
+      },
+      "stale_statements": [
+        {
+          "line": 11,
+          "quote": "Scope: pre-Python validation and benchmarking of the existing C++20 engine. No pybind11 bindings, Python package, build backend, wheel or release is implemented.",
+          "kind": "historical scope statement of the pre-Python qualification report",
+          "action": "banner-only",
+          "note": "unchanged historical scope of that report; the numerical verdict and all acceptance limits are untouched"
+        }
+      ],
+      "file_edited_by_this_sweep": false
+    },
+    {
+      "path": "docs/python-packaging.md",
+      "banner": {
+        "present": true,
+        "line": 3,
+        "added_by": "this sweep",
+        "action": "added",
+        "note": "a pre-existing, more detailed 'Licensing-audit update (2026-10-26)' section (added by the concurrent commit 2bb5ccb) is preserved verbatim below it"
+      },
+      "stale_statements": [
+        {
+          "line": 254,
+          "quote": "The source distribution holds `CMakeLists.txt`, `pyproject.toml`, `cmake/`, `include/`, `src/`, `bindings/`, `python/leo_dynamics/`, `ci/`, `THIRD_PARTY_NOTICES.md`, `tests/python/`, `tests/reference/{acceptance.json, golden, scenarios}`, the guide files and `README.md`.",
+          "kind": "record of the baseline sdist contents",
+          "action": "banner-only",
+          "note": "baseline distribution record; the final public-only sdist (52 approved files plus PKG-INFO) is documented in RELEASE_LICENSE_AUDIT.md and release-audit/"
+        },
+        {
+          "line": 362,
+          "quote": "They carry `THIRD_PARTY_NOTICES.md` but no `LICENSE` and no `License-Expression`, because the project has no licence yet.",
+          "kind": "present-tense claim that the artefacts carry no licence",
+          "action": "annotated",
+          "note_at_line": 367,
+          "note": "the final audited wheel and sdist carry LICENSE, LICENSE_SCOPE.md and THIRD_PARTY_NOTICES.md and declare License-Expression: MIT; the run 39130183664 artefacts remain the unlicensed baseline"
+        },
+        {
+          "line": 385,
+          "quote": "The release workflow is deliberately not executed: its first job is a licence gate that fails while the repository has no `LICENSE`. No wheel has been pushed to any index and no upload has been attempted.",
+          "kind": "description of the publishing gate",
+          "action": "banner-only",
+          "note": "still accurate: the workflow has not been dispatched and no artefact has been uploaded"
+        },
+        {
+          "line": 393,
+          "quote": "**No licence file exists.** At baseline commit `83aa05d`, `git ls-files` reports no `LICENSE`, `COPYING` or `NOTICE`",
+          "kind": "present-tense claim that no licence file exists",
+          "action": "annotated",
+          "note_at_line": 415,
+          "note": "annotated with the section-wide note: the owner's approved scoped MIT terms are in force for the enumerated component; legal title open, nothing publishable, NO-GO retained"
+        },
+        {
+          "line": 401,
+          "quote": "- no licence expression or licence classifier is asserted in `pyproject.toml`, because doing so would assert rights the project has not granted;",
+          "kind": "present-tense claim about package metadata",
+          "action": "annotated",
+          "note_at_line": 415,
+          "note": "same section-wide annotation; pyproject.toml now declares license = \"MIT\" with scoped license-files"
+        },
+        {
+          "line": 403,
+          "quote": "- no redistribution right is established for the project itself, which blocks publication regardless of build correctness;",
+          "kind": "present-tense claim that no redistribution right exists",
+          "action": "annotated",
+          "note_at_line": 415,
+          "note": "same section-wide annotation; the enumerated component is distributable on the MIT terms, publication stays NO-GO pending legal title and the other open items"
+        },
+        {
+          "line": 430,
+          "quote": "1. **A licence decision** by the copyright holder, a `LICENSE` file, and matching `license` metadata. **Not done.** This is the blocking item. … The enforcement is configured; the licence itself does not exist.",
+          "kind": "publication prerequisite recorded as not done",
+          "action": "annotated",
+          "note_at_line": 442,
+          "note": "the scoped MIT licence file and matching metadata have since been added; the open prerequisites are recorded in RELEASE_LICENSE_AUDIT.md and publication remains NO-GO"
+        },
+        {
+          "line": 564,
+          "quote": "Publication only. No licence decision, no `LICENSE` file, no index credentials and no release tag exist, so although every wheel now builds and installs, no wheel has been uploaded anywhere.",
+          "kind": "present-tense claim that no licence decision or file exists",
+          "action": "annotated",
+          "note_at_line": 576,
+          "note": "the scoped MIT licence and metadata now exist; index credentials and a release tag still do not, nothing has been uploaded, publication remains NO-GO"
+        }
+      ]
+    },
+    {
+      "path": "docs/repository-hygiene-report.md",
+      "banner": {
+        "present": true,
+        "line": 3,
+        "added_by": "concurrent licensing commit 2bb5ccb",
+        "action": "retained unchanged",
+        "reason": "the banner already carried the dated status, the pointer to RELEASE_LICENSE_AUDIT.md, the scoped-MIT-grant statement and the NO-GO statement"
+      },
+      "stale_statements": [
+        {
+          "line": 30,
+          "quote": "| Release blockers | No project licence; no `LICENSE` file; repository metadata unset; repository still private |",
+          "kind": "baseline summary-table row",
+          "action": "banner-only",
+          "note": "summary of the baseline audited at commit fbf85a8; kept as the baseline record"
+        },
+        {
+          "line": 32,
+          "quote": "One finding blocks a public release independently of this workstream: **no project licence / redistribution rights** (F-09). It is not fixed here; it is listed with the exact action required.",
+          "kind": "baseline blocker statement",
+          "action": "banner-only",
+          "note": "F-09 is annotated in place; the finding and its blocker status are retained, not removed"
+        },
+        {
+          "line": 244,
+          "quote": "The GitHub API reports `description: null`, `topics: []` and no detected licence for the repository, while `has_issues` and `has_wiki` are enabled.",
+          "kind": "recorded API observation",
+          "action": "banner-only",
+          "note": "read-only API evidence of the baseline; kept as written"
+        },
+        {
+          "line": 251,
+          "quote": "### F-09 — No project licence and no redistribution rights — Critical (publication blocker)",
+          "kind": "finding title",
+          "action": "banner-only",
+          "note": "finding title and Critical severity retained; the finding body is annotated in place"
+        },
+        {
+          "line": 253,
+          "quote": "There is no `LICENSE` or `COPYING` file, and `pyproject.toml` deliberately declares no licence expression, with a comment stating that adding one would assert rights the project has not granted.",
+          "kind": "present-tense claim that no licence file exists",
+          "action": "annotated",
+          "note_at_line": 260,
+          "note": "a scoped MIT licence now covers the enumerated component and the third-party position was resolved for it; legal title open, NO-GO retained, finding kept as baseline evidence"
+        },
+        {
+          "line": 551,
+          "quote": "`pyproject.toml`, `.github/workflows/*`, `THIRD_PARTY_NOTICES.md`, `LICENSE` (does not exist), `docs/python-packaging.md`, `docs/v0.1-release-readiness.md`,",
+          "kind": "stale parenthetical stating LICENSE does not exist",
+          "action": "annotated",
+          "note_at_line": 559,
+          "note": "LICENSE now exists, with LICENSE_SCOPE.md and PROPRIETARY-NOTICE.md; they were added by the licensing audit, not by the hygiene audit; the list is kept as the baseline record"
+        },
+        {
+          "line": 594,
+          "quote": "5. The licence, third-party redistribution position and the packaging metadata are not assessed here beyond identifying the blocker.",
+          "kind": "scope-of-this-audit statement",
+          "action": "banner-only",
+          "note": "still true of this report; the licensing assessment lives in RELEASE_LICENSE_AUDIT.md"
+        },
+        {
+          "line": 603,
+          "quote": "| 1 | Choose and add the project licence; resolve the third-party redistribution questions; then update `pyproject.toml` licence metadata. | User decision + compliance | Critical |",
+          "kind": "baseline recommended action",
+          "action": "banner-only",
+          "note": "historical recommendation of that audit; the action row and its Critical rating are retained"
+        }
+      ]
+    },
+    {
+      "path": "README.md",
+      "banner": {
+        "present": true,
+        "line": 3,
+        "added_by": "this sweep",
+        "action": "added",
+        "note": "banner states that the scoped MIT grant exists, that all other material stays proprietary and undistributed, that publication is not authorised and remains NO-GO, and points at RELEASE_LICENSE_AUDIT.md"
+      },
+      "stale_statements": [
+        {
+          "line": 15,
+          "quote": "**This command does not work yet.** Nothing has been published to PyPI and no publication has been approved. The numerical engine and Python interface now have a scoped MIT grant: see [LICENSE_SCOPE.md](LICENSE_SCOPE.md) and [LICENSE](LICENSE).",
+          "kind": "publication status paragraph",
+          "action": "banner-only",
+          "note": "already corrected by the concurrent licensing commit 2bb5ccb (the pre-audit text at fbf85a8 line 15 read 'the repository carries no licence file, so redistribution rights are not established'); the README therefore no longer describes the project as unlicensed and needed no annotation"
+        },
+        {
+          "line": 269,
+          "quote": "No sources/data are downloaded by CMake and no redistribution permission is inferred from public download.",
+          "kind": "upstream atmosphere-provider redistribution statement",
+          "action": "banner-only",
+          "note": "still accurate: the empirical atmosphere providers and CSPICE adapter stay outside the MIT grant"
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "files_reviewed": 5,
+    "files_edited": 4,
+    "files_with_dated_status_banner": 5,
+    "banners_added_by_this_sweep": 2,
+    "banners_retained_from_concurrent_commit": 3,
+    "stale_statements_found": 32,
+    "stale_statements_annotated": 13,
+    "stale_statements_banner_only": 19,
+    "physical_dated_notes_added": 11,
+    "gates_blockers_or_test_statements_removed": 0,
+    "gates_blockers_or_test_statements_weakened": 0,
+    "new_release_gates_added": 0,
+    "publication_or_clearance_claims_made": 0
+  },
+  "changed_paths": [
+    "README.md",
+    "docs/python-packaging.md",
+    "docs/release-readiness-report.md",
+    "docs/repository-hygiene-report.md",
+    "audit-evidence/docs-licensing-sweep.json",
+    "audit-evidence/docs-licensing-sweep.md"
+  ],
+  "unchanged_files_of_interest": [
+    {
+      "path": "docs/v0.1-release-readiness.md",
+      "reason": "no licensing statement to correct; a compliant dated banner was already present from the concurrent commit 2bb5ccb, so no edit was needed and none was made"
+    }
+  ],
+  "deliberately_left_as_historical": [
+    {
+      "statement": "docs/release-readiness-report.md §2.1 evidence table rows (baseline: no licence file tracked, no licence metadata, THIRD_PARTY_NOTICES grants nothing, built wheel carries no licence)",
+      "reason": "recorded command output and results of the baseline run; deleting or rewriting them would destroy evidence. The banner marks the table as the historical baseline."
+    },
+    {
+      "statement": "docs/release-readiness-report.md §2.3 ownership questions 1–4 and the 'Owner confirmation required before any licence is applied' heading",
+      "reason": "the legal copyright-title verification is still open and blocking; the gate is unchanged and was not weakened."
+    },
+    {
+      "statement": "docs/release-readiness-report.md §2.5/§2.6, §3, §4.1, §5, §7 and §8 blocker, gate and tolerance statements, including the preflight licence gate and the 'refuses to publish while the licence is missing' behaviour",
+      "reason": "these describe gates and executed checks that still hold; only the annotations that point at the superseded facts were added."
+    },
+    {
+      "statement": "docs/python-packaging.md recorded artefact sizes, SHA-256 digests, CI run identifiers, test counts and acceptance figures",
+      "reason": "historical measurements of the baseline; untouched. The new final-artefact inventory lives in release-audit/ and RELEASE_LICENSE_AUDIT.md."
+    },
+    {
+      "statement": "docs/python-packaging.md baseline sdist member list and the 'The release workflow is deliberately not executed' statement",
+      "reason": "still accurate at the baseline and, for the workflow statement, still accurate today: the release workflow has never been dispatched and nothing has been uploaded."
+    },
+    {
+      "statement": "docs/repository-hygiene-report.md F-08 API observation, summary-table blocker row, scope statement §9 item 5 and the Critical recommended action row 1",
+      "reason": "baseline observations and recorded recommendations; the finding severities and blocker rows are retained unchanged."
+    },
+    {
+      "statement": "docs/v0.1-release-readiness.md pre-Python scope sentence and the whole numerical qualification report",
+      "reason": "no licensing content; the numerical verdict, the 17 frozen acceptance limits and the defect record are untouched."
+    },
+    {
+      "statement": "README.md line 269 upstream redistribution sentence",
+      "reason": "still accurate: the empirical atmosphere providers and the CSPICE adapter remain outside the MIT grant."
+    }
+  ],
+  "notes": [
+    "A concurrent agent committed the licensing work as 2bb5ccb while this sweep was running; that commit already added a dated status banner to docs/release-readiness-report.md, docs/v0.1-release-readiness.md and docs/repository-hygiene-report.md. Those banners were left byte-for-byte unchanged (not reverted, not reworded) because they already satisfied the banner requirements.",
+    "docs/python-packaging.md carries both the new standard banner at line 3 and the concurrent '## Licensing-audit update (2026-10-26)' section at line 14; the concurrent section was preserved verbatim.",
+    "RELEASE_LICENSE_AUDIT.md was edited by the concurrent agent during this sweep (its copyright-title row changed from UNRESOLVED to FAIL/blocking). It was re-read before use and was not modified; all banners point at it rather than restating its verdict.",
+    "No statement in this sweep asserts publication, legal clearance or verified copyright ownership; the wording used for ownership is limited to 'the licence names the evidenced author identity; legal title verification is open'.",
+    "All annotations are additive: the original sentence, table row, gate or blocker is kept verbatim and followed by the dated note."
+  ]
+}

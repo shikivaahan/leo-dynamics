@@ -1,5 +1,7 @@
 # Python packaging status and release readiness
 
+> **Status update — 2026-10-26 licensing audit.** This document is preserved as the historical record of the state at its stated baseline; its licensing, packaging and release statements are superseded where they conflict with [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md). The numerical engine and Python interface now carry a **scoped MIT grant** ([LICENSE](../LICENSE), [LICENSE_SCOPE.md](../LICENSE_SCOPE.md)); all research, empirical atmosphere providers, experiments, datasets, tests and release tooling remain private and proprietary ([PROPRIETARY-NOTICE.md](../PROPRIETARY-NOTICE.md)). Publication remains **NO-GO** pending legal title/assignment review, upstream-parameter provenance review and verification of current private-repository plan support. No gate, threshold or historical result in this document was weakened or rewritten.
+
 What `leo-dynamics` 0.1.0 ships, what has actually been executed against it, and
 what still blocks publication. Ordinary installation instructions are in the
 [README installation section](../README.md#installation); the interface itself is
@@ -362,6 +364,8 @@ inspected locally: they are the sixteen expected slots, named
 plus `leo_dynamics-0.1.0.tar.gz`. They carry `THIRD_PARTY_NOTICES.md` but no
 `LICENSE` and no `License-Expression`, because the project has no licence yet.
 
+*[superseded 2026-10-26: the final audited wheel and source distribution carry `LICENSE`, `LICENSE_SCOPE.md` and `THIRD_PARTY_NOTICES.md` under `licenses/` and declare `License-Expression: MIT`; the artefacts of run `39130183664` inspected above are the unlicensed baseline that this sentence describes.]*
+
 Everything above is anchored to `72dddd07`, the commit whose six CI jobs all
 succeeded. Commits after it that touch only this document are documentation
 changes: they contribute no additional binary validation, and no result in this
@@ -408,6 +412,8 @@ This is a tracked release-readiness blocker, not an oversight. Establishing
 terms is a decision for the copyright holder; until then, the wheel and source
 distribution are buildable and installable but not distributable.
 
+*[superseded 2026-10-26: the owner's approved scoped MIT terms are now in force for the enumerated component (`LICENSE`, `LICENSE_SCOPE.md`), so that component is intended for distribution on the MIT terms and the third-party terms recorded in `THIRD_PARTY_NOTICES.md`, subject to the open title verification; the licence names the evidenced author identity, but legal copyright-title verification is open, no artefact may be published, and publication remains NO-GO — see [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md).]*
+
 ## PyPI name availability
 
 Checked on 2026-10-18 against the live PyPI:
@@ -432,6 +438,8 @@ exercised, and four are not done. Item 5 was obtained by an actual executed run.
    release workflow's first job enforces it: the workflow refuses to build or
    publish without it. The enforcement is configured; the licence itself does
    not exist.
+
+   *[superseded 2026-10-26: the scoped MIT licence file and the matching `license` metadata have since been added for the enumerated component, and the workflow's enforcement is unchanged; the open prerequisites (legal copyright-title verification, upstream-parameter provenance, current private-repository plan support and the platform binary matrix) are recorded in [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md), and publication remains NO-GO.]*
 2. **Confirmation that every shipped file may be redistributed** — the C++ and
    pybind11 sources under this repository's control, plus the transitive
    dependency review in the table above. **Not done.** The dependency-licence
@@ -564,6 +572,8 @@ do not appear. See the CI table in the verification log above.
 Publication only. No licence decision, no `LICENSE` file, no index credentials
 and no release tag exist, so although every wheel now builds and installs, no
 wheel has been uploaded anywhere.
+
+*[superseded 2026-10-26: a scoped MIT licence and its matching metadata now exist for the enumerated component; index credentials and a release tag still do not, no wheel has been uploaded anywhere, and publication remains NO-GO — see [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md).]*
 
 Nothing is outstanding about binary validation. In run `39128373040` all four
 operating-system/architecture combinations — `linux-x86_64`, `windows-amd64`,

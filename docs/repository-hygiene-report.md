@@ -257,6 +257,8 @@ questions for third-party material. A TestPyPI upload is a redistribution event 
 cannot proceed until the project licence is chosen and the third-party position is
 resolved. Owned by the packaging/compliance workstream. **User decision required.**
 
+*[superseded 2026-10-26: a scoped MIT licence (`LICENSE`, `LICENSE_SCOPE.md`) now covers the enumerated public component, and the third-party position was documented for that component, with the upstream-applicability and shared-parameter questions still open; the licence names the evidenced author identity, but legal copyright-title verification is open and publication remains NO-GO — see [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md). The finding recorded above is retained as the baseline evidence.]*
+
 ### F-10 — Dependency vulnerability audit is clean — Info
 
 No known vulnerabilities were reported for the runtime, build or CI dependency set
@@ -553,6 +555,8 @@ exist), `docs/python-packaging.md`, `docs/v0.1-release-readiness.md`,
 `docs/v0.1-qualification.md` and every file under `docs/**/evidence/**`. The packaging
 and workflow changes belong to the packaging/release workstream and are described in
 `docs/release-readiness-report.md`; the evidence tree is the numerical record.
+
+*[superseded 2026-10-26: `LICENSE` now exists, together with `LICENSE_SCOPE.md` and `PROPRIETARY-NOTICE.md`; they were added by the licensing audit, not by the hygiene audit recorded here, and the list above is retained as the baseline record.]*
 
 ---
 

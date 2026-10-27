@@ -30,6 +30,8 @@ by the code in this repository:
    TestPyPI is a redistribution event, and nothing here grants redistribution
    rights for the project's own code. Only the copyright holder can grant
    them.
+
+   *[superseded 2026-10-26: the scoped MIT grant now exists for the enumerated component (`LICENSE`, `LICENSE_SCOPE.md`); the copyright-title question this blocker turns on remains open and blocking, no artefact may be published, and publication remains NO-GO — see [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md).]*
 2. **The TestPyPI trusted publisher has not been confirmed.** The production
    PyPI pending publisher is registered; the separate TestPyPI one cannot be
    verified through any authorized read-only interface available here.
@@ -91,6 +93,8 @@ copyright holder can make, and §2.3 shows that the holder has not been
 established. The workflow was written so that it becomes usable the moment an
 approved licence is added, rather than containing a placeholder that would
 let an unlicensed artefact reach an index.
+
+*[superseded 2026-10-26: the owner has since approved scoped MIT intent, and the grant has been applied to the enumerated component (`LICENSE`, `LICENSE_SCOPE.md`); the licence names the evidenced author identity, but legal copyright-title verification is open and publication remains NO-GO — see [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md).]*
 
 **What is needed, and who does it.** The owner must *authorise* the licence
 and answer the ownership questions in §2.3. Applying it is then a mechanical
@@ -181,6 +185,8 @@ Until 1–4 are answered, no licence may be applied and no artefact may be
 redistributed. The MIT recommendation in §2.1 is a recommendation about *terms
 only*, conditional on the holder being able to grant them.
 
+*[superseded 2026-10-26 in its first clause only: the owner-approved scoped MIT grant now exists for the enumerated component (`LICENSE`, `LICENSE_SCOPE.md`), the owner has granted redistribution of that component on the MIT terms and the third-party terms recorded in `THIRD_PARTY_NOTICES.md`, subject to the open title verification; legal copyright-title verification is open, no artefact may be published, and publication remains NO-GO — see [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md).]*
+
 ### 2.4 Atmospheric assets and other restricted material
 
 The distribution does not redistribute any upstream atmospheric or SPICE
@@ -233,6 +239,8 @@ carries `THIRD_PARTY_NOTICES.md` but **no `LICENSE` and no
 `License-Expression`**, because the project has no licence. The release
 verifier (`ci/verify_release_artifacts.py`) rejects any wheel that does, so
 this cannot reach an index by accident.
+
+*[superseded 2026-10-26: the final audited wheel and source distribution carry `LICENSE`, `LICENSE_SCOPE.md` and `THIRD_PARTY_NOTICES.md` and declare `License-Expression: MIT`; the archive boundary gate and the release verifier still refuse any artefact that does not, and publication remains NO-GO pending the open items in [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md).]*
 
 ### 2.6 GitHub environment protection (owner action, uncertain availability)
 
@@ -719,6 +727,12 @@ this workstream.
    the `pyproject.toml` metadata (`license = "MIT"`,
    `license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]`) in one change, so
    the two cannot drift apart.
+
+   *[superseded 2026-10-26: the scoped MIT terms, the `LICENSE` file and the
+   matching `pyproject.toml` metadata have since been applied to the
+   enumerated component under the owner's approved intent; answering the
+   ownership questions in §2.3 remains open and blocking, and publication
+   remains NO-GO — see [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md).]*
 2. **Register the TestPyPI pending publisher** at
    <https://test.pypi.org/manage/account/publishing/> with project
    `leo-dynamics`, owner `shikivaahan`, repository `leo-dynamics`, workflow

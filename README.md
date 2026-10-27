@@ -1,5 +1,7 @@
 # LEO dynamics — Stage 3
 
+> **Status update — 2026-10-26 licensing audit.** The v0.1.0 licensing audit is complete: the approved public component (the numerical engine and the Python interface) carries a **scoped MIT grant** ([LICENSE](LICENSE), [LICENSE_SCOPE.md](LICENSE_SCOPE.md)); all other repository material — research, empirical high-fidelity atmosphere providers, experiments, datasets, tests and release tooling — remains private and proprietary and is not distributed ([PROPRIETARY-NOTICE.md](PROPRIETARY-NOTICE.md)). The licence grant exists; publication is not authorised and remains **NO-GO** pending legal title/assignment review, upstream-parameter provenance review and verification of current private-repository plan support. The remainder of this document is the internal overview as it stood at that baseline and is retained as evidence; the current position, the open legal items and the NO-GO recommendation are in [RELEASE_LICENSE_AUDIT.md](RELEASE_LICENSE_AUDIT.md). No gate, threshold or historical result in this document was weakened or rewritten.
+
 C++20, CPU-only, double-precision, lightweight Earth-centred 6-DoF rigid-spacecraft dynamics: point-mass/J2 gravity, panel radiation and aerodynamic forces, their torques, and gravity-gradient torque. A separate trajectory-analysis library exports CSV for optional headless Python/Matplotlib plotting. This is not a high-fidelity mission-analysis framework; no controls, third-body gravity, flexible bodies, GPU or optimisation subsystem.
 
 ## Installation
