@@ -4,6 +4,8 @@
 
 Research was read-only outside `audit-evidence/`. No publication, workflow trigger, repository visibility change, source edit, native build or native test was performed by this researcher. Synthetic archive scenarios were later exercised under the explicit independent-review assignment; they were not actual builds. Build/dependency/linkage logs supplied by the release worker were read, not rerun.
 
+> **Superseded 2026-10-27.** The owner has since authorised the standard MIT grant over the whole project, and the proprietary scope this record describes no longer applies. The classifications below are the dated record of the 2026-10-26 audit; the governing classification is now `release-audit/license-boundary.json`.
+
 ## 1. Owner decision versus legal-title evidence
 
 - The **owner approved MIT for the basic numerical engine and Python interface**, reserving the empirical integrations, research, optimisation and datasets. That decision is present; it is not an unanswered licensing-intent question.

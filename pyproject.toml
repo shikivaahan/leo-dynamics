@@ -52,15 +52,13 @@ classifiers = [
 # the native engine, which itself links nothing beyond the C++ runtime. The floor
 # is the NumPy 2.x series the interface was qualified against.
 dependencies = ["numpy>=2.0"]
-# The MIT core of this distribution - the numerical engine, its public headers,
-# the Python interface, the build machinery and the public overview - is
-# licensed under the MIT License. The licence grant is scoped to that core
-# only: LICENSE_SCOPE.md enumerates it and release-audit/license-boundary.json
-# holds the machine-readable form. Everything else in the repository (the
-# empirical atmosphere providers, the research campaigns and their datasets,
-# the optimisation experiments, the frozen research reference fixtures, the
-# project documentation set and the release tooling) is proprietary and is not
-# distributed with either distribution.
+# The whole project - the numerical engine, its public headers, the Python
+# interface, the research campaigns and their datasets, the documentation set,
+# the test suites and the release tooling - is original material licensed
+# under the MIT License. LICENSE_SCOPE.md records that grant and, separately,
+# the packaging policy that limits the published distributions to the core
+# engine interface; release-audit/license-boundary.json holds the
+# machine-readable form of both.
 license = "MIT"
 license-files = ["LICENSE", "LICENSE_SCOPE.md", "THIRD_PARTY_NOTICES.md"]
 
@@ -100,17 +98,21 @@ LEO_ENABLE_JB2008 = "OFF"
 LEO_TEST_PLOTTING = "OFF"
 
 [tool.scikit-build.sdist]
-# The source distribution carries the MIT core and nothing else. The core is
-# enumerated explicitly below, and every proprietary area is excluded
-# explicitly as well, so an unclassified or newly added path cannot slip into
-# the archive: `ci/verify_license_boundary.py` checks the built archive
-# member by member against release-audit/license-boundary.json and fails
-# closed on anything unexpected.
+# The source distribution carries the core engine interface and nothing else.
+# This is a packaging decision, not a licence restriction: the whole project
+# is MIT licensed (see LICENSE and LICENSE_SCOPE.md), but the published
+# distributions deliberately stay minimal. The approved members are enumerated
+# explicitly below and every other area is excluded explicitly as well, so an
+# unclassified or newly added path cannot slip into the archive:
+# `ci/verify_license_boundary.py` checks the built archive member by member
+# against release-audit/license-boundary.json and fails closed on anything
+# unexpected.
 #
-# What is deliberately NOT here: the empirical atmosphere providers
-# (src/atmosphere, include/leo/atmosphere, the provider cmake files), the
-# CSPICE adapter (src/environment/spice.cpp), the research campaigns and their
-# datasets (docs/atmosphere, docs/multithreading, docs/numerical-audit), the
+# What is deliberately NOT here: the deferred empirical atmosphere providers
+# (src/atmosphere, include/leo/atmosphere, the provider cmake files) and the
+# external sources they consume, the CSPICE adapter (src/environment/spice.cpp)
+# and the SPICE kernels, the research campaigns and their datasets
+# (docs/atmosphere, docs/multithreading, docs/numerical-audit), the
 # optimisation experiments (benchmarks, scripts), the frozen research
 # reference fixtures and every test suite (tests), the project documentation
 # set (docs), the examples and plotting helpers, and the packaging, CI and
@@ -152,28 +154,27 @@ exclude = [
   "/.pytest_cache/**",
   "**/__pycache__/**",
   "**/*.pyc",
-  # Proprietary: high-fidelity atmosphere providers and their build files.
+  # Deferred: the empirical atmosphere providers and their build files.
   "/src/atmosphere/**",
   "/include/leo/atmosphere/**",
   "/cmake/nrlmsise00.cmake",
   "/cmake/nrlmsise00-tests.cmake",
   "/cmake/jb2008.cmake",
-  # Proprietary: the CSPICE adapter.
+  # Deferred: the CSPICE adapter and the SPICE kernels it consumes.
   "/src/environment/**",
   "/include/leo/environment/spice.hpp",
-  # Proprietary: research campaigns, datasets and the project documentation set.
+  # Not distributed: research campaigns, datasets and the project documentation set.
   "/docs/**",
   "/benchmarks/**",
   "/scripts/**",
-  # Proprietary: the research reference fixtures and every test suite.
+  # Not distributed: the research reference fixtures and every test suite.
   "/tests/**",
   "/examples/**",
   "/plotting/**",
-  # Proprietary: packaging, CI and release tooling, and the audit records.
+  # Not distributed: packaging, CI and release tooling, and the audit records.
   "/ci/**",
   "/release-audit/**",
   "/audit-evidence/**",
-  "/PROPRIETARY-NOTICE.md",
   "/RELEASE_LICENSE_AUDIT.md",
   "/audit-progress.md",
   "/README.md",

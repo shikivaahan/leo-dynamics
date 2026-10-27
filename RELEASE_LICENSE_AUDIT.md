@@ -1,12 +1,34 @@
 # v0.1.0 pre-release licensing audit
 
+> **Current status — 2026-10-27 licensing cutover.** The owner has authorised
+> the **standard MIT grant over the whole project**: the numerical engine, the
+> Python interface, the research campaigns and their datasets, the
+> documentation set, the test suites and the packaging/CI/release tooling are
+> all original material under [LICENSE](LICENSE) and
+> [LICENSE_SCOPE.md](LICENSE_SCOPE.md). The former proprietary scope and its
+> notice are obsolete and have been removed. What remains unchanged is the
+> **packaging policy**: the published distributions carry the core engine
+> interface only, and the deferred NRLMSISE-00/JB2008/CSPICE models together
+> with their external reference sources and data are never redistributed. The
+> licence classification and the distribution allowlist are now separate
+> facts, recorded separately in `release-audit/license-boundary.json`. The
+> owner has also resolved the copyright-title, upstream-applicability and
+> repository-plan questions this audit had left open, and has authorised the
+> v0.1.0 release to TestPyPI. The audit record below is preserved as dated
+> history; it describes the state on 2026-10-26 and is not a live set of
+> restrictions.
+
+---
+
+## Audit record of 2026-10-26 (dated history)
+
 Audit date: 2026-10-26. Private repository: `shikivaahan/leo-dynamics`.
 Branch: `audit/release-licensing-v0.1.0`, based on
 `23df023d6080c9aeb27e9ceddba1671651205584`. No history was rewritten and the
 pre-existing untracked `outputs/` was preserved. No push, publication, remote
 repository creation, workflow dispatch or upload was performed.
 
-## Decision: NO-GO for publication; local mechanical boundary passes
+### Decision of 2026-10-26: NO-GO for publication; local mechanical boundary passes
 
 The owner approved MIT intent for the basic engine/Python interface, retaining
 all high-fidelity atmosphere, research, optimisation experiments/datasets and
@@ -36,7 +58,7 @@ also remain unverified. This audit does not substitute legal advice.
 | Actual private-repository plan compatibility | **FAIL (blocking, unverified)** | `/user` plan is null; an existing environment is not proof of current entitlement |
 | Publication approval | **FAIL (blocking, not granted)** | No workflow was dispatched or publishing credentials used |
 
-## Minimal MIT component and exact boundary
+### Minimal MIT component and exact boundary
 
 The authoritative reviewable scope is `LICENSE_SCOPE.md`; the exhaustive
 machine-readable classification is `release-audit/license-boundary.json`.
@@ -57,7 +79,7 @@ numerically, and are run from the private checkout against an installed wheel.
 The source distribution remains rebuildable without them. `BUILD_TESTING=ON`
 in that distribution fails explicitly instead of referring to missing sources.
 
-### File-by-file findings and exceptions
+#### File-by-file findings and exceptions
 
 Every baseline tracked file is enumerated, with hashes/provenance and scope
 proposals, in `audit-evidence/source-inventory.json` (1,951 baseline files).
@@ -113,7 +135,7 @@ NRLMSISE-00, JB2008, private examples/tests/plotting, or unpinned host dependenc
 resolution. Non-package full-repository research builds remain available.
 Missing optional files produce explicit failures in the stripped sdist.
 
-## Ownership and provenance: evidence versus legal conclusions
+### Ownership and provenance: evidence versus legal conclusions
 
 The owner approved MIT for the engine/interface and states no Imperial College
 or Siemens source code is used. That statement is recorded, not contradicted by
@@ -165,7 +187,7 @@ proprietary-inventory.json,dependency-license-matrix.md}`. Research-only Orekit
 (Apache-2.0), SatelliteToolboxAtmosphericModels.jl (MIT), Tudat (BSD-3-Clause),
 SciPy and other oracle references remain outside the final component.
 
-## Dependency and licence matrix
+### Dependency and licence matrix
 
 Exact resolved values below describe **this clean Linux build/test environment**,
 not every interpreter/platform allowed by lower bounds. Full package metadata,
@@ -203,7 +225,7 @@ MPL does not prohibit selling or sublicensing the executable/larger work under
 other terms; recipients' covered-source rights remain intact. GCC RLE is v3.1,
 not v3.3, with no invented replacement-runtime/notice §§4/5 requirements.
 
-### Consumed dependency provenance, not just pristine download hashes
+#### Consumed dependency provenance, not just pristine download hashes
 
 Pinned upstream archive hashes were independently verified by research. For the
 **final sdist rebuild**, this audit also preserved CMakeCache, compile commands
@@ -217,7 +239,7 @@ pybind11 build-environment paths disappear after build; its version pin and
 configure output are retained, not falsely represented as a retained consumed
 header-byte comparison.
 
-## Actual artifacts, inventories and binary inspection
+### Actual artifacts, inventories and binary inspection
 
 Final private local artifacts are retained under `release-audit/artifacts/`.
 No artifact was uploaded. Exact identities:
@@ -259,7 +281,7 @@ inspection found no extra kernels/weather/research resources. String absence
 alone is not proof of binary provenance: it is combined with clean builds,
 SKBUILD refusals, exact public-source archive checks and consumed-tree evidence.
 
-## Fail-closed mechanics and regression coverage
+### Fail-closed mechanics and regression coverage
 
 `ci/verify_license_boundary.py` compares the **entire** canonical manifest,
 including top-level allowlists/markers, and uses regenerated canonical data for
@@ -300,7 +322,7 @@ installed-wheel, sanitizer and six-hour qualification prerequisites remain.
 Numerical tests/acceptance tolerances were not weakened. CI wiring was edited
 locally only; no workflow execution is claimed.
 
-## Trusted Publishing and private repository support
+### Trusted Publishing and private repository support
 
 Read-only authenticated GET evidence is in `audit-evidence/provenance.json` and
 `research-report.md`. Repo is private; default branch main, no observed branch
@@ -322,7 +344,7 @@ URLs in public package metadata will be inaccessible to outsiders; any public
 documentation/repository migration is a separate owner decision, not permission
 to expose the original research history.
 
-## Reproducibility, changes and limitations
+### Reproducibility, changes and limitations
 
 All audit work is committed locally on `audit/release-licensing-v0.1.0`; the
 branch's audit commits run from `2bb5ccb` to its latest commit. Nothing was
@@ -363,7 +385,7 @@ approved, regenerate the manifest and rerun source/archive gates. Do not widen
 rules to silence a failure. No temporary scaffolding was added to numerical
 code. Evidence artifacts remain private and excluded from public distributions.
 
-### Documentation status banners
+#### Documentation status banners
 
 A parallel read-only documentation sweep (2026-10-26, evidence in
 `audit-evidence/docs-licensing-sweep.md` and `audit-evidence/docs-licensing-sweep.json`)
@@ -384,7 +406,7 @@ redistribution outright were tightened in the same additive style, so that they
 describe the owner's approval subject to the still-open copyright-title
 verification; no count, gate or historical statement changed as a result.
 
-### Non-actions and preserved material
+#### Non-actions and preserved material
 
 Stated explicitly, because the audit's value depends on them being checkable:
 
@@ -413,7 +435,7 @@ Stated explicitly, because the audit's value depends on them being checkable:
   The native suite and the Python suite pass unchanged against the final
   artefacts.
 
-### How to re-verify this audit
+#### How to re-verify this audit
 
 Run from the private checkout. These are the exact commands behind the results
 above; each writes or refreshes a log under `release-audit/`.

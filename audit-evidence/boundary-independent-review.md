@@ -4,6 +4,8 @@
 
 This is an independent structural/provenance review, **not legal clearance or permission to publish**. No source, packaging, workflow, licence or test file owned by the release worker was edited. No build, native test, workflow, installation or publication was run. Only isolated synthetic archive scenarios were exercised; their fake native payloads were never executed or imported.
 
+> **Superseded 2026-10-27.** The owner has since authorised the standard MIT grant over the whole project, and the proprietary scope this record describes no longer applies. The classifications below are the dated record of the 2026-10-26 audit; the governing classification is now `release-audit/license-boundary.json`.
+
 ## Reviewed identities
 
 SHA-256 identifies the code actually loaded for the final retest. The verifier was hashed again after the scenarios and was unchanged.

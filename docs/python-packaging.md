@@ -1,6 +1,6 @@
 # Python packaging status and release readiness
 
-> **Status update — 2026-10-26 licensing audit.** This document is preserved as the historical record of the state at its stated baseline; its licensing, packaging and release statements are superseded where they conflict with [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md). The numerical engine and Python interface now carry a **scoped MIT grant** ([LICENSE](../LICENSE), [LICENSE_SCOPE.md](../LICENSE_SCOPE.md)); all research, empirical atmosphere providers, experiments, datasets, tests and release tooling remain private and proprietary ([PROPRIETARY-NOTICE.md](../PROPRIETARY-NOTICE.md)). Publication remains **NO-GO** pending legal title/assignment review, upstream-parameter provenance review and verification of current private-repository plan support. No gate, threshold or historical result in this document was weakened or rewritten.
+> **Status update — 2026-10-27 licensing cutover.** This document is preserved as the historical record of the state at its stated baseline; its licensing, packaging and release statements are superseded where they conflict with [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md). The whole `leo-dynamics` project — engine, Python interface, research, experiments, datasets, documentation, tests and release tooling — is original material under the **MIT License** ([LICENSE](../LICENSE), [LICENSE_SCOPE.md](../LICENSE_SCOPE.md)); the former proprietary scope is obsolete and removed. The published distributions still carry the core engine interface only, and the deferred atmospheric models with their external reference sources and data are not redistributed. The owner has resolved the copyright-title, upstream-applicability and repository-plan questions this document left open. No gate, threshold or historical result was changed. Annotations inside these documents that are marked *superseded 2026-10-26* are themselves dated; their NO-GO and open-gate statements were resolved by the owner's 2026-10-27 decisions as recorded in the banner above and in [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md).
 
 What `leo-dynamics` 0.1.0 ships, what has actually been executed against it, and
 what still blocks publication. Ordinary installation instructions are in the
@@ -11,16 +11,18 @@ engine is in [python-binding-validation.md](python-binding-validation.md) and
 [v0.1-release-readiness.md](v0.1-release-readiness.md); nothing here re-qualifies
 it.
 
-## Licensing-audit update (2026-10-26)
+## Licensing update (2026-10-27)
 
 The historical packaging evidence below describes earlier revisions and must
-not be read as the current release boundary. The scoped MIT component is now
-defined by [LICENSE_SCOPE.md](../LICENSE_SCOPE.md); the full internal README,
-all `docs/`, test suites/frozen research fixtures, examples, plotting, empirical
-atmosphere/CSPICE adapters, experiments, datasets and release tooling are
-excluded from distributions. Python tests remain private and unchanged; they
-are run from this checkout against the installed wheel, not shipped as public
-research fixtures.
+not be read as the current release boundary. The whole project is MIT licensed
+under [LICENSE](../LICENSE), with the scope recorded in
+[LICENSE_SCOPE.md](../LICENSE_SCOPE.md). What the distributions exclude is a
+packaging decision, not a licence restriction: the full internal README, all
+`docs/`, test suites/frozen research fixtures, examples, plotting, the deferred
+empirical atmosphere/CSPICE adapters with their external sources, experiments,
+datasets and release tooling are not redistributed. Python tests are unchanged;
+they are run from this checkout against the installed wheel, not shipped as
+public research fixtures.
 
 The distribution uses `README.dist.md` for public metadata. Actual final member
 inventories, fresh local builds, installed-wheel/native tests and the leak-gate
@@ -28,8 +30,8 @@ regressions are recorded in [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.
 and `release-audit/`. Earlier statements below that no licence exists, or that
 the previous sdist contains guides/reference fixtures, are superseded by this
 update. No scientific acceptance thresholds or numerical tests were changed.
-No publishing workflow was run; legal title/upstream applicability and current
-private-repository plan support remain unresolved publication prerequisites.
+The owner has resolved the legal title, upstream applicability and repository
+plan questions this document listed as open.
 
 
 ## Evidence states

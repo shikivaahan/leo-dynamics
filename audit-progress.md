@@ -1,4 +1,17 @@
-# Local licensing-audit status — final, 2026-10-26
+# Local licensing-audit status
+
+> **Current status — 2026-10-27.** The owner has authorised the standard MIT
+> grant over the whole project; the proprietary scope and its notice are
+> obsolete and removed. What stays is the packaging policy: the published
+> distributions carry the core engine interface only, and the deferred
+> NRLMSISE-00/JB2008/CSPICE models with their external sources and data are
+> never redistributed. The licence classification and the distribution
+> allowlist are now separate facts in `release-audit/license-boundary.json`.
+> The owner has resolved the copyright-title, upstream-applicability and
+> repository-plan questions that this audit had left open. Everything below
+> is the dated record of the 2026-10-26 audit, kept as history.
+
+## Record of 2026-10-26 (dated history)
 
 Branch: `audit/release-licensing-v0.1.0`, created from `23df023d`.
 No history rewrite, destructive git, push, upload, remote creation, workflow
@@ -11,7 +24,7 @@ files as proprietary** (plus 2 repository-plumbing files) out of **2,019
 classified tracked files**, of which **52** are the MIT core that may be
 distributed.
 
-## Local audit commits
+### Local audit commits
 
 ```
 3eb9703 audit: keep the licensing audit evidence logs in the branch
@@ -24,7 +37,7 @@ bbd94fa docs: state the shipped notice bytes and that all evidence is from the f
 2bb5ccb audit: scope the MIT core, enforce the proprietary boundary, verify v0.1.0 packaging
 ```
 
-## Six green checks (exit codes)
+### Six green checks (exit codes)
 
 ```
 {
@@ -37,7 +50,7 @@ bbd94fa docs: state the shipped notice bytes and that all evidence is from the f
 }
 ```
 
-## Final artefact identities (private, never uploaded)
+### Final artefact identities (private, never uploaded)
 
 ```
 release-audit/artifacts/direct/leo_dynamics-0.1.0-cp313-cp313-linux_x86_64.whl  bytes=368403  sha256=87df8e2428f43118694f431e3596a078f136648a4c14f1ced20480123cee8f2f
@@ -51,7 +64,7 @@ gate re-run after this final step proves the public contents are unchanged: all
 three artefact SHA-256 values are identical to the recorded ones, and no
 evidence log is inside any artefact.
 
-## Exact scope
+### Exact scope
 
 MIT component: the numerical engine sources and public headers, the three
 provider-independent ephemeris interfaces, `bindings/`, `python/leo_dynamics/`,
@@ -63,7 +76,7 @@ fixture, examples, plotting, and packaging/CI/release/audit tooling. The audit
 evidence itself (`release-audit/`) is proprietary and excluded from both
 distributions.
 
-## Publication verdict: NO-GO
+### Publication verdict of 2026-10-26: NO-GO
 
 Owner MIT intent is approved and implemented, but it is not proof of legal
 title. Blocking items: copyright title/assignment (no instrument found in the

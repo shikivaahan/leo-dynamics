@@ -1,5 +1,7 @@
 # Documentation licensing sweep — v0.1.0 pre-release licensing audit
 
+> **Superseded 2026-10-27.** The owner has since authorised the standard MIT grant over the whole project, and the proprietary scope this record describes no longer applies. The classifications below are the dated record of the 2026-10-26 audit; the governing classification is now `release-audit/license-boundary.json`.
+
 **Date:** 2026-10-26 · **Branch:** `audit/release-licensing-v0.1.0` ·
 **Baseline:** `2bb5ccb` ("audit: scope the MIT core, enforce the proprietary
 boundary, verify v0.1.0 packaging") · **Authoritative report:**

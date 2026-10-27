@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Regression tests for the licence-boundary gate.
+"""Regression tests for the licence and distribution boundary gate.
 
-The gate is the mechanism that keeps proprietary material out of a public
-distribution, so its refusal behaviour is tested directly: a leaked path, a
-link member, a traversal name, a duplicate member, an unexpected wheel member
-and proprietary content inside a member must each be refused.
+The gate is the mechanism that keeps a public distribution limited to the
+approved core sources, so its refusal behaviour is tested directly: a leaked
+path, a link member, a traversal name, a duplicate member, an unexpected
+wheel member and deferred-model content inside a member must each be refused.
+
+The licence classification and the distribution allowlist are independent. The
+tests cover both: the research material and the reference fixtures are MIT
+licensed but not distributed.
 
 The tests build synthetic archives in a temporary directory and run the real
 gate as a subprocess against the real repository, so they exercise the shipped
@@ -66,14 +70,25 @@ class SdistRefusalTests(unittest.TestCase):
             members(tar)
         return path
 
-    def test_proprietary_path_is_refused(self) -> None:
+    def test_unapproved_path_is_refused(self) -> None:
         path = self._build(
             "leak.tar.gz",
             lambda tar: self._add(tar, "leo_dynamics-0.1.0/src/atmosphere/nrlmsise00.cpp"),
         )
         result = run_gate(path)
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn("not a member of the MIT core", result.stderr)
+        self.assertIn("not an approved distribution member", result.stderr)
+
+    def test_unapproved_reference_fixture_is_refused(self) -> None:
+        path = self._build(
+            "fixture.tar.gz",
+            lambda tar: self._add(
+                tar, "leo_dynamics-0.1.0/tests/reference/golden/tudat/manifest.json", b"{}"
+            ),
+        )
+        result = run_gate(path)
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("not an approved distribution member", result.stderr)
 
     def test_link_member_is_refused(self) -> None:
         def members(tar: tarfile.TarFile) -> None:
@@ -106,18 +121,18 @@ class SdistRefusalTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn("duplicate member", result.stderr)
 
-    def test_proprietary_content_in_member_is_refused(self) -> None:
+    def test_deferred_content_in_member_is_refused(self) -> None:
         path = self._build(
             "content.tar.gz",
             lambda tar: self._add(
                 tar,
                 "leo_dynamics-0.1.0/src/kernel/state.cpp",
-                b"// adapted from nrlmsise-00.c by Brodowski\n",
+                b"// adapted from the NRLMSISE-00 C translation by Brodowski\n",
             ),
         )
         result = run_gate(path)
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn("proprietary markers", result.stderr)
+        self.assertIn("excluded content markers", result.stderr)
 
     def test_root_level_member_is_refused(self) -> None:
         path = self._build(
@@ -170,7 +185,7 @@ class WheelRefusalTests(unittest.TestCase):
     def test_marker_free_renamed_payload_is_refused(self) -> None:
         path = self._wheel(
             "leo_dynamics-0.1.0-cp312-cp312-linux_x86_64.whl",
-            {"leo_dynamics/__init__.py": b"private research narrative"},
+            {"leo_dynamics/__init__.py": b"research payload narrative"},
         )
         result = run_gate(path)
         self.assertEqual(result.returncode, 1)
@@ -179,7 +194,7 @@ class WheelRefusalTests(unittest.TestCase):
     def test_arbitrary_licence_payload_is_refused(self) -> None:
         path = self._wheel(
             "leo_dynamics-0.1.0-cp312-cp312-linux_x86_64.whl",
-            {f"{DIST_INFO}/licenses/PROPRIETARY-NOTICE.md": b"private research"},
+            {f"{DIST_INFO}/licenses/RESEARCH.md": b"research payload"},
         )
         result = run_gate(path)
         self.assertEqual(result.returncode, 1)
@@ -187,6 +202,31 @@ class WheelRefusalTests(unittest.TestCase):
 
 
 class CanonicalManifestTests(unittest.TestCase):
+    def test_licence_classification_is_independent_of_distribution(self) -> None:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("boundary_test", GATE)
+        gate = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(gate)
+        generator = gate._load_generator(ROOT)
+        manifest = generator.build_manifest(ROOT)
+        # The research material is MIT licensed even though it is not shipped.
+        research = manifest["files"]["docs/atmosphere/JB2008.md"]
+        self.assertEqual(research["class"], "mit")
+        self.assertFalse(research["in_distribution"])
+        # The core engine is MIT licensed and shipped.
+        engine = manifest["files"]["src/kernel/gravity.cpp"]
+        self.assertEqual(engine["class"], "mit")
+        self.assertTrue(engine["in_distribution"])
+        # Every tracked file is the project's own material under the MIT
+        # grant; no tracked file carries a restricted classification.
+        for path, entry in manifest["files"].items():
+            self.assertEqual(entry["class"], generator.MIT, path)
+        # The reference fixtures are generated by this project and are MIT
+        # licensed, but they are excluded by the packaging allowlist.
+        fixture = manifest["files"]["tests/reference/golden/tudat/manifest.json"]
+        self.assertEqual(fixture["class"], "mit")
+        self.assertFalse(fixture["in_distribution"])
+
     def test_top_level_allowlist_and_marker_tampering_is_refused(self) -> None:
         import importlib.util
         import copy
@@ -196,8 +236,9 @@ class CanonicalManifestTests(unittest.TestCase):
         generator = gate._load_generator(ROOT)
         canonical = generator.build_manifest(ROOT)
         for key, value in (
-            ("sdist_members", canonical["sdist_members"] + ["docs/atmosphere/JB2008.md"]),
-            ("proprietary_markers", []),
+            ("approved_sources", canonical["approved_sources"] + ["docs/atmosphere/JB2008.md"]),
+            ("deferred_external_markers", []),
+            ("deferred_model_markers", []),
         ):
             with self.subTest(key=key):
                 altered = copy.deepcopy(canonical)
@@ -267,18 +308,18 @@ class ArchiveCompletenessTests(unittest.TestCase):
             path = self.wheel(lambda members: members.pop(name))
             self.assertTrue(self.gate._check_wheel(path, self.manifest)[0])
         path = self.wheel(lambda members: members.update({
-            f"{DIST_INFO}/METADATA": b"Name: other\nVersion: 9\nLicense-Expression: Proprietary\n\nprivate research"
+            f"{DIST_INFO}/METADATA": b"Name: other\nVersion: 9\nLicense-Expression: GPL-3.0\n\nresearch payload"
         }))
         failures = self.gate._check_wheel(path, self.manifest)[0]
         self.assertTrue(any("metadata Name" in failure for failure in failures))
         self.assertTrue(any("metadata Version" in failure for failure in failures))
         self.assertTrue(any("License-Expression" in failure for failure in failures))
 
-    def test_generated_metadata_cannot_carry_private_payloads(self):
+    def test_generated_metadata_cannot_carry_research_payloads(self):
         for field in ("Summary", "X-Research-Result"):
             path = self.wheel(lambda members: members.update({
                 f"{DIST_INFO}/METADATA":
-                    f"{field}: private research payload\n".encode() + self.metadata()
+                    f"{field}: research payload\n".encode() + self.metadata()
             }))
             self.assertTrue(self.gate._check_wheel(path, self.manifest)[0])
         path = self.wheel(lambda members: members.update({
@@ -303,7 +344,7 @@ class ArchiveCompletenessTests(unittest.TestCase):
         for mutation in (None, "research", "root"):
             path = self.directory / "source.tar.gz"
             with tarfile.open(path, "w:gz") as archive:
-                for name in self.manifest["sdist_members"] + ["PKG-INFO"]:
+                for name in self.manifest["approved_sources"] + ["PKG-INFO"]:
                     value = self.metadata() if name == "PKG-INFO" else (ROOT / name).read_bytes()
                     prefix = "leo_dynamics-0.1.0"
                     if name == "src/kernel/gravity.cpp":

@@ -442,8 +442,8 @@ analysis and the nine-file CSV export.
 Limitations to keep in mind:
 
 - **No publication yet.** Wheels and a source distribution build from this
-  repository, but nothing is on PyPI and no licence is established, so
-  `pip install leo-dynamics` does not work. See
+  repository, but nothing is on PyPI yet, so `pip install leo-dynamics` does
+  not work. The project is MIT licensed; see [LICENSE](../LICENSE) and
   [python-packaging.md](python-packaging.md).
 - **No CSPICE from Python.** The optional native provider and its tests are
   unchanged; use `SunEphemeris.constant` or `SunEphemeris.tabulated`.

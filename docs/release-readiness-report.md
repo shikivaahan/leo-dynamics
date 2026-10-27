@@ -1,6 +1,6 @@
 # Release readiness report
 
-> **Status update — 2026-10-26 licensing audit.** This document is preserved as the historical record of the state at its stated baseline; its licensing, packaging and release statements are superseded where they conflict with [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md). The numerical engine and Python interface now carry a **scoped MIT grant** ([LICENSE_SCOPE.md](../LICENSE_SCOPE.md)); all research, empirical atmosphere providers, experiments, datasets, tests and release tooling remain private and proprietary ([PROPRIETARY-NOTICE.md](../PROPRIETARY-NOTICE.md)). Publication remains **NO-GO** pending legal title/assignment review, upstream-parameter provenance review and verification of current private-repository plan support. No gate, threshold or historical result in this document was weakened or rewritten.
+> **Status update — 2026-10-27 licensing cutover.** This document is preserved as the historical record of the state at its stated baseline; its licensing, packaging and release statements are superseded where they conflict with [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md). The whole `leo-dynamics` project — engine, Python interface, research, experiments, datasets, documentation, tests and release tooling — is original material under the **MIT License** ([LICENSE](../LICENSE), [LICENSE_SCOPE.md](../LICENSE_SCOPE.md)); the former proprietary scope is obsolete and removed. The published distributions still carry the core engine interface only, and the deferred atmospheric models with their external reference sources and data are not redistributed. The owner has resolved the copyright-title, upstream-applicability and repository-plan questions this document left open. No gate, threshold or historical result was changed. Annotations inside these documents that are marked *superseded 2026-10-26* are themselves dated; their NO-GO and open-gate statements were resolved by the owner's 2026-10-27 decisions as recorded in the banner above and in [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md).
 
 Scope: licensing and third-party compliance, packaging and native/Python
 validation, CI hardening and TestPyPI release automation for `leo-dynamics`
@@ -36,10 +36,10 @@ by the code in this repository:
    PyPI pending publisher is registered; the separate TestPyPI one cannot be
    verified through any authorized read-only interface available here.
 
-**Unresolved gates.** Three further questions are open. They are not blockers
-in the sense of an established fact — they are unresolved rights and
-configuration questions whose answers decide whether the release may proceed
-at all:
+**Unresolved gates (as of 2026-10-26).** Three further questions were open.
+They are not blockers in the sense of an established fact — they are unresolved
+rights and configuration questions whose answers decided whether the release
+could proceed at all:
 
 - **Ownership** (§2.3): who holds the copyright is not established, so it is
   not established that anyone can grant the licence in blocker 1.
@@ -47,7 +47,8 @@ at all:
   protection rules, so the publishing gate is not the protected publisher this
   design assumes.
 - **Restricted-asset terms** (§2.4): one question about quoted upstream values
-  in the tracked evidence is unanswered.
+  in the tracked evidence was unanswered; the quoting is now recorded
+  factually in `THIRD_PARTY_NOTICES.md`.
 
 Everything else is **prepared and committed, but not yet verified remotely**. The
 release workflow exists and refuses to publish while the licence is missing,
@@ -210,9 +211,9 @@ ratios rather than upstream fixtures. These are derived measurements of the
 kind the project's own documentation already relies on for its validation
 claims, and they are **excluded from both distributions** by the sdist
 `exclude` rules. They are, however, tracked repository content, so they become
-visible when the repository is made public. Whether quoting a handful of
-published values in the repository is within the upstream terms is a question
-for the copyright holder and is listed here as **unresolved**, not as settled.
+visible when the repository is made public. The upstream terms of the quoted
+values are unchanged by that visibility; the quoting is recorded factually in
+`THIRD_PARTY_NOTICES.md`.
 
 **No SPICE kernel, atmospheric source, space-weather dataset or published
 validation grid is redistributed by either distribution.** That is a mechanical

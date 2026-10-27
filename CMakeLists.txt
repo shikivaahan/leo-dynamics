@@ -16,7 +16,7 @@ if(SKBUILD)
   # checkout. Config-setting overrides must not compile/link private providers.
   if(LEO_ENABLE_CSPICE OR LEO_ENABLE_NRLMSISE00 OR LEO_ENABLE_JB2008
       OR LEO_BUILD_EXAMPLES OR BUILD_TESTING OR LEO_TEST_PLOTTING)
-    message(FATAL_ERROR "Public package builds refuse proprietary providers, examples and test/research material")
+    message(FATAL_ERROR "Public package builds refuse the deferred providers, examples and test/research material")
   endif()
   if(NOT LEO_PROVISION_DEPENDENCIES)
     message(FATAL_ERROR "Public package builds require pinned dependency provisioning")
@@ -67,8 +67,8 @@ if(LEO_ENABLE_CSPICE)
   target_include_directories(leo_environment PRIVATE "${CSPICE_INCLUDE_DIR}")
 endif()
 if(LEO_ENABLE_NRLMSISE00 OR LEO_ENABLE_JB2008)
-  # The empirical atmosphere providers are proprietary and are not part of the
-  # public source distribution; their build files are absent there.
+  # The empirical atmosphere providers are deferred: they are not part of the
+  # public source distribution, and their build files are absent there.
   if(LEO_ENABLE_NRLMSISE00 AND NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/cmake/nrlmsise00.cmake")
     message(FATAL_ERROR
       "LEO_ENABLE_NRLMSISE00 requires cmake/nrlmsise00.cmake, which is not "

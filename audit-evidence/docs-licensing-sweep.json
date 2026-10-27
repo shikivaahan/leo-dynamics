@@ -7,7 +7,8 @@
     "baseline_commit": "2bb5ccb",
     "baseline_commit_subject": "audit: scope the MIT core, enforce the proprietary boundary, verify v0.1.0 packaging",
     "authoritative_report": "RELEASE_LICENSE_AUDIT.md",
-    "disclaimer": "Research evidence only. This file records which internal documentation statements were found to be stale and what was done about them. It is not a licence grant, not legal advice, not a clearance, and not an authorisation to publish. The licence grant itself is LICENSE scoped by LICENSE_SCOPE.md; the current position, the open legal items and the NO-GO recommendation are in RELEASE_LICENSE_AUDIT.md."
+    "disclaimer": "Research evidence only. This file records which internal documentation statements were found to be stale and what was done about them. It is not a licence grant, not legal advice, not a clearance, and not an authorisation to publish. The licence grant itself is LICENSE scoped by LICENSE_SCOPE.md; the current position, the open legal items and the NO-GO recommendation are in RELEASE_LICENSE_AUDIT.md.",
+    "superseded": "2026-10-27: the owner has since authorised the standard MIT grant over the whole project. The stale-statement survey below is the dated record of the 2026-10-26 audit; the governing classification is release-audit/license-boundary.json."
   },
   "constraints_observed": {
     "branch_never_switched_or_checked_out": true,

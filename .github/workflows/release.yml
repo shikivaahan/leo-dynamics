@@ -42,10 +42,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # The licence gate. Nothing is built and no OIDC token is requested until the
-  # copyright holder has granted redistribution rights for the project's own
-  # code and the metadata says so. Today this job fails: the repository has no
-  # LICENSE file. That failure is the intended behaviour, not a defect.
+  # Mechanical licence/distribution gate. The owner has authorised MIT for
+  # original project work; deferred external model sources and datasets must
+  # remain outside the distributions. This does not request an OIDC token.
   preflight:
     name: Licence, version and branch gate
     runs-on: ubuntu-24.04
@@ -160,7 +159,7 @@ jobs:
           --expected-commit "${{ github.sha }}"
           --expected-run-id "${{ github.run_id }}"
           --expected-version "$RELEASE_VERSION"
-      - name: Refuse proprietary or unexpected distribution members
+      - name: Refuse deferred external assets or unexpected distribution members
         run: >-
           python3 ci/verify_license_boundary.py
           --project-root .

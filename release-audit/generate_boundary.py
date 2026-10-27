@@ -1,23 +1,40 @@
 #!/usr/bin/env python3
-"""Generate the machine-readable licence boundary manifest.
+"""Generate the machine-readable licence and distribution boundary manifest.
 
-The manifest classifies **every** git-tracked file of the repository into
-exactly one licence class and records which files are allowed to be
-redistributed in the public source distribution. It is the authoritative input
-of ``ci/verify_license_boundary.py``.
+The manifest records two independent facts about every git-tracked file of the
+repository:
+
+* the **licence** of its content, and
+* whether it is a member of the **approved distribution** (the packaging
+  allowlist).
+
+They are independent on purpose. Every original file of the project - source,
+research, documentation, tests and tooling - is MIT licensed, whether or not
+it ships. Excluding a file from a wheel or a source distribution is a
+packaging decision; it never changes the licence of the material.
+
+No file of the repository carries a restricted classification: every tracked
+file is the project's own material under the MIT grant. Third-party software
+that is used as a reference oracle is separately installed and separately
+licensed, and its terms are recorded in ``THIRD_PARTY_NOTICES.md``; running
+such software does not place its licence on the numerical outputs this
+project produces.
+
+The manifest is the authoritative input of ``ci/verify_license_boundary.py``.
 
 Design rules:
 
 * The classification is *explicit*: every tracked file must match exactly one
-  rule. A file that matches no rule is an error, not a silent default. This
-  is what makes the manifest fail closed on an unknown addition.
-* The MIT core is deliberately minimal: the numerical engine, its public
-  headers, the Python interface, the build machinery, the third-party notices
-  and the user-facing guides.
-* Everything else - high-fidelity atmosphere providers, research campaigns,
-  optimisation experiments and datasets, the frozen research reference
-  fixtures, qualification reports, CI and release tooling - is proprietary and
-  is never redistributed.
+  rule. A file that matches no rule is an error, not a silent default, so a
+  new top-level area stops the release instead of being classified by
+  accident.
+* The distribution allowlist is a separate, explicit list of approved core
+  sources. It is the minimal basic engine interface; the deferred
+  atmospheric models, their external sources and the research material stay
+  out of every distribution.
+* Content markers identify material that must never appear inside a
+  distributed member: the external reference implementations and data that
+  the deferred models consume, and the deferred provider adapters themselves.
 
 Usage:
 
@@ -36,87 +53,92 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = REPO_ROOT / "release-audit" / "license-boundary.json"
 
-MIT = "mit_core"
-PROPRIETARY = "proprietary"
-REPOSITORY = "repository_metadata"
+# Licensing classes. These describe the content of a file, never whether it
+# is redistributed. Every tracked file of this repository is the project's own
+# material; no tracked file carries a restricted classification.
+MIT = "mit"
 
 # Ordered rules: the first match wins. Each rule is (kind, pattern, class)
 # where kind is "exact" or "prefix".
 RULES: list[tuple[str, str, str]] = [
-    # --- the MIT core -----------------------------------------------------
+    # --- the project's own material ---------------------------------------
     ("exact", "LICENSE", MIT),
     ("exact", "LICENSE_SCOPE.md", MIT),
     ("exact", "THIRD_PARTY_NOTICES.md", MIT),
     ("exact", "README.dist.md", MIT),
+    ("exact", "README.md", MIT),
     ("exact", "CMakeLists.txt", MIT),
     ("exact", "pyproject.toml", MIT),
-    ("exact", "cmake/provision.cmake", MIT),
+    ("exact", "RELEASE_LICENSE_AUDIT.md", MIT),
+    ("exact", "audit-progress.md", MIT),
+    ("exact", ".gitattributes", MIT),
+    ("exact", ".gitignore", MIT),
     # numerical engine
-    ("prefix", "src/kernel/", MIT),
-    ("prefix", "src/integration/", MIT),
-    ("prefix", "src/analysis/", MIT),
-    ("prefix", "include/leo/kernel/", MIT),
-    ("prefix", "include/leo/integration/", MIT),
-    ("prefix", "include/leo/analysis/", MIT),
-    # the CSPICE adapter is proprietary; the ephemeris interfaces are not
-    ("exact", "include/leo/environment/spice.hpp", PROPRIETARY),
-    ("prefix", "include/leo/environment/", MIT),
+    ("prefix", "src/", MIT),
+    ("prefix", "include/", MIT),
     # Python interface
     ("prefix", "bindings/", MIT),
-    ("prefix", "python/leo_dynamics/", MIT),
-    # The project's own documentation set is not distributed: the guides point
-    # at the research campaigns, the frozen reference datasets and the
-    # qualification reports, and `docs/stage3.md` records a third-party
-    # (ImperialSpaceSociety) comparative analysis. The public distribution
-    # documents itself with README.dist.md only.
-    ("prefix", "docs/", PROPRIETARY),
-    # --- everything else is proprietary -----------------------------------
-    ("prefix", "src/atmosphere/", PROPRIETARY),
-    ("prefix", "src/environment/", PROPRIETARY),
-    ("prefix", "include/leo/atmosphere/", PROPRIETARY),
-    ("prefix", "cmake/nrlmsise00.cmake", PROPRIETARY),
-    ("prefix", "cmake/nrlmsise00-tests.cmake", PROPRIETARY),
-    ("prefix", "cmake/jb2008.cmake", PROPRIETARY),
-    ("prefix", "docs/", PROPRIETARY),
-    ("prefix", "benchmarks/", PROPRIETARY),
-    ("prefix", "scripts/", PROPRIETARY),
-    ("prefix", "tests/", PROPRIETARY),
-    ("prefix", "examples/", PROPRIETARY),
-    ("prefix", "plotting/", PROPRIETARY),
-    ("prefix", "ci/", PROPRIETARY),
-    ("prefix", ".github/", PROPRIETARY),
-    ("prefix", "release-audit/", PROPRIETARY),
-    ("prefix", "audit-evidence/", PROPRIETARY),
-    ("exact", "PROPRIETARY-NOTICE.md", PROPRIETARY),
-    ("exact", "RELEASE_LICENSE_AUDIT.md", PROPRIETARY),
-    ("exact", "audit-progress.md", PROPRIETARY),
-    ("exact", "README.md", PROPRIETARY),
-    # --- repository plumbing, not distributed ------------------------------
-    ("exact", ".gitattributes", REPOSITORY),
-    ("exact", ".gitignore", REPOSITORY),
+    ("prefix", "python/", MIT),
+    # build and packaging
+    ("prefix", "cmake/", MIT),
+    # project documentation set
+    ("prefix", "docs/", MIT),
+    # research campaigns, optimisation experiments and datasets
+    ("prefix", "benchmarks/", MIT),
+    ("prefix", "scripts/", MIT),
+    ("prefix", "plotting/", MIT),
+    ("prefix", "examples/", MIT),
+    # test suites and frozen research reference fixtures
+    ("prefix", "tests/", MIT),
+    # packaging, CI and release tooling
+    ("prefix", "ci/", MIT),
+    ("prefix", ".github/", MIT),
+    ("prefix", "release-audit/", MIT),
+    ("prefix", "audit-evidence/", MIT),
 ]
 
-# Every file of the MIT core is redistributed in the public source
-# distribution. A file that must stay private is classified ``proprietary``
-# above; there is no third state, so a member of the core can never be
-# silently left out of the distribution without changing its class.
-SDIST_MEMBERS_ARE_ALL_MIT_CORE = True
+# The approved distribution allowlist: the minimal basic engine interface.
+# This is packaging policy, not a licence scope. It mirrors the include list
+# of ``[tool.scikit-build.sdist]`` in pyproject.toml and the wheel payload.
+APPROVED_SOURCES: list[tuple[str, str]] = [
+    ("exact", "LICENSE"),
+    ("exact", "LICENSE_SCOPE.md"),
+    ("exact", "THIRD_PARTY_NOTICES.md"),
+    ("exact", "README.dist.md"),
+    ("exact", "CMakeLists.txt"),
+    ("exact", "pyproject.toml"),
+    ("exact", "cmake/provision.cmake"),
+    ("prefix", "bindings/"),
+    ("prefix", "python/leo_dynamics/"),
+    ("prefix", "src/kernel/"),
+    ("prefix", "src/integration/"),
+    ("prefix", "src/analysis/"),
+    ("prefix", "include/leo/kernel/"),
+    ("prefix", "include/leo/integration/"),
+    ("prefix", "include/leo/analysis/"),
+    ("exact", "include/leo/environment/ephemeris.hpp"),
+    ("exact", "include/leo/environment/interpolated.hpp"),
+    ("exact", "include/leo/environment/source.hpp"),
+]
 
-# Content markers that must never appear inside a redistributed member.
-# They are chosen to identify proprietary *content* (external reference
-# implementations, provider adapters and their attribution strings), not the
-# optional build hooks the public CMake project keeps for the repository's own
-# provider experiments.
-PROPRIETARY_MARKERS: list[str] = [
-    "nrlmsise-00.c",
-    "nrlmsise-00_data.c",
-    "nrlmsise-00.h",
+# Content that identifies the external reference implementations and data the
+# deferred models consume. It is never vendored here and must never appear
+# inside a distributed member.
+DEFERRED_EXTERNAL_MARKERS: list[str] = [
     "Brodowski",
-    "JB2008.f",
+    "JB08DRVAUTO.f",
+    "SpaceWeather-All",
+    "naif0012.tls",
+]
+
+# Content that identifies the deferred provider adapters themselves. They are
+# the author's own work and therefore MIT licensed, but they are not part of
+# the approved distribution: the models they wrap are not redistributed.
+DEFERRED_MODEL_MARKERS: list[str] = [
+    "leo::atmosphere::",
     "leo_nrlmsise00_reference",
     "leo_jb2008_reference",
     "leo_jb2008_bridge",
-    "leo::atmosphere::",
     "SpiceEphemerisProvider",
 ]
 
@@ -143,16 +165,29 @@ def classify(path: str) -> str:
     )
 
 
+def is_approved_source(path: str) -> bool:
+    for kind, pattern in APPROVED_SOURCES:
+        if kind == "exact" and path == pattern:
+            return True
+        if kind == "prefix" and path.startswith(pattern):
+            return True
+    return False
+
+
 def build_manifest(root: Path | None = None) -> dict:
     files = {}
+    approved = []
     for path in tracked_files(root):
         licence_class = classify(path)
+        distributed = is_approved_source(path)
         files[path] = {
             "class": licence_class,
-            "in_sdist": licence_class == MIT,
+            "in_distribution": distributed,
         }
+        if distributed:
+            approved.append(path)
     return {
-        "schema": "leo-dynamics/license-boundary/v1",
+        "schema": "leo-dynamics/license-boundary/v2",
         "project": "leo-dynamics",
         "version": "0.1.0",
         "generator": "release-audit/generate_boundary.py",
@@ -160,36 +195,23 @@ def build_manifest(root: Path | None = None) -> dict:
             MIT: {
                 "licence": "MIT",
                 "licence_file": "LICENSE",
-                "scope_file": "LICENSE_SCOPE.md",
                 "description": (
-                    "The numerical engine, its public headers, the Python "
-                    "interface, the build and packaging machinery, the "
-                    "third-party notices and the user-facing guides."
+                    "Original material of this project: numerical engine, "
+                    "public headers, Python interface, research campaigns and "
+                    "datasets, documentation set, test suites and frozen "
+                    "reference fixtures, examples, plotting helpers and the "
+                    "packaging, CI and release tooling. The MIT grant covers "
+                    "all of it, whether or not a file is redistributed."
                 ),
-            },
-            PROPRIETARY: {
-                "licence": "proprietary",
-                "licence_file": "PROPRIETARY-NOTICE.md",
-                "description": (
-                    "High-fidelity atmosphere providers, research campaigns, "
-                    "optimisation experiments and datasets, research reference "
-                    "fixtures, qualification reports and the packaging, CI and "
-                    "release tooling. Never redistributed."
-                ),
-            },
-            REPOSITORY: {
-                "licence": "unpublished",
-                "description": "Repository plumbing; not distributed.",
             },
         },
         "rules": [
             {"kind": kind, "pattern": pattern, "class": licence_class}
             for kind, pattern, licence_class in RULES
         ],
-        "sdist_members": sorted(
-            path for path, entry in files.items() if entry["in_sdist"]
-        ),
-        "proprietary_markers": sorted(PROPRIETARY_MARKERS),
+        "approved_sources": sorted(approved),
+        "deferred_external_markers": sorted(DEFERRED_EXTERNAL_MARKERS),
+        "deferred_model_markers": sorted(DEFERRED_MODEL_MARKERS),
         "files": dict(sorted(files.items())),
     }
 
@@ -232,7 +254,7 @@ def main(argv: list[str] | None = None) -> int:
         + str(MANIFEST_PATH.relative_to(REPO_ROOT))
         + ": "
         + ", ".join(f"{key}={value}" for key, value in sorted(counts.items()))
-        + f", sdist_members={len(manifest['sdist_members'])}"
+        + f", approved_sources={len(manifest['approved_sources'])}"
     )
     return 0
 

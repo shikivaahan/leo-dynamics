@@ -111,11 +111,15 @@ python3 -m venv .venv-build
 ## Licence
 
 This distribution is MIT licensed; see `LICENSE` for the licence text and
-`LICENSE_SCOPE.md` for the exact scope of the grant, and
+`LICENSE_SCOPE.md` for the scope of the grant, and
 `THIRD_PARTY_NOTICES.md` for the terms of the third-party components the
 extension is built against (Eigen, MPL-2.0; Boost, BSL-1.0; pybind11,
 BSD-3-Clause) and the platform runtimes it links.
 
-The licence covers this distribution only. It does not cover the
-`leo-dynamics` repository's proprietary research material, which is not part of
-this distribution and is not redistributed with it.
+The whole `leo-dynamics` project is MIT licensed. This distribution carries
+the core engine interface only; the research campaigns and their datasets,
+the documentation set, the test suites and the deferred atmospheric models
+are part of the project repository but are not part of this distribution and
+are not redistributed with it. The external reference implementations and
+data those deferred models consume are not vendored here at all and remain
+under their own terms.

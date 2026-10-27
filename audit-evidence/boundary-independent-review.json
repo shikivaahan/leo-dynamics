@@ -2,6 +2,7 @@
   "schema": "leo.audit.independent-boundary-review/1",
   "baseline_commit": "23df023d6080c9aeb27e9ceddba1671651205584",
   "date": "2026-10-26",
+  "superseded": "2026-10-27: the owner has since authorised the standard MIT grant over the whole project and the proprietary scope was removed. The reviewed identities and scenario outcomes below are the dated record of the 2026-10-26 review; the governing classification is release-audit/license-boundary.json.",
   "reviewed_final_sha256": {
     "ci/verify_license_boundary.py": "e91055ab0079ed14c5ca41d2e0ca9b87623038be5703e2146fefc0107eeb8f65",
     "release-audit/generate_boundary.py": "77e731eed461991b721d0fd0790d53212e667936f46c71d8f18f3cf40830ab1b",

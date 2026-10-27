@@ -2,6 +2,7 @@
  "schema": "leo.audit.proprietary-inventory/1",
  "generated": "2026-10-26",
  "purpose": "Inventory of every item in and around the repository whose distribution rights are restricted, unknown, or conditional. Records the owner's stated proprietary scope separately from externally sourced material. Evidence only; no ownership or commercial decision is made here.",
+ "superseded": "2026-10-27: the owner has since authorised the standard MIT grant over the whole project, so the first-party owner-decision entries below no longer describe a proprietary scope. This file is the dated record of the 2026-10-26 audit; the governing classification is release-audit/license-boundary.json. The externally sourced material entries remain factual.",
  "legend": {
   "rights": {
    "restricted_no_grant": "The upstream states no redistribution permission; no grant may be inferred from public availability.",
@@ -177,7 +178,7 @@
     "docs/atmosphere/evidence/ and the docs/atmosphere/optimisation/evidence/ tree contain committed measurement and validation data."
    ],
    "action_for_report": "Enumerate the concrete datasets that are committed (not merely referenced) and record the terms of each. The audit did not close this item.",
-   "distribution_impact": "This material sits in the owner's proprietary scope, so it does not travel with the MIT grant; it still needs its own terms cleared before any separate distribution."
+   "distribution_impact": "This external material is never vendored and never travels with the MIT grant; it still needs its own terms cleared before any separate distribution."
   },
   {
    "id": "leo-dynamics-proprietary-scope",
@@ -185,18 +186,19 @@
    "vendor": "the project itself",
    "rights": "first_party_owner_decision",
    "stated_terms": "The owner has stated that the basic numerical engine and the Python interface are MIT-approved, while the high-fidelity NRLMSISE-00 and JB2008 integrations, the research, the optimisation work and the datasets are proprietary.",
+   "superseded": "2026-10-27: the owner has since authorised the standard MIT grant over the whole project, so this entry records the 2026-10-26 decision rather than a current scope. The externally sourced material entries in this file are unaffected and remain factual.",
    "in_repository": true,
    "evidence": [
     "Owner-approved basic engine/Python interface only; final conservative boundary enumerates52 public source files. On1951 baseline paths, the reviewed final rules classify49 public,1900 proprietary,2 repository plumbing. These research classifications do not decide copyright title."
    ],
-   "distribution_impact": "The MIT grant must be file-scoped; a single root MIT licence would sweep the proprietary material into the grant. The release-boundary worker owns the licence text and the file enumeration."
+   "distribution_impact": "Superseded 2026-10-27: the MIT grant is no longer file-scoped. The published distributions stay limited to the approved core source list, which is packaging policy recorded in release-audit/license-boundary.json."
   },
   {
    "id": "optional-research-tooling",
    "name": "Optional research and plotting dependencies",
    "vendor": "various (PyPI)",
    "rights": "permissive_attribution_required",
-   "stated_terms": "NumPy BSD-3-Clause (bundled 0BSD, MIT, Zlib, CC0-1.0); SciPy BSD-3-Clause; Matplotlib PSF-based Matplotlib licence (BSD-style); Tudat BSD-3-Clause for the code, with separate terms for the Tudat data products.",
+   "stated_terms": "NumPy BSD-3-Clause (bundled 0BSD, MIT, Zlib, CC0-1.0); SciPy BSD-3-Clause; Matplotlib PSF-based Matplotlib licence (BSD-style); Tudat BSD-3-Clause for the upstream code, which is separately installed and never redistributed.",
    "in_repository": false,
    "evidence": [
     "plotting/requirements.txt: numpy>=1.21, matplotlib>=3.5 (floating lower bounds, not pins).",

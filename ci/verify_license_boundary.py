@@ -1,10 +1,21 @@
 #!/usr/bin/env python3
 """Fail closed on boundary drift, unsafe archives, changed public bytes or leaks.
 
-Run from the private checkout before any artifact upload. The canonical manifest
-is regenerated from reviewed rules; built members are compared to the approved
+Run from the checkout before any artifact upload. The canonical manifest is
+regenerated from reviewed rules; built members are compared to the approved
 checkout bytes. Binary scans supplement, but cannot prove, compiled provenance.
+
+The contract has two independent halves, and this gate enforces both:
+
+* the **licence** of every tracked file, and
+* the **approved distribution** the wheel and the source distribution carry.
+
+A file outside the approved distribution is not redistributed - a packaging
+decision that never changes the licence of the material. Material that must
+never be packaged at all (the deferred external reference implementations and
+data, and the deferred provider adapters) is refused by content markers.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -29,6 +40,7 @@ MANIFEST_RELATIVE = Path("release-audit/license-boundary.json")
 GENERATOR_RELATIVE = Path("release-audit/generate_boundary.py")
 WHEEL_PACKAGE_FILES = {"leo_dynamics/__init__.py", "leo_dynamics/__init__.pyi", "leo_dynamics/py.typed"}
 WHEEL_MODULE_PATTERN = re.compile(r"^leo_dynamics/_core\.(?:cpython-[0-9]+-[A-Za-z0-9_-]+\.so|cp[0-9]+-[A-Za-z0-9_-]+\.pyd)$")
+LICENCE_FILES = ("LICENSE", "LICENSE_SCOPE.md", "THIRD_PARTY_NOTICES.md")
 SCAN_CHUNK = 1 << 20
 
 
@@ -41,6 +53,10 @@ def _load_generator(root):
 
 def _read_manifest(root):
     return json.loads((root / MANIFEST_RELATIVE).read_text())
+
+
+def _markers(manifest):
+    return list(manifest["deferred_external_markers"]) + list(manifest["deferred_model_markers"])
 
 
 def _scan_stream(markers, stream):
@@ -67,23 +83,32 @@ def check_source(root, manifest, generator):
     failures = []
     if canonical != manifest:
         failures.append("the complete licence boundary manifest is stale or altered")
-    for path, entry in canonical["files"].items():
-        if entry["class"] != "mit_core":
-            continue
+    markers = _markers(canonical)
+    # Only the approved distribution is scanned for excluded content: outside
+    # it, the research material legitimately discusses the deferred models and
+    # their external sources.
+    for path in canonical["approved_sources"]:
         source = root / path
         if source.is_symlink() or not source.is_file():
             failures.append(f"approved source is not a regular file: {path}")
             continue
         with source.open("rb") as handle:
-            hits = _scan_stream(canonical["proprietary_markers"], handle)
+            hits = _scan_stream(markers, handle)
         if hits:
-            failures.append(f"{path}: proprietary markers {hits}")
+            failures.append(f"{path}: excluded content markers {hits}")
+    # The approved distribution carries the project's own material only.
+    for path in canonical["approved_sources"]:
+        entry = canonical["files"].get(path)
+        if entry is None:
+            failures.append(f"{path}: approved source is not a tracked file")
+        elif entry["class"] != generator.MIT:
+            failures.append(f"{path}: approved source is not the project's own material")
     project = tomllib.loads((root / "pyproject.toml").read_text())["project"]
     if project.get("license") != "MIT":
         failures.append("project license must be MIT")
     if project.get("readme", {}).get("file") != "README.dist.md":
         failures.append("distribution readme must be README.dist.md")
-    if set(project.get("license-files", [])) != {"LICENSE", "LICENSE_SCOPE.md", "THIRD_PARTY_NOTICES.md"}:
+    if set(project.get("license-files", [])) != set(LICENCE_FILES):
         failures.append("project license-files differs from the approved exact list")
     return failures, {"canonical_manifest_matches": canonical == manifest}
 
@@ -146,7 +171,8 @@ def _wheel_metadata(payload, path):
 def _inspect(path, manifest, root, wheel):
     failures, inventory, contents = [], [], {}
     prefix = "leo_dynamics-0.1.0"
-    expected = set(manifest["sdist_members"])
+    expected = set(manifest["approved_sources"])
+    markers = _markers(manifest)
     with (zipfile.ZipFile(path) if wheel else tarfile.open(path, "r:gz")) as archive:
         entries = archive.infolist() if wheel else archive.getmembers()
         seen = set()
@@ -181,9 +207,9 @@ def _inspect(path, manifest, root, wheel):
                 payload = handle.read()
             contents[relative] = payload
             inventory.append({"path": relative, "size": len(payload), "sha256": hashlib.sha256(payload).hexdigest()})
-            hits = _scan_stream(manifest["proprietary_markers"], io.BytesIO(payload))
+            hits = _scan_stream(markers, io.BytesIO(payload))
             if hits:
-                failures.append(f"{relative}: proprietary markers {hits}")
+                failures.append(f"{relative}: excluded content markers {hits}")
             mapped = None
             if wheel:
                 if relative in WHEEL_PACKAGE_FILES:
@@ -193,7 +219,7 @@ def _inspect(path, manifest, root, wheel):
                         failures.append(f"extension is not a recognised native binary: {relative}")
                 elif relative.startswith(prefix + ".dist-info/licenses/"):
                     licence = relative.removeprefix(prefix + ".dist-info/licenses/")
-                    if licence not in {"LICENSE", "LICENSE_SCOPE.md", "THIRD_PARTY_NOTICES.md"}:
+                    if licence not in LICENCE_FILES:
                         failures.append(f"unexpected licence member {relative}")
                     else:
                         mapped = licence
@@ -202,13 +228,13 @@ def _inspect(path, manifest, root, wheel):
             elif relative in expected:
                 mapped = relative
             elif relative != "PKG-INFO":
-                failures.append(f"{relative}: not a member of the MIT core")
+                failures.append(f"{relative}: not an approved distribution member")
             if mapped is not None:
                 original = root / mapped
                 if original.is_symlink() or not original.is_file() or payload != original.read_bytes():
                     failures.append(f"{relative}: bytes differ from approved public source {mapped}")
         if wheel:
-            required = WHEEL_PACKAGE_FILES | {prefix + ".dist-info/" + child for child in ("METADATA", "WHEEL", "RECORD", "licenses/LICENSE", "licenses/LICENSE_SCOPE.md", "licenses/THIRD_PARTY_NOTICES.md")}
+            required = WHEEL_PACKAGE_FILES | {prefix + ".dist-info/" + child for child in ("METADATA", "WHEEL", "RECORD")} | {prefix + ".dist-info/licenses/" + name for name in LICENCE_FILES}
             modules = [n for n in contents if WHEEL_MODULE_PATTERN.fullmatch(n)]
             if len(modules) != 1:
                 failures.append("wheel must carry exactly one _core native module")
@@ -285,7 +311,7 @@ def main(argv=None):
         errors, details = check_artefacts(root, canonical, Path(args.artifacts).resolve())
         failures.extend(errors)
         evidence["artifacts"] = details
-    report = {"schema": "leo-dynamics/license-boundary-report/v1", "passed": not failures, "failures": failures, "evidence": evidence}
+    report = {"schema": "leo-dynamics/license-boundary-report/v2", "passed": not failures, "failures": failures, "evidence": evidence}
     if args.json_report:
         destination = Path(args.json_report)
         destination.parent.mkdir(parents=True, exist_ok=True)

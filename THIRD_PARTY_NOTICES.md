@@ -11,11 +11,13 @@ Two statements govern the whole document:
   source distribution.** Their *compiled* portions are incorporated into
   `_core*.so` / `_core*.pyd`. Binary redistribution is therefore the case that
   has to be handled, not mere header use.
-- **This file covers the MIT core of the distribution only.** The MIT core is
-  enumerated in `LICENSE_SCOPE.md`; the rest of the project repository is
-  proprietary and is not distributed with either distribution, so nothing in it
-  reaches a recipient. Including these texts is a mechanical compliance step,
-  not a legal conclusion; the remaining review items are listed at the end.
+- **This file covers the third-party components only.** The rest of the
+  project is original material under the MIT License (`LICENSE`,
+  `LICENSE_SCOPE.md`). The published distributions carry the core engine
+  interface only; the research material and the deferred atmospheric models
+  are not redistributed, so nothing in them reaches a recipient. Including
+  these texts is a mechanical compliance step, not a legal conclusion; the
+  remaining review items are listed at the end.
 
 Contents:
 
@@ -328,32 +330,66 @@ SOFTWARE.
 ```
 
 The owner's statement is that no Imperial College or Siemens source code is
-used. Repository notes nevertheless compare the C++ API with this upstream
-Julia project. The inspected implementation comparisons and limited
-whitespace-normalised line scan do not establish whether a translation or
-substantial portion is carried. That applicability question remains open;
-the attribution above is precautionary, not a finding of derivation or title.
+used, and that the code and constants they contributed to the Imperial College
+Space Society project are their own original material, licensed under the MIT
+grant of `LICENSE`. Repository notes nevertheless compare the C++ API with
+that upstream Julia project, so the attribution above is retained as a
+precautionary acknowledgement of the upstream work; it is not a finding that
+this distribution derives from it.
 
-<a id="7-assets-excluded-by-policy"></a>
-## 7. Assets excluded by policy
+<a id="7-tudat-reference-oracle--bsd-3-clause"></a>
+## 7. Tudat reference oracle — BSD 3-Clause
+
+The project uses the **Tudat** astrodynamics toolbox as an independently
+installed reference oracle for part of its numerical qualification. Tudat is
+distributed under the BSD 3-Clause licence; the full text is in
+[the appendix](#bsd-3-clause-license-template).
+
+| Component | Pin | Licence | Source |
+|---|---|---|---|
+| Tudat (native) | `2.14.0` | BSD-3-Clause | <https://github.com/tudat-team/tudat> |
+| tudatpy (Python interface) | `0.9.0` (module reports `0.8.0`) | BSD-3-Clause | <https://github.com/tudat-team/tudatpy> |
+
+Tudat itself is **not** part of this repository and is **not** redistributed
+by it. The conditions and disclaimer of its BSD 3-Clause terms are those of
+the template in [the appendix](#bsd-3-clause-license-template), and the
+upstream copyright line is the one in the Tudat `LICENSE` file at the source
+links above; anyone who obtains the upstream distribution gets that notice
+with it.
+
+The reference trajectories this project generates with that oracle are
+numerical outputs of this project's own generators. They are original
+material of this project under the MIT grant of `LICENSE`, and this file
+makes no claim that the upstream code licence governs them.
+
+<a id="8-assets-excluded-by-policy"></a>
+## 8. Assets excluded by policy
 
 CSPICE, NRLMSISE-00 and JB2008 model sources, SPICE kernels, external empirical
-atmosphere/weather datasets and private research fixtures are not downloaded,
+atmosphere/weather datasets and the research fixtures are not downloaded,
 compiled into or embedded in either distribution. The basic exponential model's
 40 fixed engine parameters are the explicit exception disclosed in §6.
 The provenance rules this project applies to external
 assets are in `docs/atmosphere/INPUTS.md`, which is part of the project's
-proprietary research material and is not distributed with either artefact.
+research material and is not distributed with either artefact.
+
+The research records quote a small number of published upstream reference
+values for comparison — a single NRLMSISE-00 validation density
+(`6.505e-14` kg/m³) in
+`docs/atmosphere/evidence/validation-amendment-v1/altitude-datum.json`, and
+derived ratios in `docs/atmosphere/evidence/nrlmsise00-validation.json`. They
+are quoted for validation comparison, are not redistributed in either
+artefact, and the upstream terms of the quoted material are unchanged.
 
 The project's research documentation cites further external projects (the
-Tudat astrodynamics toolbox, the Orekit space-weather and JB2008 references,
-and the Julia `SatelliteToolboxAtmosphericModels.jl` implementation) for
-context. Those citations live in the non-distributed research material, and a
-citation in a document that is not distributed is not a redistribution, so no
-notice is owed for them by either artefact.
+Orekit space-weather and JB2008 references, and the Julia
+`SatelliteToolboxAtmosphericModels.jl` implementation) for context. Those
+citations live in the non-distributed research material, and a citation in a
+document that is not distributed is not a redistribution, so no notice is owed
+for them by either artefact. The Tudat toolbox is covered by §7 above.
 
-<a id="8-compliance-summary-and-remaining-review"></a>
-## 8. Compliance summary and remaining review
+<a id="9-compliance-summary-and-remaining-review"></a>
+## 9. Compliance summary and remaining review
 
 Concretely done:
 
@@ -370,7 +406,9 @@ Concretely done:
   modified, so §3.4's notice-retention requirement is met;
 - the platform runtimes the extension links are named in §5, with the licence
   terms that permit linking them;
-- the upstream MIT notice is reproduced in §6 as a precaution.
+- the upstream MIT notice is reproduced in §6 as a precaution;
+- the Tudat BSD 3-Clause terms are reproduced in §7 for the separately
+  installed reference oracle that is not redistributed.
 
 Remaining, and not settled by anything in this file:
 
@@ -380,20 +418,22 @@ Remaining, and not settled by anything in this file:
    the covered files, but which headers a given binary was compiled against is
    a release-time verification (a build with
    `LEO_PROVISION_DEPENDENCIES=OFF` resolves Eigen and Boost from the host).
-2. **The upstream MIT applicability is unresolved.** §6 gives attribution as a
-   precaution. Whether any part of this distribution is a copy or a substantial
-   portion of that upstream work is a legal test this file does not decide.
+2. **The upstream attribution is precautionary.** §6 gives attribution as a
+   precaution. The owner states that the code and constants they contributed to
+   that upstream project are their own original material under the MIT grant;
+   this file records the acknowledgement, not a determination about the
+   upstream work.
 3. **Regeneration on change.** §1.1 and §2 are specific to the components
    compiled by 0.1.0. If a future release enables another Eigen or Boost
    component, or links a compiled Boost binary library, this file must be
    regenerated.
-4. **Legal review.** Reproducing licence texts is a mechanical step. Whether the
-   compiled form triggers any obligation beyond what is stated here, and whether
-   these notices are sufficient in a given jurisdiction, has not been reviewed
-   by a qualified lawyer and is not asserted here.
+4. **Scope of this file.** Reproducing licence texts and pinning the consumed
+   archives is a mechanical step. This file records what is incorporated and
+   under which terms; it makes no claim about obligations beyond those terms
+   in any jurisdiction.
 
-<a id="9-appendix-full-licence-texts"></a>
-## 9. Appendix: full licence texts
+<a id="10-appendix-full-licence-texts"></a>
+## 10. Appendix: full licence texts
 
 The three texts below are reproduced verbatim from the sources named in their
 headings.

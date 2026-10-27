@@ -85,10 +85,9 @@ def main(argv: list[str] | None = None) -> int:
             f"{arguments.expected_version!r}"
         )
 
-    # The licence decision is scoped: the MIT grant covers the MIT core only.
-    # The boundary gate is what proves that the tree still matches the
-    # boundary manifest, that no MIT-classified file carries proprietary
-    # content, and that the packaging metadata declares the scoped grant. It
+    # The boundary gate proves that the tree still matches the boundary
+    # manifest, that no approved distribution source carries deferred-model
+    # content, and that the packaging metadata declares the MIT grant. It
     # fails closed, so an unclassified or newly added file stops the release
     # here rather than after a distribution has been built.
     boundary = subprocess.run(
