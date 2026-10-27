@@ -1,2 +1,0 @@
-RELEASE_LICENSE_AUDIT.md
-audit-progress.md
