@@ -1,11 +1,10 @@
 $ python3 tests/license_boundary_tests.py
 cwd=/home/user/leo-dynamics
-started_utc=2026-10-27T01:07:26.522919+00:00
 .../usr/lib/python3.12/zipfile/__init__.py:1620: UserWarning: Duplicate name: 'leo_dynamics-0.1.0.dist-info/licenses/LICENSE'
   return self._open_to_write(zinfo, force_zip64=force_zip64)
 ............
 ----------------------------------------------------------------------
-Ran 15 tests in 1.084s
+Ran 15 tests in 1.134s
 
 OK
 exit=0

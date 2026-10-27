@@ -1,5 +1,4 @@
 $ python3 ci/verify_license_boundary.py --project-root . --artifacts release-audit/artifacts --json-report release-audit/final-archive-inventory.json
 cwd=/home/user/leo-dynamics
-started_utc=2026-10-27T01:07:25.251302+00:00
 licence boundary gate passed
 exit=0

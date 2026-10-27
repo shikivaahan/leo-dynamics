@@ -2,11 +2,11 @@
   "date": "2026-10-26",
   "branch": "audit/release-licensing-v0.1.0",
   "checks": {
-    "generate_boundary.py (regenerate)": 0,
     "generate_boundary.py --check": 0,
     "verify_license_boundary.py (source)": 0,
     "verify_license_boundary.py --artifacts": 0,
     "release_preflight.py --expected-version 0.1.0": 0,
-    "tests/license_boundary_tests.py": 0
+    "tests/license_boundary_tests.py": 0,
+    "generate_boundary.py (regenerate)": 0
   }
 }
