@@ -394,9 +394,9 @@ Stated explicitly, because the audit's value depends on them being checkable:
   repository was created or made public**. The repository remains private.
 - **No proprietary file was deleted, moved or modified.** The private tree still
   contains every research and historical artefact: the regenerated canonical
-  manifest classifies **1,933 tracked files as proprietary**,
+  manifest classifies **1,934 tracked files as proprietary**,
   plus 2 repository-plumbing files, out of
-  1,987 classified tracked files, of which 52 are the
+  1,988 classified tracked files, of which 52 are the
   MIT core that may be distributed. The research campaigns, empirical
   atmosphere providers and adapters, optimisation experiments and datasets,
   frozen reference fixtures, qualification reports and release tooling are all

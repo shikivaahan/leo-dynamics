@@ -38,6 +38,7 @@ release-audit/consumed-CMakeCache.txt
 release-audit/consumed-compile_commands.json
 release-audit/consumed-header-verification.json
 release-audit/final-archive-inventory.json
+release-audit/final-checks.json
 release-audit/final-direct-binary-scan.json
 release-audit/final-direct-binary-strings.txt
 release-audit/final-rebuilt-binary-scan.json

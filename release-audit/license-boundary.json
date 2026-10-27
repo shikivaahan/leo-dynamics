@@ -7377,6 +7377,10 @@
       "class": "proprietary",
       "in_sdist": false
     },
+    "release-audit/final-checks.json": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
     "release-audit/final-direct-binary-scan.json": {
       "class": "proprietary",
       "in_sdist": false
