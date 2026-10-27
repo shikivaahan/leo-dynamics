@@ -2,37 +2,54 @@
 
 Branch: `audit/release-licensing-v0.1.0`, created from `23df023d`.
 No history rewrite, destructive git, push, upload, remote creation, workflow
-dispatch or publication. The work is committed locally as `2bb5ccb` on this
-branch; `origin/main` still points at `23df023d`. The pre-existing untracked
-`outputs/` was preserved.
+dispatch or publication. All audit work is committed locally on this branch
+(`2bb5ccb` through the latest commit); `origin/main` still points at
+`23df023d`. The pre-existing untracked `outputs/` and the local `dist*`/`build*`
+trees were preserved untouched, and every research and historical artefact is
+still present: the regenerated boundary manifest classifies **1,965 tracked
+files as proprietary** (plus 2 repository-plumbing files) out of **2,019
+classified tracked files**, of which **52** are the MIT core that may be
+distributed.
 
-## Delivered locally
+## Local audit commits
 
-- Scoped MIT component: standard MIT terms (`LICENSE`, with an external scope
-  pointer), `LICENSE_SCOPE.md` defining the licensed subject matter,
-  `PROPRIETARY-NOTICE.md` for everything outside it, PEP 639 metadata, and a
-  public-only `README.dist.md` used for package metadata.
-- Observed final source distribution: exactly the 52 approved original files
-  plus generated `PKG-INFO`. Both final wheels: 10 members each. Full member
-  hashes, artifact identities, gate reports and logs are private in
-  `release-audit/`.
-- Direct CPython 3.13 wheel + sdist, and a clean CPython 3.12 wheel rebuilt
-  from that sdist. The **CPython 3.12 rebuilt wheel** was installed and
-  executed: 396 Python tests passed, runtime smoke passed (J2 orbit, SRP/drag/
-  albedo/gravity-gradient environment, native batch, 9 CSV exports). The
-  CPython 3.13 wheel was built and inspected, not runtime-tested.
-- Native suite: fresh Release build, 120/120 tests passed. Catch2 3.7.1
-  (`release-audit/native-Catch2ConfigVersion.cmake`).
-- Leak gate: 15 regression tests pass, covering valid complete controls and
-  manifest tampering, marker-free renamed research payloads, metadata
-  channels, links, unsafe names, duplicates, wrong roots and missing
-  payload/licence members. Archive checks run before every artifact upload in
-  the wheel workflow and before collection/upload in the release workflow.
-- Linux linkage and full binary-string evidence retained; consumed header
-  comparison Eigen 170/170 and Boost 1066/1066, zero mismatches against the
-  pinned archives.
-- `RELEASE_LICENSE_AUDIT.md` integrates the baseline research evidence with the
-  final build facts, and states the verdict.
+```
+3eb9703 audit: keep the licensing audit evidence logs in the branch
+7a3b3ee audit: finalise the boundary manifest, changed-path record and report counts
+5516344 docs: qualify the proprietary notice and record the documentation sweep in the audit report
+3798ad6 docs: annotate stale licensing statements in the internal documentation sweep
+bbd94fa docs: state the shipped notice bytes and that all evidence is from the final tree
+5413b21 audit: label the superseded first gate-regression run and close evidence logs
+3bf5f08 docs: record the local audit commit in the audit report and progress note
+2bb5ccb audit: scope the MIT core, enforce the proprietary boundary, verify v0.1.0 packaging
+```
+
+## Six green checks (exit codes)
+
+```
+{
+  "generate_boundary.py (regenerate)": 0,
+  "generate_boundary.py --check": 0,
+  "verify_license_boundary.py (source)": 0,
+  "verify_license_boundary.py --artifacts": 0,
+  "release_preflight.py --expected-version 0.1.0": 0,
+  "tests/license_boundary_tests.py": 0
+}
+```
+
+## Final artefact identities (private, never uploaded)
+
+```
+release-audit/artifacts/direct/leo_dynamics-0.1.0-cp313-cp313-linux_x86_64.whl  bytes=368403  sha256=87df8e2428f43118694f431e3596a078f136648a4c14f1ced20480123cee8f2f
+release-audit/artifacts/direct/leo_dynamics-0.1.0.tar.gz  bytes=83279  sha256=0906aade8fa832c1f9ad7c05f14ae62c47984787dc3a26c997a61fbb70fa5767
+release-audit/artifacts/rebuilt/leo_dynamics-0.1.0-cp312-cp312-linux_x86_64.whl  bytes=368448  sha256=e4e874217f2cde42bcf5fbd73d11ebed24cef9c1534bea33314b0c094803c947
+```
+
+The source distribution holds exactly the 52 approved original files plus the
+generated `PKG-INFO` (53 members); each wheel holds 10 members. The archive
+gate re-run after this final step proves the public contents are unchanged: all
+three artefact SHA-256 values are identical to the recorded ones, and no
+evidence log is inside any artefact.
 
 ## Exact scope
 
@@ -42,7 +59,9 @@ provider-independent ephemeris interfaces, `bindings/`, `python/leo_dynamics/`,
 documents/notices and `README.dist.md`. Outside the grant and not distributed:
 all empirical atmosphere and CSPICE adapters, the whole `docs/` tree, research,
 optimisation experiments and datasets, every test suite and frozen research
-fixture, examples, plotting, and packaging/CI/release/audit tooling.
+fixture, examples, plotting, and packaging/CI/release/audit tooling. The audit
+evidence itself (`release-audit/`) is proprietary and excluded from both
+distributions.
 
 ## Publication verdict: NO-GO
 
@@ -52,6 +71,7 @@ repository); upstream applicability and the ultimate provenance of the shared
 40 fixed atmospheric anchors; current private-repository plan entitlement
 (`/user` plan is null, so an existing environment is not proof); platform
 artifacts beyond Linux; and the absence of explicit publication approval.
+Nothing was published, pushed or dispatched.
 
 Ownership evidence, stated precisely: the release-line history has 76 commits
 and all refs 79 — 77 under the human author identity

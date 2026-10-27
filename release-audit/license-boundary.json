@@ -7349,7 +7349,15 @@
       "class": "proprietary",
       "in_sdist": false
     },
+    "release-audit/baseline-installed-wheel-tests.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
     "release-audit/boundary-report.json": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/build-driver-versions.log": {
       "class": "proprietary",
       "in_sdist": false
     },
@@ -7358,6 +7366,10 @@
       "in_sdist": false
     },
     "release-audit/commands.json": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/compiler-version.log": {
       "class": "proprietary",
       "in_sdist": false
     },
@@ -7370,6 +7382,14 @@
       "in_sdist": false
     },
     "release-audit/consumed-header-verification.json": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/consumed-ninja-deps.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-archive-gate.log": {
       "class": "proprietary",
       "in_sdist": false
     },
@@ -7389,6 +7409,38 @@
       "class": "proprietary",
       "in_sdist": false
     },
+    "release-audit/final-direct-build.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-direct-linkage.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-direct-needed.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-installed-dependencies.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-installed-wheel-tests.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-manifest-check.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-manifest-generation.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-preflight.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
     "release-audit/final-rebuilt-binary-scan.json": {
       "class": "proprietary",
       "in_sdist": false
@@ -7397,7 +7449,51 @@
       "class": "proprietary",
       "in_sdist": false
     },
+    "release-audit/final-rebuilt-linkage.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-rebuilt-needed.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-runtime-smoke.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-sdist-rebuild.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-source-gate.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-test-venv.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/final-wheel-install.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/gate-regressions-final.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
     "release-audit/generate_boundary.py": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/guard-LEO_ENABLE_CSPICE.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/guard-LEO_ENABLE_JB2008.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/guard-LEO_ENABLE_NRLMSISE00.log": {
       "class": "proprietary",
       "in_sdist": false
     },
@@ -7406,6 +7502,34 @@
       "in_sdist": false
     },
     "release-audit/native-Catch2ConfigVersion.cmake": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/native-build.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/native-tests.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/resolved-build-licenses.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/resolved-build-requirements.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/resolved-driver-licenses.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/resolved-test-licenses.log": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "release-audit/superseded-gate-regressions-initial-failure.log": {
       "class": "proprietary",
       "in_sdist": false
     },

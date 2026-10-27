@@ -324,10 +324,10 @@ to expose the original research history.
 
 ## Reproducibility, changes and limitations
 
-The work is committed locally on the audit branch as `2bb5ccb` ("audit: scope
-the MIT core, enforce the proprietary boundary, verify v0.1.0 packaging").
-Nothing was pushed, uploaded, published or dispatched; `origin/main` still
-points at `23df023d`, and the pre-existing untracked `outputs/` is untouched.
+All audit work is committed locally on `audit/release-licensing-v0.1.0`; the
+branch's audit commits run from `2bb5ccb` to its latest commit. Nothing was
+pushed, uploaded, published or dispatched; `origin/main` still points at
+`23df023d`, and the pre-existing untracked `outputs/` is untouched.
 
 Full final commands, working directories, exit codes and persistent log names
 are in `release-audit/commands.json`. This includes final direct/sdist builds,
@@ -352,7 +352,10 @@ researcher-written `audit-evidence/` tree including
 `release-audit/` manifest/generator/evidence.
 The parallel researcher exclusively wrote `audit-evidence/`; its contents are
 research evidence, not licence grants. Exact changed paths are additionally
-recorded in `release-audit/changed-paths.txt`.
+recorded in `release-audit/changed-paths.txt` (81 paths: the implementation,
+licence, packaging, workflow, documentation, research-evidence and audit-evidence
+changes; it excludes the pre-existing untracked `outputs/` and the local
+`dist*`/`build*` trees, and no evidence log is inside either public artefact).
 
 The canonical generator is permanent boundary-maintenance tooling: after a
 reviewed source addition, explicitly classify it, update packaging/scope if
@@ -394,9 +397,9 @@ Stated explicitly, because the audit's value depends on them being checkable:
   repository was created or made public**. The repository remains private.
 - **No proprietary file was deleted, moved or modified.** The private tree still
   contains every research and historical artefact: the regenerated canonical
-  manifest classifies **1,934 tracked files as proprietary**,
+  manifest classifies **1,965 tracked files as proprietary**,
   plus 2 repository-plumbing files, out of
-  1,988 classified tracked files, of which 52 are the
+  2,019 classified tracked files, of which 52 are the
   MIT core that may be distributed. The research campaigns, empirical
   atmosphere providers and adapters, optimisation experiments and datasets,
   frozen reference fixtures, qualification reports and release tooling are all
