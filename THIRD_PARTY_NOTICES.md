@@ -11,11 +11,11 @@ Two statements govern the whole document:
   source distribution.** Their *compiled* portions are incorporated into
   `_core*.so` / `_core*.pyd`. Binary redistribution is therefore the case that
   has to be handled, not mere header use.
-- **This project itself has no licence.** No redistribution rights for the
-  `leo-dynamics` work have been established, so nothing here authorises
-  distribution of the wheel. Including these texts is a mechanical compliance
-  step, not a legal conclusion; the remaining review items are listed at the
-  end.
+- **This file covers the MIT core of the distribution only.** The MIT core is
+  enumerated in `LICENSE_SCOPE.md`; the rest of the project repository is
+  proprietary and is not distributed with either distribution, so nothing in it
+  reaches a recipient. Including these texts is a mechanical compliance step,
+  not a legal conclusion; the remaining review items are listed at the end.
 
 Contents:
 
@@ -23,9 +23,11 @@ Contents:
 2. [Boost 1.83.0 — Boost Software License 1.0](#2-boost-1830--boost-software-license-10)
 3. [pybind11 3.1.0 — BSD 3-Clause](#3-pybind11-310--bsd-3-clause)
 4. [Build-time tooling, runtime dependency and CI tooling](#4-build-time-tooling-runtime-dependency-and-ci-tooling)
-5. [Assets excluded by policy](#5-assets-excluded-by-policy)
-6. [Compliance summary and remaining review](#6-compliance-summary-and-remaining-review)
-7. [Appendix: full licence texts](#7-appendix-full-licence-texts)
+5. [Platform runtimes the extension links](#5-platform-runtimes-the-extension-links)
+6. [Project-Svarog-Orbital — MIT (precautionary attribution)](#6-project-svarog-orbital--mit-precautionary-attribution)
+7. [Assets excluded by policy](#7-assets-excluded-by-policy)
+8. [Compliance summary and remaining review](#8-compliance-summary-and-remaining-review)
+9. [Appendix: full licence texts](#9-appendix-full-licence-texts)
 
 <a id="1-eigen-340--mozilla-public-license-20"></a>
 ## 1. Eigen 3.4.0 — Mozilla Public License 2.0
@@ -66,21 +68,46 @@ instantiating in the shipped binary.
 
 ### 1.2 MPL-2.0 obligations
 
-- **§3.1 — licence text.** The verbatim MPL-2.0 text is reproduced in
-  [the appendix](#mozilla-public-license-version-20) and is also available
-  upstream as `COPYING.MPL2` in the archive named above.
-- **§3.2 — source availability.** The covered files are **not modified**: the
-  build compiles the unmodified Eigen 3.4.0 sources obtained from
-  `https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz`
-  (SHA-256 `8586084f71f9bde545ee7fa6d00288b264a2b7ac3607b974e54d13e7162c1c72`).
-  A recipient who needs the corresponding source of the MPL-2.0-covered code
-  incorporated in `_core` obtains it from that URL, or from the upstream project
-  at <https://gitlab.com/libeigen/eigen> at tag `3.4.0`; the hash pins the exact
-  input this artefact was built from. The BSD-licensed fragments listed in §1.1
-  are likewise part of that archive.
-- **§3.3 / §3.4 — no additional restriction.** The project applies no licence,
-  patent or trademark restriction to MPL-2.0-covered code beyond the MPL-2.0
-  terms themselves.
+The obligations that apply to this distribution are the ones in §3 of the
+MPL-2.0 text, reproduced verbatim in [the appendix](#mozilla-public-license-version-20)
+and available upstream as `COPYING.MPL2` in the archive named above.
+
+- **§3.1 — Distribution of Source Form.** A source-form distribution of the
+  MPL-2.0-covered Eigen files must keep those files under MPL-2.0, must tell
+  recipients that the Source Code Form is governed by MPL-2.0 and how to
+  obtain that licence, and must not alter or restrict the recipients' rights
+  in the Source Code Form. No source-form Eigen files are embedded in either
+  archive; source made available for executable distribution under §3.2
+  remains MPL-governed as §3.1 requires.
+- **§3.2 — Distribution of Executable Form.** The extension is distributed in
+  executable form, so §3.2 applies. (a) The Covered Software must also be
+  made available in Source Code Form, and recipients must be told how to
+  obtain it by reasonable means, in a timely manner, at a charge no more than
+  the cost of distribution. The corresponding source is the unmodified Eigen
+  3.4.0 archive named above
+  (`https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz`,
+  SHA-256 `8586084f71f9bde545ee7fa6d00288b264a2b7ac3607b974e54d13e7162c1c72`),
+  or the upstream project at <https://gitlab.com/libeigen/eigen> at tag
+  `3.4.0`; the BSD-licensed fragments listed in §1.1 are part of the same
+  archive. (b) The Executable Form may be distributed under MPL-2.0 or
+  sublicensed under different terms, **provided that the licence for the
+  Executable Form does not attempt to limit or alter the recipients' rights
+  in the Source Code Form**. MIT applies to the project's enumerated
+  larger-work code; it neither restricts recipients' Eigen source rights nor
+  relicenses Eigen's Source Code Form.
+- **§3.3 — Distribution of a Larger Work.** The extension is a Larger Work
+  that includes the Covered Software. It may be distributed under terms of the
+  distributor's choice, provided the MPL-2.0 requirements for the Covered
+  Software are also complied with — which §3.2 above does.
+- **§3.4 — Notices.** The notices in the Eigen sources (the copyright notice,
+  the patent grant, the warranty disclaimer and the liability limitation, and
+  the BSD notices reproduced in §1.3) must not be removed or altered in the
+  Source Code Form. The files this build consumes are **not modified**: the
+  build compiles the unmodified Eigen 3.4.0 sources from the pinned archive,
+  and the BSD notices are reproduced verbatim in §1.3.
+
+No obligation in MPL-2.0 §3 prohibits distributing the executable form or the
+larger work under other terms, or charging for it.
 
 <a id="13-third-party-notices-inside-the-eigen-sources"></a>
 ### 1.3 Third-party notices inside the Eigen sources
@@ -215,7 +242,8 @@ requirement.
 <a id="4-build-time-tooling-runtime-dependency-and-ci-tooling"></a>
 ## 4. Build-time tooling, runtime dependency and CI tooling
 
-None of these is compiled into, or linked with, `_core`.
+None of the components in this table is compiled into, or linked with, `_core`.
+The platform runtimes `_core` *does* link are covered separately in §5.
 
 | Component | Pin | Licence | Source |
 |---|---|---|---|
@@ -230,16 +258,102 @@ None of these is compiled into, or linked with, `_core`.
 | build | `1.6.1` | MIT | `https://pypi.org/project/build/` |
 | Catch2 v3.7.1 | tests only; `BUILD_TESTING=OFF` for distribution builds | Boost Software License 1.0 | <https://github.com/catchorg/Catch2>, tag `v3.7.1` |
 
-<a id="5-assets-excluded-by-policy"></a>
-## 5. Assets excluded by policy
+<a id="5-platform-runtimes-the-extension-links"></a>
+## 5. Platform runtimes the extension links
 
-CSPICE, NRLMSISE-00 and JB2008 sources, SPICE kernels, atmospheric reference
-data and space-weather datasets are not downloaded, compiled into or embedded in
-either distribution. The provenance rules this project applies to external
-assets are in `docs/atmosphere/INPUTS.md`.
+`_core` is a native extension module, so it links the platform's C++ runtime.
+The locally inspected Linux wheel bundles no runtime library. Runtime bundling
+on macOS and Windows has not been verified by this audit.
 
-<a id="6-compliance-summary-and-remaining-review"></a>
-## 6. Compliance summary and remaining review
+| Platform | Linked runtime | Terms |
+|---|---|---|
+| Linux (x86-64, manylinux) | `libstdc++.so.6`, `libgcc_s.so.1`, `libm.so.6`, `libc.so.6` | libstdc++ and libgcc_s are distributed under the GNU General Public License version 3 with the **GCC Runtime Library Exception version 3.1**, which grants permission to propagate a work of Target Code formed by combining the Runtime Library with Independent Modules, and to convey that combination under terms of your choice, consistent with the licensing of the Independent Modules. The exception text may be copied, but is not required to be. |
+| macOS (arm64, x86-64) | `libc++.1.dylib`, `libSystem` | libc++ is under the Apache License 2.0 with the LLVM Exceptions to the Apache 2.0 License, which permit linking and redistribution under other terms. |
+| Windows (x86-64; configuration assessment only) | Microsoft Visual C++ runtime (toolchain-dependent) | Microsoft redistribution terms apply if runtime files are bundled; inspect each repaired Windows wheel before release. |
+
+Observation status of this audit: the Linux linkage above was **observed** on
+the artefact built for this audit (`ldd`/`readelf -d` on
+`_core.cpython-313-x86_64-linux-gnu.so`). The macOS and Windows rows are a
+**static configuration assessment** of the build configuration; no macOS or
+Windows binary was built or inspected in this audit.
+
+<a id="6-project-svarog-orbital--mit-precautionary-attribution"></a>
+## 6. Project-Svarog-Orbital — MIT (precautionary attribution)
+
+This section is a precaution, not a statement of derivation.
+
+| | |
+|---|---|
+| Upstream project | `Project-Svarog-Orbital` — `https://github.com/ImperialSpaceSociety/Project-Svarog-Orbital` (Imperial College Space Society) |
+| Licence | MIT — the upstream README at commit `58ab4d4964f9c20b7070efae48f8916e8a99784e` states "MIT – see `LICENSE`", and the upstream `LICENSE` file reads: |
+| Copyright | Copyright (c) 2022 Imperial College Space Society |
+| Retrieval limitation | The upstream GitHub repository returned HTTP 404 at the time of this audit. The notice above was read from the upstream README at the commit the project's own notes cite, and from the `LICENSE` file of a local checkout of that upstream project. |
+The basic exponential atmosphere's fixed 40 altitude/density pairs match the
+upstream `src/Constants.jl` table after converting kilometres to metres;
+`include/leo/kernel/aerodynamics.hpp` acknowledges those knots. The upstream
+labels its table “1976 US Standard Atmosphere”. The ultimate primary-standard
+provenance and any applicable rights have not been independently established.
+These fixed engine parameters are not the excluded empirical providers or
+private research campaign datasets. No numerical behaviour has been removed.
+
+
+The MIT licence requires that the copyright notice and the permission notice be
+included in all copies or substantial portions of the software. Whether any part
+of this distribution is a copy or a substantial portion of that upstream work is
+a legal question this file does not decide. The notice is therefore reproduced
+here, as attribution, at no cost to the distribution:
+
+```
+MIT License
+
+Copyright (c) 2022 Imperial College Space Society
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+The owner's statement is that no Imperial College or Siemens source code is
+used. Repository notes nevertheless compare the C++ API with this upstream
+Julia project. The inspected implementation comparisons and limited
+whitespace-normalised line scan do not establish whether a translation or
+substantial portion is carried. That applicability question remains open;
+the attribution above is precautionary, not a finding of derivation or title.
+
+<a id="7-assets-excluded-by-policy"></a>
+## 7. Assets excluded by policy
+
+CSPICE, NRLMSISE-00 and JB2008 model sources, SPICE kernels, external empirical
+atmosphere/weather datasets and private research fixtures are not downloaded,
+compiled into or embedded in either distribution. The basic exponential model's
+40 fixed engine parameters are the explicit exception disclosed in §6.
+The provenance rules this project applies to external
+assets are in `docs/atmosphere/INPUTS.md`, which is part of the project's
+proprietary research material and is not distributed with either artefact.
+
+The project's research documentation cites further external projects (the
+Tudat astrodynamics toolbox, the Orekit space-weather and JB2008 references,
+and the Julia `SatelliteToolboxAtmosphericModels.jl` implementation) for
+context. Those citations live in the non-distributed research material, and a
+citation in a document that is not distributed is not a redistribution, so no
+notice is owed for them by either artefact.
+
+<a id="8-compliance-summary-and-remaining-review"></a>
+## 8. Compliance summary and remaining review
 
 Concretely done:
 
@@ -251,26 +365,35 @@ Concretely done:
 - the BSD notices carried inside the Eigen sources are reproduced verbatim in
   §1.3, with their copyright lines, rather than being swept into "Eigen is
   MPL-2.0";
-- MPL-2.0 §3.2 source availability is addressed by pointing recipients at the
-  pinned upstream archive and recording its hash; no covered file is modified.
+- MPL-2.0 §3.2(a) source availability is addressed by pointing recipients at
+  the pinned upstream archive and recording its hash; no covered file is
+  modified, so §3.4's notice-retention requirement is met;
+- the platform runtimes the extension links are named in §5, with the licence
+  terms that permit linking them;
+- the upstream MIT notice is reproduced in §6 as a precaution.
 
 Remaining, and not settled by anything in this file:
 
-1. **The project's own licence.** No `LICENSE` or `COPYING` file exists, so no
-   redistribution right for the `leo-dynamics` code or its compiled output has
-   been established. This blocks publication independently of the third-party
-   work above, and only the copyright holder can resolve it.
-2. **Regeneration on change.** §1.1 and §2 are specific to the components
+1. **The hash proves the downloaded archive, not the consumed headers.** The
+   SHA-256 values above pin the archives that `cmake/provision.cmake` downloads
+   and verifies at configure time. The provisioning flow applies no patch to
+   the covered files, but which headers a given binary was compiled against is
+   a release-time verification (a build with
+   `LEO_PROVISION_DEPENDENCIES=OFF` resolves Eigen and Boost from the host).
+2. **The upstream MIT applicability is unresolved.** §6 gives attribution as a
+   precaution. Whether any part of this distribution is a copy or a substantial
+   portion of that upstream work is a legal test this file does not decide.
+3. **Regeneration on change.** §1.1 and §2 are specific to the components
    compiled by 0.1.0. If a future release enables another Eigen or Boost
    component, or links a compiled Boost binary library, this file must be
    regenerated.
-3. **Legal review.** Reproducing licence texts is a mechanical step. Whether the
+4. **Legal review.** Reproducing licence texts is a mechanical step. Whether the
    compiled form triggers any obligation beyond what is stated here, and whether
    these notices are sufficient in a given jurisdiction, has not been reviewed
    by a qualified lawyer and is not asserted here.
 
-<a id="7-appendix-full-licence-texts"></a>
-## 7. Appendix: full licence texts
+<a id="9-appendix-full-licence-texts"></a>
+## 9. Appendix: full licence texts
 
 The three texts below are reproduced verbatim from the sources named in their
 headings.

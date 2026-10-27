@@ -25,6 +25,7 @@ Exit status is 0 when every check passes and 1 otherwise.
 from __future__ import annotations
 
 import argparse
+import subprocess
 import sys
 import tomllib
 from pathlib import Path
@@ -84,6 +85,29 @@ def main(argv: list[str] | None = None) -> int:
             f"{arguments.expected_version!r}"
         )
 
+    # The licence decision is scoped: the MIT grant covers the MIT core only.
+    # The boundary gate is what proves that the tree still matches the
+    # boundary manifest, that no MIT-classified file carries proprietary
+    # content, and that the packaging metadata declares the scoped grant. It
+    # fails closed, so an unclassified or newly added file stops the release
+    # here rather than after a distribution has been built.
+    boundary = subprocess.run(
+        [
+            sys.executable,
+            str(root / "ci" / "verify_license_boundary.py"),
+            "--project-root",
+            str(root),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if boundary.returncode != 0:
+        failures.append(
+            "the licence boundary gate failed; the tree does not match "
+            "release-audit/license-boundary.json:\n"
+            + (boundary.stderr or boundary.stdout).strip()
+        )
+
     if failures:
         print(
             "release preflight failed: this release cannot be published yet.",
@@ -94,8 +118,8 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     print(
-        "release preflight passed: licence file, licence metadata and "
-        "version are in place; the distribution may be built and published."
+        "release preflight passed: mechanical licence, boundary and version "
+        "checks passed; this is not publication approval or proof of legal title."
     )
     return 0
 

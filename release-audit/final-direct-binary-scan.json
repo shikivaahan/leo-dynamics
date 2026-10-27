@@ -1,0 +1,13 @@
+{
+  "wheel": "release-audit/artifacts/direct/leo_dynamics-0.1.0-cp313-cp313-linux_x86_64.whl",
+  "binary_sha256": "460e58ed63c478cca413e44c5234f69b317f985b7251bd9344d11fc5460e7705",
+  "marker_counts": {
+    "nrlmsise": 0,
+    "jb2008": 0,
+    "brodowski": 0,
+    "spiceephemeris": 0,
+    "leo_atmosphere": 0,
+    "svarog": 0,
+    "imperial": 0
+  }
+}

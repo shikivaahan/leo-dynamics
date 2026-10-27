@@ -1,0 +1,390 @@
+{
+  "schema": "leo-dynamics/license-boundary-report/v1",
+  "passed": true,
+  "failures": [],
+  "evidence": {
+    "canonical_manifest_matches": true,
+    "artifacts": {
+      "/home/user/leo-dynamics/release-audit/artifacts/direct/leo_dynamics-0.1.0-cp313-cp313-linux_x86_64.whl": {
+        "member_count": 10,
+        "members": [
+          {
+            "path": "leo_dynamics/__init__.py",
+            "size": 5657,
+            "sha256": "971ed01056107634ae147f58c1b41b2fc04287cb666869f7fa2bf5c72e589009"
+          },
+          {
+            "path": "leo_dynamics/__init__.pyi",
+            "size": 10114,
+            "sha256": "ebf7882336f37b1ae605a97e3dec049254e61ba82e99963084c75eae77010e04"
+          },
+          {
+            "path": "leo_dynamics/_core.cpython-313-x86_64-linux-gnu.so",
+            "size": 828480,
+            "sha256": "460e58ed63c478cca413e44c5234f69b317f985b7251bd9344d11fc5460e7705"
+          },
+          {
+            "path": "leo_dynamics/py.typed",
+            "size": 128,
+            "sha256": "0d1afefe5a846993e97273cf54328b66864518c137d802f56a50a73f76cc1c42"
+          },
+          {
+            "path": "leo_dynamics-0.1.0.dist-info/METADATA",
+            "size": 6340,
+            "sha256": "7be6626e891ee001cb43b999baa8ad108fc316a3aa0cad48a63391498e1f74a1"
+          },
+          {
+            "path": "leo_dynamics-0.1.0.dist-info/WHEEL",
+            "size": 109,
+            "sha256": "2bb9eadc78f3f92e79ec1ebcca3bcc10efa81ac0f9684d250fc41776a0aea989"
+          },
+          {
+            "path": "leo_dynamics-0.1.0.dist-info/licenses/LICENSE",
+            "size": 1290,
+            "sha256": "c692219b6fe64b0621d0e6e1cb09e6e4f135e856e5d5215f6a31e23099fb29ce"
+          },
+          {
+            "path": "leo_dynamics-0.1.0.dist-info/licenses/THIRD_PARTY_NOTICES.md",
+            "size": 43737,
+            "sha256": "d622f8acdf537bbba7391a429d2016fb6705426237a0d8e6ad2a86da8c6a0c8c"
+          },
+          {
+            "path": "leo_dynamics-0.1.0.dist-info/licenses/LICENSE_SCOPE.md",
+            "size": 2053,
+            "sha256": "7567cbbbf9ae53b58cbb85e2738773aeac85b4170c79c7306eff6014a67b466c"
+          },
+          {
+            "path": "leo_dynamics-0.1.0.dist-info/RECORD",
+            "size": 903,
+            "sha256": "18be04cc2f40c85ea7e961b8c6c9b8279e8a961fcd66a0fe214a02967aba8f09"
+          }
+        ]
+      },
+      "/home/user/leo-dynamics/release-audit/artifacts/direct/leo_dynamics-0.1.0.tar.gz": {
+        "member_count": 53,
+        "members": [
+          {
+            "path": "CMakeLists.txt",
+            "size": 13949,
+            "sha256": "355d0a111e9226991e414a48d2fde16353246934bf2f402a008fa066063e4784"
+          },
+          {
+            "path": "LICENSE",
+            "size": 1290,
+            "sha256": "c692219b6fe64b0621d0e6e1cb09e6e4f135e856e5d5215f6a31e23099fb29ce"
+          },
+          {
+            "path": "LICENSE_SCOPE.md",
+            "size": 2053,
+            "sha256": "7567cbbbf9ae53b58cbb85e2738773aeac85b4170c79c7306eff6014a67b466c"
+          },
+          {
+            "path": "README.dist.md",
+            "size": 4796,
+            "sha256": "265d4a1c394aad8d87305f3282ba401cd04c0e9dd7447cd20cb9d7e27d8b5a8a"
+          },
+          {
+            "path": "THIRD_PARTY_NOTICES.md",
+            "size": 43737,
+            "sha256": "d622f8acdf537bbba7391a429d2016fb6705426237a0d8e6ad2a86da8c6a0c8c"
+          },
+          {
+            "path": "bindings/analysis.cpp",
+            "size": 28510,
+            "sha256": "a81c72ef0cd9af2b2696bcf022853c2327f765bb43c8a23cc2171426792b8a33"
+          },
+          {
+            "path": "bindings/common.hpp",
+            "size": 1740,
+            "sha256": "65a4fa5ffa2eca05ae9f8be67ce2afecc1fc1ab33643d676c450d80c02e6eb48"
+          },
+          {
+            "path": "bindings/configuration.cpp",
+            "size": 37370,
+            "sha256": "0aef2b568145ed03cb3c6988ea09c2b1f4eeb2c9394c5bab272c4071dd810575"
+          },
+          {
+            "path": "bindings/configuration.hpp",
+            "size": 3430,
+            "sha256": "5f1d2692686d9d01037341a8c16e6c22188a0e821d5fe94e8c6577566cbd470f"
+          },
+          {
+            "path": "bindings/integration.cpp",
+            "size": 15818,
+            "sha256": "b36174d67eb97909f037748061873fac4a7f41f619bdc73f0ca1c960c8488262"
+          },
+          {
+            "path": "bindings/module.cpp",
+            "size": 226,
+            "sha256": "324c1086a6071e884978c6c37ad1d649684cdf09e864c9d13e79bf7e98c4a0d8"
+          },
+          {
+            "path": "cmake/provision.cmake",
+            "size": 5752,
+            "sha256": "35f21775eed746e60d35253e362b40833b6a72484f5be66dff794dc3104b254b"
+          },
+          {
+            "path": "include/leo/analysis/export.hpp",
+            "size": 1046,
+            "sha256": "90aff0c4e2d7637edf48169f2303dc1c2288da4d73b32feb2d9f86e8ad96dd11"
+          },
+          {
+            "path": "include/leo/analysis/loads.hpp",
+            "size": 2551,
+            "sha256": "8699dbe812e4e87db9cd7ccd5631e00bd2bda2491c371a8e88f9641084a69825"
+          },
+          {
+            "path": "include/leo/analysis/orbital.hpp",
+            "size": 1770,
+            "sha256": "f9a0fe78d0de9120656f51a20ceb45306b401805cdd073d789c60e55f7dbb591"
+          },
+          {
+            "path": "include/leo/environment/ephemeris.hpp",
+            "size": 543,
+            "sha256": "c6ffb1d1127e4651a5ad6746f39ce40765326651cb0f73d22c390429cc5e9ec4"
+          },
+          {
+            "path": "include/leo/environment/interpolated.hpp",
+            "size": 4007,
+            "sha256": "34e16a398beaa502b7debc50c76d9326925e33db21487d0e5585eac89a97a4de"
+          },
+          {
+            "path": "include/leo/environment/source.hpp",
+            "size": 4173,
+            "sha256": "26a3ced5a5afadf12f0a127065e1ea63b63e68bc86854d7521394e4a2063c949"
+          },
+          {
+            "path": "include/leo/integration/batch.hpp",
+            "size": 10515,
+            "sha256": "64db3f0a87495b22f7684056780366664a03c7ccd0e3efa9eabc9df6662da1dc"
+          },
+          {
+            "path": "include/leo/integration/detail/error_control.hpp",
+            "size": 307,
+            "sha256": "298af96cc5e301940c94b6afc6c02b3d18e905a46d7ecec6ac633034fb34c899"
+          },
+          {
+            "path": "include/leo/integration/detail/packed_state.hpp",
+            "size": 659,
+            "sha256": "e508f1f4c9285a3b7b53e5edd1e4218778fa425f179a6548796ffa7eed1127a4"
+          },
+          {
+            "path": "include/leo/integration/options.hpp",
+            "size": 298,
+            "sha256": "946f79a82f79037b122226e16ce27d76a0d2557773805d4b5f3bf2b8730cc0ed"
+          },
+          {
+            "path": "include/leo/integration/propagate.hpp",
+            "size": 4531,
+            "sha256": "7f0dccc6a80e700a22dd605ff69905144ee3509fc7a9f4851001ed7ba93566e1"
+          },
+          {
+            "path": "include/leo/integration/trajectory.hpp",
+            "size": 224,
+            "sha256": "ca252856a36c088e52d304b569b53165b702b3dde497f76cb1081bf40ff98d7a"
+          },
+          {
+            "path": "include/leo/kernel/aerodynamics.hpp",
+            "size": 4700,
+            "sha256": "907c7084734617f69ef23ce066fa18ba03ea1ea889f5398d9d51a98a08bb9960"
+          },
+          {
+            "path": "include/leo/kernel/attitude.hpp",
+            "size": 473,
+            "sha256": "93e16be66fdfdd3dd80c8910180a1ca7de549bde401c4d3c2e59e384fa57251c"
+          },
+          {
+            "path": "include/leo/kernel/dynamics.hpp",
+            "size": 2274,
+            "sha256": "5624448b40b69a5361d2a18629c72e0cdcebda88f6458275d9ae20d4adc7614d"
+          },
+          {
+            "path": "include/leo/kernel/earth.hpp",
+            "size": 218,
+            "sha256": "e68195fe55f7315462f2685b8509b5cc3d2e8a99b02f73e3803ed9c9e37bf663"
+          },
+          {
+            "path": "include/leo/kernel/environment.hpp",
+            "size": 1044,
+            "sha256": "722bce0f44f788631af11d54e0008442d78cf79e1be1b2056aff61dc13f82039"
+          },
+          {
+            "path": "include/leo/kernel/frames.hpp",
+            "size": 1447,
+            "sha256": "be09cbe2292702a44f2f8226e4ebd3b6dfd18e707a270dac0d47362998caea2f"
+          },
+          {
+            "path": "include/leo/kernel/gravity.hpp",
+            "size": 663,
+            "sha256": "cf19c9a34522e3e7ace0a8049f82637c71ed7f645c5d9131c3a974948c0c83da"
+          },
+          {
+            "path": "include/leo/kernel/orbital.hpp",
+            "size": 550,
+            "sha256": "89584c10cc856dae7f9bc8e26698ee577e7cb9e58c6fead95dea9e60ce114cae"
+          },
+          {
+            "path": "include/leo/kernel/radiation.hpp",
+            "size": 2782,
+            "sha256": "0064a813fd0c261c97d3cf6a4b7773c3362b33bd4689c5667c87ce6d1c33e7a9"
+          },
+          {
+            "path": "include/leo/kernel/spacecraft.hpp",
+            "size": 2559,
+            "sha256": "db0b28ac6caa1c4ceb9a1166ecacb8911d9f0ea01884fecd2909e2b52690a0ab"
+          },
+          {
+            "path": "include/leo/kernel/state.hpp",
+            "size": 262,
+            "sha256": "de76c0492ae4fd9d7527ef43e08538c7f00095f2835e901ffe4ef2879d798a5a"
+          },
+          {
+            "path": "include/leo/kernel/time.hpp",
+            "size": 172,
+            "sha256": "dcd66c78ec4d95b5b12c513a0faa5201e53fb6dd5711789f53ff5a64d0ad447e"
+          },
+          {
+            "path": "pyproject.toml",
+            "size": 7169,
+            "sha256": "678e5de70ec1682d7902cb945d0368beb87042848fb5e62045307868f7150e2c"
+          },
+          {
+            "path": "python/leo_dynamics/__init__.py",
+            "size": 5657,
+            "sha256": "971ed01056107634ae147f58c1b41b2fc04287cb666869f7fa2bf5c72e589009"
+          },
+          {
+            "path": "python/leo_dynamics/__init__.pyi",
+            "size": 10114,
+            "sha256": "ebf7882336f37b1ae605a97e3dec049254e61ba82e99963084c75eae77010e04"
+          },
+          {
+            "path": "python/leo_dynamics/py.typed",
+            "size": 128,
+            "sha256": "0d1afefe5a846993e97273cf54328b66864518c137d802f56a50a73f76cc1c42"
+          },
+          {
+            "path": "src/analysis/export.cpp",
+            "size": 14279,
+            "sha256": "69dc70e569fe87c5ec5c59bf989ee3a15466e3a248b210c8097a5f86b6494091"
+          },
+          {
+            "path": "src/analysis/loads.cpp",
+            "size": 11997,
+            "sha256": "a5c31327fb0af09672fb02ef589fc26cef05f8d9d8caf4d4773597c7ad010235"
+          },
+          {
+            "path": "src/analysis/orbital.cpp",
+            "size": 8583,
+            "sha256": "d4f3bffa51172984f96e0b3b9cbfa216b6998e1229732435ae2eb953cdcc8add"
+          },
+          {
+            "path": "src/integration/error_control.cpp",
+            "size": 860,
+            "sha256": "973f4ad985ce51a288375dbef845fc1c1008e225835c1f47ab46b66ec27f0480"
+          },
+          {
+            "path": "src/kernel/aerodynamics.cpp",
+            "size": 7659,
+            "sha256": "cb1f73ce7e957bddd6720fea255c3620364c61caabb0918ca941c3455bc53a2f"
+          },
+          {
+            "path": "src/kernel/attitude.cpp",
+            "size": 1887,
+            "sha256": "d1acf094199a969719f2c5bb6269fa1c2e82daeabee8dd29893a457e7cb33165"
+          },
+          {
+            "path": "src/kernel/dynamics.cpp",
+            "size": 4350,
+            "sha256": "1ac761c9aff009b149d38657b0aace701195d53bc91e2c0bd23d5a92db50f012"
+          },
+          {
+            "path": "src/kernel/gravity.cpp",
+            "size": 2038,
+            "sha256": "1a9640d7f19d21d6c3a962ee72132e53abb935a14dd4d588591c747fb1dfbfa7"
+          },
+          {
+            "path": "src/kernel/orbital.cpp",
+            "size": 3277,
+            "sha256": "6187c59f6ac03131a4f677134ffa40b86dcd9a8ea180663e54765c503bf89025"
+          },
+          {
+            "path": "src/kernel/radiation.cpp",
+            "size": 9400,
+            "sha256": "975e3b72f749ca72ea6170ff950813ac04339184437858511e5e6da98f1b4f59"
+          },
+          {
+            "path": "src/kernel/spacecraft.cpp",
+            "size": 2963,
+            "sha256": "7e73572d9aa48d22bc91d6074613dfc7302732c4012c2e3907328b33a4171264"
+          },
+          {
+            "path": "src/kernel/state.cpp",
+            "size": 310,
+            "sha256": "6945a5c9c14f028aea7bcf9d2ffbc9c8b357417db89cca2ee4ce370f1499d197"
+          },
+          {
+            "path": "PKG-INFO",
+            "size": 6340,
+            "sha256": "7be6626e891ee001cb43b999baa8ad108fc316a3aa0cad48a63391498e1f74a1"
+          }
+        ]
+      },
+      "/home/user/leo-dynamics/release-audit/artifacts/rebuilt/leo_dynamics-0.1.0-cp312-cp312-linux_x86_64.whl": {
+        "member_count": 10,
+        "members": [
+          {
+            "path": "leo_dynamics/__init__.py",
+            "size": 5657,
+            "sha256": "971ed01056107634ae147f58c1b41b2fc04287cb666869f7fa2bf5c72e589009"
+          },
+          {
+            "path": "leo_dynamics/__init__.pyi",
+            "size": 10114,
+            "sha256": "ebf7882336f37b1ae605a97e3dec049254e61ba82e99963084c75eae77010e04"
+          },
+          {
+            "path": "leo_dynamics/_core.cpython-312-x86_64-linux-gnu.so",
+            "size": 824352,
+            "sha256": "7463d41dd6ce3223e21767a08bca3c7307bf07bc77a9ea2a0e6c8613245097b3"
+          },
+          {
+            "path": "leo_dynamics/py.typed",
+            "size": 128,
+            "sha256": "0d1afefe5a846993e97273cf54328b66864518c137d802f56a50a73f76cc1c42"
+          },
+          {
+            "path": "leo_dynamics-0.1.0.dist-info/METADATA",
+            "size": 6340,
+            "sha256": "7be6626e891ee001cb43b999baa8ad108fc316a3aa0cad48a63391498e1f74a1"
+          },
+          {
+            "path": "leo_dynamics-0.1.0.dist-info/WHEEL",
+            "size": 109,
+            "sha256": "73abb46135000ae56fc9d248c8886a13d83136503134c8a8f95e7fe29a006347"
+          },
+          {
+            "path": "leo_dynamics-0.1.0.dist-info/licenses/LICENSE",
+            "size": 1290,
+            "sha256": "c692219b6fe64b0621d0e6e1cb09e6e4f135e856e5d5215f6a31e23099fb29ce"
+          },
+          {
+            "path": "leo_dynamics-0.1.0.dist-info/licenses/THIRD_PARTY_NOTICES.md",
+            "size": 43737,
+            "sha256": "d622f8acdf537bbba7391a429d2016fb6705426237a0d8e6ad2a86da8c6a0c8c"
+          },
+          {
+            "path": "leo_dynamics-0.1.0.dist-info/licenses/LICENSE_SCOPE.md",
+            "size": 2053,
+            "sha256": "7567cbbbf9ae53b58cbb85e2738773aeac85b4170c79c7306eff6014a67b466c"
+          },
+          {
+            "path": "leo_dynamics-0.1.0.dist-info/RECORD",
+            "size": 903,
+            "sha256": "ea35daa61353c6fba5096b480499718742dbcaaa103c8882e84bc861dc5e71f7"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,495 @@
+{
+ "schema": "leo.audit.provenance/1",
+ "generated": "2026-10-26",
+ "purpose": "Machine-readable record of the provenance evidence gathered for the v0.1.0 licensing audit. Evidence only: no ownership, licensing or commercial decision is expressed or implied here.",
+ "baseline": {
+  "ref": "main",
+  "commit": "23df023d6080c9aeb27e9ceddba1671651205584",
+  "commit_subject": "ci(release): add TestPyPI release automation and release-readiness audit",
+  "commit_date": "2026-10-26",
+  "tracked_files": 1951,
+  "tracked_bytes": 926464624,
+  "note": "Baseline captured read-only. The release-boundary worker owns all later changes on branch audit/release-licensing-v0.1.0; the inventories in this directory describe the baseline only. Re-run against the release branch to obtain the changed state."
+ },
+ "repository": {
+  "name": "shikivaahan/leo-dynamics",
+  "remote_url": "https://github.com/shikivaahan/leo-dynamics.git",
+  "visibility": "private",
+  "visibility_evidence": "GET /repos/shikivaahan/leo-dynamics -> \"private\": true, \"visibility\": \"private\"",
+  "owner_type": "User",
+  "github_created_at": "2026-10-07T19:24:49Z",
+  "default_branch": "main",
+  "archived": false,
+  "fork": false,
+  "license_field": null,
+  "license_endpoint": "404 Not Found",
+  "topics": [],
+  "description": null
+ },
+ "refs": [
+  {
+   "name": "main",
+   "type": "local+remote",
+   "tip": "23df023d6080c9aeb27e9ceddba1671651205584",
+   "relationship": "release-line head; baseline of this audit"
+  },
+  {
+   "name": "origin/main",
+   "type": "remote",
+   "tip": "23df023d6080c9aeb27e9ceddba1671651205584",
+   "relationship": "identical to main"
+  },
+  {
+   "name": "sim",
+   "type": "local",
+   "tip": "bbfc126",
+   "relationship": "diverges from 016af3a (2026-10-18); predates the release-readiness work; carries no licence file"
+  },
+  {
+   "name": "audit/release-licensing-v0.1.0",
+   "type": "local",
+   "tip": "23df023d6080c9aeb27e9ceddba1671651205584",
+   "relationship": "release-boundary worker's branch; created during this audit, not part of the baseline"
+  },
+  {
+   "name": "benchmarks/opt001-candidate",
+   "type": "tag",
+   "tip": "b9b2f1f",
+   "relationship": "immutable benchmark candidate snapshot"
+  },
+  {
+   "name": "benchmarks/opt001-final",
+   "type": "tag",
+   "tip": "a799fc6",
+   "relationship": "final experimental cache snapshot"
+  }
+ ],
+ "history": {
+  "total_commits_all_refs": 79,
+  "first_commit": {
+   "sha": "9215c21268e7e653b983db45ee656710259b914c",
+   "subject": "Initial commit",
+   "author": "Shiki Vaahan <shikivaahan@gmail.com>",
+   "date": "2026-10-07T20:24:50+01:00",
+   "tree_contents": ".gitignore only (68 lines)"
+  },
+  "authors": [
+   {
+    "name": "Shiki Vaahan",
+    "email": "shikivaahan@gmail.com",
+    "commits": 77,
+    "kind": "human",
+    "note": "Same identity as the repository's git config user.name/user.email."
+   },
+   {
+    "name": "LEO benchmark snapshot",
+    "email": "benchmarks@localhost",
+    "commits": 2,
+    "kind": "local machine identity",
+    "note": "Commits b9b2f1f, a799fc6 (2026-10-08). Carries no legal-entity identity."
+   }
+  ],
+  "committers": [
+   {
+    "name": "Shiki Vaahan",
+    "email": "shikivaahan@gmail.com",
+    "commits": 76
+   },
+   {
+    "name": "LEO benchmark snapshot",
+    "email": "benchmarks@localhost",
+    "commits": 2
+   },
+   {
+    "name": "GitHub",
+    "email": "noreply@github.com",
+    "commits": 1
+   }
+  ],
+  "contributors": [
+   {
+    "login": "shikivaahan",
+    "role_name": "admin",
+    "source": "GET /repos/shikivaahan/leo-dynamics/collaborators"
+   }
+  ],
+  "organisation_membership": [],
+  "organisation_membership_evidence": "GET /users/shikivaahan/orgs returned []; no private-membership conclusion is drawn."
+ },
+ "licence_state_baseline": {
+  "licence_file_present": false,
+  "licence_file_ever_present": false,
+  "licence_file_ever_present_evidence": "git rev-list --all | while read c; do git ls-tree -r --name-only $c; done | sort -u | grep -iE '(^|/)(licen[cs]e|copying|notice)[^/]*$'  ->  no output",
+  "spdx_headers_in_history": 0,
+  "spdx_headers_evidence": "git rev-list --all | while read c; do git grep -I -l 'SPDX-License-Identifier' $c --; done | sort -u  ->  no output",
+  "copyright_headers_on_first_party_sources": 0,
+  "cla_or_assignment_instrument_in_repo": false,
+  "cla_evidence": "git grep -In -iE '\\bCLA\\b|contributor license agreement|copyright assignment|assigns all rights|work made for hire' -- '*.md' '*.txt' '*.toml'  ->  no output"
+ },
+ "github_account_evidence": {
+  "login": "shikivaahan",
+  "id": 173715398,
+  "type": "User",
+  "display_name": "Shiki Vaahan",
+  "profile_company_field": "Imperial College London",
+  "profile_location_field": "London",
+  "account_created_at": "2024-06-24",
+  "source": "GET https://api.github.com/users/shikivaahan",
+  "interpretation_limit": "Free-text profile affiliation only, not verified employment, legal identity or copyright title. An empty /users/{login}/orgs response establishes only that no memberships were returned by that endpoint; it is not proof of no private memberships."
+ },
+ "repository_plan_and_environment": {
+  "environments": [
+   {
+    "name": "testpypi",
+    "protection_rules": [],
+    "deployment_branch_policy": null,
+    "html_url": "https://github.com/shikivaahan/leo-dynamics/deployments/activity_log?environments_filter=testpypi"
+   }
+  ],
+  "deployments": [],
+  "repo_actions_secrets": [],
+  "environment_secrets": [],
+  "environment_variables": [],
+  "branch_protection_main": "404 Branch not protected",
+  "release_workflow_runs": 0,
+  "release_workflow_ever_run": false,
+  "release_workflow_definition": ".github/workflows/release.yml, publish job at lines 181-190, environment: testpypi, permissions: id-token: write",
+  "plan_readable_from_api": false,
+  "plan_api_result": "GET /user -> \"plan\": null for this token; the billing plan is not queryable with the available scopes",
+  "interpretation": "Configured testpypi environment observed; current billing plan not exposed by token. Existing configuration is not proof of usable plan features. GitHub documentation distinguishes private environment creation from required-reviewer availability; no paid-plan inference is made."
+ },
+ "external_upstreams": [
+  {
+   "id": "julia-svarog",
+   "name": "Project Svarog / SolarSailPropagator.jl",
+   "url": "https://github.com/ImperialSpaceSociety/Project-Svarog-Orbital",
+   "organisation": "ImperialSpaceSociety",
+   "licence": "MIT",
+   "licence_evidence": [
+    "README.md at commit 58ab4d4964f9c20b7070efae48f8916e8a99784e: '## License' / 'MIT - see LICENSE'",
+    "legacy/LICENSE in the local checkout: MIT License, 'Copyright (c) 2022 Imperial College Space Society'"
+   ],
+   "retrieval_limitations": [
+    "GitHub API for the repository returns 404 (deleted or private) as of 2026-10-26",
+    "The LICENSE file was removed from the upstream tree before the commit the project cites; only the README statement and a local legacy/ copy remain"
+   ],
+   "relationship_to_project": "Documented reference upstream for the C++ engine. docs/stage3.md lines 288-300 map the upstream Julia Analysis/EnsembleIO functionality onto the project's C++ equivalents and cite upstream commit 58ab4d4964f9c20b7070efae48f8916e8a99784e. docs/numerical-audit/experiments/provenance.json and docs/numerical-audit/experiments/CASE-B-v1.cfg cite the upstream's examples/earth_orbit_acc.jl (lines 15-21, 49-89) as the source of the CASE-B spacecraft characteristics and configuration.",
+   "local_checkout_used_for_inspection": "/home/user/Project-Svarog-Orbital (read-only inspection; upstream remote https://github.com/ImperialSpaceSociety/Project-Svarog-Orbital.git)",
+   "upstream_authorship_of_the_same_person": {
+    "identities": [
+     {
+      "name": "Shiki Vaahan",
+      "email": "shikivaahan@gmail.com",
+      "commits": 28
+     },
+     {
+      "name": "Shiki Mahesh Devan",
+      "email": "shikivaahan@gmail.com",
+      "commits": 160
+     },
+     {
+      "name": "Shiki Vaahan",
+      "email": "shiki.vaahan@siemens.com",
+      "commits": 13
+     }
+    ],
+    "total_upstream_commits_all_refs": 621,
+    "note": "Same email for two of the three identities; the third uses a corporate domain. Upstream contributors also include addresses at imperial.ac.uk."
+   },
+   "corporate_email_commits_in_upstream": {
+    "count": 13,
+    "ancestors_of_upstream_origin_main": [
+     "ac63c0c",
+     "2eb92fa",
+     "388a4b2",
+     "2542812",
+     "5a30ad7",
+     "7106844",
+     "9f3ed4a"
+    ],
+    "not_in_upstream_origin_main": [
+     "c2481bd",
+     "5387de0",
+     "c10dd7f",
+     "8a73b78",
+     "d5c723b",
+     "9b4228b"
+    ],
+    "significant_files_touched": [
+     "src/Gravity.jl",
+     "src/Propagator.jl",
+     "src/Torque.jl",
+     "src/Analysis.jl",
+     "src/Control.jl",
+     "src/Ephemeris.jl",
+     "src/OrbitState.jl",
+     "src/OrbitState.jl"
+    ],
+    "open_question": "Whether any claim attaches to work authored under a corporate email and then published under MIT in a public repository cannot be determined from the evidence available to this audit. Recorded as an open legal-review item; no finding made.",
+    "note": "The string 'Siemens' has never appeared in any blob of any commit of leo-dynamics.",
+    "not_reachable_from_upstream_origin_main": [
+     "c2481bd",
+     "5387de0",
+     "c10dd7f",
+     "8a73b78",
+     "d5c723b",
+     "9b4228b"
+    ],
+    "note_reachability": "All seven commits reachable from upstream origin/main are ancestors of it. Verified with 'git merge-base --is-ancestor' for each of the seven."
+   },
+   "derivation_assessment": {
+    "method": "Line-by-line comparison of the upstream Julia formulations against the corresponding leo-dynamics C++ implementations.",
+    "findings": [
+     {
+      "area": "SRP",
+      "upstream": "a_mag = P * area * C_r * cos^2 / mass (single reflectivity coefficient, src/Gravity.jl)",
+      "project": "specular/diffuse panel law, src/kernel/radiation.cpp",
+      "assessment": "different formulation"
+     },
+     {
+      "area": "Atmospheric drag",
+      "upstream": "sentman_coeffs: Cn = (2-sigma)*S*C + sigma*sqrt(pi)*S^2, Ct = 2*sigma/sqrt(pi)*S (src/Gravity.jl)",
+      "project": "sentman_coefficients: 4*(1-sigma)*sin^2(alpha) normal plus 2*sigma*sin(alpha) tangential (src/kernel/aerodynamics.cpp)",
+      "assessment": "different coefficient convention"
+     },
+     {
+      "area": "Apsis detection",
+      "upstream": "find_periapsis_indices: true-anomaly wrap-around with thresholds (src/Analysis.jl)",
+      "project": "detect_apsides: radial-velocity zero crossing with linear interpolation (src/analysis/orbital.cpp)",
+      "assessment": "different algorithm"
+     }
+    ],
+    "conclusion": "The three compared algorithms use different formulations, not equivalent source text. This is NOT a conclusion that no upstream material is retained: all40 altitude/density anchors from upstream Constants.jl are retained numerically after unit conversion. See numeric_table_evidence and independent review. No legal substantiality/title determination is made."
+   },
+   "numeric_table_evidence": {
+    "upstream_commit": "58ab4d4964f9c20b7070efae48f8916e8a99784e",
+    "upstream_path": "src/Constants.jl:100-142",
+    "public_path": "src/kernel/aerodynamics.cpp:9-21",
+    "upstream_row_count": 40,
+    "public_row_count": 40,
+    "all_altitude_density_pairs_equal_after_km_to_m": true,
+    "cpp_sha256": "cb1f73ce7e957bddd6720fea255c3620364c61caabb0918ca941c3455bc53a2f",
+    "upstream_blob_sha256": "59e072f830235ffd0ce05a19182b2064d48daff6d84b9fb7d64f0fba03e39cdf"
+   }
+  },
+  {
+   "id": "nrlmsise00-brodowski",
+   "name": "NRLMSISE-00 C translation (Brodowski)",
+   "url": "https://git.linta.de/~brodo/nrlmsise-00.git",
+   "revision": "bc9a2feba4344e74201281e563332688a4d09cc3",
+   "release": "20190709",
+   "licence": "NOT VERIFIED - upstream licence file could not be retrieved during the audit",
+   "retrieval_limitations": [
+    "The cgit plain-file endpoints for README/README/COPYING/LICENSE/COPYING.txt at the pinned revision returned HTTP 404 on 2026-10-26",
+    "The cgit tree listing was readable but no licence file was identified in it"
+   ],
+   "relationship_to_project": "Externally acquired source linked in place by cmake/nrlmsise00.cmake, which enforces three pinned SHA-256 digests. Never vendored. docs/atmosphere/nrlmsise00-parameters.json records the upstream URL, revision, per-file SHA-256 and the coefficient inventory shape without reproducing the coefficient values."
+  },
+  {
+   "id": "jb2008-set",
+   "name": "JB2008 (Space Environment Technologies)",
+   "url": "https://spacewx.com/jb2008/ (linked from docs/atmosphere/DECISIONS.md)",
+   "licence": "\"Copyright, 2008, Space Environment Technologies. All rights reserved.\" - no redistribution grant supplied with the archive",
+   "evidence": "docs/atmosphere/JB2008.md line 37; docs/atmosphere/DECISIONS.md line 9; docs/atmosphere/INPUTS.md line 234",
+   "relationship_to_project": "Externally acquired official source linked in place by cmake/jb2008.cmake (SHA-256 b18c1607239db881940a7b91635a7af39edc82306cf10854ec12080397227999). Never vendored. The in-repo Fortran files are project-owned I/O wrappers that declare that no model equations are copied."
+  },
+  {
+   "id": "cspice-naif",
+   "name": "CSPICE / NAIF",
+   "licence": "NASA NAIF rules and copyright statement govern the toolkit; SPICE data kernels are licensed separately from the toolkit source",
+   "relationship_to_project": "Optional provider. src/environment/spice.cpp is a caller-side adapter that links a CSPICE library supplied by the user via CSPICE_ROOT. No CSPICE source is in the repository. LEO_ENABLE_CSPICE=OFF for the distribution build."
+  },
+  {
+   "id": "orekit",
+   "name": "Orekit (CS-SI/Orekit)",
+   "url": "https://github.com/CS-SI/Orekit",
+   "licence": "Apache-2.0",
+   "licence_evidence": "GET /repos/CS-SI/Orekit/license -> LICENSE.txt, 'Apache License Version 2.0, January 2004' (retrieved 2026-10-26)",
+   "relationship_to_project": "Independent reference oracle for JB2008 densities (docs/atmosphere/JB2008.md lines 494, 914, 1006) and mirror host for the CSSI space-weather file at upstream commit 6fdf97c133c1ab8c56d7608688419bf4becacf80 (docs/atmosphere/DECISIONS.md line 24, INPUTS.md lines 127 and 236). Cited in docs/atmosphere/** only; the CSSI file itself is not committed, only its SHA-256 f3eb9e676295bbf93566a054e95d1317de1aba2e410d209d4642dbedebf05ea2.",
+   "in_repository": false
+  },
+  {
+   "id": "satellite-toolbox-atmospheric-models",
+   "name": "SatelliteToolboxAtmosphericModels.jl (JuliaSpace)",
+   "url": "https://github.com/JuliaSpace/SatelliteToolboxAtmosphericModels.jl",
+   "licence": "MIT",
+   "licence_evidence": "GET /repos/JuliaSpace/SatelliteToolboxAtmosphericModels.jl/license -> LICENSE.txt, 'Copyright (c) 2018-2026: Ronan Arraes Jardim Chagas' (retrieved 2026-10-26)",
+   "relationship_to_project": "Cited for context, explicitly 'not an oracle', with SHA-256 f7c20c41ce5edbf824ec8179dbdee1f099f4999e48a747e2835a774c163c5287 and one quoted phrase, in docs/atmosphere/altitude/altitude_datum_experiment.py (excluded from the sdist).",
+   "in_repository": false
+  },
+  {
+   "id": "tudat",
+   "name": "Tudat / tudatpy (TU Delft)",
+   "url": "https://github.com/tudat-team/tudatpy",
+   "licence": "BSD-3-Clause for the code; Tudat data products (DSN/JPL ephemerides, leap seconds, gravity files) carry separate terms",
+   "licence_evidence": "tests/reference/PROVENANCE.md line 23 pins tudatpy 0.9.0, native tudat 2.14.0, Python 3.10, Boost 1.85, and records the module's self-reported version 0.8.0.",
+   "relationship_to_project": "Independent reference oracle used to produce the frozen goldens under tests/reference/golden/tudat/. Confined to the research/excluded set: all 31 tracked files mentioning Tudat are under tests/, docs/, benchmarks/, .github/ or .gitattributes; none is in the engine/interface scope.",
+   "in_repository": true
+  }
+ ],
+ "content_level_history_findings": {
+  "method": "git log --all -S<string> pickaxe search over every ref, plus a blob-level scan of every commit for SPDX-License-Identifier and Siemens, plus per-commit author identity analysis.",
+  "results": [
+   {
+    "marker": "SPDX-License-Identifier",
+    "commits_touched": 0,
+    "blobs_containing": 0
+   },
+   {
+    "marker": "Siemens",
+    "commits_touched": 0,
+    "blobs_containing": 0
+   },
+   {
+    "marker": "Imperial",
+    "commits_touched": 1,
+    "commit": "48961a2",
+    "explanation": "docs/stage3.md links to https://github.com/ImperialSpaceSociety/Project-Svarog-Orbital - the MIT-licensed upstream project, not an affiliation claim."
+   },
+   {
+    "marker": "imperial (case-insensitive)",
+    "commits_touched": 2,
+    "explanation": "48961a2 as above; 27fcbb9 adds a Julia environment manifest that lists Unitful.jl package paths under units/base_units/imperial/ - a units library, unrelated to any organisation."
+   },
+   {
+    "marker": "All rights reserved",
+    "commits_touched": 3,
+    "explanation": "docs only (e94b76f, fe0e0ab, 23df023), quoting the Space Environment Technologies copyright on the official JB2008 distribution."
+   },
+   {
+    "marker": "Space Environment Technologies",
+    "commits_touched": 3,
+    "explanation": "docs only."
+   },
+   {
+    "marker": "NAIF",
+    "commits_touched": 10,
+    "explanation": "documentation of the optional CSPICE provider."
+   },
+   {
+    "marker": "Tudat",
+    "commits_touched": 8,
+    "explanation": "documentation of the independent reference generator."
+   },
+   {
+    "marker": "Copyright (c)",
+    "commits_touched": 1,
+    "explanation": "fe0e0ab adds THIRD_PARTY_NOTICES.md, which reproduces third-party copyright lines."
+   }
+  ],
+  "note": "Named-marker and filename searches do not establish absence of third-party material. The documented Julia relationship and40 inherited numerical anchor pairs are concrete content evidence; no copyright ownership conclusion follows from author names or email domains."
+ },
+ "pinned_dependency_verification": {
+  "method": "Each archive named in THIRD_PARTY_NOTICES.md was downloaded and its SHA-256 recomputed on 2026-10-26.",
+  "results": [
+   {
+    "component": "Eigen",
+    "version": "3.4.0",
+    "url": "https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz",
+    "claimed_sha256": "8586084f71f9bde545ee7fa6d00288b264a2b7ac3607b974e54d13e7162c1c72",
+    "recomputed_sha256": "8586084f71f9bde545ee7fa6d00288b264a2b7ac3607b974e54d13e7162c1c72",
+    "match": true,
+    "bytes": 2705005
+   },
+   {
+    "component": "Boost",
+    "version": "1.83.0",
+    "url": "https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.tar.xz",
+    "claimed_sha256": "c5a0688e1f0c05f354bbd0b32244d36085d9ffc9f932e8a18983a9908096f614",
+    "recomputed_sha256": "c5a0688e1f0c05f354bbd0b32244d36085d9ffc9f932e8a18983a9908096f614",
+    "match": true,
+    "bytes": 93879028
+   },
+   {
+    "component": "pybind11",
+    "version": "3.1.0",
+    "url": "https://files.pythonhosted.org/packages/76/f3/95b0f40b31df41dbfe6bb0857419c9442c15839cbac4796f1c26ae0b6081/pybind11-3.1.0.tar.gz",
+    "claimed_sha256": "a1cc06b524ab3edca51f8ad3895f9c4fa20b8b19283173dff4ae781449dc9639",
+    "recomputed_sha256": "a1cc06b524ab3edca51f8ad3895f9c4fa20b8b19283173dff4ae781449dc9639",
+    "match": true,
+    "bytes": 603746
+   }
+  ]
+ },
+ "retrieval_limitations": [
+  "The upstream NRLMSISE-00 licence file could not be retrieved (all candidate paths returned HTTP 404); the licence of that translation is unverified.",
+  "The upstream GitHub repository Project-Svarog-Orbital returns HTTP 404, so its current licence and current state cannot be read from GitHub.",
+  "The authenticated account's billing plan is not readable through the API (GET /user returns plan: null), so plan-dependent feature availability is UNVERIFIED.",
+  "Windows and macOS runtime linkage is inferred from the workflow configuration and the repair tools' documented defaults; it was not observed.",
+  "The Orekit and SatelliteToolboxAtmosphericModels.jl licences were read live from the GitHub API; both are permissive, but neither is referenced by any licence notice in the baseline repository.",
+  "Initial research had no release artefact observations; later worker-produced final Linux artefact/header/dependency logs were reviewed, with provenance explicitly attributed. Windows/macOS final artefacts remain unobserved by this researcher."
+ ],
+ "audit_constraints_observed": [
+  "No branch was checked out by this worker; the working tree was not modified.",
+  "Only files under audit-evidence/ were created by this worker.",
+  "No repository was published, created or made public; no workflow was triggered; no upload was performed.",
+  "GitHub access was read-only GET requests only; no token value is recorded in this directory.",
+  "The sibling worker's branch audit/release-licensing-v0.1.0 and its staged files were not edited.",
+  "No released wheel or source distribution was built or opened; the packaging inclusion flags in source-inventory.json are declared-rule projections, not archive observations."
+ ],
+ "snippet_scan": {
+  "artefact": "audit-evidence/snippet-scan.json",
+  "tracked_files_total": 1951,
+  "tracked_files_content_compared": 229,
+  "source_extensions_skipped_bulk_evidence": 27,
+  "numeric_binary_payloads_not_compared": 1615,
+  "other_extensions_not_compared": 80,
+  "attribution_marker_scan_candidate_count": 321,
+  "matches_found": 1,
+  "match_detail": "Three pybind11 include directives in bindings/common.hpp. This line-oriented result does not detect transformed numerical tables;40 inherited density anchors were separately confirmed.",
+  "conclusion": "No multi-line nontrivial source match reported among indexed lines in the229 selected files. Not a whole-repository or ownership clearance."
+ },
+ "independent_boundary_review": "audit-evidence/boundary-independent-review.md",
+ "actual_release_evidence_reviewed": {
+  "basis": "Worker-produced logs inspected during independent review; no build/test/header comparison rerun by this researcher.",
+  "dependency_environments": {
+   "build": {
+    "cmake": "4.4.4",
+    "ninja": "1.13.2",
+    "packaging": "26.3",
+    "pathspec": "1.1.1",
+    "pybind11": "3.1.0",
+    "scikit-build-core": "0.11.6"
+   },
+   "driver": {
+    "build": "1.6.1",
+    "packaging": "26.3",
+    "pip": "26.2.2",
+    "pyproject-hooks": "1.3.3"
+   },
+   "runtime_test": {
+    "numpy": "2.5.4",
+    "pytest": "9.1.1",
+    "pluggy": "1.7.0",
+    "iniconfig": "2.3.1",
+    "Pygments": "2.21.0",
+    "pip": "26.2.2",
+    "packaging": "26.3"
+   }
+  },
+  "consumed_headers": {
+   "basis": "Worker-produced log inspected, not independently rebuilt",
+   "Eigen": {
+    "matched": 170,
+    "consumed": 170
+   },
+   "Boost": {
+    "matched": 1066,
+    "consumed": 1066
+   },
+   "mismatches": 0
+  },
+  "logs": [
+   "release-audit/resolved-build-requirements.log",
+   "release-audit/resolved-build-licenses.log",
+   "release-audit/build-driver-versions.log",
+   "release-audit/resolved-driver-licenses.log",
+   "release-audit/final-installed-dependencies.log",
+   "release-audit/resolved-test-licenses.log",
+   "release-audit/consumed-header-verification.json",
+   "release-audit/final-direct-needed.log",
+   "release-audit/final-archive-gate.log",
+   "release-audit/archive-identities.json"
+  ]
+ }
+}

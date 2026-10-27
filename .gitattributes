@@ -10,3 +10,24 @@ tests/reference/acceptance.json -text
 tests/reference/golden/*.json -text
 tests/reference/golden/tudat/*.json -text
 tests/reference/scenarios/*.json -text
+
+# Public source members are compared byte-for-byte across wheel platforms.
+# Keep their checkout representation LF rather than weakening those gates.
+/LICENSE text eol=lf
+/LICENSE_SCOPE.md text eol=lf
+/THIRD_PARTY_NOTICES.md text eol=lf
+/README.dist.md text eol=lf
+/CMakeLists.txt text eol=lf
+/pyproject.toml text eol=lf
+/cmake/provision.cmake text eol=lf
+/bindings/** text eol=lf
+/python/leo_dynamics/** text eol=lf
+/src/kernel/** text eol=lf
+/src/integration/** text eol=lf
+/src/analysis/** text eol=lf
+/include/leo/kernel/** text eol=lf
+/include/leo/integration/** text eol=lf
+/include/leo/analysis/** text eol=lf
+/include/leo/environment/ephemeris.hpp text eol=lf
+/include/leo/environment/interpolated.hpp text eol=lf
+/include/leo/environment/source.hpp text eol=lf

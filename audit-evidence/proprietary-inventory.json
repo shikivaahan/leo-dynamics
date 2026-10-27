@@ -1,0 +1,220 @@
+{
+ "schema": "leo.audit.proprietary-inventory/1",
+ "generated": "2026-10-26",
+ "purpose": "Inventory of every item in and around the repository whose distribution rights are restricted, unknown, or conditional. Records the owner's stated proprietary scope separately from externally sourced material. Evidence only; no ownership or commercial decision is made here.",
+ "legend": {
+  "rights": {
+   "restricted_no_grant": "The upstream states no redistribution permission; no grant may be inferred from public availability.",
+   "permissive_attribution_required": "Permissive licence whose only condition is that the copyright and permission notice accompany copies or substantial portions.",
+   "unverified": "The licence could not be read from the upstream during the audit.",
+   "conditional_separate_terms": "The toolkit and the data it consumes are licensed separately.",
+   "first_party_owner_decision": "Material the owner has stated should remain proprietary."
+  },
+  "in_repository": "whether any of the item's own source or data is committed to this repository"
+ },
+ "items": [
+  {
+   "id": "jb2008-official",
+   "name": "JB2008 empirical atmosphere model, official distribution",
+   "vendor": "Space Environment Technologies",
+   "rights": "restricted_no_grant",
+   "stated_terms": "\"Copyright, 2008, Space Environment Technologies. All rights reserved.\"",
+   "in_repository": false,
+   "evidence": [
+    "docs/atmosphere/JB2008.md line 37 quotes the copyright line.",
+    "docs/atmosphere/DECISIONS.md line 9 records that the archive's README points to a licence that is not supplied as an explicit grant and that no redistribution permission is inferred from public download.",
+    "docs/atmosphere/INPUTS.md line 234 records: jb2008.zip -> JB2008.f, acquisition sol.spacenvironment.net/JB2008/downloadables/, 'All rights reserved; acquired externally, not vendored'.",
+    "cmake/jb2008.cmake requires a local unmodified source file and enforces SHA-256 b18c1607239db881940a7b91635a7af39edc82306cf10854ec12080397227999."
+   ],
+   "in_repository_material_that_touches_it": [
+    {
+     "path": "src/atmosphere/jb2008_bridge.f90",
+     "kind": "project-owned Fortran ABI bridge",
+     "assessment": "declares 'no JB2008 equations are copied here'; verified by reading the whole file - it only declares an interface and calls JB2008."
+    },
+    {
+     "path": "src/atmosphere/jb2008.cpp",
+     "kind": "project-owned C++ adapter"
+    },
+    {
+     "path": "include/leo/atmosphere/jb2008.hpp",
+     "kind": "project-owned public header"
+    },
+    {
+     "path": "docs/atmosphere/jb2008_native_kernel.f90",
+     "kind": "project-owned stdin/stdout kernel",
+     "assessment": "declares 'Nothing of the official model is copied here'; verified by reading the whole file - moves doubles across stdin/stdout only."
+    },
+    {
+     "path": "docs/atmosphere/jb2008_official_astronomy.f90",
+     "kind": "project-owned helper around the upstream SUNPOS and THETA subroutines",
+     "assessment": "states THETA is not stored here; references the driver's own expressions in prose."
+    },
+    {
+     "path": "docs/atmosphere/altitude/jb2008_altitude_probe.f90",
+     "kind": "project-owned probe driver",
+     "assessment": "declares 'It contains no JB2008 physics'."
+    },
+    {
+     "path": "docs/atmosphere/altitude/jb2008_official_grid_check.f90",
+     "kind": "project-owned check driver",
+     "assessment": "states THETA 'is not stored here' and that the upstream block is copied into the build directory at experiment time, so no upstream code is redistributed by the repository."
+    },
+    {
+     "path": "docs/atmosphere/altitude/jb2008_theta_probe.f90",
+     "kind": "project-owned scalar wrapper",
+     "assessment": "declares 'THETA is extracted byte-for-byte out of tree'."
+    }
+   ],
+   "method": "All seven .f90 files were read in full and scanned for model-equation markers (polynomial coefficients, density/temperature model terms, COMMON blocks). None contains model equations; the only constants present are PI = 3.1415927D0 and DG2RD = PI/180 in jb2008_official_grid_check.f90, which reproduce the driver driver's numerical constants rather than its code.",
+   "residual_risk": "The scan covers the in-repo files. It cannot rule out derivation in the C++ adapter that was not detected by inspection of the Fortran wrappers; a qualified reviewer with the official JB2008.f in hand would be needed for a definitive clearance.",
+   "distribution_impact": "Official external model/toolkit sources are not vendored. BASELINE packaging did include first-party provider adapters/glue because source inclusion was broad. FINAL conservative52-file public boundary excludes those adapters and forbids them in SKBUILD. No claim that the baseline sdist excluded all proprietary integration source is made."
+  },
+  {
+   "id": "nrlmsise00-brodowski-c",
+   "name": "NRLMSISE-00 C translation by Martin Brodowski",
+   "vendor": "individual translation of the US Naval Research Laboratory NRLMSISE-00 model",
+   "rights": "unverified",
+   "stated_terms": "NOT ESTABLISHED - the upstream licence file could not be retrieved during this audit",
+   "in_repository": false,
+   "evidence": [
+    "cmake/nrlmsise00.cmake pins three files by SHA-256 (nrlmsise-00.c a20d6523..., nrlmsise-00_data.c d0b3022f..., nrlmsise-00.h d5b45be6...) and requires a local acquisition via LEO_NRLMSISE00_ROOT.",
+    "docs/atmosphere/nrlmsise00-parameters.json records upstream_repository https://git.linta.de/~brodo/nrlmsise-00.git, upstream_revision bc9a2feba4344e74201281e563332688a4d09cc3, upstream_release 20190709, and redistribution: 'not vendored; no redistribution grant is claimed'."
+   ],
+   "retrieval_limitation": "cgit plain-file endpoints for README, README.md, COPYING, LICENSE and COPYING.txt at the pinned revision all returned HTTP 404 on 2026-10-26. The repository tree listing was readable but no licence file was identified. The licence of this translation is therefore UNKNOWN, which is itself the finding.",
+   "in_repository_material_that_touches_it": [
+    {
+     "path": "src/atmosphere/nrlmsise00.cpp",
+     "kind": "project-owned C++ adapter",
+     "assessment": "calls gtd7d from the externally supplied nrlmsise-00.h; contains no model coefficients."
+    },
+    {
+     "path": "include/leo/atmosphere/nrlmsise00.hpp",
+     "kind": "project-owned public header"
+    },
+    {
+     "path": "docs/atmosphere/nrlmsise00-parameters.json",
+     "kind": "committed coefficient inventory",
+     "assessment": "VERIFIED: contains the coefficient array symbols, declared shapes, explicit and implied-zero initialiser counts, source line spans, the source SHA-256, switch semantics and per-switch rationale - it does NOT reproduce the coefficient values. The script that generates it (scripts/extract_nrlmsise00_parameters.py) states this explicitly and implements it that way."
+    },
+    {
+     "path": "scripts/extract_nrlmsise00_parameters.py",
+     "kind": "project-owned tool"
+    }
+   ],
+   "residual_risk": "The particular third-party C translation licence was not established in this audit. No blanket US-government/public-domain conclusion is made about the translation or its coefficients.",
+   "distribution_impact": "Official external model/toolkit sources are not vendored. BASELINE packaging did include first-party provider adapters/glue because source inclusion was broad. FINAL conservative52-file public boundary excludes those adapters and forbids them in SKBUILD. No claim that the baseline sdist excluded all proprietary integration source is made.",
+   "method_note": "Six tracked Fortran wrappers total were inspected in the initial source review; do not interpret an earlier mistaken count of seven as an additional file."
+  },
+  {
+   "id": "julia-svarog-upstream",
+   "name": "Project Svarog / SolarSailPropagator.jl (Julia)",
+   "vendor": "Imperial College Space Society (github org: ImperialSpaceSociety)",
+   "rights": "permissive_attribution_required",
+   "stated_terms": "MIT License, \"Copyright (c) 2022 Imperial College Space Society\"",
+   "in_repository": false,
+   "evidence": [
+    "Upstream README at the commit the project cites, 58ab4d4964f9c20b7070efae48f8916e8a99784e: '## License' / 'MIT - see LICENSE'.",
+    "legacy/LICENSE in the read-only local checkout /home/user/Project-Svarog-Orbital: the MIT text with 'Copyright (c) 2022 Imperial College Space Society'.",
+    "docs/stage3.md lines 288-300 map the upstream's src/Analysis.jl and src/EnsembleIO.jl onto the project's C++ analysis equivalents and cite upstream commit 58ab4d4964f9c20b7070efae48f8916e8a99784e.",
+    "docs/numerical-audit/experiments/provenance.json and docs/numerical-audit/experiments/CASE-B-v1.cfg cite the upstream's examples/earth_orbit_acc.jl (lines 15-21 and 49-89) as the source of the CASE-B configuration; docs/numerical-audit/spacecraft_characteristics.py and docs/numerical-audit/evidence/spacecraft-characteristics.json carry that provenance."
+   ],
+   "retrieval_limitation": "GET /repos/ImperialSpaceSociety/Project-Svarog-Orbital returns HTTP 404 on 2026-10-26 (deleted or private). The upstream LICENSE file was removed from the tree before the cited commit. The MIT grant is therefore evidenced by the README statement at that commit plus the local legacy/ copy, and not by a currently retrievable upstream LICENSE file.",
+   "open_gap": "APPLICABILITY UNRESOLVED; PRECAUTIONARY ATTRIBUTION RECOMMENDED. MIT's condition attaches to copies or substantial portions of the Software. This audit established that the upstream is a real dependency of the project's design and that the three physics/analysis areas compared are re-implementations with different formulations rather than copies; it did NOT establish that a substantial portion is carried, and the substantial-portion test is a legal determination this audit does not make. The upstream source is not vendored, so there is no block of upstream text in the distribution to point at. What IS certain: no notice for this upstream exists anywhere in the baseline repository, and the upstream licence file is no longer retrievable from GitHub (HTTP 404), so any notice must state that it was reproduced from the local checkout at the cited commit, with the retrieval limitation attached. Recommendation: reproduce the upstream MIT notice as a precaution - one paragraph, and it removes the question.",
+   "derivation_assessment": "Three compared physics/analysis algorithms differ; separately all40 fixed altitude/density anchors are inherited from upstream Constants.jl. Exact comparison recorded in boundary-independent-review.json. This is not a determination of legal substantiality or copyright/database rights.",
+   "identity_note": "'Imperial' in this provenance chain refers to the Imperial College Space Society upstream project. It is a different entity from the 'Imperial College London' string in the account's GitHub profile company field, which is self-declared affiliation metadata.",
+   "distribution_impact": "The upstream source is not vendored. The attribution obligation travels with any distribution of the ported material.",
+   "rights_applicability": "unresolved",
+   "numeric_table_evidence": {
+    "upstream_commit": "58ab4d4964f9c20b7070efae48f8916e8a99784e",
+    "upstream_path": "src/Constants.jl:100-142",
+    "public_path": "src/kernel/aerodynamics.cpp:9-21",
+    "upstream_row_count": 40,
+    "public_row_count": 40,
+    "all_altitude_density_pairs_equal_after_km_to_m": true,
+    "cpp_sha256": "cb1f73ce7e957bddd6720fea255c3620364c61caabb0918ca941c3455bc53a2f",
+    "upstream_blob_sha256": "59e072f830235ffd0ce05a19182b2064d48daff6d84b9fb7d64f0fba03e39cdf"
+   }
+  },
+  {
+   "id": "siemens-authored-upstream-commits",
+   "name": "Upstream commits authored under a corporate email address",
+   "vendor": "upstream project ImperialSpaceSociety/Project-Svarog-Orbital (public, MIT at the cited commit)",
+   "rights": "unverified",
+   "stated_terms": "NOT ESTABLISHED - the upstream is MIT at the cited commit; whether any separate claim attaches to work authored under a corporate email and published into that MIT repository cannot be determined from the evidence available here.",
+   "in_repository": false,
+   "evidence": [
+    "13 upstream commits are authored by 'Shiki Vaahan <shiki.vaahan@siemens.com>' (2025-10-27 to 2026-03-23), among 621 upstream commits across all refs.",
+    "Correct ancestry list: ac63c0c,2eb92fa,388a4b2,2542812,5a30ad7,7106844,9f3ed4a. Remaining six are not reachable from upstream origin/main. Email-domain evidence alone establishes no corporate source/title claim."
+   ],
+   "residual_risk": "OPEN LEGAL-REVIEW ITEM. No finding is made. The audit cannot determine whether the upstream repository's publication of these commits under MIT was authorised by the corporate holder, and whether any obligation attaches to the downstream port.",
+   "verification_of_the_owner_statement": "The string 'Siemens' has never appeared in any blob of any commit of leo-dynamics (verified over all refs), so no Siemens material is present in this repository under that name.",
+   "distribution_impact": "Indirect, through the upstream MIT material that the port derives from."
+  },
+  {
+   "id": "cspice-toolkit",
+   "name": "CSPICE toolkit (NASA NAIF)",
+   "vendor": "NASA Navigation and Ancillary Information Facility (NAIF)",
+   "rights": "conditional_separate_terms",
+   "stated_terms": "The toolkit source is publicly available under NAIF's own rules; SPICE data kernels are licensed separately from the toolkit source.",
+   "in_repository": false,
+   "evidence": [
+    "src/environment/spice.cpp is a caller-side adapter that links a CSPICE library the user supplies via CSPICE_ROOT; it contains no CSPICE source.",
+    "CMakeLists.txt option LEO_ENABLE_CSPICE defaults OFF; pyproject.toml sets LEO_ENABLE_CSPICE = \"OFF\" for the distribution build.",
+    "docs/atmosphere/INPUTS.md records the project's own provenance rules for external assets."
+   ],
+   "distribution_impact": "Official external model/toolkit sources are not vendored. BASELINE packaging did include first-party provider adapters/glue because source inclusion was broad. FINAL conservative52-file public boundary excludes those adapters and forbids them in SKBUILD. No claim that the baseline sdist excluded all proprietary integration source is made."
+  },
+  {
+   "id": "space-weather-and-reference-datasets",
+   "name": "Space-weather indices, atmospheric reference data and qualification datasets",
+   "vendor": "various (external indices and model reference grids)",
+   "rights": "unverified",
+   "stated_terms": "NOT ESTABLISHED per dataset by this audit.",
+   "in_repository": true,
+   "evidence": [
+    "docs/atmosphere/INPUTS.md is the project's own statement of its external-asset provenance rules.",
+    "docs/atmosphere/evidence/ and the docs/atmosphere/optimisation/evidence/ tree contain committed measurement and validation data."
+   ],
+   "action_for_report": "Enumerate the concrete datasets that are committed (not merely referenced) and record the terms of each. The audit did not close this item.",
+   "distribution_impact": "This material sits in the owner's proprietary scope, so it does not travel with the MIT grant; it still needs its own terms cleared before any separate distribution."
+  },
+  {
+   "id": "leo-dynamics-proprietary-scope",
+   "name": "leo-dynamics material the owner has designated proprietary",
+   "vendor": "the project itself",
+   "rights": "first_party_owner_decision",
+   "stated_terms": "The owner has stated that the basic numerical engine and the Python interface are MIT-approved, while the high-fidelity NRLMSISE-00 and JB2008 integrations, the research, the optimisation work and the datasets are proprietary.",
+   "in_repository": true,
+   "evidence": [
+    "Owner-approved basic engine/Python interface only; final conservative boundary enumerates52 public source files. On1951 baseline paths, the reviewed final rules classify49 public,1900 proprietary,2 repository plumbing. These research classifications do not decide copyright title."
+   ],
+   "distribution_impact": "The MIT grant must be file-scoped; a single root MIT licence would sweep the proprietary material into the grant. The release-boundary worker owns the licence text and the file enumeration."
+  },
+  {
+   "id": "optional-research-tooling",
+   "name": "Optional research and plotting dependencies",
+   "vendor": "various (PyPI)",
+   "rights": "permissive_attribution_required",
+   "stated_terms": "NumPy BSD-3-Clause (bundled 0BSD, MIT, Zlib, CC0-1.0); SciPy BSD-3-Clause; Matplotlib PSF-based Matplotlib licence (BSD-style); Tudat BSD-3-Clause for the code, with separate terms for the Tudat data products.",
+   "in_repository": false,
+   "evidence": [
+    "plotting/requirements.txt: numpy>=1.21, matplotlib>=3.5 (floating lower bounds, not pins).",
+    "tests/reference/requirements-generation.txt: numpy==2.5.3, scipy==1.18.1 (pinned).",
+    "tests/reference/generators/qualify_tudat.py uses Tudat as an independent reference generator for the frozen goldens."
+   ],
+   "distribution_impact": "None of this is a dependency of the released wheel, and none is vendored. Attribution obligations attach only to whoever redistributes a product that includes them. These are research dependencies and must not be presented as release dependencies."
+  }
+ ],
+ "summary": {
+  "items_total": 8,
+  "by_rights": {
+   "conditional_separate_terms": 1,
+   "first_party_owner_decision": 1,
+   "permissive_attribution_required": 2,
+   "restricted_no_grant": 1,
+   "unverified": 3
+  },
+  "current_status": "Initial baseline findings only; final enforcement/correction state is in boundary-independent-review.md. Precautionary upstream attribution now present in worker-owned notices."
+ }
+}

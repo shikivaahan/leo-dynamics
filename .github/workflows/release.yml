@@ -160,6 +160,11 @@ jobs:
           --expected-commit "${{ github.sha }}"
           --expected-run-id "${{ github.run_id }}"
           --expected-version "$RELEASE_VERSION"
+      - name: Refuse proprietary or unexpected distribution members
+        run: >-
+          python3 ci/verify_license_boundary.py
+          --project-root .
+          --artifacts artifacts
       - name: Check the distribution metadata
         run: >-
           python -m twine check

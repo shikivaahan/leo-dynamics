@@ -1,0 +1,17 @@
+[
+  {
+    "path": "release-audit/artifacts/direct/leo_dynamics-0.1.0-cp313-cp313-linux_x86_64.whl",
+    "size": 368403,
+    "sha256": "87df8e2428f43118694f431e3596a078f136648a4c14f1ced20480123cee8f2f"
+  },
+  {
+    "path": "release-audit/artifacts/direct/leo_dynamics-0.1.0.tar.gz",
+    "size": 83279,
+    "sha256": "0906aade8fa832c1f9ad7c05f14ae62c47984787dc3a26c997a61fbb70fa5767"
+  },
+  {
+    "path": "release-audit/artifacts/rebuilt/leo_dynamics-0.1.0-cp312-cp312-linux_x86_64.whl",
+    "size": 368448,
+    "sha256": "e4e874217f2cde42bcf5fbd73d11ebed24cef9c1534bea33314b0c094803c947"
+  }
+]

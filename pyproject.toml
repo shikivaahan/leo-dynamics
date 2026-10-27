@@ -20,7 +20,7 @@ build-backend = "scikit_build_core.build"
 name = "leo-dynamics"
 version = "0.1.0"
 description = "Native LEO orbital dynamics: two-body, J2 and environmental propagation with a NumPy interface"
-readme = { file = "README.md", content-type = "text/markdown" }
+readme = { file = "README.dist.md", content-type = "text/markdown" }
 requires-python = ">=3.10,<3.14"
 authors = [{ name = "leo-dynamics contributors" }]
 keywords = [
@@ -52,13 +52,17 @@ classifiers = [
 # the native engine, which itself links nothing beyond the C++ runtime. The floor
 # is the NumPy 2.x series the interface was qualified against.
 dependencies = ["numpy>=2.0"]
-# Eigen (MPL-2.0), Boost (BSL-1.0) and pybind11 (BSD-3-Clause) headers are
-# compiled into the extension, so their terms travel with both distributions.
-# No licence expression is declared for this project itself: the repository
-# carries no LICENSE or COPYING file, so no redistribution rights have been
-# established. Adding one here would assert rights the project has not granted.
-# That absence is a tracked release-readiness blocker, not an oversight.
-license-files = ["THIRD_PARTY_NOTICES.md"]
+# The MIT core of this distribution - the numerical engine, its public headers,
+# the Python interface, the build machinery and the public overview - is
+# licensed under the MIT License. The licence grant is scoped to that core
+# only: LICENSE_SCOPE.md enumerates it and release-audit/license-boundary.json
+# holds the machine-readable form. Everything else in the repository (the
+# empirical atmosphere providers, the research campaigns and their datasets,
+# the optimisation experiments, the frozen research reference fixtures, the
+# project documentation set and the release tooling) is proprietary and is not
+# distributed with either distribution.
+license = "MIT"
+license-files = ["LICENSE", "LICENSE_SCOPE.md", "THIRD_PARTY_NOTICES.md"]
 
 [project.urls]
 Homepage = "https://github.com/shikivaahan/leo-dynamics"
@@ -96,61 +100,81 @@ LEO_ENABLE_JB2008 = "OFF"
 LEO_TEST_PLOTTING = "OFF"
 
 [tool.scikit-build.sdist]
-# A source distribution must rebuild and self-test from a fresh checkout: the
-# C++ sources, headers, pybind11 bindings, CMake project, the Python package,
-# the Python suite with its frozen reference data, the written guides and the
-# third-party notices whose terms the compiled extension inherits. Qualification
-# campaigns, benchmark harnesses, plots and generated evidence stay out.
+# The source distribution carries the MIT core and nothing else. The core is
+# enumerated explicitly below, and every proprietary area is excluded
+# explicitly as well, so an unclassified or newly added path cannot slip into
+# the archive: `ci/verify_license_boundary.py` checks the built archive
+# member by member against release-audit/license-boundary.json and fails
+# closed on anything unexpected.
+#
+# What is deliberately NOT here: the empirical atmosphere providers
+# (src/atmosphere, include/leo/atmosphere, the provider cmake files), the
+# CSPICE adapter (src/environment/spice.cpp), the research campaigns and their
+# datasets (docs/atmosphere, docs/multithreading, docs/numerical-audit), the
+# optimisation experiments (benchmarks, scripts), the frozen research
+# reference fixtures and every test suite (tests), the project documentation
+# set (docs), the examples and plotting helpers, and the packaging, CI and
+# release tooling (ci, .github).
 include = [
-  "THIRD_PARTY_NOTICES.md",
-  # Developer and source-build guides ship; the packaging/release report does
-  # not: it quotes the artefact sizes and hashes of the very sdist being built,
-  # so including it would make the manifest self-referential and stale.
-  "docs/python-development.md",
-  "docs/python-api-design.md",
-  "docs/python-binding-validation.md",
-  "docs/stage3.md",
-  "docs/v0.1-qualification.md",
-  # The written notes in the campaign directories are small and explain why the
-  # deferred atmospheric providers are deferred; the measured evidence beside
-  # them (hundreds of megabytes) stays out.
-  "docs/atmosphere/*.md",
-  "docs/multithreading/*.md",
-  "docs/numerical-audit/*.md",
-  "tests/reference/acceptance.json",
-  "tests/reference/golden/**",
-  "tests/reference/scenarios/**",
+  "/LICENSE",
+  "/LICENSE_SCOPE.md",
+  "/THIRD_PARTY_NOTICES.md",
+  "/README.dist.md",
+  "/CMakeLists.txt",
+  "/pyproject.toml",
+  "/cmake/provision.cmake",
+  "/bindings/*.cpp",
+  "/bindings/*.hpp",
+  "/python/leo_dynamics/*.py",
+  "/python/leo_dynamics/*.pyi",
+  "/python/leo_dynamics/py.typed",
+  "/src/kernel/*.cpp",
+  "/src/integration/*.cpp",
+  "/src/analysis/*.cpp",
+  "/include/leo/kernel/*.hpp",
+  "/include/leo/integration/*.hpp",
+  "/include/leo/integration/detail/*.hpp",
+  "/include/leo/analysis/*.hpp",
+  "/include/leo/environment/ephemeris.hpp",
+  "/include/leo/environment/interpolated.hpp",
+  "/include/leo/environment/source.hpp",
 ]
 exclude = [
+  # Repository plumbing: not part of the distribution.
+  "/.gitattributes",
+  "/.gitignore",
   "/build*/**",
   # Local wheel/sdist output directories, including repaired wheels.
   "/dist*/**",
   "/.github/**",
   "/.venv-python/**",
   "/outputs/**",
-  "/benchmarks/**",
-  # The packaging/release report quotes the sizes and hashes of the very sdist
-  # being built, so shipping it would make those figures wrong on every rebuild.
-  "/docs/python-packaging.md",
-  "/examples/**",
-  "/plotting/**",
-  "/scripts/**",
-  # Evidence directories under docs/ are multi-gigabyte campaign artefacts; the
-  # written guides next to them are included above.
-  "/docs/atmosphere/**",
-  "/docs/multithreading/**",
-  "/docs/numerical-audit/**",
-  "/tests/reference/generators/**",
-  "/tests/reference/*.cpp",
-  "/tests/reference/*.py",
-  "/tests/reference/*.txt",
-  # The native Catch2 suite needs Catch2 and the optional external providers, so
-  # it is not part of the redistributable Python source distribution.
-  "/tests/*.cpp",
-  "/tests/*.hpp",
-  "/tests/*.py",
-  "/tests/support/**",
+  "/.pytest_cache/**",
   "**/__pycache__/**",
   "**/*.pyc",
-  "/.pytest_cache/**",
+  # Proprietary: high-fidelity atmosphere providers and their build files.
+  "/src/atmosphere/**",
+  "/include/leo/atmosphere/**",
+  "/cmake/nrlmsise00.cmake",
+  "/cmake/nrlmsise00-tests.cmake",
+  "/cmake/jb2008.cmake",
+  # Proprietary: the CSPICE adapter.
+  "/src/environment/**",
+  "/include/leo/environment/spice.hpp",
+  # Proprietary: research campaigns, datasets and the project documentation set.
+  "/docs/**",
+  "/benchmarks/**",
+  "/scripts/**",
+  # Proprietary: the research reference fixtures and every test suite.
+  "/tests/**",
+  "/examples/**",
+  "/plotting/**",
+  # Proprietary: packaging, CI and release tooling, and the audit records.
+  "/ci/**",
+  "/release-audit/**",
+  "/audit-evidence/**",
+  "/PROPRIETARY-NOTICE.md",
+  "/RELEASE_LICENSE_AUDIT.md",
+  "/audit-progress.md",
+  "/README.md",
 ]

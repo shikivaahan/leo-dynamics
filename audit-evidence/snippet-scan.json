@@ -1,0 +1,63 @@
+{
+ "schema": "leo.audit.snippet-scan/1",
+ "method": "Normalised (whitespace-collapsed) line hashing against the pinned upstream source trees. Only lines of 25 or more characters are indexed, to avoid trivial matches. A match is reported when 3 or more consecutive lines of a tracked file appear verbatim in an upstream.",
+ "upstreams_indexed": {
+  "eigen_3.4.0": {
+   "files_indexed": 1423,
+   "distinct_long_lines": 119570
+  },
+  "boost_1.83.0": {
+   "files_indexed": 18666,
+   "distinct_long_lines": 1052540
+  },
+  "pybind11_3.1.0": {
+   "files_indexed": 163,
+   "distinct_long_lines": 21099
+  },
+  "julia_svarog_58ab4d4": {
+   "files_indexed": 38,
+   "distinct_long_lines": 4505
+  }
+ },
+ "coverage": {
+  "tracked_files_total": 1951,
+  "tracked_files_content_scanned": 229,
+  "tracked_files_skipped_as_bulk_evidence": 27,
+  "skip_rule": "Directories whose files are bulk measurement/evidence payloads are not scanned for verbatim upstream blocks; they are inventoried and classified but not content-compared. This is a stated coverage limit.",
+  "numeric_binary_payloads_not_compared": 1615,
+  "other_extensions_not_compared": 80,
+  "attribution_marker_candidate_files": 321
+ },
+ "matches": [
+  {
+   "tracked_file": "bindings/common.hpp",
+   "upstream": "pybind11_3.1.0",
+   "longest_verbatim_run_lines": 3,
+   "run_start_line": 2,
+   "upstream_reference_examples": [
+    [
+     "include/pybind11/eigen/matrix.h",
+     12
+    ],
+    [
+     "include/pybind11/eigen/tensor.h",
+     10
+    ],
+    [
+     "include/pybind11/stl/filesystem.h",
+     10
+    ],
+    [
+     "tests/cross_module_gil_utils.cpp",
+     13
+    ]
+   ],
+   "segment_head": [
+    "#include <pybind11/pybind11.h>",
+    "#include <pybind11/numpy.h>",
+    "#include <pybind11/stl.h>"
+   ]
+  }
+ ],
+ "limitations": "This whitespace-line scan does not detect translated formulas, reformatted tables or semantic provenance. Separately,40 matching altitude/density anchors were confirmed in public code; see boundary-independent-review.md."
+}

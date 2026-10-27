@@ -9,6 +9,27 @@ engine is in [python-binding-validation.md](python-binding-validation.md) and
 [v0.1-release-readiness.md](v0.1-release-readiness.md); nothing here re-qualifies
 it.
 
+## Licensing-audit update (2026-10-26)
+
+The historical packaging evidence below describes earlier revisions and must
+not be read as the current release boundary. The scoped MIT component is now
+defined by [LICENSE_SCOPE.md](../LICENSE_SCOPE.md); the full internal README,
+all `docs/`, test suites/frozen research fixtures, examples, plotting, empirical
+atmosphere/CSPICE adapters, experiments, datasets and release tooling are
+excluded from distributions. Python tests remain private and unchanged; they
+are run from this checkout against the installed wheel, not shipped as public
+research fixtures.
+
+The distribution uses `README.dist.md` for public metadata. Actual final member
+inventories, fresh local builds, installed-wheel/native tests and the leak-gate
+regressions are recorded in [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md)
+and `release-audit/`. Earlier statements below that no licence exists, or that
+the previous sdist contains guides/reference fixtures, are superseded by this
+update. No scientific acceptance thresholds or numerical tests were changed.
+No publishing workflow was run; legal title/upstream applicability and current
+private-repository plan support remain unresolved publication prerequisites.
+
+
 ## Evidence states
 
 Every claim in this document is in exactly one of these three states. They are

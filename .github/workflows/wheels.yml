@@ -112,10 +112,14 @@ jobs:
           --commit "${{ github.sha }}"
           --workflow-run-id "${{ github.run_id }}"
           --directory wheelhouse
+      - name: Check every wheel before artifact upload
+        id: wheel-boundary
+        if: always()
+        run: python ci/verify_license_boundary.py --project-root . --artifacts wheelhouse
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         # Uploaded on failure as well: a partial wheelhouse plus the build log
         # above is the whole diagnostic story when a native build breaks.
-        if: always()
+        if: ${{ always() && steps.wheel-boundary.outcome == 'success' }}
         with:
           name: ${{ matrix.artifact }}
           path: wheelhouse/
@@ -173,6 +177,8 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
+      - name: Exercise proprietary leak-gate regressions
+        run: python tests/license_boundary_tests.py
       - name: Build the source distribution
         run: python -m pip install --upgrade pip build && python -m build --sdist
       - name: Inspect the source distribution
@@ -209,8 +215,12 @@ jobs:
           --commit "${{ github.sha }}"
           --workflow-run-id "${{ github.run_id }}"
           --directory dist
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check source distribution before artifact upload
+        id: sdist-boundary
         if: always()
+        run: python ci/verify_license_boundary.py --project-root . --artifacts dist
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ always() && steps.sdist-boundary.outcome == 'success' }}
         with:
           name: sdist
           path: dist/

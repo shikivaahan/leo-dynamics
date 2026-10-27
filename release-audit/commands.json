@@ -1,0 +1,535 @@
+[
+  {
+    "command": [
+      "python3",
+      "tests/license_boundary_tests.py"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:19:18.355154+00:00",
+    "exit": 1,
+    "log": "gate-regressions.log"
+  },
+  {
+    "command": [
+      "ctest",
+      "--test-dir",
+      "/tmp/leo-native-build",
+      "--output-on-failure"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:19:19.431169+00:00",
+    "exit": 0,
+    "log": "native-tests.log"
+  },
+  {
+    "command": [
+      "python3",
+      "tests/license_boundary_tests.py"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:20:02.992550+00:00",
+    "exit": 0,
+    "log": "gate-regressions-final.log"
+  },
+  {
+    "command": [
+      "/tmp/leo-audit-venv/bin/python",
+      "-m",
+      "build",
+      "--sdist",
+      "--wheel",
+      "--outdir",
+      "/home/user/leo-dynamics/release-audit/artifacts/direct",
+      "."
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:20:04.185928+00:00",
+    "exit": 0,
+    "log": "final-direct-build.log"
+  },
+  {
+    "command": [
+      "/tmp/leo-sdist-venv/bin/python",
+      "-m",
+      "build",
+      "--wheel",
+      "--outdir",
+      "/home/user/leo-dynamics/release-audit/artifacts/rebuilt",
+      "-Cbuild-dir=/tmp/leo-final-sdist-build",
+      "-Ccmake.define.CMAKE_EXPORT_COMPILE_COMMANDS=ON",
+      "."
+    ],
+    "cwd": "/tmp/leo-final-sdist-source/leo_dynamics-0.1.0",
+    "started_utc": "2026-10-26T23:21:04.440311+00:00",
+    "exit": 0,
+    "log": "final-sdist-rebuild.log"
+  },
+  {
+    "command": [
+      "/home/user/.local/bin/uv",
+      "pip",
+      "list",
+      "--python",
+      "/tmp/leo-deps-venv/bin/python",
+      "--format",
+      "json"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:21:40.596403+00:00",
+    "exit": 0,
+    "log": "resolved-build-requirements.log"
+  },
+  {
+    "command": [
+      "g++",
+      "--version"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:21:40.636125+00:00",
+    "exit": 0,
+    "log": "compiler-version.log"
+  },
+  {
+    "command": [
+      "/home/user/.local/bin/uv",
+      "pip",
+      "list",
+      "--python",
+      "/tmp/leo-audit-venv/bin/python",
+      "--format",
+      "json"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:21:40.638683+00:00",
+    "exit": 0,
+    "log": "build-driver-versions.log"
+  },
+  {
+    "command": [
+      "python3",
+      "tests/license_boundary_tests.py"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:22:30.945159+00:00",
+    "exit": 0,
+    "log": "gate-regressions-final.log"
+  },
+  {
+    "command": [
+      "python3",
+      "ci/verify_license_boundary.py",
+      "--project-root",
+      ".",
+      "--artifacts",
+      "/home/user/leo-dynamics/release-audit/artifacts",
+      "--json-report",
+      "/home/user/leo-dynamics/release-audit/final-archive-inventory.json"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:22:32.214366+00:00",
+    "exit": 0,
+    "log": "final-archive-gate.log"
+  },
+  {
+    "command": [
+      "/home/user/.local/bin/uv",
+      "venv",
+      "--python",
+      "3.12",
+      "--seed",
+      "/tmp/leo-final-installed"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:22:44.328421+00:00",
+    "exit": 0,
+    "log": "final-test-venv.log"
+  },
+  {
+    "command": [
+      "/home/user/.local/bin/uv",
+      "pip",
+      "install",
+      "--python",
+      "/tmp/leo-final-installed/bin/python",
+      "/home/user/leo-dynamics/release-audit/artifacts/rebuilt/leo_dynamics-0.1.0-cp312-cp312-linux_x86_64.whl",
+      "pytest"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:22:44.470362+00:00",
+    "exit": 0,
+    "log": "final-wheel-install.log"
+  },
+  {
+    "command": [
+      "/tmp/leo-final-installed/bin/python",
+      "/home/user/leo-dynamics/ci/run_installed_wheel_tests.py",
+      "/home/user/leo-dynamics"
+    ],
+    "cwd": "/tmp",
+    "started_utc": "2026-10-26T23:22:44.707023+00:00",
+    "exit": 0,
+    "log": "final-installed-wheel-tests.log"
+  },
+  {
+    "command": [
+      "/tmp/leo-final-installed/bin/python",
+      "-c",
+      "import numpy as np\nimport leo_dynamics as leo\n\nearth = leo.Earth()\nradius = 7.0e6                                     # ~622 km above the reference radius\nspeed = float(np.sqrt(earth.mu_m3_s2 / radius))    # circular speed\n\ninitial = leo.State(position_m=[radius, 0.0, 0.0],\n                    velocity_m_s=[0.0, speed, 0.0])\n\nspacecraft = leo.Spacecraft(\n    mass_kg=500.0,\n    inertia_kg_m2=np.diag([40.0, 40.0, 20.0]),\n    surfaces=[\n        leo.Surface(area_m2=12.0,\n                    normal_body=[0.0, 0.0, 1.0],\n                    center_of_pressure_body_m=[0.0, 0.0, 0.0])\n    ],\n)\n\nmodel = leo.DynamicsModel(gravity=\"j2\")\ntimes_s = np.arange(0.0, 5400.0 + 5.0, 5.0)\n\ntrajectory = leo.propagate(initial=initial,\n                           spacecraft=spacecraft,\n                           model=model,\n                           times_s=times_s,\n                           earth=earth)\n\nprint(trajectory.states.shape)        # (1081, 13)\nprint(trajectory.position_m[-1])      # final position in metres\n\nimport tempfile, pathlib\nenv=leo.Environment(sun=leo.SunEphemeris.constant([1e11,0,0]), atmosphere=leo.ExponentialAtmosphere())\nloads=leo.DynamicsModel(gravity=\"j2\", srp=leo.Contribution(force=True,torque=True), drag=leo.Contribution(force=True,torque=True), drag_law=\"sentman\", albedo=leo.Contribution(force=True,torque=True), gravity_gradient=True)\nloaded=leo.propagate(initial=initial,spacecraft=spacecraft,model=loads,times_s=np.arange(0,1801,10),environment=env)\nbatch=leo.propagate_batch(initials=[initial]*3,spacecraft=spacecraft,model=model,times_s=np.arange(0,601,10),workers=2)\nassert batch.states.shape==(3,61,13)\nassert np.isfinite(loaded.states).all()\nwith tempfile.TemporaryDirectory() as tmp:\n    leo.analysis.export_csv(trajectory,tmp)\n    names=sorted(p.name for p in pathlib.Path(tmp).iterdir())\n    assert len(names)==9\n    print(\"CSV\",names)\nprint(\"environment\",loaded.states.shape,\"batch\",batch.states.shape,\"SMOKE PASS\")\n"
+    ],
+    "cwd": "/tmp",
+    "started_utc": "2026-10-26T23:22:48.787421+00:00",
+    "exit": 0,
+    "log": "final-runtime-smoke.log"
+  },
+  {
+    "command": [
+      "/home/user/.local/bin/uv",
+      "pip",
+      "list",
+      "--python",
+      "/tmp/leo-final-installed/bin/python",
+      "--format",
+      "json"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:22:49.023271+00:00",
+    "exit": 0,
+    "log": "final-installed-dependencies.log"
+  },
+  {
+    "command": [
+      "cmake",
+      "-S",
+      "/home/user/leo-dynamics",
+      "-B",
+      "/tmp/leo-guard-LEO_ENABLE_CSPICE",
+      "-DSKBUILD=ON",
+      "-DLEO_PROVISION_DEPENDENCIES=ON",
+      "-DLEO_ENABLE_CSPICE=ON"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:23:22.784043+00:00",
+    "exit": 1,
+    "log": "guard-LEO_ENABLE_CSPICE.log"
+  },
+  {
+    "command": [
+      "cmake",
+      "-S",
+      "/home/user/leo-dynamics",
+      "-B",
+      "/tmp/leo-guard-LEO_ENABLE_NRLMSISE00",
+      "-DSKBUILD=ON",
+      "-DLEO_PROVISION_DEPENDENCIES=ON",
+      "-DLEO_ENABLE_NRLMSISE00=ON"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:23:25.291215+00:00",
+    "exit": 1,
+    "log": "guard-LEO_ENABLE_NRLMSISE00.log"
+  },
+  {
+    "command": [
+      "cmake",
+      "-S",
+      "/home/user/leo-dynamics",
+      "-B",
+      "/tmp/leo-guard-LEO_ENABLE_JB2008",
+      "-DSKBUILD=ON",
+      "-DLEO_PROVISION_DEPENDENCIES=ON",
+      "-DLEO_ENABLE_JB2008=ON"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:23:27.651856+00:00",
+    "exit": 1,
+    "log": "guard-LEO_ENABLE_JB2008.log"
+  },
+  {
+    "command": [
+      "readelf",
+      "-d",
+      "/tmp/leo-final-binary-direct/_core.cpython-313-x86_64-linux-gnu.so"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:23:30.016305+00:00",
+    "exit": 0,
+    "log": "final-direct-needed.log"
+  },
+  {
+    "command": [
+      "ldd",
+      "/tmp/leo-final-binary-direct/_core.cpython-313-x86_64-linux-gnu.so"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:23:30.019294+00:00",
+    "exit": 0,
+    "log": "final-direct-linkage.log"
+  },
+  {
+    "command": [
+      "readelf",
+      "-d",
+      "/tmp/leo-final-binary-rebuilt/_core.cpython-312-x86_64-linux-gnu.so"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:23:30.046856+00:00",
+    "exit": 0,
+    "log": "final-rebuilt-needed.log"
+  },
+  {
+    "command": [
+      "ldd",
+      "/tmp/leo-final-binary-rebuilt/_core.cpython-312-x86_64-linux-gnu.so"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:23:30.049281+00:00",
+    "exit": 0,
+    "log": "final-rebuilt-linkage.log"
+  },
+  {
+    "command": [
+      "/tmp/leo-deps-venv/bin/python",
+      "-c",
+      "import importlib.metadata as m,json\nprint(json.dumps([{\"name\":d.metadata[\"Name\"],\"version\":d.version,\"license_expression\":d.metadata.get(\"License-Expression\"),\"license\":d.metadata.get(\"License\"),\"classifiers\":[v for v in d.metadata.get_all(\"Classifier\",[]) if v.startswith(\"License\")],\"requires\":d.requires} for d in m.distributions()],indent=2))"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:23:41.729804+00:00",
+    "exit": 0,
+    "log": "resolved-build-licenses.log"
+  },
+  {
+    "command": [
+      "/tmp/leo-audit-venv/bin/python",
+      "-c",
+      "import importlib.metadata as m,json\nprint(json.dumps([{\"name\":d.metadata[\"Name\"],\"version\":d.version,\"license_expression\":d.metadata.get(\"License-Expression\"),\"license\":d.metadata.get(\"License\"),\"classifiers\":[v for v in d.metadata.get_all(\"Classifier\",[]) if v.startswith(\"License\")],\"requires\":d.requires} for d in m.distributions()],indent=2))"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:23:41.796072+00:00",
+    "exit": 0,
+    "log": "resolved-driver-licenses.log"
+  },
+  {
+    "command": [
+      "/tmp/leo-final-installed/bin/python",
+      "-c",
+      "import importlib.metadata as m,json\nprint(json.dumps([{\"name\":d.metadata[\"Name\"],\"version\":d.version,\"license_expression\":d.metadata.get(\"License-Expression\"),\"license\":d.metadata.get(\"License\"),\"classifiers\":[v for v in d.metadata.get_all(\"Classifier\",[]) if v.startswith(\"License\")],\"requires\":d.requires} for d in m.distributions()],indent=2))"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:23:41.859647+00:00",
+    "exit": 0,
+    "log": "resolved-test-licenses.log"
+  },
+  {
+    "command": [
+      "/tmp/leo-audit-venv/bin/python",
+      "-m",
+      "build",
+      "--sdist",
+      "--wheel",
+      "--outdir",
+      "/home/user/leo-dynamics/release-audit/artifacts/direct",
+      "."
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:28:49.295140+00:00",
+    "exit": 0,
+    "log": "final-direct-build.log"
+  },
+  {
+    "command": [
+      "/tmp/leo-sdist-venv/bin/python",
+      "-m",
+      "build",
+      "--wheel",
+      "--outdir",
+      "/home/user/leo-dynamics/release-audit/artifacts/rebuilt",
+      "-Cbuild-dir=/tmp/leo-final-sdist-build",
+      "-Ccmake.define.CMAKE_EXPORT_COMPILE_COMMANDS=ON",
+      "."
+    ],
+    "cwd": "/tmp/leo-final-sdist-source/leo_dynamics-0.1.0",
+    "started_utc": "2026-10-26T23:29:31.612323+00:00",
+    "exit": 0,
+    "log": "final-sdist-rebuild.log"
+  },
+  {
+    "command": [
+      "/home/user/.local/bin/uv",
+      "venv",
+      "--python",
+      "3.12",
+      "--seed",
+      "/tmp/leo-final-installed-v2"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:30:06.844318+00:00",
+    "exit": 0,
+    "log": "final-test-venv.log"
+  },
+  {
+    "command": [
+      "/home/user/.local/bin/uv",
+      "pip",
+      "install",
+      "--python",
+      "/tmp/leo-final-installed-v2/bin/python",
+      "/home/user/leo-dynamics/release-audit/artifacts/rebuilt/leo_dynamics-0.1.0-cp312-cp312-linux_x86_64.whl",
+      "pytest"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:30:06.914517+00:00",
+    "exit": 0,
+    "log": "final-wheel-install.log"
+  },
+  {
+    "command": [
+      "/tmp/leo-final-installed-v2/bin/python",
+      "/home/user/leo-dynamics/ci/run_installed_wheel_tests.py",
+      "/home/user/leo-dynamics"
+    ],
+    "cwd": "/tmp",
+    "started_utc": "2026-10-26T23:30:07.067425+00:00",
+    "exit": 0,
+    "log": "final-installed-wheel-tests.log"
+  },
+  {
+    "command": [
+      "/tmp/leo-final-installed-v2/bin/python",
+      "-c",
+      "import numpy as np\nimport leo_dynamics as leo\n\nearth = leo.Earth()\nradius = 7.0e6                                     # ~622 km above the reference radius\nspeed = float(np.sqrt(earth.mu_m3_s2 / radius))    # circular speed\n\ninitial = leo.State(position_m=[radius, 0.0, 0.0],\n                    velocity_m_s=[0.0, speed, 0.0])\n\nspacecraft = leo.Spacecraft(\n    mass_kg=500.0,\n    inertia_kg_m2=np.diag([40.0, 40.0, 20.0]),\n    surfaces=[\n        leo.Surface(area_m2=12.0,\n                    normal_body=[0.0, 0.0, 1.0],\n                    center_of_pressure_body_m=[0.0, 0.0, 0.0])\n    ],\n)\n\nmodel = leo.DynamicsModel(gravity=\"j2\")\ntimes_s = np.arange(0.0, 5400.0 + 5.0, 5.0)\n\ntrajectory = leo.propagate(initial=initial,\n                           spacecraft=spacecraft,\n                           model=model,\n                           times_s=times_s,\n                           earth=earth)\n\nprint(trajectory.states.shape)        # (1081, 13)\nprint(trajectory.position_m[-1])      # final position in metres\n\nimport tempfile, pathlib\nenv=leo.Environment(sun=leo.SunEphemeris.constant([1e11,0,0]), atmosphere=leo.ExponentialAtmosphere())\nloads=leo.DynamicsModel(gravity=\"j2\", srp=leo.Contribution(force=True,torque=True), drag=leo.Contribution(force=True,torque=True), drag_law=\"sentman\", albedo=leo.Contribution(force=True,torque=True), gravity_gradient=True)\nloaded=leo.propagate(initial=initial,spacecraft=spacecraft,model=loads,times_s=np.arange(0,1801,10),environment=env)\nbatch=leo.propagate_batch(initials=[initial]*3,spacecraft=spacecraft,model=model,times_s=np.arange(0,601,10),workers=2)\nassert batch.states.shape==(3,61,13)\nassert np.isfinite(loaded.states).all()\nwith tempfile.TemporaryDirectory() as tmp:\n    leo.analysis.export_csv(trajectory,tmp)\n    names=sorted(p.name for p in pathlib.Path(tmp).iterdir())\n    assert len(names)==9\n    print(\"CSV\",names)\nprint(\"environment\",loaded.states.shape,\"batch\",batch.states.shape,\"SMOKE PASS\")\n"
+    ],
+    "cwd": "/tmp",
+    "started_utc": "2026-10-26T23:30:10.985456+00:00",
+    "exit": 0,
+    "log": "final-runtime-smoke.log"
+  },
+  {
+    "command": [
+      "python3",
+      "tests/license_boundary_tests.py"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:30:11.196761+00:00",
+    "exit": 0,
+    "log": "gate-regressions-final.log"
+  },
+  {
+    "command": [
+      "python3",
+      "ci/verify_license_boundary.py",
+      "--project-root",
+      ".",
+      "--artifacts",
+      "/home/user/leo-dynamics/release-audit/artifacts",
+      "--json-report",
+      "/home/user/leo-dynamics/release-audit/final-archive-inventory.json"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:30:12.387205+00:00",
+    "exit": 0,
+    "log": "final-archive-gate.log"
+  },
+  {
+    "command": [
+      "readelf",
+      "-d",
+      "/tmp/leo-final-binary-direct/_core.cpython-313-x86_64-linux-gnu.so"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:31:18.825176+00:00",
+    "exit": 0,
+    "log": "final-direct-needed.log"
+  },
+  {
+    "command": [
+      "ldd",
+      "/tmp/leo-final-binary-direct/_core.cpython-313-x86_64-linux-gnu.so"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:31:18.828158+00:00",
+    "exit": 0,
+    "log": "final-direct-linkage.log"
+  },
+  {
+    "command": [
+      "readelf",
+      "-d",
+      "/tmp/leo-final-binary-rebuilt/_core.cpython-312-x86_64-linux-gnu.so"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:31:18.887376+00:00",
+    "exit": 0,
+    "log": "final-rebuilt-needed.log"
+  },
+  {
+    "command": [
+      "ldd",
+      "/tmp/leo-final-binary-rebuilt/_core.cpython-312-x86_64-linux-gnu.so"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:31:18.890294+00:00",
+    "exit": 0,
+    "log": "final-rebuilt-linkage.log"
+  },
+  {
+    "command": [
+      "python3",
+      "release-audit/generate_boundary.py"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:31:26.760328+00:00",
+    "exit": 0,
+    "log": "final-manifest-generation.log"
+  },
+  {
+    "command": [
+      "python3",
+      "release-audit/generate_boundary.py"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:31:26.839592+00:00",
+    "exit": 0,
+    "log": "final-manifest-generation.log"
+  },
+  {
+    "command": [
+      "python3",
+      "release-audit/generate_boundary.py",
+      "--check"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:31:26.899654+00:00",
+    "exit": 0,
+    "log": "final-manifest-check.log"
+  },
+  {
+    "command": [
+      "python3",
+      "ci/release_preflight.py",
+      "--project-root",
+      ".",
+      "--expected-version",
+      "0.1.0"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:31:26.952596+00:00",
+    "exit": 0,
+    "log": "final-preflight.log"
+  },
+  {
+    "command": [
+      "python3",
+      "ci/verify_license_boundary.py",
+      "--project-root",
+      ".",
+      "--artifacts",
+      "/home/user/leo-dynamics/release-audit/artifacts",
+      "--json-report",
+      "/home/user/leo-dynamics/release-audit/final-archive-inventory.json"
+    ],
+    "cwd": "/home/user/leo-dynamics",
+    "started_utc": "2026-10-26T23:31:27.090959+00:00",
+    "exit": 0,
+    "log": "final-archive-gate.log"
+  }
+]

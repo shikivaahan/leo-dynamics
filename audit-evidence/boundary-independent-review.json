@@ -1,0 +1,577 @@
+{
+  "schema": "leo.audit.independent-boundary-review/1",
+  "baseline_commit": "23df023d6080c9aeb27e9ceddba1671651205584",
+  "date": "2026-10-26",
+  "reviewed_final_sha256": {
+    "ci/verify_license_boundary.py": "e91055ab0079ed14c5ca41d2e0ca9b87623038be5703e2146fefc0107eeb8f65",
+    "release-audit/generate_boundary.py": "77e731eed461991b721d0fd0790d53212e667936f46c71d8f18f3cf40830ab1b",
+    "release-audit/license-boundary.json": "24806398adb458a92dcfd9051103ee8dd54929044d4f16cbc577f2027a9bb5f6",
+    "pyproject.toml": "678e5de70ec1682d7902cb945d0368beb87042848fb5e62045307868f7150e2c",
+    "CMakeLists.txt": "355d0a111e9226991e414a48d2fde16353246934bf2f402a008fa066063e4784",
+    "LICENSE": "c692219b6fe64b0621d0e6e1cb09e6e4f135e856e5d5215f6a31e23099fb29ce",
+    "LICENSE_SCOPE.md": "7567cbbbf9ae53b58cbb85e2738773aeac85b4170c79c7306eff6014a67b466c",
+    "PROPRIETARY-NOTICE.md": "c9bf6855729a4fa72a7c386b6f372a44a77dddd0e1c2b372ec564d6871844b54",
+    "README.dist.md": "265d4a1c394aad8d87305f3282ba401cd04c0e9dd7447cd20cb9d7e27d8b5a8a",
+    "THIRD_PARTY_NOTICES.md": "5634a26d2d94c5551c13b1459df7d26d62454521053c435498dd0e0a2af67466"
+  },
+  "initial_verifier_sha256": "cd6d59bd4da65c3901e9210b5029eab1116f7599359db61490944a519a0fa64b",
+  "initial_results": [
+    {
+      "scenario": "complete_sdist_control",
+      "accepted": true,
+      "failures": [],
+      "member_count": 52
+    },
+    {
+      "scenario": "complete_sdist_research_renamed_as_public_cpp",
+      "accepted": true,
+      "failures": [],
+      "member_count": 52
+    },
+    {
+      "scenario": "complete_sdist_added_proprietary_member_and_tampered_allowlist",
+      "accepted": true,
+      "failures": [],
+      "member_count": 53
+    },
+    {
+      "scenario": "complete_sdist_two_unrelated_roots",
+      "accepted": true,
+      "failures": [],
+      "member_count": 52
+    },
+    {
+      "scenario": "complete_sdist_extra_tar_symlink",
+      "accepted": false,
+      "failures": [
+        "symlink.tar.gz: member 'leo_dynamics-0.1.0/escape' is not a regular file (type b'2'); links and special files are refused"
+      ],
+      "member_count": 52
+    },
+    {
+      "scenario": "complete_sdist_duplicate",
+      "accepted": false,
+      "failures": [
+        "duplicate.tar.gz: duplicate member 'src/kernel/gravity.cpp' (first seen as 'leo_dynamics-0.1.0/src/kernel/gravity.cpp')"
+      ],
+      "member_count": 52
+    },
+    {
+      "scenario": "complete_sdist_traversal",
+      "accepted": false,
+      "failures": [
+        "traversal.tar.gz: unsafe member name: path traversal in member name 'leo_dynamics-0.1.0/../escape'"
+      ],
+      "member_count": 52
+    },
+    {
+      "scenario": "complete_wheel_control",
+      "accepted": true,
+      "failures": [],
+      "member_count": 10
+    },
+    {
+      "scenario": "wheel_undeclared_research_license_payload",
+      "accepted": true,
+      "failures": [],
+      "member_count": 11
+    },
+    {
+      "scenario": "wheel_public_facade_replaced_with_research_payload",
+      "accepted": true,
+      "failures": [],
+      "member_count": 10
+    },
+    {
+      "scenario": "wheel_zip_symlink_uses_allowed_license_name",
+      "accepted": true,
+      "failures": [],
+      "member_count": 10
+    },
+    {
+      "scenario": "wheel_wrong_dist_info_directory",
+      "accepted": true,
+      "failures": [],
+      "member_count": 10
+    },
+    {
+      "scenario": "wheel_unsafe_directory_only",
+      "accepted": true,
+      "failures": [],
+      "member_count": 10
+    },
+    {
+      "scenario": "wheel_missing_license_and_package",
+      "accepted": true,
+      "failures": [],
+      "member_count": 8
+    },
+    {
+      "scenario": "wheel_metadata_has_wrong_license_and_private_research",
+      "accepted": true,
+      "failures": [],
+      "member_count": 10
+    },
+    {
+      "scenario": "wheel_extra_module_rejected",
+      "accepted": false,
+      "failures": [
+        "wheel-extra-module.whl: unexpected member 'leo_dynamics/research.py'; the wheel may contain only the leo_dynamics package, the compiled _core extension and its .dist-info metadata"
+      ],
+      "member_count": 11
+    }
+  ],
+  "intermediate_hardened_results": [
+    {
+      "scenario": "sdist_v2_control",
+      "accepted": true,
+      "failures": []
+    },
+    {
+      "scenario": "sdist_v2_renamed_research",
+      "accepted": false,
+      "failures": [
+        "src/kernel/gravity.cpp: bytes differ from approved public source src/kernel/gravity.cpp"
+      ]
+    },
+    {
+      "scenario": "sdist_v2_two_roots",
+      "accepted": false,
+      "failures": [
+        "unexpected source archive root: wrong_project-9.9.9/LICENSE",
+        "unexpected source archive root: wrong_project-9.9.9/README.dist.md",
+        "unexpected source archive root: wrong_project-9.9.9/bindings/analysis.cpp",
+        "unexpected source archive root: wrong_project-9.9.9/bindings/configuration.cpp",
+        "unexpected source archive root: wrong_project-9.9.9/bindings/integration.cpp",
+        "unexpected source archive root: wrong_project-9.9.9/cmake/provision.cmake",
+        "unexpected source archive root: wrong_project-9.9.9/include/leo/analysis/loads.hpp",
+        "unexpected source archive root: wrong_project-9.9.9/include/leo/environment/ephemeris.hpp",
+        "unexpected source archive root: wrong_project-9.9.9/include/leo/environment/source.hpp",
+        "unexpected source archive root: wrong_project-9.9.9/include/leo/integration/detail/error_control.hpp",
+        "unexpected source archive root: wrong_project-9.9.9/include/leo/integration/options.hpp",
+        "unexpected source archive root: wrong_project-9.9.9/include/leo/integration/trajectory.hpp",
+        "unexpected source archive root: wrong_project-9.9.9/include/leo/kernel/attitude.hpp",
+        "unexpected source archive root: wrong_project-9.9.9/include/leo/kernel/earth.hpp",
+        "unexpected source archive root: wrong_project-9.9.9/include/leo/kernel/frames.hpp",
+        "unexpected source archive root: wrong_project-9.9.9/include/leo/kernel/orbital.hpp",
+        "unexpected source archive root: wrong_project-9.9.9/include/leo/kernel/spacecraft.hpp",
+        "unexpected source archive root: wrong_project-9.9.9/include/leo/kernel/time.hpp",
+        "unexpected source archive root: wrong_project-9.9.9/python/leo_dynamics/__init__.py",
+        "unexpected source archive root: wrong_project-9.9.9/python/leo_dynamics/py.typed",
+        "unexpected source archive root: wrong_project-9.9.9/src/analysis/loads.cpp",
+        "unexpected source archive root: wrong_project-9.9.9/src/integration/error_control.cpp",
+        "unexpected source archive root: wrong_project-9.9.9/src/kernel/attitude.cpp",
+        "unexpected source archive root: wrong_project-9.9.9/src/kernel/gravity.cpp",
+        "unexpected source archive root: wrong_project-9.9.9/src/kernel/radiation.cpp",
+        "unexpected source archive root: wrong_project-9.9.9/src/kernel/state.cpp"
+      ]
+    },
+    {
+      "scenario": "sdist_v2_proprietary_extra",
+      "accepted": false,
+      "failures": [
+        "tests/reference/scenarios/case_c_short.json: not a member of the MIT core"
+      ]
+    },
+    {
+      "scenario": "sdist_v2_symlink",
+      "accepted": false,
+      "failures": [
+        "not a regular file: leo_dynamics-0.1.0/escape"
+      ]
+    },
+    {
+      "scenario": "sdist_v2_duplicate",
+      "accepted": false,
+      "failures": [
+        "duplicate member 'leo_dynamics-0.1.0/src/kernel/gravity.cpp'"
+      ]
+    },
+    {
+      "scenario": "sdist_v2_metadata_extra_research_header",
+      "accepted": true,
+      "failures": []
+    },
+    {
+      "scenario": "wheel_v2_control",
+      "accepted": true,
+      "failures": []
+    },
+    {
+      "scenario": "wheel_v2_extra_license_research",
+      "accepted": false,
+      "failures": [
+        "unexpected licence member leo_dynamics-0.1.0.dist-info/licenses/private.json"
+      ]
+    },
+    {
+      "scenario": "wheel_v2_renamed_facade",
+      "accepted": false,
+      "failures": [
+        "leo_dynamics/__init__.py: bytes differ from approved public source python/leo_dynamics/__init__.py"
+      ]
+    },
+    {
+      "scenario": "wheel_v2_zip_symlink",
+      "accepted": false,
+      "failures": [
+        "not a regular file: leo_dynamics-0.1.0.dist-info/licenses/LICENSE",
+        "RECORD does not enumerate every member exactly once",
+        "malformed RECORD row",
+        "incomplete artifact; missing leo_dynamics-0.1.0.dist-info/licenses/LICENSE"
+      ]
+    },
+    {
+      "scenario": "wheel_v2_unsafe_directory",
+      "accepted": false,
+      "failures": [
+        "unsafe member name '../escape/'"
+      ]
+    },
+    {
+      "scenario": "wheel_v2_foreign_dist_info",
+      "accepted": false,
+      "failures": [
+        "unexpected member wrong_project-9.9.9.dist-info/METADATA",
+        "unexpected member wrong_project-9.9.9.dist-info/WHEEL",
+        "unexpected member wrong_project-9.9.9.dist-info/licenses/LICENSE",
+        "unexpected member wrong_project-9.9.9.dist-info/licenses/LICENSE_SCOPE.md",
+        "unexpected member wrong_project-9.9.9.dist-info/licenses/THIRD_PARTY_NOTICES.md",
+        "unexpected member wrong_project-9.9.9.dist-info/RECORD",
+        "incomplete artifact; missing leo_dynamics-0.1.0.dist-info/METADATA, leo_dynamics-0.1.0.dist-info/RECORD, leo_dynamics-0.1.0.dist-info/WHEEL, leo_dynamics-0.1.0.dist-info/licenses/LICENSE, leo_dynamics-0.1.0.dist-info/licenses/LICENSE_SCOPE.md, leo_dynamics-0.1.0.dist-info/licenses/THIRD_PARTY_NOTICES.md"
+      ]
+    },
+    {
+      "scenario": "wheel_v2_missing_facade_license",
+      "accepted": false,
+      "failures": [
+        "incomplete artifact; missing leo_dynamics-0.1.0.dist-info/licenses/LICENSE, leo_dynamics/__init__.py"
+      ]
+    },
+    {
+      "scenario": "wheel_v2_extra_private_metadata_header",
+      "accepted": true,
+      "failures": []
+    },
+    {
+      "scenario": "wheel_v2_WHEEL_is_actual_private_research_data",
+      "accepted": true,
+      "failures": []
+    }
+  ],
+  "final_archive_results": [
+    {
+      "scenario": "abi3-module",
+      "kind": "wheel",
+      "accepted": false,
+      "failures": [
+        "unexpected member leo_dynamics/_core.abi3.so",
+        "wheel must carry exactly one _core native module"
+      ],
+      "member_count": 10
+    },
+    {
+      "scenario": "control-sdist",
+      "kind": "sdist",
+      "accepted": true,
+      "failures": [],
+      "member_count": 53
+    },
+    {
+      "scenario": "control-wheel",
+      "kind": "wheel",
+      "accepted": true,
+      "failures": [],
+      "member_count": 10
+    },
+    {
+      "scenario": "extra-license",
+      "kind": "wheel",
+      "accepted": false,
+      "failures": [
+        "unexpected licence member leo_dynamics-0.1.0.dist-info/licenses/private.json"
+      ],
+      "member_count": 11
+    },
+    {
+      "scenario": "extra-module",
+      "kind": "wheel",
+      "accepted": false,
+      "failures": [
+        "unexpected member leo_dynamics/research.py"
+      ],
+      "member_count": 11
+    },
+    {
+      "scenario": "foreign-dist-info",
+      "kind": "wheel",
+      "accepted": false,
+      "failures": [
+        "unexpected member wrong_project-9.9.9.dist-info/METADATA",
+        "unexpected member wrong_project-9.9.9.dist-info/WHEEL",
+        "unexpected member wrong_project-9.9.9.dist-info/licenses/LICENSE",
+        "unexpected member wrong_project-9.9.9.dist-info/licenses/LICENSE_SCOPE.md",
+        "unexpected member wrong_project-9.9.9.dist-info/licenses/THIRD_PARTY_NOTICES.md",
+        "unexpected member wrong_project-9.9.9.dist-info/RECORD",
+        "incomplete artifact; missing leo_dynamics-0.1.0.dist-info/METADATA, leo_dynamics-0.1.0.dist-info/RECORD, leo_dynamics-0.1.0.dist-info/WHEEL, leo_dynamics-0.1.0.dist-info/licenses/LICENSE, leo_dynamics-0.1.0.dist-info/licenses/LICENSE_SCOPE.md, leo_dynamics-0.1.0.dist-info/licenses/THIRD_PARTY_NOTICES.md"
+      ],
+      "member_count": 10
+    },
+    {
+      "scenario": "missing-members",
+      "kind": "wheel",
+      "accepted": false,
+      "failures": [
+        "incomplete artifact; missing leo_dynamics-0.1.0.dist-info/licenses/LICENSE, leo_dynamics/__init__.py"
+      ],
+      "member_count": 8
+    },
+    {
+      "scenario": "multi-root",
+      "kind": "sdist",
+      "accepted": false,
+      "failures": [
+        "unexpected source archive root: other-9.9.9/LICENSE",
+        "unexpected source archive root: other-9.9.9/README.dist.md",
+        "unexpected source archive root: other-9.9.9/bindings/analysis.cpp",
+        "unexpected source archive root: other-9.9.9/bindings/configuration.cpp",
+        "unexpected source archive root: other-9.9.9/bindings/integration.cpp",
+        "unexpected source archive root: other-9.9.9/cmake/provision.cmake",
+        "unexpected source archive root: other-9.9.9/include/leo/analysis/loads.hpp",
+        "unexpected source archive root: other-9.9.9/include/leo/environment/ephemeris.hpp",
+        "unexpected source archive root: other-9.9.9/include/leo/environment/source.hpp",
+        "unexpected source archive root: other-9.9.9/include/leo/integration/detail/error_control.hpp",
+        "unexpected source archive root: other-9.9.9/include/leo/integration/options.hpp",
+        "unexpected source archive root: other-9.9.9/include/leo/integration/trajectory.hpp",
+        "unexpected source archive root: other-9.9.9/include/leo/kernel/attitude.hpp",
+        "unexpected source archive root: other-9.9.9/include/leo/kernel/earth.hpp",
+        "unexpected source archive root: other-9.9.9/include/leo/kernel/frames.hpp",
+        "unexpected source archive root: other-9.9.9/include/leo/kernel/orbital.hpp",
+        "unexpected source archive root: other-9.9.9/include/leo/kernel/spacecraft.hpp",
+        "unexpected source archive root: other-9.9.9/include/leo/kernel/time.hpp",
+        "unexpected source archive root: other-9.9.9/python/leo_dynamics/__init__.py",
+        "unexpected source archive root: other-9.9.9/python/leo_dynamics/py.typed",
+        "unexpected source archive root: other-9.9.9/src/analysis/loads.cpp",
+        "unexpected source archive root: other-9.9.9/src/integration/error_control.cpp",
+        "unexpected source archive root: other-9.9.9/src/kernel/attitude.cpp",
+        "unexpected source archive root: other-9.9.9/src/kernel/gravity.cpp",
+        "unexpected source archive root: other-9.9.9/src/kernel/radiation.cpp",
+        "unexpected source archive root: other-9.9.9/src/kernel/state.cpp"
+      ],
+      "member_count": 53
+    },
+    {
+      "scenario": "private-extra",
+      "kind": "sdist",
+      "accepted": false,
+      "failures": [
+        "tests/reference/scenarios/case_c_short.json: not a member of the MIT core"
+      ],
+      "member_count": 54
+    },
+    {
+      "scenario": "private-header",
+      "kind": "wheel",
+      "accepted": false,
+      "failures": [
+        "metadata contains unknown or missing headers"
+      ],
+      "member_count": 10
+    },
+    {
+      "scenario": "private-summary",
+      "kind": "wheel",
+      "accepted": false,
+      "failures": [
+        "metadata Summary differs from approved pyproject values"
+      ],
+      "member_count": 10
+    },
+    {
+      "scenario": "private-wheel-content",
+      "kind": "wheel",
+      "accepted": false,
+      "failures": [
+        "WHEEL has unknown or missing headers",
+        "WHEEL Wheel-Version differs from approved build/filename",
+        "WHEEL Generator differs from approved build/filename",
+        "WHEEL Root-Is-Purelib differs from approved build/filename",
+        "WHEEL Tag differs from approved build/filename",
+        "WHEEL must have no body"
+      ],
+      "member_count": 10
+    },
+    {
+      "scenario": "renamed-cpp",
+      "kind": "sdist",
+      "accepted": false,
+      "failures": [
+        "src/kernel/gravity.cpp: bytes differ from approved public source src/kernel/gravity.cpp"
+      ],
+      "member_count": 53
+    },
+    {
+      "scenario": "renamed-facade",
+      "kind": "wheel",
+      "accepted": false,
+      "failures": [
+        "leo_dynamics/__init__.py: bytes differ from approved public source python/leo_dynamics/__init__.py"
+      ],
+      "member_count": 10
+    },
+    {
+      "scenario": "sdist-extra-header",
+      "kind": "sdist",
+      "accepted": false,
+      "failures": [
+        "metadata contains unknown or missing headers"
+      ],
+      "member_count": 53
+    },
+    {
+      "scenario": "sdist-summary",
+      "kind": "sdist",
+      "accepted": false,
+      "failures": [
+        "metadata Summary differs from approved pyproject values"
+      ],
+      "member_count": 53
+    },
+    {
+      "scenario": "tar-duplicate",
+      "kind": "sdist",
+      "accepted": false,
+      "failures": [
+        "duplicate member 'leo_dynamics-0.1.0/src/kernel/gravity.cpp'"
+      ],
+      "member_count": 53
+    },
+    {
+      "scenario": "tar-symlink",
+      "kind": "sdist",
+      "accepted": false,
+      "failures": [
+        "not a regular file: leo_dynamics-0.1.0/link"
+      ],
+      "member_count": 53
+    },
+    {
+      "scenario": "tar-traversal",
+      "kind": "sdist",
+      "accepted": false,
+      "failures": [
+        "unsafe member name 'leo_dynamics-0.1.0/../escape'"
+      ],
+      "member_count": 53
+    },
+    {
+      "scenario": "zip-symlink",
+      "kind": "wheel",
+      "accepted": false,
+      "failures": [
+        "not a regular file: leo_dynamics-0.1.0.dist-info/licenses/LICENSE",
+        "RECORD does not enumerate every member exactly once",
+        "malformed RECORD row",
+        "incomplete artifact; missing leo_dynamics-0.1.0.dist-info/licenses/LICENSE"
+      ],
+      "member_count": 9
+    },
+    {
+      "scenario": "zip-unsafe-directory",
+      "kind": "wheel",
+      "accepted": false,
+      "failures": [
+        "unsafe member name '../escape/'"
+      ],
+      "member_count": 10
+    }
+  ],
+  "final_source_canonical_passed": true,
+  "final_manifest_tamper_cases": [
+    {
+      "field": "sdist_members",
+      "accepted": false,
+      "failures": [
+        "the complete licence boundary manifest is stale or altered"
+      ]
+    },
+    {
+      "field": "proprietary_markers",
+      "accepted": false,
+      "failures": [
+        "the complete licence boundary manifest is stale or altered"
+      ]
+    }
+  ],
+  "constant_table_comparison": {
+    "upstream_commit": "58ab4d4964f9c20b7070efae48f8916e8a99784e",
+    "upstream_path": "src/Constants.jl:100-142",
+    "public_path": "src/kernel/aerodynamics.cpp:9-21",
+    "upstream_row_count": 40,
+    "public_row_count": 40,
+    "all_altitude_density_pairs_equal_after_km_to_m": true,
+    "cpp_sha256": "cb1f73ce7e957bddd6720fea255c3620364c61caabb0918ca941c3455bc53a2f",
+    "upstream_blob_sha256": "59e072f830235ffd0ce05a19182b2064d48daff6d84b9fb7d64f0fba03e39cdf"
+  },
+  "scope_notes": [
+    "Synthetic archives only; native payload begins ELF magic but is not executable, was not extracted/imported/executed.",
+    "All final negative cases rejected; initial acceptance results are historical, not current vulnerabilities.",
+    "Approved source bytes frozen in a temporary snapshot for archive cases to avoid concurrent edits.",
+    "Source index current at reviewed canonical manifest; not asserted identical to HEAD or immutable."
+  ],
+  "actual_environment_evidence_reviewed": [
+    "release-audit/resolved-build-requirements.log",
+    "release-audit/resolved-build-licenses.log",
+    "release-audit/build-driver-versions.log",
+    "release-audit/resolved-driver-licenses.log",
+    "release-audit/final-installed-dependencies.log",
+    "release-audit/resolved-test-licenses.log",
+    "release-audit/consumed-header-verification.json",
+    "release-audit/final-direct-needed.log",
+    "release-audit/final-archive-gate.log",
+    "release-audit/archive-identities.json"
+  ],
+  "actual_dependency_summary": {
+    "build": {
+      "cmake": "4.4.4",
+      "ninja": "1.13.2",
+      "packaging": "26.3",
+      "pathspec": "1.1.1",
+      "pybind11": "3.1.0",
+      "scikit-build-core": "0.11.6"
+    },
+    "driver": {
+      "build": "1.6.1",
+      "packaging": "26.3",
+      "pip": "26.2.2",
+      "pyproject-hooks": "1.3.3"
+    },
+    "runtime_test": {
+      "numpy": "2.5.4",
+      "pytest": "9.1.1",
+      "pluggy": "1.7.0",
+      "iniconfig": "2.3.1",
+      "Pygments": "2.21.0",
+      "pip": "26.2.2",
+      "packaging": "26.3"
+    }
+  },
+  "consumed_header_evidence": {
+    "basis": "Worker-produced log inspected, not independently rebuilt",
+    "Eigen": {
+      "matched": 170,
+      "consumed": 170
+    },
+    "Boost": {
+      "matched": 1066,
+      "consumed": 1066
+    },
+    "mismatches": 0
+  },
+  "unresolved": [
+    "Legal title/assignment and rights in upstream numeric table: no decision made.",
+    "Binary compiled provenance cannot be established by marker scans or ELF magic.",
+    "Observed environments cover the recorded Linux/Python versions, not all OS/interpreter combinations.",
+    "GitHub current account plan remains unverified."
+  ]
+}

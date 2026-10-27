@@ -12,7 +12,7 @@ The intended installation command is:
 pip install leo-dynamics
 ```
 
-**This command does not work yet.** Nothing has been published to PyPI and the repository carries no licence file, so redistribution rights are not established. Until both are resolved, install a wheel built from this repository (below). See [packaging status and blockers](docs/python-packaging.md).
+**This command does not work yet.** Nothing has been published to PyPI and no publication has been approved. The numerical engine and Python interface now have a scoped MIT grant: see [LICENSE_SCOPE.md](LICENSE_SCOPE.md) and [LICENSE](LICENSE). All research, empirical high-fidelity atmosphere providers, experiments and datasets remain private and proprietary; see [PROPRIETARY-NOTICE.md](PROPRIETARY-NOTICE.md). Only the enumerated component may enter a distribution. The public package overview is [README.dist.md](README.dist.md), not this internal document. See [the licensing audit](RELEASE_LICENSE_AUDIT.md) for observed local checks and unresolved ownership/provenance and publication blockers.
 
 ### Installing a locally built wheel
 

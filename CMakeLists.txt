@@ -11,6 +11,17 @@ option(LEO_ENABLE_NRLMSISE00 "Build direct NRLMSISE-00 C reference adapter" OFF)
 option(LEO_ENABLE_JB2008 "Build direct external official JB2008 Fortran adapter" OFF)
 option(LEO_BUILD_PYTHON_BINDINGS "Build the private pybind11 extension for a local development import" OFF)
 option(LEO_PROVISION_DEPENDENCIES "Build against the pinned, hash-verified Eigen and Boost archives instead of host packages" OFF)
+if(SKBUILD)
+  # Packaging is always the approved public component, even in the full private
+  # checkout. Config-setting overrides must not compile/link private providers.
+  if(LEO_ENABLE_CSPICE OR LEO_ENABLE_NRLMSISE00 OR LEO_ENABLE_JB2008
+      OR LEO_BUILD_EXAMPLES OR BUILD_TESTING OR LEO_TEST_PLOTTING)
+    message(FATAL_ERROR "Public package builds refuse proprietary providers, examples and test/research material")
+  endif()
+  if(NOT LEO_PROVISION_DEPENDENCIES)
+    message(FATAL_ERROR "Public package builds require pinned dependency provisioning")
+  endif()
+endif()
 set(LEO_PYTHON_BINDING_DIR "${CMAKE_BINARY_DIR}/python/leo_dynamics"
     CACHE PATH "Directory receiving the _core extension and the staged Python facade")
 if(LEO_BUILD_PYTHON_BINDINGS)
@@ -39,6 +50,14 @@ target_compile_features(leo_kernel PUBLIC cxx_std_20)
 target_include_directories(leo_kernel PUBLIC include)
 target_link_libraries(leo_kernel PUBLIC Eigen3::Eigen)
 if(LEO_ENABLE_CSPICE)
+  # The CSPICE adapter is not part of the public source distribution. Fail
+  # with a clear message instead of an unreadable CMake error when a caller
+  # asks for it on a tree that does not carry it.
+  if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/environment/spice.cpp")
+    message(FATAL_ERROR
+      "LEO_ENABLE_CSPICE requires src/environment/spice.cpp, which is not part "
+      "of this source distribution. Build the full repository to enable it.")
+  endif()
   find_package(Threads REQUIRED)
   find_path(CSPICE_INCLUDE_DIR SpiceUsr.h HINTS "${CSPICE_ROOT}/include" REQUIRED)
   find_library(CSPICE_LIBRARY NAMES cspice cspice.a libcspice.a HINTS "${CSPICE_ROOT}/lib" REQUIRED)
@@ -48,6 +67,18 @@ if(LEO_ENABLE_CSPICE)
   target_include_directories(leo_environment PRIVATE "${CSPICE_INCLUDE_DIR}")
 endif()
 if(LEO_ENABLE_NRLMSISE00 OR LEO_ENABLE_JB2008)
+  # The empirical atmosphere providers are proprietary and are not part of the
+  # public source distribution; their build files are absent there.
+  if(LEO_ENABLE_NRLMSISE00 AND NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/cmake/nrlmsise00.cmake")
+    message(FATAL_ERROR
+      "LEO_ENABLE_NRLMSISE00 requires cmake/nrlmsise00.cmake, which is not "
+      "part of this source distribution. Build the full repository to enable it.")
+  endif()
+  if(LEO_ENABLE_JB2008 AND NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/cmake/jb2008.cmake")
+    message(FATAL_ERROR
+      "LEO_ENABLE_JB2008 requires cmake/jb2008.cmake, which is not part of "
+      "this source distribution. Build the full repository to enable it.")
+  endif()
   add_library(leo_atmosphere STATIC)
   add_library(leo::atmosphere ALIAS leo_atmosphere)
   target_compile_features(leo_atmosphere PUBLIC cxx_std_20)
@@ -145,6 +176,12 @@ if(LEO_BUILD_PYTHON_BINDINGS)
   message(STATUS "leo_dynamics: development import with PYTHONPATH=${LEO_PYTHON_BINDING_DIR}/..")
 endif()
 if(LEO_BUILD_EXAMPLES)
+  # The examples are not part of the public source distribution.
+  if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/examples/propagate_leo.cpp")
+    message(FATAL_ERROR
+      "LEO_BUILD_EXAMPLES requires examples/, which is not part of this "
+      "source distribution. Build the full repository to enable it.")
+  endif()
   add_executable(propagate_leo examples/propagate_leo.cpp)
   target_link_libraries(propagate_leo PRIVATE leo::integration)
   if(LEO_BUILD_ANALYSIS)
@@ -161,6 +198,12 @@ if(LEO_BUILD_EXAMPLES)
   endif()
 endif()
 if(BUILD_TESTING)
+  # The test suites are not part of the public source distribution.
+  if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/frames_tests.cpp")
+    message(FATAL_ERROR
+      "BUILD_TESTING requires tests/, which is not part of this source "
+      "distribution. Build the full repository to run the test suites.")
+  endif()
   enable_testing()
   find_package(Catch2 3 REQUIRED)
   add_executable(leo_kernel_tests

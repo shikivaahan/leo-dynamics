@@ -1,5 +1,7 @@
 # Repository hygiene, security and release-readiness audit
 
+> **Status update — 2026-10-26 licensing audit.** This document is preserved as the historical record of the state at its stated baseline; its licensing, packaging and release statements are superseded where they conflict with [RELEASE_LICENSE_AUDIT.md](../RELEASE_LICENSE_AUDIT.md). The numerical engine and Python interface now carry a **scoped MIT grant** ([LICENSE_SCOPE.md](../LICENSE_SCOPE.md)); all research, empirical atmosphere providers, experiments, datasets, tests and release tooling remain private and proprietary ([PROPRIETARY-NOTICE.md](../PROPRIETARY-NOTICE.md)). Publication remains **NO-GO** pending legal title/assignment review, upstream-parameter provenance review and verification of current private-repository plan support. No gate, threshold or historical result in this document was weakened or rewritten.
+
 Audit date: 2026-10-26. Repository: `leo-dynamics` (origin `https://github.com/shikivaahan/leo-dynamics.git`).
 Baseline audited: commit `fbf85a80f751b8d7f9790362a0f2d3671160ab89` (`main`, tracking `origin/main`).
 
