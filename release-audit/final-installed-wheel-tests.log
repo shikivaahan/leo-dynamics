@@ -1,0 +1,16 @@
+$ /tmp/leo-final-installed-v2/bin/python /home/user/leo-dynamics/ci/run_installed_wheel_tests.py /home/user/leo-dynamics
+removed source-tree path entry /home/user/leo-dynamics/ci
+installed distribution: /tmp/leo-final-installed-v2/lib/python3.12/site-packages/leo_dynamics/__init__.py
+version: 0.1.0
+installed payload: ['leo_dynamics/__init__.py', 'leo_dynamics/__init__.pyi', 'leo_dynamics/_core.cpython-312-x86_64-linux-gnu.so', 'leo_dynamics/py.typed']
+No broken requirements found.
+installed-wheel smoke: leo_dynamics.Earth(mu_m3_s2=398600441800000.000000, equatorial_radius_m=6378136.300000, j2=0.001083); j2 propagation returned (10, 13)
+........................................................................ [ 18%]
+........................................................................ [ 36%]
+........................................................................ [ 54%]
+........................................................................ [ 72%]
+........................................................................ [ 90%]
+....................................                                     [100%]
+396 passed in 2.61s
+
+exit=0

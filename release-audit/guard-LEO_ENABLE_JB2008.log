@@ -1,0 +1,15 @@
+$ cmake -S /home/user/leo-dynamics -B /tmp/leo-guard-LEO_ENABLE_JB2008 -DSKBUILD=ON -DLEO_PROVISION_DEPENDENCIES=ON -DLEO_ENABLE_JB2008=ON
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+CMake Error at CMakeLists.txt:19 (message):
+  Public package builds refuse proprietary providers, examples and
+  test/research material
+
+
+-- Configuring incomplete, errors occurred!
+
+exit=1

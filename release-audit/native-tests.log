@@ -1,0 +1,248 @@
+$ ctest --test-dir /tmp/leo-native-build --output-on-failure
+Test project /tmp/leo-native-build
+        Start   1: Frame vector algebra
+  1/120 Test   #1: Frame vector algebra .....................................................................   Passed    0.00 sec
+        Start   2: Hamilton body-to-inertial rotation
+  2/120 Test   #2: Hamilton body-to-inertial rotation .......................................................   Passed    0.00 sec
+        Start   3: Quaternion validation and raw derivative
+  3/120 Test   #3: Quaternion validation and raw derivative .................................................   Passed    0.00 sec
+        Start   4: Full inertia and torque-free Euler equation
+  4/120 Test   #4: Full inertia and torque-free Euler equation ..............................................   Passed    0.00 sec
+        Start   5: Central gravity covariance and inverse square
+  5/120 Test   #5: Central gravity covariance and inverse square ............................................   Passed    0.00 sec
+        Start   6: J2 signs symmetry and composition
+  6/120 Test   #6: J2 signs symmetry and composition ........................................................   Passed    0.00 sec
+        Start   7: Gravity and named dynamics validation
+  7/120 Test   #7: Gravity and named dynamics validation ....................................................   Passed    0.00 sec
+        Start   8: Radians elements use active prograde orientation
+  8/120 Test   #8: Radians elements use active prograde orientation .........................................   Passed    0.00 sec
+        Start   9: Singular elements reconstruct with deterministic gauges
+  9/120 Test   #9: Singular elements reconstruct with deterministic gauges ..................................   Passed    0.00 sec
+        Start  10: Invalid elliptic and Cartesian domains fail explicitly
+ 10/120 Test  #10: Invalid elliptic and Cartesian domains fail explicitly ...................................   Passed    0.00 sec
+        Start  11: Angles just below zero wrap into a half-open interval
+ 11/120 Test  #11: Angles just below zero wrap into a half-open interval ....................................   Passed    0.00 sec
+        Start  12: Surface and materials preserve geometry invariants
+ 12/120 Test  #12: Surface and materials preserve geometry invariants .......................................   Passed    0.00 sec
+        Start  13: Gravity gradient analytical body torque and inverse cube law
+ 13/120 Test  #13: Gravity gradient analytical body torque and inverse cube law .............................   Passed    0.00 sec
+        Start  14: Environment uses epoch plus fractional elapsed time and explicit coverage
+ 14/120 Test  #14: Environment uses epoch plus fractional elapsed time and explicit coverage ................   Passed    0.00 sec
+        Start  15: Selected environmental models reject missing built-in acquisition
+ 15/120 Test  #15: Selected environmental models reject missing built-in acquisition ........................   Passed    0.00 sec
+        Start  16: Explicit zero-density vacuum is distinct from disabled acquisition
+ 16/120 Test  #16: Explicit zero-density vacuum is distinct from disabled acquisition .......................   Passed    0.00 sec
+        Start  17: Missing Sun snapshot cannot masquerade as a near-Earth radiation source
+ 17/120 Test  #17: Missing Sun snapshot cannot masquerade as a near-Earth radiation source ..................   Passed    0.00 sec
+        Start  18: Hermite Sun cache reproduces cubic positions and derivative velocities
+ 18/120 Test  #18: Hermite Sun cache reproduces cubic positions and derivative velocities ...................   Passed    0.00 sec
+        Start  19: A cache interval exceeding a tiny span still preserves both endpoints
+ 19/120 Test  #19: A cache interval exceeding a tiny span still preserves both endpoints ....................   Passed    0.00 sec
+        Start  20: Sun cache rejects invalid epochs targets and exact coverage neighbours
+ 20/120 Test  #20: Sun cache rejects invalid epochs targets and exact coverage neighbours ...................   Passed    0.00 sec
+        Start  21: Sun cache construction propagates coverage failures and rejects invalid source samples
+ 21/120 Test  #21: Sun cache construction propagates coverage failures and rejects invalid source samples ...   Passed    0.00 sec
+        Start  22: Sun cache owns samples and supports deterministic backward queries over a month
+ 22/120 Test  #22: Sun cache owns samples and supports deterministic backward queries over a month ..........   Passed    0.00 sec
+        Start  23: Cached Sun acquisition still computes eclipse from the current spacecraft
+ 23/120 Test  #23: Cached Sun acquisition still computes eclipse from the current spacecraft ................   Passed    0.00 sec
+        Start  24: Diffuse reflection transfers incident momentum as well as recoil
+ 24/120 Test  #24: Diffuse reflection transfers incident momentum as well as recoil .........................   Passed    0.00 sec
+        Start  25: Solar pressure incidence face, edge and back face
+ 25/120 Test  #25: Solar pressure incidence face, edge and back face ........................................   Passed    0.00 sec
+        Start  26: Oblique absorption specular and diffuse momentum fixtures
+ 26/120 Test  #26: Oblique absorption specular and diffuse momentum fixtures ................................   Passed    0.00 sec
+        Start  27: Inverse square pressure and illumination multiplier
+ 27/120 Test  #27: Inverse square pressure and illumination multiplier ......................................   Passed    0.00 sec
+        Start  28: Attitude rotates optical force while torque remains body framed
+ 28/120 Test  #28: Attitude rotates optical force while torque remains body framed ..........................   Passed    0.00 sec
+        Start  29: Centre of pressure, lever arm and multiple surfaces
+ 29/120 Test  #29: Centre of pressure, lever arm and multiple surfaces ......................................   Passed    0.00 sec
+        Start  30: Eclipse models day side, umbra and outside geometry
+ 30/120 Test  #30: Eclipse models day side, umbra and outside geometry ......................................   Passed    0.00 sec
+        Start  31: Conical penumbra is continuous, symmetric and monotone
+ 31/120 Test  #31: Conical penumbra is continuous, symmetric and monotone ...................................   Passed    0.00 sec
+        Start  32: Eclipse geometry validation
+ 32/120 Test  #32: Eclipse geometry validation ..............................................................   Passed    0.00 sec
+        Start  33: Albedo pressure magnitude scaling and sign
+ 33/120 Test  #33: Albedo pressure magnitude scaling and sign ...............................................   Passed    0.00 sec
+        Start  34: Albedo optical momentum and torque use the same panel interaction
+ 34/120 Test  #34: Albedo optical momentum and torque use the same panel interaction ........................   Passed    0.00 sec
+        Start  35: Conical disk overlap agrees with independent Cartesian area quadrature at contacts
+ 35/120 Test  #35: Conical disk overlap agrees with independent Cartesian area quadrature at contacts .......   Passed    0.00 sec
+        Start  36: Conical illumination retains small centre separations near the physical shadow apex
+ 36/120 Test  #36: Conical illumination retains small centre separations near the physical shadow apex ......   Passed    0.00 sec
+        Start  37: Apparent body radius preserves a representable altitude above the surface
+ 37/120 Test  #37: Apparent body radius preserves a representable altitude above the surface ................   Passed    0.00 sec
+        Start  38: Exponential atmosphere reproduces the tabulated reference
+ 38/120 Test  #38: Exponential atmosphere reproduces the tabulated reference ................................   Passed    0.00 sec
+        Start  39: Exponential atmosphere is globally monotonic and continuous
+ 39/120 Test  #39: Exponential atmosphere is globally monotonic and continuous ..............................   Passed    0.00 sec
+        Start  40: Exponential atmosphere scale, domain and validation
+ 40/120 Test  #40: Exponential atmosphere scale, domain and validation ......................................   Passed    0.00 sec
+        Start  41: Atmospheric relative velocity from co-rotation
+ 41/120 Test  #41: Atmospheric relative velocity from co-rotation ...........................................   Passed    0.00 sec
+        Start  42: Flat plate drag projection, sign and scaling
+ 42/120 Test  #42: Flat plate drag projection, sign and scaling .............................................   Passed    0.00 sec
+        Start  43: Flat plate drag lever arm, centre of mass and composition
+ 43/120 Test  #43: Flat plate drag lever arm, centre of mass and composition ................................   Passed    0.00 sec
+        Start  44: Flat plate drag attitude and co-rotation coupling
+ 44/120 Test  #44: Flat plate drag attitude and co-rotation coupling ........................................   Passed    0.00 sec
+        Start  45: Flat plate drag input validation
+ 45/120 Test  #45: Flat plate drag input validation .........................................................   Passed    0.00 sec
+        Start  46: Sentman coefficient hand cases
+ 46/120 Test  #46: Sentman coefficient hand cases ...........................................................   Passed    0.00 sec
+        Start  47: Sentman coefficients stay finite and physical over the full range
+ 47/120 Test  #47: Sentman coefficients stay finite and physical over the full range ........................   Passed    0.00 sec
+        Start  48: Sentman coefficient input validation
+ 48/120 Test  #48: Sentman coefficient input validation .....................................................   Passed    0.00 sec
+        Start  49: Sentman force orientation follows the plate-frame definition
+ 49/120 Test  #49: Sentman force orientation follows the plate-frame definition .............................   Passed    0.00 sec
+        Start  50: Sentman torque, attitude and composition
+ 50/120 Test  #50: Sentman torque, attitude and composition .................................................   Passed    0.00 sec
+        Start  51: Sentman drag input validation
+ 51/120 Test  #51: Sentman drag input validation ............................................................   Passed    0.00 sec
+        Start  52: Sentman small lift agrees with independent high-precision momentum flux
+ 52/120 Test  #52: Sentman small lift agrees with independent high-precision momentum flux ..................   Passed    0.00 sec
+        Start  53: Atmosphere agrees with independent anchor interpolation away from knots
+ 53/120 Test  #53: Atmosphere agrees with independent anchor interpolation away from knots ..................   Passed    0.00 sec
+        Start  54: Atmospheric segment midpoints obey the geometric mean identity
+ 54/120 Test  #54: Atmospheric segment midpoints obey the geometric mean identity ...........................   Passed    0.00 sec
+        Start  55: Fixed-seed drag preserves dissipation lever-arm shifts and frame covariance
+ 55/120 Test  #55: Fixed-seed drag preserves dissipation lever-arm shifts and frame covariance ..............   Passed    0.00 sec
+        Start  56: Accepted roundoff asymmetry has one self-adjoint inertia operator
+ 56/120 Test  #56: Accepted roundoff asymmetry has one self-adjoint inertia operator ........................   Passed    0.00 sec
+        Start  57: Inertia canonicalisation preserves equal large and subnormal finite entries
+ 57/120 Test  #57: Inertia canonicalisation preserves equal large and subnormal finite entries ..............   Passed    0.00 sec
+        Start  58: Gravity and J2 agree with independent long-double potential gradients
+ 58/120 Test  #58: Gravity and J2 agree with independent long-double potential gradients ....................   Passed    0.00 sec
+        Start  59: Quaternion rotation matches Rodrigues including tiny angles and large representatives
+ 59/120 Test  #59: Quaternion rotation matches Rodrigues including tiny angles and large representatives ....   Passed    0.00 sec
+        Start  60: Fixed-seed physical elliptic states satisfy Kepler energy and angular momentum
+ 60/120 Test  #60: Fixed-seed physical elliptic states satisfy Kepler energy and angular momentum ...........   Passed    0.00 sec
+        Start  61: Torque-free Euler has independent instantaneous conservation identities
+ 61/120 Test  #61: Torque-free Euler has independent instantaneous conservation identities ..................   Passed    0.00 sec
+        Start  62: Requested sample times are labelled exactly
+ 62/120 Test  #62: Requested sample times are labelled exactly ..............................................   Passed    0.00 sec
+        Start  63: A single requested sample returns the validated initial state
+ 63/120 Test  #63: A single requested sample returns the validated initial state ............................   Passed    0.00 sec
+        Start  64: Caller-invalid sample times are rejected
+ 64/120 Test  #64: Caller-invalid sample times are rejected .................................................   Passed    0.00 sec
+        Start  65: Caller-invalid state and epoch are rejected
+ 65/120 Test  #65: Caller-invalid state and epoch are rejected ..............................................   Passed    0.00 sec
+        Start  66: Caller-invalid options are rejected
+ 66/120 Test  #66: Caller-invalid options are rejected ......................................................   Passed    0.00 sec
+        Start  67: Attempt exhaustion fails without a partial trajectory
+ 67/120 Test  #67: Attempt exhaustion fails without a partial trajectory ....................................   Passed    0.00 sec
+        Start  68: Nonfinite stage derivative is a detected step failure
+ 68/120 Test  #68: Nonfinite stage derivative is a detected step failure ....................................   Passed    0.00 sec
+        Start  69: A near-zero trial quaternion is a detected step failure
+ 69/120 Test  #69: A near-zero trial quaternion is a detected step failure ..................................   Passed    0.00 sec
+        Start  70: A near-zero quaternion also fails on a rejected trial
+ 70/120 Test  #70: A near-zero quaternion also fails on a rejected trial ....................................   Passed    0.00 sec
+        Start  71: RHS exceptions propagate unchanged
+ 71/120 Test  #71: RHS exceptions propagate unchanged .......................................................   Passed    0.00 sec
+        Start  72: Rejected steps below time resolution fail explicitly
+ 72/120 Test  #72: Rejected steps below time resolution fail explicitly .....................................   Passed    0.00 sec
+        Start  73: Rejections converge on the exponential-decay oracle
+ 73/120 Test  #73: Rejections converge on the exponential-decay oracle ......................................   Passed    0.00 sec
+        Start  74: Non-autonomous RHS is evaluated at the exact requested times
+ 74/120 Test  #74: Non-autonomous RHS is evaluated at the exact requested times .............................   Passed    0.00 sec
+        Start  75: Zero attitude stays fixed under EarthDynamics
+ 75/120 Test  #75: Zero attitude stays fixed under EarthDynamics ............................................   Passed    0.00 sec
+        Start  76: Principal-axis rotation with an unnormalized initial quaternion
+ 76/120 Test  #76: Principal-axis rotation with an unnormalized initial quaternion ..........................   Passed    0.01 sec
+        Start  77: Constant body rate about a principal axis stays analytic
+ 77/120 Test  #77: Constant body rate about a principal axis stays analytic .................................   Passed    0.00 sec
+        Start  78: General inertia torque-free motion conserves energy and angular momentum
+ 78/120 Test  #78: General inertia torque-free motion conserves energy and angular momentum .................   Passed    0.00 sec
+        Start  79: Circular two-body orbit tracks exact analytic motion
+ 79/120 Test  #79: Circular two-body orbit tracks exact analytic motion .....................................   Passed    0.01 sec
+        Start  80: Elliptic two-body orbit matches Keplerian motion over ten periods
+ 80/120 Test  #80: Elliptic two-body orbit matches Keplerian motion over ten periods ........................   Passed    0.01 sec
+        Start  81: J2 nodal rates, step convergence and conserved quantities
+ 81/120 Test  #81: J2 nodal rates, step convergence and conserved quantities ................................   Passed    0.32 sec
+        Start  82: J2 apsidal regression matches the first-order analytic rate
+ 82/120 Test  #82: J2 apsidal regression matches the first-order analytic rate ..............................   Passed    0.10 sec
+        Start  83: J2 apsidal regression vanishes at the critical inclination
+ 83/120 Test  #83: J2 apsidal regression vanishes at the critical inclination ...............................   Passed    0.10 sec
+        Start  84: Coupled SRP changes orbit only for illuminated front-facing panels
+ 84/120 Test  #84: Coupled SRP changes orbit only for illuminated front-facing panels .......................   Passed    0.00 sec
+        Start  85: Atmospheric co-rotation and attitude affect orbital energy loss
+ 85/120 Test  #85: Atmospheric co-rotation and attitude affect orbital energy loss ..........................   Passed    0.00 sec
+        Start  86: Off-centre environmental force couples angular rate and attitude
+ 86/120 Test  #86: Off-centre environmental force couples angular rate and attitude .........................   Passed    0.00 sec
+        Start  87: Gravity-gradient propagation uses body torque and spherical-inertia equilibrium
+ 87/120 Test  #87: Gravity-gradient propagation uses body torque and spherical-inertia equilibrium ..........   Passed    0.00 sec
+        Start  88: Force and body torque switches compose against independent analytical loads
+ 88/120 Test  #88: Force and body torque switches compose against independent analytical loads ..............   Passed    0.00 sec
+        Start  89: Rejected large adaptive trials preserve the exponential IVP
+ 89/120 Test  #89: Rejected large adaptive trials preserve the exponential IVP ..............................   Passed    0.00 sec
+        Start  90: Projected adaptive attitude follows an independent arbitrary-axis spin solution
+ 90/120 Test  #90: Projected adaptive attitude follows an independent arbitrary-axis spin solution ..........   Passed    0.00 sec
+        Start  91: Every trajectory is attempted exactly once regardless of worker count
+ 91/120 Test  #91: Every trajectory is attempted exactly once regardless of worker count ....................   Passed    0.00 sec
+        Start  92: Batch output is bitwise identical to sequential propagation
+ 92/120 Test  #92: Batch output is bitwise identical to sequential propagation ..............................   Passed    0.00 sec
+        Start  93: Batch results are ordered by input index, not by worker
+ 93/120 Test  #93: Batch results are ordered by input index, not by worker ..................................   Passed    0.00 sec
+        Start  94: Results do not depend on the worker count
+ 94/120 Test  #94: Results do not depend on the worker count ................................................   Passed    0.00 sec
+        Start  95: Empty, single-element and oversized worker batches behave
+ 95/120 Test  #95: Empty, single-element and oversized worker batches behave ................................   Passed    0.00 sec
+        Start  96: A zero worker count is rejected before any work
+ 96/120 Test  #96: A zero worker count is rejected before any work ..........................................   Passed    0.00 sec
+        Start  97: A factory failure identifies its trajectory and preserves the cause
+ 97/120 Test  #97: A factory failure identifies its trajectory and preserves the cause ......................   Passed    0.00 sec
+        Start  98: An RHS failure identifies its trajectory and preserves the cause
+ 98/120 Test  #98: An RHS failure identifies its trajectory and preserves the cause .........................   Passed    0.00 sec
+        Start  99: Several failures report the lowest failing input index
+ 99/120 Test  #99: Several failures report the lowest failing input index ...................................   Passed    0.00 sec
+        Start 100: Every other trajectory runs to completion when one fails
+100/120 Test #100: Every other trajectory runs to completion when one fails .................................   Passed    0.05 sec
+        Start 101: Invalid shared integration options surface as the lowest failing trajectory
+101/120 Test #101: Invalid shared integration options surface as the lowest failing trajectory ..............   Passed    0.00 sec
+        Start 102: Each trajectory gets independent move-only mutable RHS state
+102/120 Test #102: Each trajectory gets independent move-only mutable RHS state .............................   Passed    0.00 sec
+        Start 103: Analysis preserves analytic circular and elliptic invariants
+103/120 Test #103: Analysis preserves analytic circular and elliptic invariants .............................   Passed    0.01 sec
+        Start 104: Analysis unwraps both angular directions and rejects malformed trajectories
+104/120 Test #104: Analysis unwraps both angular directions and rejects malformed trajectories ..............   Passed    0.00 sec
+        Start 105: Apsis events and segments recover periods and partial boundary orbits
+105/120 Test #105: Apsis events and segments recover periods and partial boundary orbits ....................   Passed    0.00 sec
+        Start 106: Linear radial velocity crossing has an explicit fractional event
+106/120 Test #106: Linear radial velocity crossing has an explicit fractional event .........................   Passed    0.00 sec
+        Start 107: Circular orbits count phase turns without fictional apsides
+107/120 Test #107: Circular orbits count phase turns without fictional apsides ..............................   Passed    0.00 sec
+        Start 108: Analysis on propagation preserves two body elements and J2 nodal trends
+108/120 Test #108: Analysis on propagation preserves two body elements and J2 nodal trends ..................   Passed    0.02 sec
+        Start 109: Selected load diagnostics reconstruct RHS for both drag laws
+109/120 Test #109: Selected load diagnostics reconstruct RHS for both drag laws .............................   Passed    0.00 sec
+        Start 110: Surface illumination area and off-centre torque share body to inertial convention
+110/120 Test #110: Surface illumination area and off-centre torque share body to inertial convention ........   Passed    0.00 sec
+        Start 111: Attitude energy momentum and relative Euler lock follow physical rotations
+111/120 Test #111: Attitude energy momentum and relative Euler lock follow physical rotations ...............   Passed    0.00 sec
+        Start 112: SRP work integrates constant force using actual irregular timestamps
+112/120 Test #112: SRP work integrates constant force using actual irregular timestamps .....................   Passed    0.00 sec
+        Start 113: Fractional work remains correct when endpoint work cancels
+113/120 Test #113: Fractional work remains correct when endpoint work cancels ...............................   Passed    0.00 sec
+        Start 114: Umbra gives zero solar power and RTN rejects degenerate orbits
+114/120 Test #114: Umbra gives zero solar power and RTN rejects degenerate orbits ...........................   Passed    0.00 sec
+        Start 115: Integrated constant applied force work accounts for two body energy change
+115/120 Test #115: Integrated constant applied force work accounts for two body energy change ...............   Passed    0.00 sec
+        Start 116: CSV preserves every timestamp full precision schema and deterministic values
+116/120 Test #116: CSV preserves every timestamp full precision schema and deterministic values .............   Passed    0.00 sec
+        Start 117: CSV rejects malformed analyses before creating outputs and reports invalid paths
+117/120 Test #117: CSV rejects malformed analyses before creating outputs and reports invalid paths .........   Passed    0.01 sec
+        Start 118: CSV specific SRP work has explicit J per kg columns and mass scaling
+118/120 Test #118: CSV specific SRP work has explicit J per kg columns and mass scaling .....................   Passed    0.00 sec
+        Start 119: audit_metric_identities
+119/120 Test #119: audit_metric_identities ..................................................................   Passed    0.05 sec
+        Start 120: process_batch_contracts
+120/120 Test #120: process_batch_contracts ..................................................................   Passed    0.14 sec
+
+100% tests passed out of 120
+
+Total Test time (real) =   1.12 sec
+
+exit=0

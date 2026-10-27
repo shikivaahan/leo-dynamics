@@ -1,0 +1,9 @@
+$ ldd /tmp/leo-final-binary-rebuilt/_core.cpython-312-x86_64-linux-gnu.so
+	linux-vdso.so.1 (0x00007b6b5b46a000)
+	libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007b6b5b000000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007b6b5b2a7000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007b6b5afd2000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007b6b5ac00000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007b6b5b46c000)
+
+exit=0

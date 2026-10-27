@@ -1,0 +1,7 @@
+$ /home/user/.local/bin/uv venv --python 3.12 --seed /tmp/leo-final-installed-v2
+Using CPython 3.12.14
+Creating virtual environment with seed packages at: /tmp/leo-final-installed-v2
+ + pip==26.2.2
+Activate with: source /tmp/leo-final-installed-v2/bin/activate
+
+exit=0

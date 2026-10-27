@@ -1,0 +1,44 @@
+SUPERSEDED: this was the first regression run, before the METADATA payload
+decoding fix; it failed on the synthetic control and is retained only as a
+record of the earlier state. The authoritative run is final-manifest/gate
+regressions in final-archive-gate.log and gate-regressions-final.log.
+$ python3 tests/license_boundary_tests.py
+FF/usr/lib/python3.12/zipfile/__init__.py:1620: UserWarning: Duplicate name: 'leo_dynamics-0.1.0.dist-info/licenses/LICENSE'
+  return self._open_to_write(zinfo, force_zip64=force_zip64)
+............
+======================================================================
+FAIL: test_complete_control_then_wrong_metadata_missing_payload_and_licence (__main__.ArchiveCompletenessTests.test_complete_control_then_wrong_metadata_missing_payload_and_licence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/leo-dynamics/tests/license_boundary_tests.py", line 255, in test_complete_control_then_wrong_metadata_missing_payload_and_licence
+    self.assertEqual(self.gate._check_wheel(path, self.manifest)[0], [])
+AssertionError: Lists differ: ['metadata description differs from the approved public readme'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'metadata description differs from the approved public readme'
+
+- ['metadata description differs from the approved public readme']
++ []
+
+======================================================================
+FAIL: test_complete_sdist_then_renamed_research_and_multiple_roots (__main__.ArchiveCompletenessTests.test_complete_sdist_then_renamed_research_and_multiple_roots)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/leo-dynamics/tests/license_boundary_tests.py", line 294, in test_complete_sdist_then_renamed_research_and_multiple_roots
+    self.assertEqual(failures, [])
+AssertionError: Lists differ: ['metadata description differs from the approved public readme'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'metadata description differs from the approved public readme'
+
+- ['metadata description differs from the approved public readme']
++ []
+
+----------------------------------------------------------------------
+Ran 14 tests in 1.014s
+
+FAILED (failures=2)
+
+exit=1

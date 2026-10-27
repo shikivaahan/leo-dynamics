@@ -1,0 +1,91 @@
+$ /tmp/leo-final-installed/bin/python -c import importlib.metadata as m,json
+print(json.dumps([{"name":d.metadata["Name"],"version":d.version,"license_expression":d.metadata.get("License-Expression"),"license":d.metadata.get("License"),"classifiers":[v for v in d.metadata.get_all("Classifier",[]) if v.startswith("License")],"requires":d.requires} for d in m.distributions()],indent=2))
+[
+  {
+    "name": "pluggy",
+    "version": "1.7.0",
+    "license_expression": null,
+    "license": "MIT",
+    "classifiers": [
+      "License :: OSI Approved :: MIT License"
+    ],
+    "requires": null
+  },
+  {
+    "name": "iniconfig",
+    "version": "2.3.1",
+    "license_expression": "MIT",
+    "license": null,
+    "classifiers": [],
+    "requires": null
+  },
+  {
+    "name": "leo-dynamics",
+    "version": "0.1.0",
+    "license_expression": "MIT",
+    "license": null,
+    "classifiers": [],
+    "requires": [
+      "numpy>=2.0"
+    ]
+  },
+  {
+    "name": "pip",
+    "version": "26.2.2",
+    "license_expression": "MIT",
+    "license": null,
+    "classifiers": [],
+    "requires": null
+  },
+  {
+    "name": "pytest",
+    "version": "9.1.1",
+    "license_expression": "MIT",
+    "license": null,
+    "classifiers": [],
+    "requires": [
+      "colorama>=0.4; sys_platform == \"win32\"",
+      "exceptiongroup>=1; python_version < \"3.11\"",
+      "iniconfig>=1.0.1",
+      "packaging>=22",
+      "pluggy<2,>=1.5",
+      "pygments>=2.7.2",
+      "tomli>=1; python_version < \"3.11\"",
+      "argcomplete; extra == \"dev\"",
+      "attrs>=19.2; extra == \"dev\"",
+      "hypothesis>=3.56; extra == \"dev\"",
+      "mock; extra == \"dev\"",
+      "requests; extra == \"dev\"",
+      "setuptools; extra == \"dev\"",
+      "xmlschema; extra == \"dev\""
+    ]
+  },
+  {
+    "name": "packaging",
+    "version": "26.3",
+    "license_expression": "Apache-2.0 OR BSD-2-Clause",
+    "license": null,
+    "classifiers": [],
+    "requires": null
+  },
+  {
+    "name": "Pygments",
+    "version": "2.21.0",
+    "license_expression": "BSD-2-Clause",
+    "license": null,
+    "classifiers": [],
+    "requires": [
+      "colorama>=0.4.6; extra == 'windows-terminal'"
+    ]
+  },
+  {
+    "name": "numpy",
+    "version": "2.5.4",
+    "license_expression": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+    "license": null,
+    "classifiers": [],
+    "requires": null
+  }
+]
+
+exit=0

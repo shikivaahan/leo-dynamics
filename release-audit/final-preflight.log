@@ -1,0 +1,4 @@
+$ python3 ci/release_preflight.py --project-root . --expected-version 0.1.0
+cwd=/home/user/leo-dynamics
+release preflight passed: mechanical licence, boundary and version checks passed; this is not publication approval or proof of legal title.
+exit=0

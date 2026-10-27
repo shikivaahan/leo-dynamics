@@ -1,0 +1,5 @@
+$ /home/user/.local/bin/uv pip list --python /tmp/leo-final-installed/bin/python --format json
+Using Python 3.12.14 environment at: /tmp/leo-final-installed
+[{"name":"iniconfig","version":"2.3.1"},{"name":"leo-dynamics","version":"0.1.0"},{"name":"numpy","version":"2.5.4"},{"name":"packaging","version":"26.3"},{"name":"pip","version":"26.2.2"},{"name":"pluggy","version":"1.7.0"},{"name":"pygments","version":"2.21.0"},{"name":"pytest","version":"9.1.1"}]
+
+exit=0

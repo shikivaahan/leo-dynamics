@@ -1,0 +1,4 @@
+$ python3 release-audit/generate_boundary.py
+cwd=/home/user/leo-dynamics
+wrote release-audit/license-boundary.json: mit_core=52, proprietary=1934, repository_metadata=2, sdist_members=52
+exit=0

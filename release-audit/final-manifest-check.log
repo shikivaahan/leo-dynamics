@@ -1,0 +1,4 @@
+$ python3 release-audit/generate_boundary.py --check
+cwd=/home/user/leo-dynamics
+boundary manifest is current
+exit=0

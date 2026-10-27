@@ -1,0 +1,4 @@
+$ python3 ci/verify_license_boundary.py --project-root .
+cwd=/home/user/leo-dynamics
+licence boundary gate passed
+exit=0

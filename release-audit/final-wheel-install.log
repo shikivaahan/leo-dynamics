@@ -1,0 +1,14 @@
+$ /home/user/.local/bin/uv pip install --python /tmp/leo-final-installed-v2/bin/python /home/user/leo-dynamics/release-audit/artifacts/rebuilt/leo_dynamics-0.1.0-cp312-cp312-linux_x86_64.whl pytest
+Using Python 3.12.14 environment at: /tmp/leo-final-installed-v2
+Resolved 7 packages in 6ms
+Prepared 1 package in 12ms
+Installed 7 packages in 69ms
+ + iniconfig==2.3.1
+ + leo-dynamics==0.1.0 (from file:///home/user/leo-dynamics/release-audit/artifacts/rebuilt/leo_dynamics-0.1.0-cp312-cp312-linux_x86_64.whl)
+ + numpy==2.5.4
+ + packaging==26.3
+ + pluggy==1.7.0
+ + pygments==2.21.0
+ + pytest==9.1.1
+
+exit=0

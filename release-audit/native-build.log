@@ -1,0 +1,60 @@
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- leo_dynamics: EIGEN provisioned as eigen 3.4.0 https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz sha256=8586084f71f9bde545ee7fa6d00288b264a2b7ac3607b974e54d13e7162c1c72
+-- leo_dynamics: BOOST provisioned as boost 1.83.0 https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.tar.xz sha256=c5a0688e1f0c05f354bbd0b32244d36085d9ffc9f932e8a18983a9908096f614
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (15.8s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/leo-native-build
+[  2%] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/attitude.cpp.o
+[  7%] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/gravity.cpp.o
+[  7%] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/spacecraft.cpp.o
+[ 10%] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/state.cpp.o
+[ 13%] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/dynamics.cpp.o
+[ 15%] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/orbital.cpp.o
+[ 18%] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/radiation.cpp.o
+[ 21%] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/aerodynamics.cpp.o
+[ 23%] Linking CXX static library libleo_kernel.a
+[ 23%] Built target leo_kernel
+[ 26%] Building CXX object CMakeFiles/leo_integration.dir/src/integration/error_control.cpp.o
+[ 28%] Building CXX object CMakeFiles/leo_analysis.dir/src/analysis/orbital.cpp.o
+[ 31%] Building CXX object CMakeFiles/leo_kernel_tests.dir/tests/frames_tests.cpp.o
+[ 34%] Building CXX object CMakeFiles/leo_analysis.dir/src/analysis/loads.cpp.o
+[ 36%] Linking CXX static library libleo_integration.a
+[ 36%] Built target leo_integration
+[ 39%] Building CXX object CMakeFiles/leo_analysis.dir/src/analysis/export.cpp.o
+[ 42%] Building CXX object CMakeFiles/leo_integration_tests.dir/tests/integration_tests.cpp.o
+[ 44%] Building CXX object CMakeFiles/leo_kernel_tests.dir/tests/attitude_tests.cpp.o
+[ 47%] Building CXX object CMakeFiles/leo_kernel_tests.dir/tests/gravity_tests.cpp.o
+[ 50%] Linking CXX static library libleo_analysis.a
+[ 50%] Built target leo_analysis
+[ 52%] Building CXX object CMakeFiles/leo_kernel_tests.dir/tests/orbital_tests.cpp.o
+[ 55%] Building CXX object CMakeFiles/leo_kernel_tests.dir/tests/environment_tests.cpp.o
+[ 57%] Building CXX object CMakeFiles/leo_analysis_tests.dir/tests/analysis_orbital_tests.cpp.o
+[ 60%] Building CXX object CMakeFiles/leo_analysis_tests.dir/tests/analysis_loads_tests.cpp.o
+[ 63%] Building CXX object CMakeFiles/leo_kernel_tests.dir/tests/interpolated_tests.cpp.o
+[ 65%] Building CXX object CMakeFiles/leo_integration_tests.dir/tests/two_body_tests.cpp.o
+[ 68%] Building CXX object CMakeFiles/leo_kernel_tests.dir/tests/radiation_tests.cpp.o
+[ 71%] Building CXX object CMakeFiles/leo_kernel_tests.dir/tests/numerical_radiation_tests.cpp.o
+[ 73%] Building CXX object CMakeFiles/leo_analysis_tests.dir/tests/analysis_export_tests.cpp.o
+[ 76%] Building CXX object CMakeFiles/leo_kernel_tests.dir/tests/aerodynamics_tests.cpp.o
+[ 78%] Building CXX object CMakeFiles/leo_kernel_tests.dir/tests/numerical_environment_tests.cpp.o
+[ 81%] Building CXX object CMakeFiles/leo_integration_tests.dir/tests/j2_tests.cpp.o
+[ 84%] Building CXX object CMakeFiles/leo_kernel_tests.dir/tests/numerical_dynamics_tests.cpp.o
+[ 86%] Linking CXX executable leo_analysis_tests
+[ 86%] Built target leo_analysis_tests
+[ 89%] Building CXX object CMakeFiles/leo_integration_tests.dir/tests/environment_integration_tests.cpp.o
+[ 92%] Building CXX object CMakeFiles/leo_integration_tests.dir/tests/numerical_integration_tests.cpp.o
+[ 94%] Linking CXX executable leo_kernel_tests
+[ 94%] Built target leo_kernel_tests
+[ 97%] Building CXX object CMakeFiles/leo_integration_tests.dir/tests/batch_tests.cpp.o
+[100%] Linking CXX executable leo_integration_tests
+[100%] Built target leo_integration_tests
+
+exit=0 (native Release build, 120/120 ctest in native-tests.log)

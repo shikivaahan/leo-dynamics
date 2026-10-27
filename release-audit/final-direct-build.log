@@ -1,0 +1,83 @@
+$ /tmp/leo-audit-venv/bin/python -m build --sdist --wheel --outdir /home/user/leo-dynamics/release-audit/artifacts/direct .
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - cmake>=3.28
+  - ninja>=1.11
+  - pybind11==3.1.0
+  - scikit-build-core==0.11.6
+* Getting build dependencies for sdist...
+* Installed build dependency versions:
+  - cmake==4.4.4
+  - ninja==1.13.2
+  - pybind11==3.1.0
+  - scikit-build-core==0.11.6
+* Building sdist...
+*** scikit-build-core 0.11.6 (sdist)
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - cmake>=3.28
+  - ninja>=1.11
+  - pybind11==3.1.0
+  - scikit-build-core==0.11.6
+* Getting build dependencies for wheel...
+* Installing packages in isolated environment:
+  - cmake>=3.28
+  - ninja>=1.5
+* Installed build dependency versions:
+  - cmake==4.4.4
+  - ninja==1.13.2
+  - pybind11==3.1.0
+  - scikit-build-core==0.11.6
+* Building wheel...
+2026-10-26 23:28:54,780 - scikit_build_core - WARNING - cmake should not be in build-system.requires - scikit-build-core will inject it as needed
+2026-10-26 23:28:54,780 - scikit_build_core - WARNING - ninja should not be in build-system.requires - scikit-build-core will inject it as needed
+*** scikit-build-core 0.11.6 using CMake 4.4.4 (wheel)
+*** Configuring CMake...
+loading initial cache file /tmp/tmpwvu_rr5w/build/CMakeInit.txt
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- leo_dynamics: EIGEN provisioned as eigen 3.4.0 https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz sha256=8586084f71f9bde545ee7fa6d00288b264a2b7ac3607b974e54d13e7162c1c72
+-- leo_dynamics: BOOST provisioned as boost 1.83.0 https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.tar.xz sha256=c5a0688e1f0c05f354bbd0b32244d36085d9ffc9f932e8a18983a9908096f614
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Found Python3: /tmp/build-env-pkgfjy_f/bin/python (found suitable version "3.13.15", minimum required is "3.9") found components: Interpreter Development.Module
+-- Performing Test HAS_FLTO_AUTO
+-- Performing Test HAS_FLTO_AUTO - Success
+-- leo_dynamics: development import with PYTHONPATH=/tmp/tmpwvu_rr5w/build/python/leo_dynamics/..
+-- Configuring done (17.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/tmpwvu_rr5w/build
+*** Building project with Ninja...
+[1/20] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/attitude.cpp.o
+[2/20] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/state.cpp.o
+[3/20] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/gravity.cpp.o
+[4/20] Building CXX object CMakeFiles/leo_integration.dir/src/integration/error_control.cpp.o
+[5/20] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/dynamics.cpp.o
+[6/20] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/aerodynamics.cpp.o
+[7/20] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/radiation.cpp.o
+[8/20] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/orbital.cpp.o
+[9/20] Building CXX object CMakeFiles/leo_analysis.dir/src/analysis/export.cpp.o
+[10/20] Building CXX object CMakeFiles/leo_analysis.dir/src/analysis/orbital.cpp.o
+[11/20] Building CXX object CMakeFiles/leo_analysis.dir/src/analysis/loads.cpp.o
+[12/20] Building CXX object CMakeFiles/leo_kernel.dir/src/kernel/spacecraft.cpp.o
+[13/20] Linking CXX static library libleo_kernel.a
+[14/20] Linking CXX static library libleo_integration.a
+[15/20] Linking CXX static library libleo_analysis.a
+[16/20] Building CXX object CMakeFiles/_core.dir/bindings/module.cpp.o
+[17/20] Building CXX object CMakeFiles/_core.dir/bindings/analysis.cpp.o
+[18/20] Building CXX object CMakeFiles/_core.dir/bindings/configuration.cpp.o
+[19/20] Building CXX object CMakeFiles/_core.dir/bindings/integration.cpp.o
+[20/20] Linking CXX shared module python/leo_dynamics/_core.cpython-313-x86_64-linux-gnu.so
+*** Installing project into wheel...
+-- Install configuration: "Release"
+-- Installing: /tmp/tmpwvu_rr5w/wheel/platlib/leo_dynamics/_core.cpython-313-x86_64-linux-gnu.so
+*** Making wheel...
+*** Created leo_dynamics-0.1.0-cp313-cp313-linux_x86_64.whl
+Successfully built leo_dynamics-0.1.0.tar.gz and leo_dynamics-0.1.0-cp313-cp313-linux_x86_64.whl
+
+exit=0

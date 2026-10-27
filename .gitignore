@@ -74,3 +74,8 @@ __pycache__/
 *.pyc
 .venv/
 .venv-python/
+
+# The licensing audit's evidence logs are part of the audit record and must
+# survive a clone. They live under release-audit/, are classified proprietary
+# by the boundary manifest and are excluded from every distribution.
+!release-audit/**/*.log

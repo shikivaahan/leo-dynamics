@@ -1,0 +1,52 @@
+$ /tmp/leo-final-installed-v2/bin/python -c import numpy as np
+import leo_dynamics as leo
+
+earth = leo.Earth()
+radius = 7.0e6                                     # ~622 km above the reference radius
+speed = float(np.sqrt(earth.mu_m3_s2 / radius))    # circular speed
+
+initial = leo.State(position_m=[radius, 0.0, 0.0],
+                    velocity_m_s=[0.0, speed, 0.0])
+
+spacecraft = leo.Spacecraft(
+    mass_kg=500.0,
+    inertia_kg_m2=np.diag([40.0, 40.0, 20.0]),
+    surfaces=[
+        leo.Surface(area_m2=12.0,
+                    normal_body=[0.0, 0.0, 1.0],
+                    center_of_pressure_body_m=[0.0, 0.0, 0.0])
+    ],
+)
+
+model = leo.DynamicsModel(gravity="j2")
+times_s = np.arange(0.0, 5400.0 + 5.0, 5.0)
+
+trajectory = leo.propagate(initial=initial,
+                           spacecraft=spacecraft,
+                           model=model,
+                           times_s=times_s,
+                           earth=earth)
+
+print(trajectory.states.shape)        # (1081, 13)
+print(trajectory.position_m[-1])      # final position in metres
+
+import tempfile, pathlib
+env=leo.Environment(sun=leo.SunEphemeris.constant([1e11,0,0]), atmosphere=leo.ExponentialAtmosphere())
+loads=leo.DynamicsModel(gravity="j2", srp=leo.Contribution(force=True,torque=True), drag=leo.Contribution(force=True,torque=True), drag_law="sentman", albedo=leo.Contribution(force=True,torque=True), gravity_gradient=True)
+loaded=leo.propagate(initial=initial,spacecraft=spacecraft,model=loads,times_s=np.arange(0,1801,10),environment=env)
+batch=leo.propagate_batch(initials=[initial]*3,spacecraft=spacecraft,model=model,times_s=np.arange(0,601,10),workers=2)
+assert batch.states.shape==(3,61,13)
+assert np.isfinite(loaded.states).all()
+with tempfile.TemporaryDirectory() as tmp:
+    leo.analysis.export_csv(trajectory,tmp)
+    names=sorted(p.name for p in pathlib.Path(tmp).iterdir())
+    assert len(names)==9
+    print("CSV",names)
+print("environment",loaded.states.shape,"batch",batch.states.shape,"SMOKE PASS")
+
+(1081, 13)
+[ 6317334.71350775 -3012959.89789854        0.        ]
+CSV ['apsides.csv', 'attitude.csv', 'environment.csv', 'metadata.csv', 'orbital_elements.csv', 'per_orbit.csv', 'surfaces.csv', 'trajectory.csv', 'work.csv']
+environment (181, 13) batch (3, 61, 13) SMOKE PASS
+
+exit=0

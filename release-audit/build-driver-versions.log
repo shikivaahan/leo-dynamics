@@ -1,0 +1,5 @@
+$ /home/user/.local/bin/uv pip list --python /tmp/leo-audit-venv/bin/python --format json
+Using Python 3.13.15 environment at: /tmp/leo-audit-venv
+[{"name":"build","version":"1.6.1"},{"name":"packaging","version":"26.3"},{"name":"pip","version":"26.2.2"},{"name":"pyproject-hooks","version":"1.3.3"}]
+
+exit=0

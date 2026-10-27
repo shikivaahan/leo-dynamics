@@ -1,0 +1,5 @@
+$ /home/user/.local/bin/uv pip list --python /tmp/leo-deps-venv/bin/python --format json
+Using Python 3.12.14 environment at: /tmp/leo-deps-venv
+[{"name":"cmake","version":"4.4.4"},{"name":"ninja","version":"1.13.2"},{"name":"packaging","version":"26.3"},{"name":"pathspec","version":"1.1.1"},{"name":"pybind11","version":"3.1.0"},{"name":"scikit-build-core","version":"0.11.6"}]
+
+exit=0
