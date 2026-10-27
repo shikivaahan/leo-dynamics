@@ -2,6 +2,13 @@
 
 **Copyright (c) 2026 Shiki Vaahan. All rights reserved.**
 
+*Notice dated 2026-10-26: this notice records the copyright holder's licensing
+decision for the material listed below. Legal copyright title and any
+employment or assignment position have not been independently verified in this
+audit, and nothing here is a legal opinion or a clearance; see
+`RELEASE_LICENSE_AUDIT.md` for the open items and the current
+no-publication status. The reservation of rights above is unchanged.*
+
 This notice applies to every part of the `leo-dynamics` repository that is
 **not** covered by the MIT licence in `LICENSE`. The scope of the MIT grant is
 described in `LICENSE_SCOPE.md`; the machine-readable, authoritative

@@ -343,8 +343,13 @@ Modified/new implementation paths: `.gitattributes`,
 `ci/release_preflight.py`, new `ci/verify_license_boundary.py`, new
 `tests/license_boundary_tests.py`, `LICENSE`, `LICENSE_SCOPE.md`,
 `PROPRIETARY-NOTICE.md`, `README.dist.md`, `README.md`,
-`THIRD_PARTY_NOTICES.md`, `docs/python-packaging.md`, this report,
-`audit-progress.md`, and the private `release-audit/` manifest/generator/evidence.
+`THIRD_PARTY_NOTICES.md`, `docs/python-packaging.md`,
+`docs/release-readiness-report.md`, `docs/repository-hygiene-report.md`,
+`docs/v0.1-release-readiness.md`, this report, `audit-progress.md`, the
+researcher-written `audit-evidence/` tree including
+`audit-evidence/docs-licensing-sweep.md` and
+`audit-evidence/docs-licensing-sweep.json`, and the private
+`release-audit/` manifest/generator/evidence.
 The parallel researcher exclusively wrote `audit-evidence/`; its contents are
 research evidence, not licence grants. Exact changed paths are additionally
 recorded in `release-audit/changed-paths.txt`.
@@ -354,6 +359,56 @@ reviewed source addition, explicitly classify it, update packaging/scope if
 approved, regenerate the manifest and rerun source/archive gates. Do not widen
 rules to silence a failure. No temporary scaffolding was added to numerical
 code. Evidence artifacts remain private and excluded from public distributions.
+
+### Documentation status banners
+
+A parallel read-only documentation sweep (2026-10-26, evidence in
+`audit-evidence/docs-licensing-sweep.md` and `audit-evidence/docs-licensing-sweep.json`)
+marked the internal documents whose licensing statements predated the scoped
+grant. Five documents are affected: `README.md`,
+`docs/release-readiness-report.md`, `docs/python-packaging.md`,
+`docs/repository-hygiene-report.md` and `docs/v0.1-release-readiness.md`. The
+annotation style is additive only: a dated status banner immediately after each
+document's title, and dated inline `*[superseded 2026-10-26: …]*` notes placed
+directly after the stale statement they qualify. The sweep found **32 stale
+statements: 13 annotated, 19 banner-covered**. A line-level diff of the four
+modified tracked documents shows insertions only and **zero removed lines**, so
+no measurement, baseline date, hash, count, gate, blocker, severity or test
+tolerance was deleted, softened or rewritten. The sweep's own record states
+that no annotation claims a release, legal clearance or verified ownership.
+During consolidation two annotations that could have been read as granting
+redistribution outright were tightened in the same additive style, so that they
+describe the owner's approval subject to the still-open copyright-title
+verification; no count, gate or historical statement changed as a result.
+
+### Non-actions and preserved material
+
+Stated explicitly, because the audit's value depends on them being checkable:
+
+- **Nothing was pushed.** `origin/main` still reads
+  `23df023d6080c9aeb27e9ceddba1671651205584`; the audit work exists only as
+  local commits on `audit/release-licensing-v0.1.0`.
+- **No workflow was run or dispatched**, and no publishing credential was used.
+  The GitHub access during this audit was read-only GET.
+- **No index upload** of any wheel or source distribution occurred, and **no
+  repository was created or made public**. The repository remains private.
+- **No proprietary file was deleted, moved or modified.** The private tree still
+  contains every research and historical artefact: the regenerated canonical
+  manifest classifies **1,933 tracked files as proprietary**,
+  plus 2 repository-plumbing files, out of
+  1,987 classified tracked files, of which 52 are the
+  MIT core that may be distributed. The research campaigns, empirical
+  atmosphere providers and adapters, optimisation experiments and datasets,
+  frozen reference fixtures, qualification reports and release tooling are all
+  still present and still classified as non-distributable.
+- **The proprietary notice itself is not distributed.** `PROPRIETARY-NOTICE.md`
+  is absent from both final artifacts (sdist 53 members, wheel 10 members;
+  classification `proprietary`, `in_sdist: false`), so its dated title
+  clarification required no rebuild; the archive and source gates were re-run
+  and pass.
+- **No numerical source, test, fixture or acceptance threshold was changed.**
+  The native suite and the Python suite pass unchanged against the final
+  artefacts.
 
 ### How to re-verify this audit
 

@@ -85,6 +85,14 @@
       "class": "proprietary",
       "in_sdist": false
     },
+    "audit-evidence/docs-licensing-sweep.json": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
+    "audit-evidence/docs-licensing-sweep.md": {
+      "class": "proprietary",
+      "in_sdist": false
+    },
     "audit-evidence/proprietary-inventory.json": {
       "class": "proprietary",
       "in_sdist": false

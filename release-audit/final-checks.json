@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-26",
+  "exit_codes": {
+    "generate_boundary (regenerate)": 0,
+    "generate_boundary --check": 0,
+    "verify_license_boundary (source)": 0,
+    "verify_license_boundary --artifacts": 0,
+    "release_preflight": 0,
+    "license_boundary_tests": 0
+  }
+}
