@@ -360,5 +360,181 @@ class ArchiveCompletenessTests(unittest.TestCase):
                 self.assertTrue(failures)
 
 
+class RepairedWheelTests(unittest.TestCase):
+    """The repair tools may change a wheel; only in the way they are pinned to.
+
+    cibuildwheel repairs every wheel it builds: delocate on macOS and
+    delvewheel on Windows. The gate accepts those repairs and refuses
+    everything the tools do not produce.
+    """
+
+    def setUp(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("repaired_wheel_test", GATE)
+        self.gate = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.gate)
+        self.manifest = self.gate._load_generator(ROOT).build_manifest(ROOT)
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.directory = Path(self.temporary.name)
+
+    def metadata(self):
+        import tomllib
+        p = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]
+        headers = [
+            ("Metadata-Version", "2.4"), ("Name", p["name"]),
+            ("Version", p["version"]), ("Summary", p["description"]),
+            ("Keywords", ",".join(p["keywords"])),
+            ("Author", ", ".join(a["name"] for a in p["authors"])),
+            ("License-Expression", p["license"]),
+            ("Requires-Python", ",".join(sorted(p["requires-python"].split(",")))),
+            ("Description-Content-Type", p["readme"]["content-type"]),
+        ]
+        headers += [("License-File", v) for v in p["license-files"]]
+        headers += [("Classifier", v) for v in p["classifiers"]]
+        headers += [("Project-URL", f"{k}, {v}") for k, v in p["urls"].items()]
+        headers += [("Requires-Dist", v) for v in p["dependencies"]]
+        return ("\n".join(f"{key}: {value}" for key, values in headers
+                          for value in (values if isinstance(values, list) else [values]))
+                + "\n\n" + (ROOT / "README.dist.md").read_text(encoding="utf-8")).encode()
+
+    def wheel(self, filename, tag, module, members):
+        """Write a wheel with a correct RECORD and return its path."""
+        import base64
+        import hashlib
+        payload = dict(members)
+        payload[f"{DIST_INFO}/METADATA"] = self.metadata()
+        payload.setdefault(f"{DIST_INFO}/WHEEL", (
+            "Wheel-Version: 1.0\nGenerator: scikit-build-core 0.11.6\n"
+            f"Root-Is-Purelib: false\nTag: {tag}\n\n"
+        ).encode())
+        for name in ("LICENSE", "LICENSE_SCOPE.md", "THIRD_PARTY_NOTICES.md"):
+            payload[f"{DIST_INFO}/licenses/{name}"] = (ROOT / name).read_bytes()
+        payload[module[0]] = module[1]
+        record = f"{DIST_INFO}/RECORD"
+        rows = [
+            f"{name},sha256={base64.urlsafe_b64encode(hashlib.sha256(value).digest()).rstrip(b'=').decode()},{len(value)}"
+            for name, value in payload.items()
+        ]
+        payload[record] = ("\n".join(rows + [f"{record},,"]) + "\n").encode()
+        path = self.directory / filename
+        with zipfile.ZipFile(path, "w") as archive:
+            for name, value in payload.items():
+                archive.writestr(name, value)
+        return path
+
+    def macos_wheel(self, extra_generator=True):
+        members = {name: (ROOT / ("python/" + name)).read_bytes()
+                   for name in self.gate.WHEEL_PACKAGE_FILES}
+        wheel_file = (
+            "Wheel-Version: 1.0\nGenerator: scikit-build-core 0.11.6\n"
+            "Root-Is-Purelib: false\nTag: cp312-cp312-macosx_11_0_arm64\n"
+        )
+        if extra_generator:
+            wheel_file += f"Generator: {self.gate.DELOCATE_GENERATOR}\n"
+        members[f"{DIST_INFO}/WHEEL"] = (wheel_file + "\n").encode()
+        return self.wheel(
+            "leo_dynamics-0.1.0-cp312-cp312-macosx_11_0_arm64.whl",
+            "cp312-cp312-macosx_11_0_arm64",
+            ("leo_dynamics/_core.cpython-312-darwin.so", b"\xcf\xfa\xed\xfe" + b"\0" * 16),
+            members,
+        )
+
+    def windows_wheel(self, runtime=b"MZ" + b"\0" * 32, patch=True, log=None, inject=b""):
+        members = {name: (ROOT / ("python/" + name)).read_bytes()
+                   for name in self.gate.WHEEL_PACKAGE_FILES}
+        if patch:
+            members["leo_dynamics/__init__.py"] = self.gate._delvewheel_patched(
+                (ROOT / "python/leo_dynamics/__init__.py").read_bytes()
+            ) + inject
+        import hashlib
+        digest = hashlib.sha256(runtime).hexdigest()
+        name = f"leo_dynamics.libs/msvcp140-{digest[:32]}.dll"
+        members[name] = runtime
+        members[f"{DIST_INFO}/DELVEWHEEL"] = (
+            log if log is not None else f"Version: {self.gate.DELVEWHEEL_VERSION}\n"
+        ).encode()
+        # The gate only accepts a runtime that has been reviewed and pinned.
+        self.gate.APPROVED_RUNTIME_LIBRARIES = {name: digest}
+        return self.wheel(
+            "leo_dynamics-0.1.0-cp312-cp312-win_amd64.whl",
+            "cp312-cp312-win_amd64",
+            ("leo_dynamics/_core.cp312-win_amd64.pyd", b"MZ" + b"\0" * 16),
+            members,
+        )
+
+    def test_delocate_repaired_wheel_is_accepted(self):
+        self.assertEqual(self.gate._check_wheel(self.macos_wheel(), self.manifest)[0], [])
+
+    def test_unrepaired_macos_wheel_is_accepted(self):
+        self.assertEqual(self.gate._check_wheel(self.macos_wheel(False), self.manifest)[0], [])
+
+    def test_delocate_generator_is_refused_on_a_linux_wheel(self):
+        # The generator delocate writes belongs to a macOS wheel only.
+        members = {name: (ROOT / ("python/" + name)).read_bytes()
+                   for name in self.gate.WHEEL_PACKAGE_FILES}
+        members[f"{DIST_INFO}/WHEEL"] = (
+            "Wheel-Version: 1.0\nGenerator: scikit-build-core 0.11.6\n"
+            f"Generator: {self.gate.DELOCATE_GENERATOR}\n"
+            "Root-Is-Purelib: false\nTag: cp312-cp312-linux_x86_64\n\n"
+        ).encode()
+        path = self.wheel(
+            "leo_dynamics-0.1.0-cp312-cp312-linux_x86_64.whl",
+            "cp312-cp312-linux_x86_64",
+            ("leo_dynamics/_core.cpython-312-x86_64-linux-gnu.so", b"\x7fELF" + b"\0" * 16),
+            members,
+        )
+        failures = self.gate._check_wheel(path, self.manifest)[0]
+        self.assertTrue(
+            any("Generator differs" in failure for failure in failures), failures
+        )
+
+    def test_delvewheel_repaired_wheel_is_accepted(self):
+        self.assertEqual(self.gate._check_wheel(self.windows_wheel(), self.manifest)[0], [])
+
+    def test_repaired_module_may_not_carry_anything_else(self):
+        path = self.windows_wheel(inject=b"# injected\n")
+        failures = self.gate._check_wheel(path, self.manifest)[0]
+        self.assertTrue(any("bytes differ" in failure for failure in failures), failures)
+
+    def test_unapproved_runtime_library_is_refused(self):
+        path = self.windows_wheel()
+        # A runtime that was never reviewed is not accepted, whatever it is
+        # named and whatever it contains.
+        self.gate.APPROVED_RUNTIME_LIBRARIES = {}
+        failures = self.gate._check_wheel(path, self.manifest)[0]
+        self.assertTrue(any("unexpected member" in failure for failure in failures), failures)
+
+    def test_runtime_library_must_match_its_approved_digest(self):
+        path = self.windows_wheel()
+        approved = dict(self.gate.APPROVED_RUNTIME_LIBRARIES)
+        name = next(iter(approved))
+        self.gate.APPROVED_RUNTIME_LIBRARIES = {name: "0" * 64}
+        failures = self.gate._check_wheel(path, self.manifest)[0]
+        self.assertTrue(
+            any("runtime library is not the approved build" in failure for failure in failures),
+            failures,
+        )
+
+    def test_repair_log_must_declare_the_pinned_tool(self):
+        path = self.windows_wheel(log="Version: 0.0.0\n")
+        failures = self.gate._check_wheel(path, self.manifest)[0]
+        self.assertTrue(
+            any("pinned delvewheel version" in failure for failure in failures), failures
+        )
+
+    def test_marker_free_injected_member_is_refused(self):
+        path = self.macos_wheel()
+        with zipfile.ZipFile(path, "a") as archive:
+            archive.writestr("leo_dynamics/notes.py", b"print('research notes')\n")
+        failures = self.gate._check_wheel(path, self.manifest)[0]
+        self.assertTrue(any("unexpected member" in failure for failure in failures), failures)
+
+    def test_approved_runtime_digest_is_named_after_its_content(self):
+        for name, digest in self.gate.APPROVED_RUNTIME_LIBRARIES.items():
+            with self.subTest(name=name):
+                self.assertTrue(name.endswith(f"-{digest[:32]}.dll"))
+
+
 if __name__ == "__main__":
     unittest.main()

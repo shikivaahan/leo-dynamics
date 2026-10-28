@@ -264,20 +264,23 @@ The platform runtimes `_core` *does* link are covered separately in §5.
 ## 5. Platform runtimes the extension links
 
 `_core` is a native extension module, so it links the platform's C++ runtime.
-The locally inspected Linux wheel bundles no runtime library. Runtime bundling
-on macOS and Windows has not been verified by this audit.
+The locally inspected Linux wheel bundles no runtime library. The repaired
+wheels built by the release CI bundle no additional runtime on macOS, and
+vendor exactly one runtime file on Windows (see the table below).
 
 | Platform | Linked runtime | Terms |
 |---|---|---|
 | Linux (x86-64, manylinux) | `libstdc++.so.6`, `libgcc_s.so.1`, `libm.so.6`, `libc.so.6` | libstdc++ and libgcc_s are distributed under the GNU General Public License version 3 with the **GCC Runtime Library Exception version 3.1**, which grants permission to propagate a work of Target Code formed by combining the Runtime Library with Independent Modules, and to convey that combination under terms of your choice, consistent with the licensing of the Independent Modules. The exception text may be copied, but is not required to be. |
 | macOS (arm64, x86-64) | `libc++.1.dylib`, `libSystem` | libc++ is under the Apache License 2.0 with the LLVM Exceptions to the Apache 2.0 License, which permit linking and redistribution under other terms. |
-| Windows (x86-64; configuration assessment only) | Microsoft Visual C++ runtime (toolchain-dependent) | Microsoft redistribution terms apply if runtime files are bundled; inspect each repaired Windows wheel before release. |
+| Windows (x86-64) | Microsoft Visual C++ runtime: the repaired wheel vendors `leo_dynamics.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll` (SHA-256 `a4c2229bdc2a2a630acdc095b4d86008e5c3e3bc7773174354f3da4f5beb9cde`) | Microsoft redistribution terms apply to the runtime file that is bundled. `ci/verify_license_boundary.py` pins that file by name and digest and refuses a repaired wheel that carries any other runtime. |
 
 Observation status of this audit: the Linux linkage above was **observed** on
 the artefact built for this audit (`ldd`/`readelf -d` on
-`_core.cpython-313-x86_64-linux-gnu.so`). The macOS and Windows rows are a
+`_core.cpython-313-x86_64-linux-gnu.so`). The macOS and Windows rows remain a
 **static configuration assessment** of the build configuration; no macOS or
-Windows binary was built or inspected in this audit.
+Windows binary was built or inspected in this audit. The Windows runtime file
+named in the table was observed separately, in the repaired wheels built by the
+release CI, and it is the file the release gate pins.
 
 <a id="6-project-svarog-orbital--mit-precautionary-attribution"></a>
 ## 6. Project-Svarog-Orbital — MIT (precautionary attribution)

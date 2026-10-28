@@ -19,6 +19,7 @@ data, and the deferred provider adapters) is refused by content markers.
 from __future__ import annotations
 
 import argparse
+import ast
 import csv
 import email.policy
 import hashlib
@@ -42,6 +43,51 @@ WHEEL_PACKAGE_FILES = {"leo_dynamics/__init__.py", "leo_dynamics/__init__.pyi", 
 WHEEL_MODULE_PATTERN = re.compile(r"^leo_dynamics/_core\.(?:cpython-[0-9]+-[A-Za-z0-9_-]+\.so|cp[0-9]+-[A-Za-z0-9_-]+\.pyd)$")
 LICENCE_FILES = ("LICENSE", "LICENSE_SCOPE.md", "THIRD_PARTY_NOTICES.md")
 SCAN_CHUNK = 1 << 20
+
+# The wheel repair tools cibuildwheel 4.3.1 installs: auditwheel on Linux,
+# delocate on macOS and delvewheel on Windows. cibuildwheel pins them in its
+# own per-interpreter constraint files, so the pinned cibuildwheel release
+# fixes their versions:
+#   cibuildwheel/resources/constraints.in -> delocate, delvewheel
+DELOCATE_VERSION = "0.13.0"
+DELVEWHEEL_VERSION = "1.13.2"
+
+# delocate records itself as a second generator in the WHEEL file of every
+# wheel it repairs.
+DELOCATE_GENERATOR = f"delocate {DELOCATE_VERSION}"
+
+# The patch delvewheel inserts into the package __init__ so that the vendored
+# runtime is found at import time. The text is fixed by the tool version; the
+# rest of the module must still be the approved source, byte for byte. The
+# text is the output of delvewheel (MIT), which THIRD_PARTY_NOTICES.md
+# records among the build tooling; nothing of the tool is shipped in it.
+DELVEWHEEL_PATCH = (
+    "# start delvewheel patch\n"
+    "def _delvewheel_patch_{version}():\n"
+    "    import os\n"
+    "    if os.path.isdir(libs_dir := os.path.abspath(os.path.join("
+    "os.path.dirname(__file__), os.pardir, 'leo_dynamics.libs'))):\n"
+    "        os.add_dll_directory(libs_dir)\n"
+    "\n"
+    "\n"
+    "_delvewheel_patch_{version}()\n"
+    "del _delvewheel_patch_{version}\n"
+    "# end delvewheel patch\n"
+).format(version=DELVEWHEEL_VERSION.replace(".", "_"))
+
+# The runtime delvewheel vendors on Windows: the Microsoft Visual C++ runtime,
+# which the tool names after the first sixteen bytes of its SHA-256 digest.
+# The approved digest is pinned here; a different runtime is a different
+# artefact and has to be reviewed before it is released.
+APPROVED_RUNTIME_LIBRARIES = {
+    "leo_dynamics.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll": (
+        "a4c2229bdc2a2a630acdc095b4d86008e5c3e3bc7773174354f3da4f5beb9cde"
+    ),
+}
+
+# The repair log delvewheel writes next to the metadata: the tool version and,
+# when diagnostics are on, the command line it ran with.
+DELVEWHEEL_LOG_LIMIT = 4096
 
 
 def _load_generator(root):
@@ -76,6 +122,47 @@ def _unsafe_name(name):
     if not name or name.startswith(("/", "\\")) or "\\" in name or ":" in name or any(p in ("", ".", "..") for p in parts):
         return f"unsafe member name {name!r}"
     return None
+
+
+def _normalise_newlines(payload):
+    """Return `payload` with CRLF and CR line endings rewritten as LF."""
+    return payload.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+
+
+def _delvewheel_patched(source):
+    """Return the approved source with the delvewheel patch inserted.
+
+    delvewheel inserts the patch after the last ``from __future__ import``
+    statement, separated from it by three line endings, and strips the
+    whitespace around the insertion point. This reproduces that exactly, so
+    the gate can accept the repaired module and nothing else.
+    """
+    text = source.decode("utf-8")
+    anchor = 0
+    for child in ast.iter_child_nodes(ast.parse(text)):
+        if isinstance(child, ast.ImportFrom) and child.module == "__future__":
+            anchor = child.end_lineno
+    if not anchor:
+        raise ValueError("the approved source has no __future__ import to anchor the patch")
+    lines = text.splitlines(keepends=True)
+    head = "".join(lines[:anchor]).rstrip()
+    tail = "".join(lines[anchor:]).lstrip()
+    return (head + "\n\n\n" + DELVEWHEEL_PATCH + "\n" + tail).encode("utf-8")
+
+
+def _delvewheel_log(payload):
+    """Check the repair log delvewheel writes next to the metadata."""
+    failures = []
+    if len(payload) > DELVEWHEEL_LOG_LIMIT:
+        failures.append("the delvewheel repair log is unexpectedly large")
+        return failures
+    lines = payload.decode("utf-8", "replace").splitlines()
+    if not lines or lines[0] != f"Version: {DELVEWHEEL_VERSION}":
+        failures.append("the delvewheel repair log does not declare the pinned delvewheel version")
+    for line in lines[1:]:
+        if not line.startswith("Arguments: "):
+            failures.append("the delvewheel repair log carries an unexpected entry")
+    return failures
 
 
 def check_source(root, manifest, generator):
@@ -139,8 +226,15 @@ def _metadata(payload, root):
             actual = [",".join(sorted(value.split(","))) for value in actual]
         if Counter(actual) != Counter(values):
             failures.append(f"metadata {key} differs from approved pyproject values")
-    description = message.get_payload(decode=True).decode("utf-8")
-    if not isinstance(description, str) or description.rstrip("\n") != (root / "README.dist.md").read_text().rstrip("\n"):
+    description = message.get_payload(decode=True)
+    # The approved readme is read as UTF-8 on every platform: the default
+    # encoding of a Windows host is not UTF-8, and the readme carries
+    # characters outside ASCII. Line endings are compared as equivalent, so a
+    # CRLF checkout cannot fail the comparison either.
+    approved = _normalise_newlines((root / "README.dist.md").read_bytes()).decode("utf-8")
+    if isinstance(description, bytes):
+        description = _normalise_newlines(description).decode("utf-8", "replace")
+    if not isinstance(description, str) or description.rstrip("\n") != approved.rstrip("\n"):
         failures.append("metadata description differs from the approved public readme")
     return failures
 
@@ -161,7 +255,18 @@ def _wheel_metadata(payload, path):
     if {name.lower() for name in message.keys()} != {name.lower() for name in expected}:
         failures.append("WHEEL has unknown or missing headers")
     for key, values in expected.items():
-        if Counter(map(str, message.get_all(key, []))) != Counter(values):
+        actual = list(map(str, message.get_all(key, [])))
+        if key == "Generator":
+            # A repaired macOS wheel carries a second generator line, written
+            # by delocate. No other generator is accepted, and only a macOS
+            # wheel may carry that line.
+            allowed = [[values[0]]]
+            if "macosx" in platform:
+                allowed.append([values[0], DELOCATE_GENERATOR])
+            if actual not in allowed:
+                failures.append("WHEEL Generator differs from approved build/filename")
+            continue
+        if Counter(actual) != Counter(values):
             failures.append(f"WHEEL {key} differs from approved build/filename")
     if message.get_payload(decode=True).strip():
         failures.append("WHEEL must have no body")
@@ -223,6 +328,16 @@ def _inspect(path, manifest, root, wheel):
                         failures.append(f"unexpected licence member {relative}")
                     else:
                         mapped = licence
+                elif relative in APPROVED_RUNTIME_LIBRARIES:
+                    digest = hashlib.sha256(payload).hexdigest()
+                    if digest != APPROVED_RUNTIME_LIBRARIES[relative]:
+                        failures.append(f"{relative}: runtime library is not the approved build")
+                    if not relative.endswith(f"-{digest[:32]}.dll"):
+                        failures.append(f"{relative}: runtime library is not named after its own digest")
+                    if not payload.startswith(b"MZ"):
+                        failures.append(f"{relative}: runtime library is not a Windows image")
+                elif relative == prefix + ".dist-info/DELVEWHEEL":
+                    failures.extend(_delvewheel_log(payload))
                 elif relative not in {prefix + ".dist-info/" + child for child in ("METADATA", "WHEEL", "RECORD")}:
                     failures.append(f"unexpected member {relative}")
             elif relative in expected:
@@ -231,8 +346,26 @@ def _inspect(path, manifest, root, wheel):
                 failures.append(f"{relative}: not an approved distribution member")
             if mapped is not None:
                 original = root / mapped
-                if original.is_symlink() or not original.is_file() or payload != original.read_bytes():
-                    failures.append(f"{relative}: bytes differ from approved public source {mapped}")
+                if original.is_symlink() or not original.is_file():
+                    failures.append(f"{relative}: approved public source is missing: {mapped}")
+                else:
+                    approved = original.read_bytes()
+                    if relative == "leo_dynamics/__init__.py":
+                        # The repaired Windows wheel carries the module
+                        # delvewheel patched; everything else in it must still
+                        # be the approved source.
+                        try:
+                            patched = _delvewheel_patched(approved)
+                        except (SyntaxError, UnicodeDecodeError, ValueError) as error:
+                            failures.append(f"{relative}: the approved source cannot be patched: {error}")
+                            patched = None
+                        if payload != approved and not (
+                            patched is not None
+                            and _normalise_newlines(payload) == _normalise_newlines(patched)
+                        ):
+                            failures.append(f"{relative}: bytes differ from approved public source {mapped}")
+                    elif payload != approved:
+                        failures.append(f"{relative}: bytes differ from approved public source {mapped}")
         if wheel:
             required = WHEEL_PACKAGE_FILES | {prefix + ".dist-info/" + child for child in ("METADATA", "WHEEL", "RECORD")} | {prefix + ".dist-info/licenses/" + name for name in LICENCE_FILES}
             modules = [n for n in contents if WHEEL_MODULE_PATTERN.fullmatch(n)]
@@ -244,6 +377,11 @@ def _inspect(path, manifest, root, wheel):
             wheel_metadata_name = prefix + ".dist-info/WHEEL"
             if wheel_metadata_name in contents:
                 failures.extend(_wheel_metadata(contents[wheel_metadata_name], path))
+            # A vendored runtime and the repair log that describes it belong
+            # together: one without the other is not a wheel this gate knows.
+            vendored = [name for name in contents if name in APPROVED_RUNTIME_LIBRARIES]
+            if bool(vendored) != (prefix + ".dist-info/DELVEWHEEL" in contents):
+                failures.append("the vendored runtime and the delvewheel repair log must both be present")
             if record_name in contents:
                 import base64
                 rows = list(csv.reader(io.StringIO(contents[record_name].decode())))

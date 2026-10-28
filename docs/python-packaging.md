@@ -112,6 +112,20 @@ macOS and `delvewheel repair -w {dest_dir} -v {wheel}` on Windows (cibuildwheel
 Windows build environment). Only the Linux path has been exercised so far; see
 the verification log for what `auditwheel` actually reported.
 
+The three repair tools change the wheel they repair, and the release gate
+knows exactly which changes it accepts:
+
+| Tool | Change | Accepted because |
+|---|---|---|
+| `delocate 0.13.0` | a second `Generator:` line in `WHEEL` | the version is pinned by cibuildwheel's own constraint file and no other generator is accepted |
+| `delvewheel 1.13.2` | a patch block in `leo_dynamics/__init__.py` | the gate reproduces the patch exactly and requires the rest of the module to be the approved source, byte for byte |
+| `delvewheel 1.13.2` | `leo_dynamics.libs/msvcp140-<digest>.dll` and `DELVEWHEEL` | the runtime file is pinned by name and SHA-256, is named after its own digest, and the repair log has to declare the pinned tool version |
+
+Everything else a repaired wheel carries is still refused: an unexpected
+member, a runtime that is not the approved one, a module that differs from the
+approved source by anything other than that patch, and any content marker of
+the deferred models.
+
 ## Installed-wheel verification
 
 `ci/run_installed_wheel_tests.py` is the single entry point, used by CI and
