@@ -336,6 +336,74 @@ def test_gil_is_released_during_batch_propagation():
 # Repeated construction, destruction and failure
 # --------------------------------------------------------------------------
 
+def _native_task_states(tasks: Path) -> dict[str, str]:
+    """Return the kernel state of every task listed under /proc/self/task.
+
+    The comm field may contain spaces and parentheses, so the single-letter
+    state is read from the field that follows the last ')'.
+    """
+    states: dict[str, str] = {}
+    for entry in tasks.iterdir():
+        try:
+            stat = (entry / "stat").read_text()
+            states[entry.name] = stat[stat.rindex(")") + 2 :].split()[0]
+        except (OSError, ValueError, IndexError):
+            # The task vanished between the listing and the read, or its stat
+            # line is not the shape this expects.  It is still counted: a task
+            # that is really gone drops out of the next listing, and one that
+            # is really there must never be passed over.
+            states[entry.name] = "?"
+    return states
+
+
+def _await_native_quiescence(tasks: Path, baseline: set[str], timeout_s: float = 5.0,
+                              poll_s: float = 0.002) -> dict[str, str]:
+    """Wait, bounded, until /proc/self/task lists no task outside `baseline`.
+
+    pthread_join() returns as soon as the kernel has woken the join futex,
+    which happens in mm_release() while the exiting thread is still inside
+    do_exit().  The task is unlinked from the PID hash afterwards, in
+    release_task(), on the exiting thread's own CPU time.  A thread that has
+    already been joined - it can no longer run any code and owns no batch
+    state - can therefore still be listed by /proc/self/task for a short,
+    scheduling-dependent time, and a loaded machine widens that window enough
+    for an instantaneous snapshot to observe it.
+
+    Waiting for the condition preserves the no-leak invariant instead of
+    relaxing it: a thread that really leaked is never unlinked, so it is still
+    listed when the bounded wait expires and the caller fails.  The wait is
+    bounded, so a real leak stalls the check for a fixed time rather than
+    hanging the suite.
+    """
+    deadline = time.monotonic() + timeout_s
+    while True:
+        states = _native_task_states(tasks)
+        extra = {tid: state for tid, state in states.items() if tid not in baseline}
+        if not extra:
+            return extra
+        if time.monotonic() >= deadline:
+            return extra
+        time.sleep(poll_s)
+
+
+def test_native_thread_quiescence_does_not_tolerate_a_live_thread():
+    """The no-leak check must still report a thread that really is there."""
+    tasks = Path("/proc/self/task")
+    if not tasks.exists():
+        pytest.skip("Linux only: /proc/self/task is not available")
+    baseline = {p.name for p in tasks.iterdir()}
+    release = threading.Event()
+    holder = threading.Thread(target=release.wait, daemon=True)
+    holder.start()
+    holder_tid = str(holder.native_id)
+    try:
+        extra = _await_native_quiescence(tasks, baseline, timeout_s=0.25)
+    finally:
+        release.set()
+        holder.join(timeout=5.0)
+    assert holder_tid in extra, f"the quiescence check lost a live thread: {extra}"
+
+
 def test_repeated_construction_does_not_accumulate_memory():
     document = _document()
     for _ in range(20):                      # warm up caches and one-off costs
@@ -389,7 +457,8 @@ def test_repeated_failures_leave_no_threads_or_references():
     tracemalloc.stop()
     assert threading.active_count() == baseline
     if native_threads is not None:
-        assert {p.name for p in tasks.iterdir()} <= native_threads
+        extra = _await_native_quiescence(tasks, native_threads)
+        assert not extra, f"native threads survived the failing batches: {extra}"
     growth = sum(stat.size_diff for stat in after.compare_to(snapshot, "filename"))
     assert growth < 500_000, f"python-side growth {growth} bytes over 50 failures"
     recovered = leo.propagate_batch(initials=initials, spacecraft=craft,
@@ -400,5 +469,6 @@ def test_repeated_failures_leave_no_threads_or_references():
     np.testing.assert_array_equal(recovered.states[0], reference.states)
     assert threading.active_count() == baseline
     if native_threads is not None:
-        assert {p.name for p in tasks.iterdir()} <= native_threads
+        extra = _await_native_quiescence(tasks, native_threads)
+        assert not extra, f"native threads survived the recovered batch: {extra}"
 

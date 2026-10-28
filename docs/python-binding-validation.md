@@ -125,7 +125,12 @@ Two notes on the sanitizer run:
   Python run; **no leak certification of any kind is claimed from these runs**,
   native included. Worker-thread lifetime is covered instead by tests that repeat
   batch creation and forced-failure teardown under `tracemalloc`, and by a
-  Linux `/proc/self/task` check asserting that no worker threads survive.
+  Linux `/proc/self/task` check asserting that no worker threads survive. That
+  check waits, bounded, for the condition instead of sampling it once: the
+  kernel unlinks a joined thread from the task list slightly after
+  `pthread_join` returns, so an instantaneous snapshot can still see a thread
+  that has already been joined and owns no state. A thread that really leaked
+  is never unlinked, so the bounded wait still fails on it.
 - Preloading `libasan` alone fails with `__cxa_throw` interception errors
   against the host C++ runtime. Preloading `libstdc++` as well resolves it.
   This is host toolchain interoperation, not a defect in the bindings.
